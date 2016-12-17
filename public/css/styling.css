@@ -1,0 +1,69 @@
+
+@font-face {
+  font-family: 'OdinBold';
+  src: url("Odin Rounded - Bold.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Odin';
+  src: url("Odin Rounded - Regular.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+.navbar-nav > li > a {
+	padding-top:3px !important;
+	padding-bottom:8px !important;
+	color:white !important;
+	font-size:18px;
+
+}
+.navbar {min-height:32px !important; background-color:red;}
+.navbar-nav > li.active > a {background-color:#3391A3 !important;}
+
+body{
+	font-family:OdinBold;	
+	color:red;
+	background-image: url('../ass/bg.png') ;
+}
+
+th, td {
+  border: 1px solid #D9E4E6;
+}
+
+.responstable {
+  width: 100%;
+  overflow: hidden;
+  background: #FFF;
+  color: #024457;
+  border-radius: 10px;
+  border: 1px solid #167F92;
+  
+}
+
+.responstable td:first-child{
+  text-align: center;
+}
+
+.responstable tr {
+  border: 1px solid #D9E4E6;
+  height: 10px ;
+}
+.responstable tr:nth-child(odd) {
+  background-color: #ffe6e6;
+}
+.responstable th {
+  border: 1px solid #FFF;
+  background-color: #e60000;
+  color: #FFF;
+  padding: 1em;
+}
+.title{
+	font-family:Odin;
+	font-size:36px;
+}
+.menuicon{
+	float:right;
+	margin-right:15px;
+	margin-top:3px;
+}
