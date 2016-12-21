@@ -20,12 +20,12 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::get('/dashboard', [
-    'uses' => 'AClubController@index',
+    'uses' => 'Auth\LoginController@index',
     'as' => 'dashboard'
     ]);
 
 Route::get('/dashboard1', [
-    'uses' => 'AClubController@index1',
+    'uses' => 'Auth\LoginController@index1',
     'as' => 'dashboard1'
     ]);
 

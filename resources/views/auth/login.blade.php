@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     </form>
-					<a href="{{route('dashboard')}}"> GOTODASHBOARDTEST </a>
+					<a href="{{route('dashboard')}}"> GOTODASHBOARDTEST </a><br>
 					<a href="{{route('dashboard1')}}"> GOTODASHBOARD1 </a>
                 </div>
             </div>

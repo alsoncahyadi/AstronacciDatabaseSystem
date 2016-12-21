@@ -36,4 +36,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+	
+	public function index() {
+        return view('dashboard\dashboard');
+    }
+	public function index1() {
+        return view('dashboard\dashboard1');
+    }
 }
