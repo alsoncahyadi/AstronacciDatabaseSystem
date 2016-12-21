@@ -18,3 +18,23 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('/dashboard', [
+    'uses' => 'AClubController@index',
+    'as' => 'dashboard'
+    ]);
+
+Route::get('/AClub', [
+    'uses' => 'AClubController@getTable',
+    'as' => 'AClub'
+    ]);
+
+Route::get('/CAT', [
+    'uses' => 'CATController@getTable',
+    'as' => 'CAT'
+    ]);
+
+Route::get('/CAT/{id}', [
+    'uses' => 'CATController@clientDetail',
+    'as' => 'CAT.detail'
+    ]);
