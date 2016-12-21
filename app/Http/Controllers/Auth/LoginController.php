@@ -43,4 +43,7 @@ class LoginController extends Controller
 	public function index1() {
         return view('dashboard\dashboard1');
     }
+	public function index2() {
+        return view('dashboard\dashboard2');
+    }
 }

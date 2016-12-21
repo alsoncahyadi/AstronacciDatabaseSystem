@@ -28,6 +28,11 @@ Route::get('/dashboard1', [
     'uses' => 'Auth\LoginController@index1',
     'as' => 'dashboard1'
     ]);
+	
+Route::get('/dashboard2', [
+    'uses' => 'Auth\LoginController@index2',
+    'as' => 'dashboard2'
+    ]);
 
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',
