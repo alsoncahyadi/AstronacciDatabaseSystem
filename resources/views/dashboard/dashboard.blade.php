@@ -50,5 +50,17 @@
             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
             <input type="submit" value="insert">
         </form>
+
+        <form method="post" action="{{route('MRG.import')}}" enctype="multipart/form-data">
+            <input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+            <input type="file" name="import_file" />
+            <button class="btn btn-primary">Import File</button>
+        </form>
+
+        @if(count($errors) > 0)
+            @foreach($errors->all() as $error)
+                <h4>{{$error}}</h4>
+            @endforeach
+        @endif
     </body>
 </html>

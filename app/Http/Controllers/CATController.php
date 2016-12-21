@@ -11,7 +11,7 @@ class CATController extends Controller
         $tab = ["asdf", "bsb", "adf"];
         $a = 'a';
         //return $tab['a'];
-        return view('table', ['posts' => $tab, 'route' => 'CAT.detail']);
+        return view('table/table', ['posts' => $tab, 'route' => 'CAT.detail']);
     }
 
     public function clientDetail($id) {
