@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Laravel</title>
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-        <script>
+@extends('layouts.logged')
+@section('content')
+    <div onload="loadtable('AClub')">
+	<script>
             function loadtable($pc) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
@@ -27,9 +19,6 @@
                 xmlhttp.send();
             }
         </script>
-        
-    </head>
-    <body onload="loadtable('AClub')">
         <h1>Dashboard</h1>
         <input type="button" onclick="loadtable('CAT')" value="CAT">
         <input type="button" onclick="loadtable('AClub')" value="AClub">
@@ -62,5 +51,7 @@
                 <h4>{{$error}}</h4>
             @endforeach
         @endif
-    </body>
+    </div>
+	
+@endsection
 </html>
