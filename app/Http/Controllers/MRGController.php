@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\MRG;
+use DB;
 
 class MRGController extends Controller
 {
     //
     public function getTable() {
         //Select seluruh tabel
-        
+        $mrgs = MRG::all();
+        //dd($mrgs);
 
         //return view('table', ['posts' => $table]);
 
         $tab = ["ini MRG"];
-        return view('table\table', ['posts' => $tab, 'route' => 'MRG.detail']);
+        return view('table\table', ['posts' => $tab, 'route' => 'MRG.detail', 'mrgs' => $mrgs]);
     }
 
     public function clientDetail($id) {
@@ -37,6 +40,7 @@ class MRGController extends Controller
         echo $request["sales"] . "<br/>";
 
         //input ke database
+        DB::select("call inputMRG($request->account,'$request->nama',$request->tgljoin,'$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
     }
 
     public function importExcel() {
