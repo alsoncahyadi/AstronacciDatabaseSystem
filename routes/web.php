@@ -23,9 +23,11 @@ Route::get('/dashboard', [
     'uses' => 'AClubController@index',
     'as' => 'dashboard'
     ]);
-Route::get('/dashboard1', function () {
-    return view('dashboard/dashboard1');
-});
+
+Route::get('/dashboard1', [
+    'uses' => 'AClubController@index1',
+    'as' => 'dashboard1'
+    ]);
 
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',

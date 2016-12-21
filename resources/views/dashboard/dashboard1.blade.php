@@ -9,6 +9,7 @@
         </div>
     </div>
 
+	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
 	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
 	<br><br>
 	

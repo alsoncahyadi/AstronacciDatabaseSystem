@@ -24,7 +24,7 @@
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
-                <div class="navbar-header">
+                <div class="navbar-header" style="height:100px">
 
                     <!-- Collapsed Hamburger -->
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
@@ -36,7 +36,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <img src="{{ URL::asset('img/logo.png') }}"/>
                     </a>
                 </div>
 
@@ -46,7 +46,7 @@
                         &nbsp;
                     </ul>
 
-                    <!-- Right Side Of Navbar -->
+                    <!-- Right Side Of Navbar --><br>
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
                         @if (Auth::guest())

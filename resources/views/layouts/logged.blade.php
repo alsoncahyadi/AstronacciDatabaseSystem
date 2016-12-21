@@ -98,7 +98,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="{{ url('login') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -153,6 +153,7 @@
                 <!-- /.sidebar-collapse -->
             </div>
         </nav>
+		
 		<div id="page-wrapper">
 			<br>
 			@yield('content')
@@ -172,20 +173,11 @@
     <script src="{{ URL::asset('js/metisMenu/metisMenu.min.js') }}"></script>
 
     <!-- Morris Charts JavaScript -->
-    <script src="{{ URL::asset('js/raphael/raphael.min.js') }}"></script>
-    <script src="{{ URL::asset('js/morrisjs/morris.min.js') }}"></script>
-    <script src="{{ URL::asset('js//morris-data.js') }}"></script>
+
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
 	
-	<script src="{{ URL::asset('js/jquery/jquery-1.12.4.js') }}"></script>
-	<script src="{{ URL::asset('js/jquery/jquery.dataTables.min.js') }}"></script>
-	<script src="{{ URL::asset('js/jquery/dataTables.select.min.js') }}"></script>
-	<script src="{{ URL::asset('js/datatables-plugins/dataTables.bootstrap.min.js') }}"></script>
-	<script src="{{ URL::asset('js/datatables-responsive/dataTables.responsive') }}"></script>
-	<script src="{{ URL::asset('js/metisMenu/metisMenu.min.js') }}"></script>
 
-	
 </body>
 </html>
