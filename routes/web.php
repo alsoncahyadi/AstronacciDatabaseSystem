@@ -38,3 +38,23 @@ Route::get('/CAT/{id}', [
     'uses' => 'CATController@clientDetail',
     'as' => 'CAT.detail'
     ]);
+
+Route::get('/MRG', [
+    'uses' => 'MRGController@getTable',
+    'as' => 'MRG'
+    ]);
+
+Route::get('/MRG/{id}', [
+    'uses' => 'MRGController@clientDetail',
+    'as' => 'MRG.detail'
+    ]);
+
+Route::post('/MRG/insert', [
+    'uses' => 'MRGController@addClient',
+    'as' => 'MRG.insert'
+    ]);
+
+Route::post('/MRG/import', [
+    'uses' => 'MRGController@importExcel',
+    'as' => 'MRG.import'
+    ]);

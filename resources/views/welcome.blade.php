@@ -14,6 +14,5 @@
     </head>
     <body>
         <a href="{{route('dashboard')}}"> GO </a>
-        {{ $lala }}
     </body>
 </html>
