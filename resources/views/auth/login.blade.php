@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.prelog')
 
 @section('content')
 <div class="container">
@@ -60,6 +60,7 @@
                             </div>
                         </div>
                     </form>
+					<a href="{{route('dashboard')}}"> GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO </a>
                 </div>
             </div>
         </div>
