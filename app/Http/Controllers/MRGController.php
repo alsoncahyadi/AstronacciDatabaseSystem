@@ -24,6 +24,17 @@ class MRGController extends Controller
 
     public function addClient(Request $request) {
         //Insert
+        echo $request["account"] . "<br/>";
+        echo $request["nama"] . "<br/>";
+        echo $request["tgljoin"] . "<br/>";
+        echo $request["alamat"] . "<br/>";
+        echo $request["kota"] . "<br/>";
+        echo $request["telepon"] . "<br/>";
+        echo $request["email"] . "<br/>";
+        echo $request["type"] . "<br/>";
+        echo $request["sales"] . "<br/>";
+
+        //input ke database
     }
 
     public function importExcel() {
