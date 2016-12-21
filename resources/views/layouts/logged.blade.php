@@ -173,7 +173,9 @@
     <script src="{{ URL::asset('js/metisMenu/metisMenu.min.js') }}"></script>
 
     <!-- Morris Charts JavaScript -->
-
+    <script src="{{ URL::asset('js/raphael/raphael.min.js') }}"></script>
+    <script src="{{ URL::asset('js/morrisjs/morris.min.js') }}"></script>
+    <script src="{{ URL::asset('js//morris-data.js') }}"></script>
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
