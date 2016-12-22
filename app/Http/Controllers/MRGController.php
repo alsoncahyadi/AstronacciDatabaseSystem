@@ -17,6 +17,9 @@ class MRGController extends Controller
         $mrgs = DB::select("call select_mrg()");
         //dd($mrgs);
 
+        //Data untuk insert
+        $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
+
         //Judul kolom yang ditampilkan pada tabel
         $heads = ["Account", "Tanggal Join", "Type", "Sales", "Birthday", "UOB"];
 
@@ -32,7 +35,7 @@ class MRGController extends Controller
                 if (!$mrg->$att) $mrg->$att = "-";
             }
         }
-        return view('table\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('table\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
@@ -44,7 +47,7 @@ class MRGController extends Controller
         //Insert
         echo $request["account"] . "<br/>";
         echo $request["nama"] . "<br/>";
-        echo $request["tgljoin"] . "<br/>";
+        echo $request["tanggal_join"] . "<br/>";
         echo $request["alamat"] . "<br/>";
         echo $request["kota"] . "<br/>";
         echo $request["telepon"] . "<br/>";
@@ -53,7 +56,7 @@ class MRGController extends Controller
         echo $request["sales"] . "<br/>";
 
         //input ke database
-        DB::select("call inputMRG($request->account,'$request->nama',$request->tgljoin,'$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+        DB::select("call inputMRG($request->account,'$request->nama','$request->tanggal_join','$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
     }
 
     public function importExcel() {
