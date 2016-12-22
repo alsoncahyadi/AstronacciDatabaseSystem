@@ -33,5 +33,6 @@
         @endif
     </div>
 	
+    <script> loadtable('MRG') </script>
 @endsection
 </html>

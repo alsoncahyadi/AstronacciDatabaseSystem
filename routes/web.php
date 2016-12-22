@@ -49,6 +49,16 @@ Route::get('/CAT/{id}', [
     'as' => 'CAT.detail'
     ]);
 
+Route::post('/CAT/insert', [
+    'uses' => 'CATController@addClient',
+    'as' => 'CAT.insert'
+    ]);
+
+Route::post('/CAT/import', [
+    'uses' => 'CATController@importExcel',
+    'as' => 'CAT.import'
+    ]);
+
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
     'as' => 'MRG'
@@ -67,4 +77,24 @@ Route::post('/MRG/insert', [
 Route::post('/MRG/import', [
     'uses' => 'MRGController@importExcel',
     'as' => 'MRG.import'
+    ]);
+
+Route::get('/UOB', [
+    'uses' => 'UOBController@getTable',
+    'as' => 'UOB'
+    ]);
+
+Route::get('/UOB/{id}', [
+    'uses' => 'UOBController@clientDetail',
+    'as' => 'UOB.detail'
+    ]);
+
+Route::post('/UOB/insert', [
+    'uses' => 'UOBController@addClient',
+    'as' => 'UOB.insert'
+    ]);
+
+Route::post('/UOB/import', [
+    'uses' => 'UOBController@importExcel',
+    'as' => 'UOB.import'
     ]);
