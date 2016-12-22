@@ -11,7 +11,7 @@
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Name</label>
+                            <label for="name" class="col-md-4 control-label">Username</label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
@@ -67,8 +67,16 @@
 								<input name="ashop" value="0" type="hidden">
                                 <input id="ashop" type="checkbox" class="form-control" name="ashop" >
                             </div>
-                        </div>
+                         </div>
 
+						<div class="form-group">
+                            <label for="role" class="col-md-4 control-label">Role</label>
+
+                            <div class="col-md-6">								
+                                <input id="role" type="text" class="form-control" value="5" name="role" >
+                            </div>
+                        </div>
+						
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

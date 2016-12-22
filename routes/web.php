@@ -11,9 +11,13 @@
 |
 */
 
+Route::get('/', 'Auth\LoginController@index')->middleware('auth');
+
+/*
 Route::get('/', function () {
     return view('auth/login');
 });
+*/
 
 Auth::routes();
 

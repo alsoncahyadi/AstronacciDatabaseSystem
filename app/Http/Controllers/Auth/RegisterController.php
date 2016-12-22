@@ -67,6 +67,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
 			'a_shop_auth' => ($data['ashop']=='on' ? 1 : 0),
+			'role' => $data['role'],			
         ]);
     }
 }
