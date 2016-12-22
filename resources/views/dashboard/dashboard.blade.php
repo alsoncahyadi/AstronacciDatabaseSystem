@@ -14,6 +14,8 @@
                     $str = "{{route('CAT')}}";
                 } else if ($pc == "MRG") {
                     $str = "{{route('MRG')}}";
+                } else if ($pc == "UOB") {
+                    $str = "{{route('UOB')}}";
                 }
                 xmlhttp.open("GET", $str, true);
                 xmlhttp.send();
@@ -23,6 +25,7 @@
         <input type="button" onclick="loadtable('CAT')" value="CAT">
         <input type="button" onclick="loadtable('AClub')" value="AClub">
         <input type="button" onclick="loadtable('MRG')" value="MRG">
+        <input type="button" onclick="loadtable('UOB')" value="UOB">
         <div id="tab">
         </div> <br/>
 
@@ -33,6 +36,5 @@
         @endif
     </div>
 	
-    <script> loadtable('MRG') </script>
 @endsection
 </html>

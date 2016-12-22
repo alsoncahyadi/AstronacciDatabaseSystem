@@ -3,13 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Excel;
+
 
 class UOBController extends Controller
 {
     //
     public function getTable() {
         //Select seluruh tabel
-        
+        $uobs = [];
+
+        //Data untuk insert
+        $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
+
+        //Judul kolom yang ditampilkan pada tabel
+        $heads = [];
+
+        //Nama attribute pada sql
+        $atts = [];
+        return view('table\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
@@ -19,6 +32,14 @@ class UOBController extends Controller
 
     public function addClient(Request $request) {
         //Insert
+        $this->validate($request, [
+                'client' => 'required',
+                'nama' => 'required',
+                'expired' => 'required',
+                'email' => 'required|email',
+                'telepon' => 'required',
+                'alamat' => 'required',
+            ]);
     }
 
     public function importExcel() {
@@ -32,6 +53,30 @@ class UOBController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
+                    if (($value->client) === null) {
+                        $msg = "Client empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->nama) === null) {
+                        $msg = "Nama empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->expired) === null) {
+                        $msg = "Expired empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->email) === null) {
+                        $msg = "Email empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->telepon) === null) {
+                        $msg = "Telepon empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->alamat) === null) {
+                        $msg = "Alamat empty on line ".$i;
+                        $err[] = $msg;
+                    }
                     
                 } //end validasi
 
@@ -39,7 +84,7 @@ class UOBController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try { 
-
+                            //
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           $err[] = $ex->getMessage();
                         }

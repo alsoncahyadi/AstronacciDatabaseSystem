@@ -45,6 +45,18 @@ class MRGController extends Controller
 
     public function addClient(Request $request) {
         //Insert
+        $this->validate($request, [
+                'account' => 'required',
+                'nama' => 'required',
+                'tanggal_join' => 'required',
+                'alamat' => 'required',
+                'kota' => 'required',
+                'telepon' => 'required',
+                'email' => 'required|email',
+                'type' => 'required',
+                'sales' => 'required'
+            ]);
+
         echo $request["account"] . "<br/>";
         echo $request["nama"] . "<br/>";
         echo $request["tanggal_join"] . "<br/>";
