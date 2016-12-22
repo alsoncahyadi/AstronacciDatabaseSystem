@@ -8,7 +8,7 @@
 @foreach ($clients as $client)
     <tr>
     @foreach ($atts as $att)
-        <td> <a href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client[$att]}} </a></td>
+        <td> <a href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
     @endforeach
     </tr>
 @endforeach
