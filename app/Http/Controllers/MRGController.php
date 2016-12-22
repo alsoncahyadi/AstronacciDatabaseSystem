@@ -13,7 +13,8 @@ class MRGController extends Controller
     //
     public function getTable() {
         //Select seluruh tabel
-        $mrgs = MRG::all();
+        //$mrgs = MRG::all();
+        $mrgs = DB::select("call select_mrg()");
         //dd($mrgs);
 
         //Judul kolom yang ditampilkan pada tabel
