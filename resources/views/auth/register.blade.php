@@ -77,6 +77,14 @@
                             </div>
                         </div>
 						
+						<div class="form-group">
+                            <label for="fullname" class="col-md-4 control-label">Fullname</label>
+
+                            <div class="col-md-6">								
+                                <input id="fullname" type="text" class="form-control" name="fullname" >
+                            </div>
+                        </div>
+						
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
