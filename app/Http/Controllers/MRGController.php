@@ -93,7 +93,7 @@ class MRGController extends Controller
 
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";                
 
-                    DB::select("call inputMRG($request->account,'$request->nama',$request->tgljoin,'$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+                    DB::select("call inputMRG($value->account,'$value->nama','$value->tanggal_join','$value->alamat','$value->kota','$value->telepon','$value->email','$value->type','$value->sales')");
                 }
             }
         } else {
@@ -102,14 +102,14 @@ class MRGController extends Controller
         }
     }
 
-    public function exportExcel() {
-        /*$data = Item::get()->toArray();
-        print_r($data);
-        return Excel::create('itsolutionstuff_example', function($excel) use ($data) {
-            $excel->sheet('mySheet', function($sheet) use ($data)
-            {
-                $sheet->fromArray($data);
-            });
-        })->download('xls');*/
-    }
+    /*public function exportExcel() {
+            $data = MRG::get()->toArray();
+            print_r($data);
+            return Excel::create('testexportmrg', function($excel) use ($data) {
+                $excel->sheet('Sheet1', function($sheet) use ($data)
+                {
+                    $sheet->fromArray($data);
+                });
+            })->download('xls');
+        }*/
 }
