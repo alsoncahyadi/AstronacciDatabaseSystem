@@ -21,10 +21,10 @@ class MRGController extends Controller
         $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Account", "Tanggal Join", "Type", "Sales", "Birthday", "UOB"];
+        $heads = ["Account", "Tanggal Join", "Type", "Sales", "UOB"];
 
         //Nama attribute pada sql
-        $atts = ["account", "join_date", "type", "sales_username", "birthdate", "is_UOB"];
+        $atts = ["account", "join_date", "type", "sales_username", "is_UOB"]; //ga ada birthdate cil
         foreach ($mrgs as $mrg) {
             $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
             $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
@@ -68,7 +68,7 @@ class MRGController extends Controller
         echo $request["sales"] . "<br/>";
 
         //input ke database
-        DB::select("call inputMRG($request->account,'$request->nama','$request->tanggal_join','$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+        DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
     }
 
     public function importExcel() {

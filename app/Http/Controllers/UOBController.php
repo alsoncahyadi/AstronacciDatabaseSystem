@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use DB;
 
 
 class UOBController extends Controller
@@ -12,16 +13,16 @@ class UOBController extends Controller
     //
     public function getTable() {
         //Select seluruh tabel
-        $uobs = [];
+        $uobs = DB::select("call select_uob()");
 
         //Data untuk insert
         $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = [];
+        $heads = ["fullname", "class", "address"];
 
         //Nama attribute pada sql
-        $atts = [];
+        $atts = ["fullname", "class", "address"];
         return view('table\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
@@ -40,6 +41,8 @@ class UOBController extends Controller
                 'telepon' => 'required',
                 'alamat' => 'required',
             ]);
+
+         DB::select("call inputUOB($request->client,'$request->nama','$request->class','$request->nomor',$request->expired,'$request->alamat','$request->kota',$request->tanggal_lahir,'$request->kategori', $request->bulan, '$request->email', $request->telepon, '$request->bank', '$request->nomor_rekening', '$request->jenis_kelamin', '$request->rdi_niaga', '$request->rdi_bca', '$request->trading_via', '$request->source', '$request->sales')");
     }
 
     public function importExcel() {

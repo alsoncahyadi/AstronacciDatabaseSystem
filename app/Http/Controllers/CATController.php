@@ -50,6 +50,7 @@ class CATController extends Controller
             ]);
 
         echo $request;
+        DB::select("call inputCAT('$request->sales','$request->batch',$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,'$request->username','$request->password','$request->nama', '$request->jenis_kelamin', '$request->email', '$request->telepon', '$request->alamat', '$request->kota', $request->tanggal_lahir)");
     }
 
     public function importExcel() {
