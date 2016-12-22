@@ -16,10 +16,12 @@ class MRGController extends Controller
         $mrgs = MRG::all();
         //dd($mrgs);
 
-        //return view('table', ['posts' => $table]);
+        //Judul kolom yang ditampilkan pada tabel
+        $heads = ["Account", "Tanggal Join", "Type", "Sales"];
 
-        $tab = ["ini MRG"];
-        return view('table\table', ['posts' => $tab, 'route' => 'MRG.detail', 'mrgs' => $mrgs]);
+        //Nama attribute pada sql
+        $atts = ["account", "join_date", "type", "sales_username"];
+        return view('table\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -89,16 +91,14 @@ class MRGController extends Controller
                         return redirect()->back()->withErrors([$msg]);
                     }
 
-                    else
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";                
+
+                    DB::select("call inputMRG($request->account,'$request->nama',$request->tgljoin,'$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
                 }
-                //if(!empty($insert)){
-                  //  DB::table('items')->insert($insert);
-                    //dd('Insert Record successfully.');
-                //}
             }
         } else {
-            echo "no file";
+            $msg = "No file supplied";
+            return redirect()->back()->withErrors([$msg]);
         }
     }
 
