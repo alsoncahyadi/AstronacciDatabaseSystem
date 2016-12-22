@@ -1,7 +1,4 @@
-@extends('layouts.logged')
-@section('content')
-
-	<div>
+<div>
 		<div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header" style="color:red">Dashboard</h1>
@@ -442,8 +439,6 @@
         <!-- /.col-lg-12 -->
     </div>
 			
-
-
 	<script>
 		$(document).ready(function() {
 			$('#dataTables').DataTable({
@@ -451,5 +446,3 @@
 			});
 		});
     </script>
-
-@endsection

@@ -13,12 +13,6 @@
 
 Route::get('/', 'Auth\LoginController@index')->middleware('auth');
 
-/*
-Route::get('/', function () {
-    return view('auth/login');
-});
-*/
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
@@ -38,14 +32,21 @@ Route::get('/dashboard2', [
     'as' => 'dashboard2'
     ]);
 
+// ACLUB ROUTES
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',
     'as' => 'AClub'
     ]);
 
+// CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
     'as' => 'CAT'
+    ]);
+
+Route::get('/CAT/add', [
+    'uses' => 'CATController@getForm',
+    'as' => 'CAT.add'
     ]);
 
 Route::get('/CAT/{id}', [
@@ -63,9 +64,15 @@ Route::post('/CAT/import', [
     'as' => 'CAT.import'
     ]);
 
+// MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
     'as' => 'MRG'
+    ]);
+
+	Route::get('/MRG/add', [
+    'uses' => 'MRGController@getForm',
+    'as' => 'MRG.add'
     ]);
 
 Route::get('/MRG/{id}', [
@@ -83,9 +90,15 @@ Route::post('/MRG/import', [
     'as' => 'MRG.import'
     ]);
 
+//UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
     'as' => 'UOB'
+    ]);
+
+Route::get('/UOB/add', [
+    'uses' => 'UOBController@getForm',
+    'as' => 'UOB.add'
     ]);
 
 Route::get('/UOB/{id}', [

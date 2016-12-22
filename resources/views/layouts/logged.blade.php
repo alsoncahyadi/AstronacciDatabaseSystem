@@ -25,8 +25,63 @@
     <!-- Custom Fonts -->
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
+	    <!-- Scripts -->
+	<!-- jQuery -->
 
+    <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{ URL::asset('js/bootstrap/js/bootstrap.min.js') }}"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="{{ URL::asset('js/metisMenu/metisMenu.min.js') }}"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="{{ URL::asset('js/raphael/raphael.min.js') }}"></script>
+    <script src="{{ URL::asset('js/morrisjs/morris.min.js') }}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
+	<script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
+	
+<!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
+	
+	<script>
+    function load($type, $pc) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("tab").innerHTML = this.responseText;
+        }
+    };
+    $str = "{{route('AClub')}}";
+    if ($type == "table"){
+		if ($pc == "CAT") {
+			$str = "{{route('CAT')}}";
+		} else if ($pc == "MRG") {
+			$str = "{{route('MRG')}}";
+		} else if ($pc == "UOB") {
+			$str = "{{route('UOB')}}";
+		}
+	} else
+	if ($type == "form"){
+		if ($pc == "CAT") {
+			$str = "{{route('CAT.add')}}";
+		} else if ($pc == "MRG") {
+			$str = "{{route('MRG.add')}}";
+		} else if ($pc == "UOB") {
+			$str = "{{route('UOB.add')}}";
+		}
+	}
+    xmlhttp.open("GET", $str, true);
+    xmlhttp.send();
+
+}    
+    </script>
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -97,7 +152,7 @@
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
-                        <li class="divider"></li>                            
+                        <li class="divider"></li>
                         <li><a href="{{ url('/logout') }}"
                                 onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();">
@@ -116,34 +171,23 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">
-                        <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            </div>
-                            <!-- /input-group -->
+                        <li id="t2">
+                            
                         </li>                        
                         <li id="t1">
                             <a href="index.html" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#" style="color:white;">Super Admin</a>
+                                    <a onclick="load('form', 'AClub')" href="#" style="color:white;">Admin A-Club</a>
                                 </li>
                                 <li>
-                                    <a href="#" style="color:white;">Admin A-Club</a>
+                                    <a onclick="load('form', 'MRG')" href="#" style="color:white;">Admin MRG</a>
                                 </li>
                                 <li>
-                                    <a href="#" style="color:white;">Admin MRG</a>
+                                    <a onclick="load('table', 'UOB'); " href="#" style="color:white;">Admin UOB</a>
                                 </li>
                                 <li>
-                                    <a href="#" style="color:white;">Admin UOB</a>
-                                </li>
-                                <li>
-                                    <a href="#" style="color:white;">Admin CAT</a>
+                                    <a onclick="load('form', 'CAT')" href="#" style="color:white;">Admin CAT</a>
                                 </li>
                                 <li>
                                     <a href="#" style="color:white;">Sales</a>
@@ -152,7 +196,7 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <li id="t2">
-                            <a href="#" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop</a>
+                            <a href="{{ url('dashboard2') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop</a>
                         </li>
                     </ul>
                 </div>
@@ -165,27 +209,6 @@
 			@yield('content')
 		</div>
     </div>
-
-
-	    <!-- Scripts -->
-	<!-- jQuery -->
-
-    <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ URL::asset('js/bootstrap/js/bootstrap.min.js') }}"></script>
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="{{ URL::asset('js/metisMenu/metisMenu.min.js') }}"></script>
-
-    <!-- Morris Charts JavaScript -->
-    <script src="{{ URL::asset('js/raphael/raphael.min.js') }}"></script>
-    <script src="{{ URL::asset('js/morrisjs/morris.min.js') }}"></script>
-    <script src="{{ URL::asset('js//morris-data.js') }}"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
-	
 
 </body>
 </html>

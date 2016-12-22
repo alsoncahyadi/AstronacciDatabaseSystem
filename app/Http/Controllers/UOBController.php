@@ -13,6 +13,21 @@ class UOBController extends Controller
     //
     public function getTable() {
         //Select seluruh tabel
+        $uobs = [];
+
+        //Data untuk insert
+        $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
+
+        //Judul kolom yang ditampilkan pada tabel
+        $heads = [];
+
+        //Nama attribute pada sql
+        $atts = [];
+        return view('content\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+    }
+	
+	public function getForm() {
+                //Select seluruh tabel
         $uobs = DB::select("call select_uob()");
 
         //Data untuk insert
@@ -23,7 +38,7 @@ class UOBController extends Controller
 
         //Nama attribute pada sql
         $atts = ["fullname", "class", "address"];
-        return view('table\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\form', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
@@ -41,8 +56,7 @@ class UOBController extends Controller
                 'telepon' => 'required',
                 'alamat' => 'required',
             ]);
-
-         DB::select("call inputUOB($request->client,'$request->nama','$request->class','$request->nomor',$request->expired,'$request->alamat','$request->kota',$request->tanggal_lahir,'$request->kategori', $request->bulan, '$request->email', $request->telepon, '$request->bank', '$request->nomor_rekening', '$request->jenis_kelamin', '$request->rdi_niaga', '$request->rdi_bca', '$request->trading_via', '$request->source', '$request->sales')");
+		DB::select("call inputUOB($request->client,'$request->nama','$request->class','$request->nomor',$request->expired,'$request->alamat','$request->kota',$request->tanggal_lahir,'$request->kategori', $request->bulan, '$request->email', $request->telepon, '$request->bank', '$request->nomor_rekening', '$request->jenis_kelamin', '$request->rdi_niaga', '$request->rdi_bca', '$request->trading_via', '$request->source', '$request->sales')");
     }
 
     public function importExcel() {
