@@ -11,21 +11,15 @@ use DB;
 class MRGController extends Controller
 {
    
-    private function emptyStringToNull($string)
+    private function nullify($string)
     {
-        //trim every value
-        //$string_name='  Welcome to w3resource.com  ';  
-        //$new_string=trim($string_name);  
-        //echo $new_string; 
         $newstring = trim($string);
-       //echo $newstring;
         if ($newstring === ''){
-            //echo "masuk";
-           return NULL;
+           return null;
         }
 
         //echo "masuk sini";
-        return $string;
+        return $newstring;
     }
     //
     public function getTable() {
@@ -38,10 +32,10 @@ class MRGController extends Controller
         $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Account", "Tanggal Join", "Type", "Sales", "UOB"];
+        $heads = ["Account", "Tanggal Join", "Type", "Sales", "UOB", "Alamat", "Kota"];
 
         //Nama attribute pada sql
-        $atts = ["account", "join_date", "type", "sales_username", "is_UOB"]; //ga ada birthdate cil
+        $atts = ["account", "join_date", "type", "sales_username", "is_UOB", "address", "city"]; //ga ada birthdate cil
         foreach ($mrgs as $mrg) {
             $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
             $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
@@ -62,7 +56,7 @@ class MRGController extends Controller
 
     public function addClient(Request $request) {
         //Insert
-        $this->validate($request, [
+        /*$this->validate($request, [
                 'account' => 'required',
                 'nama' => 'required',
                 'tanggal_join' => 'required',
@@ -72,26 +66,16 @@ class MRGController extends Controller
                 'email' => 'required|email',
                 'type' => 'required',
                 'sales' => 'required'
-            ]);
-
-        
-        /*foreach ($request as &$req){
-            echo gettype($req);
-            $req = $this->emptyStringToNull($req);
-        }*/
-        echo $request["account"] . "<br/>";
-        echo $request["nama"] . "<br/>";
-        echo $request["tanggal_join"] . "<br/>";
-        echo $request["alamat"] . "<br/>";
-        echo $request["kota"] . "<br/>";
-        echo $request["telepon"] . "<br/>";
-        echo $request["email"] . "<br/>";
-        echo $request["type"] . "<br/>";
-        echo $request["sales"] . "<br/>";
-
-
+            ]);*/
         //input ke database
-        DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->address','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+        //DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->address','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+        $err = [];
+        try {
+            DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
     public function importExcel() {
@@ -139,7 +123,7 @@ class MRGController extends Controller
                     }
                     if (($value->sales) === null) {
                         $msg = "Sales empty on line ".$i;
-                        $err[] = $msg;
+                        //$err[] = $msg;
                     }
                 } //end validasi
 
@@ -148,7 +132,7 @@ class MRGController extends Controller
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try { 
-                          DB::select("call inputMRG($value->account,'$value->nama','$value->tanggal_join','$value->alamat','$value->kota','$value->telepon','$value->email','$value->type','$value->sales')");
+                          DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$value->account, $value->nama,$value->tanggal_join,$value->alamat,$value->kota,$value->telepon,$value->email,$value->type,$value->sales]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();

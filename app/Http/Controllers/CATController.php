@@ -10,6 +10,17 @@ use Excel;
 class CATController extends Controller
 {
     //
+    private function nullify($string)
+    {
+        $newstring = trim($string);
+        if ($newstring === ''){
+           return null;
+        }
+
+        //echo "masuk sini";
+        return $newstring;
+    }
+
     public function getTable() {
         $cats = DB::select("call select_cat()");
         //dd($mrgs);
@@ -49,8 +60,8 @@ class CATController extends Controller
                 'username' => 'required'
             ]);
 
-        echo $request;
-        DB::select("call inputCAT('$request->sales','$request->batch',$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,'$request->username','$request->password','$request->nama', '$request->jenis_kelamin', '$request->email', '$request->telepon', '$request->alamat', '$request->kota', $request->tanggal_lahir)");
+        //echo $request;
+        DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$this->nullify($request->sales),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
     }
 
     public function importExcel() {
@@ -111,7 +122,7 @@ class CATController extends Controller
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try { 
-                            //
+                            DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->sales,$value->batch,$value->user_id,$value->no_induk,$value->pendaftaran,$value->kelas_berakhir,$value->username,$value->password,$value->nama,$value->jenis_kelamin,$value->email,$value->telepon,$value->alamat,$value->kota, $value->tanggal_lahir]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();

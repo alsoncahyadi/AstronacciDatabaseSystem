@@ -11,6 +11,17 @@ use DB;
 class UOBController extends Controller
 {
     //
+    private function nullify($string)
+    {
+        $newstring = trim($string);
+        if ($newstring === ''){
+           return null;
+        }
+
+        //echo "masuk sini";
+        return $newstring;
+    }
+
     public function getTable() {
 		//Select seluruh tabel
         $uobs = DB::select("call select_uob()");
@@ -41,7 +52,7 @@ class UOBController extends Controller
                 'telepon' => 'required',
                 'alamat' => 'required',
             ]);
-		DB::select("call inputUOB($request->client,'$request->nama','$request->class','$request->nomor',$request->expired,'$request->alamat','$request->kota',$request->tanggal_lahir,'$request->kategori', $request->bulan, '$request->email', $request->telepon, '$request->bank', '$request->nomor_rekening', '$request->jenis_kelamin', '$request->rdi_niaga', '$request->rdi_bca', '$request->trading_via', '$request->source', '$request->sales')");
+		DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
     }
 
     public function importExcel() {
@@ -86,7 +97,7 @@ class UOBController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try { 
-                            //
+                            DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->client,$value->nama,$value->class,$value->nomor,$value->expired,$value->alamat,$value->kota,$value->tanggal_lahir,$value->kategori, $value->bulan, $value->telepon, $value->email, $value->bank, $value->nomor_rekening, $value->jenis_kelamin, $value->rdi_niaga, $value->rdi_bca, $value->trading_via, $value->source, $value->sales]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           $err[] = $ex->getMessage();
                         }
