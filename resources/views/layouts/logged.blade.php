@@ -51,7 +51,7 @@
 <!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
 	
 	<script>
-    function load($type, $pc) {
+    function load($pc) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -59,24 +59,14 @@
         }
     };
     $str = "{{route('AClub')}}";
-    if ($type == "table"){
-		if ($pc == "CAT") {
-			$str = "{{route('CAT')}}";
-		} else if ($pc == "MRG") {
-			$str = "{{route('MRG')}}";
-		} else if ($pc == "UOB") {
-			$str = "{{route('UOB')}}";
-		}
-	} else
-	if ($type == "form"){
-		if ($pc == "CAT") {
-			$str = "{{route('CAT.add')}}";
-		} else if ($pc == "MRG") {
-			$str = "{{route('MRG.add')}}";
-		} else if ($pc == "UOB") {
-			$str = "{{route('UOB.add')}}";
-		}
+	if ($pc == "CAT") {
+		$str = "{{route('CAT')}}";
+	} else if ($pc == "MRG") {
+		$str = "{{route('MRG')}}";
+	} else if ($pc == "UOB") {
+		$str = "{{route('UOB')}}";
 	}
+	
     xmlhttp.open("GET", $str, true);
     xmlhttp.send();
 
@@ -178,16 +168,16 @@
                             <a href="index.html" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a onclick="load('form', 'AClub')" href="#" style="color:white;">Admin A-Club</a>
+                                    <a onclick="load('AClub')" href="#" style="color:white;">Admin A-Club</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('form', 'MRG')" href="#" style="color:white;">Admin MRG</a>
+                                    <a onclick="load('MRG')" href="#" style="color:white;">Admin MRG</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('table', 'UOB'); " href="#" style="color:white;">Admin UOB</a>
+                                    <a onclick="load('UOB'); " href="#" style="color:white;">Admin UOB</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('form', 'CAT')" href="#" style="color:white;">Admin CAT</a>
+                                    <a onclick="load('CAT')" href="#" style="color:white;">Admin CAT</a>
                                 </li>
                                 <li>
                                     <a href="#" style="color:white;">Sales</a>

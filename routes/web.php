@@ -44,11 +44,6 @@ Route::get('/CAT', [
     'as' => 'CAT'
     ]);
 
-Route::get('/CAT/add', [
-    'uses' => 'CATController@getForm',
-    'as' => 'CAT.add'
-    ]);
-
 Route::get('/CAT/{id}', [
     'uses' => 'CATController@clientDetail',
     'as' => 'CAT.detail'
@@ -70,11 +65,6 @@ Route::get('/MRG', [
     'as' => 'MRG'
     ]);
 
-	Route::get('/MRG/add', [
-    'uses' => 'MRGController@getForm',
-    'as' => 'MRG.add'
-    ]);
-
 Route::get('/MRG/{id}', [
     'uses' => 'MRGController@clientDetail',
     'as' => 'MRG.detail'
@@ -94,11 +84,6 @@ Route::post('/MRG/import', [
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
     'as' => 'UOB'
-    ]);
-
-Route::get('/UOB/add', [
-    'uses' => 'UOBController@getForm',
-    'as' => 'UOB.add'
     ]);
 
 Route::get('/UOB/{id}', [

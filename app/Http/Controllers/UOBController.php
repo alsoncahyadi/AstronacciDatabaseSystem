@@ -12,22 +12,7 @@ class UOBController extends Controller
 {
     //
     public function getTable() {
-        //Select seluruh tabel
-        $uobs = [];
-
-        //Data untuk insert
-        $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
-
-        //Judul kolom yang ditampilkan pada tabel
-        $heads = [];
-
-        //Nama attribute pada sql
-        $atts = [];
-        return view('content\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
-    }
-	
-	public function getForm() {
-                //Select seluruh tabel
+		//Select seluruh tabel
         $uobs = DB::select("call select_uob()");
 
         //Data untuk insert
