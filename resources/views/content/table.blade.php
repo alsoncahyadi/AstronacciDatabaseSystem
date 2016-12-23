@@ -12,7 +12,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    DataTables Advanced Tables
+				List of {{ $route }} client
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
@@ -43,14 +43,7 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-			
-	<script>
-		$(document).ready(function() {
-			$('#dataTables').DataTable({
-				responsive: true
-			});
-		});
-    </script>
+
 	
 	
 	<form method="post" action="{{route($route . '.insert')}}">

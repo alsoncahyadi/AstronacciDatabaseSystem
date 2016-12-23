@@ -56,6 +56,9 @@
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("tab").innerHTML = this.responseText;
+			$('#dataTables').DataTable({
+				responsive: true
+			});
         }
     };
     $str = "{{route('AClub')}}";
@@ -69,10 +72,9 @@
 	
     xmlhttp.open("GET", $str, true);
     xmlhttp.send();
-
-}    
+	}    
     </script>
-	
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -84,7 +86,7 @@
 <body>
     <div id="wrapper">
         <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background-image: url('{{ URL::asset('img/swirl_pattern1.png') }}') ;">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
             <div class="navbar-header" style="height:95px;">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="sr-only">Toggle navigation</span>
@@ -92,7 +94,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html"><img src="{{ URL::asset('img/logo.png') }}"/></a>
+                <a class="navbar-brand" href="index.html"><img src="{{ URL::asset('images/logo.png') }}"/></a>
             </div>
             <!-- /.navbar-header -->
 
@@ -174,7 +176,7 @@
                                     <a onclick="load('MRG')" href="#" style="color:white;">Admin MRG</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('UOB'); " href="#" style="color:white;">Admin UOB</a>
+                                    <a onclick="load('UOB')" href="#" style="color:white;">Admin UOB</a>
                                 </li>
                                 <li>
                                     <a onclick="load('CAT')" href="#" style="color:white;">Admin CAT</a>
@@ -195,7 +197,6 @@
         </nav>
 		
 		<div id="page-wrapper">
-			<br>
 			@yield('content')
 		</div>
     </div>
