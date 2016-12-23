@@ -5,8 +5,43 @@
             </div>
             <!-- /.col-lg-12 -->
         </div>
+    </div>	
+		
+	<div class="panel-group" id="accordion1">
+		<div class="panel">
+			<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Client</a>
+			<div id="addcli" class="panel-collapse collapse">
+				<div class="panel-body">
+					<form method="post" action="{{route($route . '.insert')}}">
+						@foreach ($ins as $atr)
+							<div class="form-group">
+								<label>{{$atr}}</label>
+								<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							</div>
+						@endforeach
+						<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+						<input type="submit" class="btn btn-default" value="Insert">
+						<button type="reset" class="btn btn-default">Reset Form</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="panel">
+			<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#impo">Import Excel File</a>       
+			<div id="impo" class="panel-collapse collapse">
+				<div class="panel-body">
+					<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+						<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+						<input type="file" name="import_file" />
+						<br>
+						<button class="btn btn-primary">Import .xls File</button>
+					</form>
+				</div>
+			</div>
+		</div>
     </div>
-	<br>
+	
+	
 	
 	<div class="row">
         <div class="col-lg-12">
@@ -22,6 +57,7 @@
 							@foreach ($heads as $head)
 								<th> {{$head}} </th>
 							@endforeach
+								
 							</tr>
                         </thead>
 						<tbody>
@@ -43,19 +79,3 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-
-	
-	
-	<form method="post" action="{{route($route . '.insert')}}">
-		@foreach ($ins as $atr)
-			{{$atr}} <input type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}"> <br/>
-		@endforeach
-		<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-		<input type="submit" value="insert">
-	</form>
-
-	<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-		<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-		<input type="file" name="import_file" />
-		<button class="btn btn-primary">Import File</button>
-	</form>
