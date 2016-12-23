@@ -100,3 +100,10 @@ Route::post('/UOB/import', [
     'uses' => 'UOBController@importExcel',
     'as' => 'UOB.import'
     ]);
+	
+Route::get('list', [
+	'uses' => 'RolelistController@index',
+	'as' => 'rolelist',
+	'middleware' => 'roles',
+	'roles' => ['0'],
+	]);
