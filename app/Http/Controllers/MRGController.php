@@ -10,6 +10,23 @@ use DB;
 
 class MRGController extends Controller
 {
+   
+    private function emptyStringToNull($string)
+    {
+        //trim every value
+        //$string_name='  Welcome to w3resource.com  ';  
+        //$new_string=trim($string_name);  
+        //echo $new_string; 
+        $newstring = trim($string);
+       //echo $newstring;
+        if ($newstring === ''){
+            //echo "masuk";
+           return NULL;
+        }
+
+        //echo "masuk sini";
+        return $string;
+    }
     //
     public function getTable() {
         //Select seluruh tabel
@@ -57,6 +74,11 @@ class MRGController extends Controller
                 'sales' => 'required'
             ]);
 
+        
+        /*foreach ($request as &$req){
+            echo gettype($req);
+            $req = $this->emptyStringToNull($req);
+        }*/
         echo $request["account"] . "<br/>";
         echo $request["nama"] . "<br/>";
         echo $request["tanggal_join"] . "<br/>";
@@ -67,8 +89,9 @@ class MRGController extends Controller
         echo $request["type"] . "<br/>";
         echo $request["sales"] . "<br/>";
 
+
         //input ke database
-        DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->alamat','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+        DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->address','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
     }
 
     public function importExcel() {
