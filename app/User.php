@@ -49,4 +49,11 @@ class User extends Authenticatable
         }
         return false;
     }
+	
+	public function hasAShop($user) {
+		if ($this->where('username', $user)->where('a_shop_auth', '1')->first()) {
+			return true;
+		}
+		return false;
+	}
 }

@@ -104,6 +104,6 @@ Route::post('/UOB/import', [
 Route::get('list', [
 	'uses' => 'RolelistController@index',
 	'as' => 'rolelist',
-	'middleware' => 'roles',
+	'middleware' => 'ashop' /*['auth', 'roles']*/ ,
 	'roles' => ['0'],
 	]);

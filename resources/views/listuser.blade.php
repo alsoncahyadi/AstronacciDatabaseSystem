@@ -89,7 +89,7 @@
             <th>Username</th>
             <th>Role 0</th>
             <th>Role 1</th>
-            <th>Role 7</th>
+            <th>A Shop</th>
             </tr>
             @foreach ($users as $user)
             <tr>
@@ -97,7 +97,7 @@
             <td style="color:black"><b>{{ $user->username }}</b></td>
             <td><input type="checkbox" {{ $user->hasRole($user->username, '0') ? 'checked' : ''}} name="superadmin"></td>
             <td><input type="checkbox" {{ $user->hasRole($user->username, '1') ? 'checked' : ''}} name="admin"></td>
-            <td><input type="checkbox" {{ $user->hasRole($user->username, '7') ? 'checked' : ''}} name="sales"></td>
+            <td><input type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="sales"></td>
             <br>
             </tr>
             @endforeach
