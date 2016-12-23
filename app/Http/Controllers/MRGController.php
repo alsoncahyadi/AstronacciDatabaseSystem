@@ -56,7 +56,7 @@ class MRGController extends Controller
 
     public function addClient(Request $request) {
         //Insert
-        /*$this->validate($request, [
+        $this->validate($request, [
                 'account' => 'required',
                 'nama' => 'required',
                 'tanggal_join' => 'required',
@@ -66,7 +66,7 @@ class MRGController extends Controller
                 'email' => 'required|email',
                 'type' => 'required',
                 'sales' => 'required'
-            ]);*/
+            ]);
         //input ke database
         //DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->address','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
         $err = [];
