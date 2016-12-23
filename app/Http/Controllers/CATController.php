@@ -22,7 +22,7 @@ class CATController extends Controller
 
         //Nama attribute pada sql
         $atts = ["cat_user_id", "fullname", "cat_username", "tanggal_pendaftaran"];
-        return view('table\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';

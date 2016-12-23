@@ -23,7 +23,7 @@ class UOBController extends Controller
 
         //Nama attribute pada sql
         $atts = ["fullname", "class", "address"];
-        return view('content\form', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {

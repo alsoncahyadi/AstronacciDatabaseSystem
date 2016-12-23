@@ -35,7 +35,7 @@ class MRGController extends Controller
                 if (!$mrg->$att) $mrg->$att = "-";
             }
         }
-        return view('table\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
