@@ -30,10 +30,10 @@ class UOBController extends Controller
         $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["fullname", "class", "address"];
+        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Address", "City", "Marital Status", "Jenis Kelamin", "Clent ID", "Class", "Nomor", "Tanggal Expired", "Kategori", "Bulan", "Bank", "Nomor Rekening", "RDI Niaga", "RDI BCA", "Trading", "Source", "Sales"]; //kecuali is" an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["fullname", "class", "address"];
+        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "client_id", "class", "nomor", "expired_date", "kategori", "bulan", "bank", "nomor_rekening", "RDI_niaga", "RDI_BCA", "trading_via", "source", "sales_username"];
         return view('content\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 

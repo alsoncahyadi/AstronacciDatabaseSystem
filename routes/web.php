@@ -107,3 +107,24 @@ Route::get('list', [
 	'middleware' => 'ashop' /*['auth', 'roles']*/ ,
 	'roles' => ['0'],
 	]);
+
+//A-CLUB ROUTES
+Route::get('/AClub', [
+    'uses' => 'AClubController@getTable',
+    'as' => 'AClub'
+    ]);
+
+Route::get('/AClub/{id}', [
+    'uses' => 'AClubController@clientDetail',
+    'as' => 'AClub.detail'
+    ]);
+
+Route::post('/AClub/insert', [
+    'uses' => 'AClubController@addClient',
+    'as' => 'AClub.insert'
+    ]);
+
+Route::post('/AClub/import', [
+    'uses' => 'AClubController@importExcel',
+    'as' => 'AClub.import'
+    ]);

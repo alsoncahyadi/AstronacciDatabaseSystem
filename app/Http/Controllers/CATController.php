@@ -29,10 +29,10 @@ class CATController extends Controller
         $ins = ["Sales", "Batch", "User ID", "No Induk", "Pendaftaran", "Kelas Berakhir", "Nama", "Jenis Kelamin", "Email", "Telepon", "Alamat", "Kota", "Tanggal Lahir", "Username", "Password"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["ID", "Fullname", "Username", "Tanggal Daftar"];
+        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Address", "City", "Marital Status", "Jenis Kelamin","CAT ID", "No Induk", "Username", "Batch", "Tanggal Daftar", "Tanggal Kelas Akhir", "Sales"]; //kecuali is" an, password, sm add_time
 
         //Nama attribute pada sql
-        $atts = ["cat_user_id", "fullname", "cat_username", "tanggal_pendaftaran"];
+        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin","cat_user_id", "cat_no_induk", "cat_username", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username"];
         return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
