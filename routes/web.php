@@ -32,12 +32,6 @@ Route::get('/dashboard2', [
     'as' => 'dashboard2'
     ]);
 
-// ACLUB ROUTES
-Route::get('/AClub', [
-    'uses' => 'AClubController@getTable',
-    'as' => 'AClub'
-    ]);
-
 // CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
@@ -127,4 +121,25 @@ Route::post('/AClub/insert', [
 Route::post('/AClub/import', [
     'uses' => 'AClubController@importExcel',
     'as' => 'AClub.import'
+    ]);
+
+//GREEN ROUTES
+Route::get('/green', [
+    'uses' => 'GreenController@getTable',
+    'as' => 'green'
+    ]);
+
+Route::get('/green/{id}', [
+    'uses' => 'GreenController@clientDetail',
+    'as' => 'green.detail'
+    ]);
+
+Route::post('/green/insert', [
+    'uses' => 'GreenController@addClient',
+    'as' => 'green.insert'
+    ]);
+
+Route::post('/green/import', [
+    'uses' => 'GreenController@importExcel',
+    'as' => 'green.import'
     ]);

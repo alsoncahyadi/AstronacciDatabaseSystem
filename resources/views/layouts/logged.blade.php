@@ -68,7 +68,9 @@
 		$str = "{{route('MRG')}}";
 	} else if ($pc == "UOB") {
 		$str = "{{route('UOB')}}";
-	}
+	} else if ($pc == "green") {
+        $str = "{{route('green')}}";
+    }
 	
     xmlhttp.open("GET", $str, true);
     xmlhttp.send();
@@ -183,6 +185,9 @@
                                 </li>
                                 <li>
                                     <a href="#" style="color:white;">Sales</a>
+                                </li>
+                                <li>
+                                    <a onclick="load('green')" href="#" style="color:white;">Green</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

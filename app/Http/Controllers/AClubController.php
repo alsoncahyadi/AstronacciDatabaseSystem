@@ -22,18 +22,20 @@ class AClubController extends Controller
     }
 
     public function getTable() {
-        $cats = DB::select("call select_cat()");
+        $aclubs = DB::select("call selectaclub_member()");
         //dd($mrgs);
 
         //Data untuk insert
-        $ins = ["Sales", "Batch", "User ID", "No Induk", "Pendaftaran", "Kelas Berakhir", "Nama", "Jenis Kelamin", "Email", "Telepon", "Alamat", "Kota", "Tanggal Lahir", "Username", "Password"];
+        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Security Question", "Security Answer"];
+
+        // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["ID", "Fullname", "Username", "Tanggal Daftar"];
+        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "Interest and Hobby", "Trading Experience Year", "Your Stocks & Futures Broker", ""];
 
         //Nama attribute pada sql
-        $atts = ["cat_user_id", "fullname", "cat_username", "tanggal_pendaftaran"];
-        return view('content\table', ['route' => 'AClub', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker"];
+        return view('content\table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';
@@ -42,28 +44,23 @@ class AClubController extends Controller
     }
 
     public function clientDetail($id) {
-        echo "CAT Detail <br>";
+        echo "Aclub Detail <br>";
         echo $id;
     }
 
     public function addClient(Request $request) {
         $this->validate($request, [
-                'batch' => 'required',
                 'user_id' => 'required',
-                'no_induk' => 'required',
-                'pendaftaran' => 'required',
-                'kelas_berakhir' => 'required',
                 'nama' => 'required',
                 'email' => 'required|email',
-                'telepon' => 'required',
+                'no_hp' => 'required',
                 'alamat' => 'required',
-                'username' => 'required'
             ]);
 
         //echo $request;
         $err = [];
         try {
-            DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$this->nullify($request->sales),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
+            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $request->no_telepon, $request->alamat, $request->kota, $request->provinsi, $request->email, $this->nullify($request->tanggal_lahir), $request->line_id, $request->pin_bb, $request->facebook, $request->twitter, $request->jenis_kelamin, $request->occupation, $request->website, $request->state, $request->interest_and_hobby, $this->nullify($request->trading_experience_year), $request->your_stock_and_future_broker, $this->nullify($request->annual_income), $request->status, $request->security_question, $request->security_answer]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
@@ -82,24 +79,8 @@ class AClubController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->batch) === null) {
-                        $msg = "Batch empty on line ".$i;
-                        $err[] = $msg;
-                    }
                     if (($value->user_id) === null) {
                         $msg = "User ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->no_induk) === null) {
-                        $msg = "No Induk empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->pendaftaran) === null) {
-                        $msg = "Pendaftaran empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->kelas_berakhir) === null) {
-                        $msg = "Kelas Berakhir empty on line ".$i;
                         $err[] = $msg;
                     }
                     if (($value->nama) === null) {
@@ -110,16 +91,12 @@ class AClubController extends Controller
                         $msg = "Email empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->telepon) === null) {
-                        $msg = "Telepon empty on line ".$i;
+                    if (($value->no_hp) === null) {
+                        $msg = "No HP empty on line ".$i;
                         $err[] = $msg;
                     }
                     if (($value->alamat) === null) {
                         $msg = "Alamat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->username) === null) {
-                        $msg = "Username empty on line ".$i;
                         $err[] = $msg;
                     }
                 } //end validasi
@@ -129,7 +106,7 @@ class AClubController extends Controller
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try { 
-                            DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->sales,$value->batch,$value->user_id,$value->no_induk,$value->pendaftaran,$value->kelas_berakhir,$value->username,$value->password,$value->nama,$value->jenis_kelamin,$value->email,$value->telepon,$value->alamat,$value->kota, $value->tanggal_lahir]);
+                            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->user_id, $value->nama, $value->no_hp, $value->no_telepon, $value->alamat, $value->kota, $value->provinsi, $value->email, $this->nullify($value->tanggal_lahir), $value->line_id, $value->pin_bb, $value->facebook, $value->twitter, $value->jenis_kelamin, $value->occupation, $value->website, $value->state, $value->interest_and_hobby, $this->nullify($value->trading_experience_year), $value->your_stock_and_future_broker, $this->nullify($value->annual_income), $value->status, $value->security_question, $value->security_answer]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();
