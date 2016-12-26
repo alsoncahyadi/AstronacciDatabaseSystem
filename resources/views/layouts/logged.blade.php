@@ -70,6 +70,10 @@
 		$str = "{{route('UOB')}}";
 	} else if ($pc == "green") {
         $str = "{{route('green')}}";
+    } else if ($pc == "grow") {
+        $str = "{{route('grow')}}";
+    } else if ($pc == "RedClub") {
+        $str = "{{route('RedClub')}}";
     }
 	
     xmlhttp.open("GET", $str, true);
@@ -188,6 +192,12 @@
                                 </li>
                                 <li>
                                     <a onclick="load('green')" href="#" style="color:white;">Green</a>
+                                </li>
+                                <li>
+                                    <a onclick="load('grow')" href="#" style="color:white;">Grow</a>
+                                </li>
+                                <li>
+                                    <a onclick="load('RedClub')" href="#" style="color:white;">Red Club</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

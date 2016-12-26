@@ -143,3 +143,45 @@ Route::post('/green/import', [
     'uses' => 'GreenController@importExcel',
     'as' => 'green.import'
     ]);
+
+//Red Club Route
+Route::get('/RedClub', [
+    'uses' => 'RedClubController@getTable',
+    'as' => 'RedClub'
+    ]);
+
+Route::get('/RedClub/{id}', [
+    'uses' => 'RedClubController@clientDetail',
+    'as' => 'RedClub.detail'
+    ]);
+
+Route::post('/RedClub/insert', [
+    'uses' => 'RedClubController@addClient',
+    'as' => 'RedClub.insert'
+    ]);
+
+Route::post('/RedClub/import', [
+    'uses' => 'RedClubController@importExcel',
+    'as' => 'RedClub.import'
+    ]);
+
+//Grow Route
+Route::get('/grow', [
+    'uses' => 'GrowController@getTable',
+    'as' => 'grow'
+    ]);
+
+Route::get('/grow/{id}', [
+    'uses' => 'GrowController@clientDetail',
+    'as' => 'grow.detail'
+    ]);
+
+Route::post('/grow/insert', [
+    'uses' => 'GrowController@addClient',
+    'as' => 'grow.insert'
+    ]);
+
+Route::post('/grow/import', [
+    'uses' => 'GrowController@importExcel',
+    'as' => 'grow.import'
+    ]);
