@@ -22,19 +22,19 @@ class GrowController extends Controller
     }
 
     public function getTable() {
-        $aclubs = DB::select("call selectaclub_member()");
+        $aclubs = DB::select("select * from grow natural join master_client");
         //dd($mrgs);
 
         //Data untuk insert
-        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Security Question", "Security Answer"];
+        $ins = ["PC ID", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB"];
 
         // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "Interest and Hobby", "Trading Experience Year", "Your Stocks & Futures Broker", ""];
+        $heads = ["PC ID", "Grow ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook"];
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker"];
+        $atts = ["all_pc_id", "grow_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
         return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
@@ -49,18 +49,18 @@ class GrowController extends Controller
     }
 
     public function addClient(Request $request) {
-        $this->validate($request, [
+        /*$this->validate($request, [
                 'user_id' => 'required',
                 'nama' => 'required',
                 'email' => 'required|email',
                 'no_hp' => 'required',
                 'alamat' => 'required',
-            ]);
+            ]);*/
 
         //echo $request;
         $err = [];
         try {
-            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $request->no_telepon, $request->alamat, $request->kota, $request->provinsi, $request->email, $this->nullify($request->tanggal_lahir), $request->line_id, $request->pin_bb, $request->facebook, $request->twitter, $request->jenis_kelamin, $request->occupation, $request->website, $request->state, $request->interest_and_hobby, $this->nullify($request->trading_experience_year), $request->your_stock_and_future_broker, $this->nullify($request->annual_income), $request->status, $request->security_question, $request->security_answer]);
+            DB::select("call input_grow(?,?,?,?,?)", [$request->pc_id, $request->share_to_aclub, $request->share_to_mrg, $request->share_to_mrg, $request->share_to_cat, $request->share_to_uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
