@@ -58,12 +58,15 @@ class GrowController extends Controller
             ]);*/
 
         //echo $request;
+        DB::beginTransaction();
         $err = [];
         try {
             DB::select("call input_grow(?,?,?,?,?)", [$request->pc_id, $request->share_to_aclub, $request->share_to_mrg, $request->share_to_mrg, $request->share_to_cat, $request->share_to_uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
 
     }
