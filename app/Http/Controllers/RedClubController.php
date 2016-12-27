@@ -58,12 +58,15 @@ class RedClubController extends Controller
             ]);*/
 
         //echo $request;
+            DB::beginTransaction();
         $err = [];
         try {
             DB::select("call input_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $request->tanggal_join, $request->no_hp, $request->pc_id, $request->occupation, $this->nullify($request->jenis_kelamin), $request->status_perkawinan, $request->alamat, $request->kota, $request->line_id, $request->bb_pin, $request->annual_come, $request->country, $request->birthdate, $request->interest, $request->hobby, $request->spesific,  $request->your_stock_and_future_broker, $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $request->security_question, $request->security_answer, $request->facebook, $request->share_to_aclub, $request->share_to_mrg, $request->share_to_cat, $request->share_to_uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
 
     }
