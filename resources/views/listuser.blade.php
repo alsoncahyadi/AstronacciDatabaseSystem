@@ -78,37 +78,40 @@
                 <div class="title m-b-md">
                     List of user and roles
                 </div>
-
-
-            <? $users = User::all(); ?>
-
             
+			<!-- CORE CONTENT FOR LIST USER MANAGEMENT -->
+			
             <table>
-            <tr>
-            <th>We got</th>
+            <tr>            
             <th>Username</th>
-            <th>Role 0</th>
-            <th>Role 1</th>
+			<th>Fullname</th>
+            <th>Role</th>
             <th>A Shop</th>
             </tr>
             @foreach ($users as $user)
             <tr>
-            <td style="color:black"><b>{{ $user }}</b></td>
-            <td style="color:black"><b>{{ $user->username }}</b></td>
-            <td><input type="checkbox" {{ $user->hasRole($user->username, '0') ? 'checked' : ''}} name="superadmin"></td>
-            <td><input type="checkbox" {{ $user->hasRole($user->username, '1') ? 'checked' : ''}} name="admin"></td>
-            <td><input type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="sales"></td>
-            <br>
+			<form action="{{ route('admin.assign') }}" method="post">
+				<td style="color:black"><b>{{ $user->username }}<input type="hidden" name="username" value="{{ $user->username }}"> </b></td>
+				<td style="color:black"><b>{{ $user->fullname }}</b></td>
+				<td><select name="roles">
+					<option value="0" {{ $user->hasRole($user->username, '0') ? 'selected' : ''}} >Superadmin</option>
+					<option value="1" {{ $user->hasRole($user->username, '1') ? 'selected' : ''}} >A-Club admin</option>
+					<option value="2" {{ $user->hasRole($user->username, '2') ? 'selected' : ''}} >MRG admin</option>
+					<option value="3" {{ $user->hasRole($user->username, '3') ? 'selected' : ''}} >CAT admin</option>
+					<option value="4" {{ $user->hasRole($user->username, '4') ? 'selected' : ''}} >UOB admin</option>
+					<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
+				</select></td>
+				<td><input type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop"></td>
+					{{ csrf_field() }}
+				<td><button type="submit">Assign Roles</button></td>
+				<br>
+			</form>
             </tr>
             @endforeach
             </table>
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+			
+			<!-- ------------------------------------ -->
+			
             </div>
         </div>
 

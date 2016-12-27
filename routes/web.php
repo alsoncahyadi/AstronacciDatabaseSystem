@@ -31,6 +31,18 @@ Route::get('/dashboard2', [
     'uses' => 'Auth\LoginController@index2',
     'as' => 'dashboard2'
     ]);
+		
+Route::get('list', [
+	'uses' => 'RolelistController@index',
+	'as' => 'rolelist',
+	'middleware' => 'ashop' /*['auth', 'roles']*/ ,
+	'roles' => ['0'],
+	]);
+	
+Route::post('roleAssign', [
+	'uses' => 'RolelistController@postAssignRoles',
+	'as' => 'admin.assign',
+	]);
 
 // CAT ROUTES
 Route::get('/CAT', [
@@ -93,14 +105,7 @@ Route::post('/UOB/insert', [
 Route::post('/UOB/import', [
     'uses' => 'UOBController@importExcel',
     'as' => 'UOB.import'
-    ]);
-	
-Route::get('list', [
-	'uses' => 'RolelistController@index',
-	'as' => 'rolelist',
-	'middleware' => 'ashop' /*['auth', 'roles']*/ ,
-	'roles' => ['0'],
-	]);
+    ]);	
 
 //A-CLUB ROUTES
 Route::get('/AClub', [

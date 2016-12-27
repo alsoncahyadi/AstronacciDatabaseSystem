@@ -12,4 +12,18 @@ class RolelistController extends Controller
     	$users = User::all();
         return view('listuser', compact('users'));
     }
+	
+	public function postAssignRoles(Request $request)
+	{
+		$user = User::where('username', $request['username'])->first();
+		if ($request['ashop']) {
+			$user->a_shop_auth = '1';
+		}
+		else {
+			$user->a_shop_auth = '0';
+		}
+		$user->role = $request['roles'];
+		$user->save();
+		return redirect()->back();
+	}
 }
