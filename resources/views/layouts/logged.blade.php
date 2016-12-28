@@ -62,6 +62,7 @@
         }
     };
     $str = "{{route('AClub')}}";
+    $str2 = "{{route('dashboard')}}";
 	if ($pc == "CAT") {
 		$str = "{{route('CAT')}}";
 	} else if ($pc == "MRG") {
@@ -75,11 +76,14 @@
     } else if ($pc == "RedClub") {
         $str = "{{route('RedClub')}}";
     }
-	
+	xmlhttp.open("GET", $str2, true);
+    xmlhttp.send();
     xmlhttp.open("GET", $str, true);
     xmlhttp.send();
-	}    
+	}
+    
     </script>
+	
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

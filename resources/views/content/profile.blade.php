@@ -1,4 +1,5 @@
-
+@extends('layouts.logged')
+@section('content')
     <div>
 		<div class="row">
             <div class="col-lg-12">
@@ -35,3 +36,9 @@
                     </div>
                     <!-- /.panel-body -->
                 </div>
+            
+
+	<br><br>
+	
+@endsection
+</html>
