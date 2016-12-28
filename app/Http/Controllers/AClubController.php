@@ -26,15 +26,15 @@ class AClubController extends Controller
         //dd($mrgs);
 
         //Data untuk insert
-        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Security Question", "Security Answer"];
+        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Keterangan", "Security Question", "Security Answer"];
 
         // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "Interest and Hobby", "Trading Experience Year", "Your Stocks & Futures Broker", ""];
+        $heads = ["User ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "Interest and Hobby", "Trading Experience Year", "Your Stocks & Futures Broker", "Keterangan"];
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker"];
+        $atts = ["user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "status", "jenis_kelamin", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "keterangan"];
         return view('content\table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
@@ -60,7 +60,7 @@ class AClubController extends Controller
         //echo $request;
         $err = [];
         try {
-            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $request->no_telepon, $request->alamat, $request->kota, $request->provinsi, $request->email, $this->nullify($request->tanggal_lahir), $request->line_id, $request->pin_bb, $request->facebook, $request->twitter, $request->jenis_kelamin, $request->occupation, $request->website, $request->state, $request->interest_and_hobby, $this->nullify($request->trading_experience_year), $request->your_stock_and_future_broker, $this->nullify($request->annual_income), $request->status, $request->security_question, $request->security_answer]);
+            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $request->no_telepon, $request->alamat, $request->kota, $request->provinsi, $request->email, $this->nullify($request->tanggal_lahir), $request->line_id, $request->pin_bb, $request->facebook, $request->twitter, $request->jenis_kelamin, $request->occupation, $request->website, $request->state, $request->interest_and_hobby, $this->nullify($request->trading_experience_year), $request->your_stock_and_future_broker, $this->nullify($request->annual_income), $request->status, $request->keterangan, $request->security_question, $request->security_answer]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
@@ -106,7 +106,7 @@ class AClubController extends Controller
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try { 
-                            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->user_id, $value->nama, $value->no_hp, $value->no_telepon, $value->alamat, $value->kota, $value->provinsi, $value->email, $this->nullify($value->tanggal_lahir), $value->line_id, $value->pin_bb, $value->facebook, $value->twitter, $value->jenis_kelamin, $value->occupation, $value->website, $value->state, $value->interest_and_hobby, $this->nullify($value->trading_experience_year), $value->your_stock_and_future_broker, $this->nullify($value->annual_income), $value->status, $value->security_question, $value->security_answer]);
+                            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->user_id, $value->nama, $value->no_hp, $value->no_telepon, $value->alamat, $value->kota, $value->provinsi, $value->email, $this->nullify($value->tanggal_lahir), $value->line_id, $value->pin_bb, $value->facebook, $value->twitter, $value->jenis_kelamin, $value->occupation, $value->website, $value->state, $value->interest_and_hobby, $this->nullify($value->trading_experience_year), $value->your_stock_and_future_broker, $this->nullify($value->annual_income), $value->status, $value->keterangan, $value->security_question, $value->security_answer]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();

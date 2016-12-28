@@ -60,8 +60,12 @@ class RedClubController extends Controller
         //echo $request;
             DB::beginTransaction();
         $err = [];
+        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
+        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
+        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
+        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            DB::select("call input_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $request->tanggal_join, $request->no_hp, $request->pc_id, $request->occupation, $this->nullify($request->jenis_kelamin), $request->status_perkawinan, $request->alamat, $request->kota, $request->line_id, $request->bb_pin, $request->annual_come, $request->country, $request->birthdate, $request->interest, $request->hobby, $request->spesific,  $request->your_stock_and_future_broker, $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $request->security_question, $request->security_answer, $request->facebook, $request->share_to_aclub, $request->share_to_mrg, $request->share_to_cat, $request->share_to_uob]);
+            DB::select("call input_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $request->tanggal_join, $request->no_hp, $request->pc_id, $request->occupation, $this->nullify($request->jenis_kelamin), $request->status_perkawinan, $request->alamat, $request->kota, $request->line_id, $request->bb_pin, $request->annual_come, $request->country, $request->birthdate, $request->interest, $request->hobby, $request->spesific,  $request->your_stock_and_future_broker, $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $request->security_question, $request->security_answer, $request->facebook, $aclub, $mrg, $cat, $uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();
@@ -82,24 +86,8 @@ class RedClubController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->user_id) === null) {
-                        $msg = "User ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->no_hp) === null) {
-                        $msg = "No HP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
+                    if (($value->username) === null) {
+                        $msg = "Username empty on line ".$i;
                         $err[] = $msg;
                     }
                 } //end validasi
@@ -108,8 +96,12 @@ class RedClubController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
+                        $aclub = strtolower($value->share_to_aclub) == "yes" ? 1 : 0;
+                        $mrg = strtolower($value->share_to_mrg) == "yes" ? 1 : 0;
+                        $cat = strtolower($value->share_to_cat) == "yes" ? 1 : 0;
+                        $uob = strtolower($value->share_to_uob) == "yes" ? 1 : 0;
                         try { 
-                            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->user_id, $value->nama, $value->no_hp, $value->no_telepon, $value->alamat, $value->kota, $value->provinsi, $value->email, $this->nullify($value->tanggal_lahir), $value->line_id, $value->pin_bb, $value->facebook, $value->twitter, $value->jenis_kelamin, $value->occupation, $value->website, $value->state, $value->interest_and_hobby, $this->nullify($value->trading_experience_year), $value->your_stock_and_future_broker, $this->nullify($value->annual_income), $value->status, $value->security_question, $value->security_answer]);
+                            DB::select("call input_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->username, $value->firstname, $value->lastname, $value->email, $value->tanggal_join, $value->no_hp, $value->pc_id, $value->occupation, $this->nullify($value->jenis_kelamin), $value->status_perkawinan, $value->alamat, $value->kota, $value->line_id, $value->bb_pin, $value->annual_come, $value->country, $value->birthdate, $value->interest, $value->hobby, $value->spesific,  $value->your_stock_and_future_broker, $this->nullify($value->trading_experience_year),$this->nullify($value->trading_type), $value->security_question, $value->security_answer, $value->facebook, $aclub, $mrg, $cat, $uob]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();
