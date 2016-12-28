@@ -44,8 +44,9 @@ class AClubController extends Controller
     }
 
     public function clientDetail($id) {
-        echo "Aclub Detail <br>";
-        echo $id;
+        //echo "Aclub Detail <br>";
+        //echo $id;
+		return view('profile\profile');
     }
 
     public function addClient(Request $request) {

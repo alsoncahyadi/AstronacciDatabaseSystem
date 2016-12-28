@@ -39,8 +39,7 @@ class UOBController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        echo "UOB detail" . $id;
-		return view('content\profile');
+		return view('profile\profile');
     }
 
     public function addClient(Request $request) {

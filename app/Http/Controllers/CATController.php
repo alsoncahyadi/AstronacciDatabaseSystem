@@ -42,8 +42,9 @@ class CATController extends Controller
     }
 
     public function clientDetail($id) {
-        echo "CAT Detail <br>";
-        echo $id;
+        //echo "CAT Detail <br>";
+        //echo $id;
+		return view('profile\profile');
     }
 
     public function addClient(Request $request) {

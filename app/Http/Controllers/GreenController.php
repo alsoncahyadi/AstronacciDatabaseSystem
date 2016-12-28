@@ -60,8 +60,9 @@ class GreenController extends Controller
     }
 
     public function clientDetail($id) {
-        echo "Green Detail <br>";
-        echo $id;
+        //echo "Green Detail <br>";
+        //echo $id;
+		return view('profile\profile');
     }
 
     public function addClient(Request $request) {

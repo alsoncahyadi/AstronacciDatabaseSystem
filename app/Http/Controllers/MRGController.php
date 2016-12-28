@@ -51,7 +51,7 @@ class MRGController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        echo "MRG detail" . $id;
+        return view('profile\profile');
     }
 
     public function addClient(Request $request) {
