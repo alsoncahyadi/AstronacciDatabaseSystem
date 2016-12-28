@@ -32,10 +32,10 @@ class MRGController extends Controller
         $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Marital Status", "Jenis Kelamin", "Account", "Tanggal Join", "Type", "Sales", "Alamat", "Kota"];
+        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Account", "Tanggal Join", "Type", "Sales"]; //semua kecuali yg is"an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "marital_status", "jenis_kelamin", "account", "join_date", "type", "sales_username", "address", "city"]; //ga ada birthdate cil
+        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "account", "join_date", "type", "sales_username"]; 
         foreach ($mrgs as $mrg) {
             $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
             $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";

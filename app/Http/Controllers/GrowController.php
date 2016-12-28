@@ -31,10 +31,10 @@ class GrowController extends Controller
         // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Grow ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook"];
+        $heads = ["PC ID", "Grow ID", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB", "Created At", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook"]; //kecuali is"an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "grow_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
+        $atts = ["all_pc_id", "grow_id", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "created_at", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
         return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
@@ -50,13 +50,9 @@ class GrowController extends Controller
     }
 
     public function addClient(Request $request) {
-        /*$this->validate($request, [
-                'user_id' => 'required',
-                'nama' => 'required',
-                'email' => 'required|email',
-                'no_hp' => 'required',
-                'alamat' => 'required',
-            ]);*/
+        $this->validate($request, [
+                'pc_id' => 'required',
+            ]);
 
         //echo $request;
         DB::beginTransaction();

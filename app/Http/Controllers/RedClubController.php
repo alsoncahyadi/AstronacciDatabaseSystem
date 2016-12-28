@@ -31,10 +31,10 @@ class RedClubController extends Controller
         // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Username", "Firstname", "Lastname", "Email", "Tanggal Join", "No HP", "PC ID", "Occupation", "Jenis Kelamin", "Status Perkawinan", "Alamat", "Kota", " Line ID", "BB Pin", " Annual Come", "Country", "Birthdate", "Interest", "Hobby", "Spesific", "Stock and Future Broker", "Trading Experience Year", "Trading Type", "Facebook"];
+        $heads = ["Username", "Firstname", "Lastname", "Email", "Tanggal Join", "No HP", "PC ID", "Occupation", "Jenis Kelamin", "Status Perkawinan", "Alamat", "Kota", " Line ID", "BB Pin", " Annual Come", "Country", "Birthdate", "Interest", "Hobby", "Spesific", "Stock and Future Broker", "Trading Experience Year", "Trading Type", "Security Question", "Security Answer", "Facebook", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB"];
 
         //Nama attribute pada sql
-        $atts = ["username", "firstname", "lastname", "email", "join_date", "no_hp","all_pc_id", "occupation", "jenis_kelamin", "status_perkawinan", "alamat", "kota", "line_id", "blackberry_pin", "annual_come", "country", "birthdate", "interest", "hobby", "spesific", "your_stock_and_future_broker", "trading_experience_year", "trading_type", "facebook"];
+         $atts = ["username", "firstname", "lastname", "email", "join_date", "no_hp","all_pc_id", "occupation", "jenis_kelamin", "status_perkawinan", "alamat", "kota", "line_id", "blackberry_pin", "annual_come", "country", "birthdate", "interest", "hobby", "spesific", "your_stock_and_future_broker", "trading_experience_year", "trading_type", "security_question", "security_answer", "facebook", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob"];
         return view('content\table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
@@ -50,13 +50,12 @@ class RedClubController extends Controller
     }
 
     public function addClient(Request $request) {
-        /*$this->validate($request, [
-                'user_id' => 'required',
-                'nama' => 'required',
+        $this->validate($request, [
+                'username' => 'required',
+                'firstname' => 'required',
                 'email' => 'required|email',
-                'no_hp' => 'required',
-                'alamat' => 'required',
-            ]);*/
+                'lastname' => 'required',
+            ]);
 
         //echo $request;
             DB::beginTransaction();
@@ -66,7 +65,7 @@ class RedClubController extends Controller
         $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
         $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            DB::select("call input_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $request->tanggal_join, $request->no_hp, $request->pc_id, $request->occupation, $this->nullify($request->jenis_kelamin), $request->status_perkawinan, $request->alamat, $request->kota, $request->line_id, $request->bb_pin, $request->annual_come, $request->country, $request->birthdate, $request->interest, $request->hobby, $request->spesific,  $request->your_stock_and_future_broker, $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $request->security_question, $request->security_answer, $request->facebook, $aclub, $mrg, $cat, $uob]);
+            DB::select("call input_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $this->nullify($request->tanggal_join), $this->nullify($request->no_hp), $this->nullify($request->pc_id), $this->nullify($request->occupation), $this->nullify($request->jenis_kelamin), $this->nullify($request->status_perkawinan), $this->nullify($request->alamat), $this->nullify($request->kota), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->annual_come), $this->nullify($request->country), $this->nullify($request->birthdate), $this->nullify($request->interest), $this->nullify($request->hobby), $this->nullify($request->spesific),  $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $this->nullify($request->security_question), $this->nullify($request->security_answer), $this->nullify($request->facebook), $aclub, $mrg, $cat, $uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();

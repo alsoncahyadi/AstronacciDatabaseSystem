@@ -31,10 +31,10 @@ class AClubController extends Controller
         // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["User ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "Interest and Hobby", "Trading Experience Year", "Your Stocks & Futures Broker", "Keterangan"];
+       $heads = ["PC ID", "User ID", "Interest and Hobby", "Trading Experience Year", "Your Stock Future Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Created At", "Occupation", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook"];//kecuali is"an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "status", "jenis_kelamin", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "keterangan"];
+        $atts = ["all_pc_id", "user_id", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "created_at", "occupation", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
         return view('content\table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
@@ -61,7 +61,7 @@ class AClubController extends Controller
         //echo $request;
         $err = [];
         try {
-            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $request->no_telepon, $request->alamat, $request->kota, $request->provinsi, $request->email, $this->nullify($request->tanggal_lahir), $request->line_id, $request->pin_bb, $request->facebook, $request->twitter, $request->jenis_kelamin, $request->occupation, $request->website, $request->state, $request->interest_and_hobby, $this->nullify($request->trading_experience_year), $request->your_stock_and_future_broker, $this->nullify($request->annual_income), $request->status, $request->keterangan, $request->security_question, $request->security_answer]);
+             DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $this->nullify($request->no_telepon), $request->alamat, $this->nullify($request->kota), $this->nullify($request->provinsi), $request->email, $this->nullify($request->tanggal_lahir), $this->nullify($request->line_id), $this->nullify($request->pin_bb), $this->nullify($request->facebook), $this->nullify($request->twitter), $this->nullify($request->jenis_kelamin), $this->nullify($request->occupation), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->annual_income), $this->nullify($request->status), $this->nullify($request->keterangan),$this->nullify($request->security_question), $this->nullify($request->security_answer)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }

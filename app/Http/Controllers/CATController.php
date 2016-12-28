@@ -29,10 +29,10 @@ class CATController extends Controller
         $ins = ["Sales", "Batch", "User ID", "No Induk", "Pendaftaran", "Kelas Berakhir", "Nama", "Jenis Kelamin", "Email", "Telepon", "Alamat", "Kota", "Tanggal Lahir", "Username", "Password"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthday", "Line ID", "BB Pin", "Twitter", "Address", "City", "Marital Status", "Jenis Kelamin","CAT ID", "No Induk", "Username", "Batch", "Tanggal Daftar", "Tanggal Kelas Akhir", "Sales"]; //kecuali is" an, password, sm add_time
+        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Address", "City", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "CAT ID", "No Induk", "Username", "Password", "Batch", "Tanggal Daftar", "Tanggal Kelas Akhir", "Sales"]; //kecuali is" an, sm add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin","cat_user_id", "cat_no_induk", "cat_username", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username"];
+        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "cat_user_id", "cat_no_induk", "cat_username", "password", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username"];
         return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
