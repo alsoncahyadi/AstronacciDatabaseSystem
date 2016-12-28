@@ -12,29 +12,28 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-child fa-fw"></i> Basic Information
+                    <i class="fa fa-child fa-fw"></i> Basic Information 
+					<a href="www.google.com" style="padding-left:50px"><i class="fa fa-pencil-square-o"></i> Edit </a>
                 </div>
                 <div class="panel-body">
-					<div class="col-lg-1">
-						Name <br>
-						Address <br>
-						Email <br>
-						Phone <br>
-						Status <br>
-						Date Join <br>
-						PC <br>
-						Other info <br>
+					
+					<div>
+						<div class="col-lg-1">
+							Name
+						</div>
+						<div class="col-lg-11">
+							: Something
+						</div>
 					</div>
-					<div class="col-lg-10">
-					: <br>
-					: <br>
-					: <br>
-					: <br>
-					: <br>
-					: <br>
-					: <br>
-					: <br>
+					<div>
+						<div class="col-lg-1">
+							Gender
+						</div>
+						<div class="col-lg-11">
+							: sex
+						</div>
 					</div>
+					
 				</div>
                 <!-- /.panel-body -->
             </div>
