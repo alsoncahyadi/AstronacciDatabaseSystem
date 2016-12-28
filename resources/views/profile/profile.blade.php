@@ -70,7 +70,31 @@ $(document).ready(function(){
                         <i class="fa fa-money fa-fw"></i> Transactions
                     </div>
                     <div class="panel-body">
-                        Ini isinya TABEL
+                        <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
+                        <thead>
+							<tr>
+							
+								<th> head </th>
+								<th> head2</th>
+								<th> head3</th>
+							
+								
+							</tr>
+                        </thead>
+						<tbody>
+						
+							<tr class="gradeA">
+							
+                                
+                                    <td> tes </td>
+                                    <td> tes2 </td>
+                                    <td> tes3 </td>
+                                
+							
+							</tr>
+						
+						</tbody>
+					</table>
                     </div>
                     <!-- /.panel-body -->
                 </div>
