@@ -22,7 +22,7 @@ class GrowController extends Controller
     }
 
     public function getTable() {
-        $aclubs = DB::select("select * from grow natural join master_client");
+        $aclubs = DB::select("SELECT * FROM grow INNER JOIN master_client ON (master_client.all_pc_id = grow.all_pc_id)");
         //dd($mrgs);
 
         //Data untuk insert
@@ -44,9 +44,37 @@ class GrowController extends Controller
     }
 
     public function clientDetail($id) {
-        //echo "Aclub Detail <br>";
+        //echo "CAT Detail <br>";
         //echo $id;
-		return view('profile\profile');
+        $grow = DB::select("SELECT * FROM grow INNER JOIN master_client ON (master_client.all_pc_id = grow.all_pc_id) WHERE master_client.all_pc_id = ?", [$id]);
+        $grow = $grow[0];
+        $grow->share_to_aclub = $grow->share_to_aclub ? "Yes" : "No";
+        $grow->share_to_cat = $grow->share_to_cat ? "Yes" : "No";
+        $grow->share_to_mrg = $grow->share_to_mrg ? "Yes" : "No";
+        $grow->share_to_uob = $grow->share_to_uob ? "Yes" : "No";
+        $ins = ["Grow ID" => "grow_id", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Share To AClub" => "share_to_aclub", "Share To CAT" => "share_to_cat", "Share to MRG" => "share_to_mrg", "Share to UOB" => "share_to_uob"];
+        $heads = ["PC ID" => "all_pc_id"] + $ins;
+        return view('profile\profile', ['route'=>'grow', 'client'=>$grow, 'heads'=>$heads, 'ins'=>$ins]);
+    }
+
+    public function editClient(Request $request) {
+        $this->validate($request, [
+                'grow_id' => 'required',
+                'fullname' => 'required',
+                'no_hp' => 'required'
+            ]);
+        $err = [];
+        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
+        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
+        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
+        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
+        try {
+            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $request->line_id, $request->bb_pin, $request->twitter, $request->address, $request->city, $request->marital_status, $request->jenis_kelamin, $request->no_telp, $request->provinsi, $request->facebook]);
+            DB::select("call edit_grow(?,?,?,?,?,?)", [$request->grow_id, $aclub, $mrg, $cat, $uob, $request->all_pc_id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {

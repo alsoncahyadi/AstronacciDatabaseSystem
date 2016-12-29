@@ -220,3 +220,8 @@ Route::post('/grow/import', [
     'uses' => 'GrowController@importExcel',
     'as' => 'grow.import'
     ]);
+
+Route::post('/grow/edit', [
+    'uses' => 'GrowController@editClient',
+    'as' => 'grow.edit'
+    ]);
