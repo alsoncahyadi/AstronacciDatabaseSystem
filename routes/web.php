@@ -122,6 +122,11 @@ Route::post('/UOB/import', [
     'as' => 'UOB.import'
     ]);	
 
+Route::post('/UOB/edit', [
+    'uses' => 'UOBController@editClient',
+    'as' => 'UOB.edit'
+    ]);
+
 //A-CLUB ROUTES
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',
