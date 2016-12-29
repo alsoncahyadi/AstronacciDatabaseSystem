@@ -49,41 +49,8 @@
 	<script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
 	
 <!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
-	
-	<script>
-    function load($pc) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("tab").innerHTML = this.responseText;
-			$('#dataTables').DataTable({
-				responsive: true
-			});
-        }
-    };
-    $str = "{{route('AClub')}}";
-    $str2 = "{{route('dashboard')}}";
-	if ($pc == "CAT") {
-		$str = "{{route('CAT')}}";
-	} else if ($pc == "MRG") {
-		$str = "{{route('MRG')}}";
-	} else if ($pc == "UOB") {
-		$str = "{{route('UOB')}}";
-	} else if ($pc == "green") {
-        $str = "{{route('green')}}";
-    } else if ($pc == "grow") {
-        $str = "{{route('grow')}}";
-    } else if ($pc == "RedClub") {
-        $str = "{{route('RedClub')}}";
-    }
-	xmlhttp.open("GET", $str2, true);
-    xmlhttp.send();
-    xmlhttp.open("GET", $str, true);
-    xmlhttp.send();
-	}
-    
-    </script>
-	
+
+    <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -180,28 +147,28 @@
                             <a href="index.html" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a onclick="load('AClub')" href="#" style="color:white;">Admin A-Club</a>
+                                    <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('MRG')" href="#" style="color:white;">Admin MRG</a>
+                                    <a onclick="load('{{route('MRG')}}')" href="#" style="color:white;">Admin MRG</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('UOB')" href="#" style="color:white;">Admin UOB</a>
+                                    <a onclick="load('{{route('UOB')}}')" href="#" style="color:white;">Admin UOB</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('CAT')" href="#" style="color:white;">Admin CAT</a>
+                                    <a onclick="load('{{route('CAT')}}')" href="#" style="color:white;">Admin CAT</a>
                                 </li>
                                 <li>
                                     <a href="#" style="color:white;">Sales</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('green')" href="#" style="color:white;">Green</a>
+                                    <a onclick="load('{{route('green')}}')" href="#" style="color:white;">Green</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('grow')" href="#" style="color:white;">Grow</a>
+                                    <a onclick="load('{{route('grow')}}')" href="#" style="color:white;">Grow</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('RedClub')" href="#" style="color:white;">Red Club</a>
+                                    <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
