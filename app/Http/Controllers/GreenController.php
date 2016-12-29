@@ -22,7 +22,7 @@ class GreenController extends Controller
     }
 
     public function getTable() {
-        $greens = DB::select("select * from green");
+        $greens = DB::select("SELECT * FROM green");
         //dd($mrgs);
 
         //Data untuk insert
@@ -60,9 +60,48 @@ class GreenController extends Controller
     }
 
     public function clientDetail($id) {
-        //echo "Green Detail <br>";
+        //echo "CAT Detail <br>";
         //echo $id;
-		return view('profile\profile');
+        $green = DB::select("SELECT * FROM green WHERE green_id = ?", [$id]);
+        $green = $green[0];
+        $green->is_UOB = $green->is_UOB ? "Yes" : "No";
+        $green->is_cat = $green->is_cat ? "Yes" : "No";
+        $green->is_mrg_premiere = $green->is_mrg_premiere ? "Yes" : "No";
+        $green->is_aclub_stock = $green->is_aclub_stock ? "Yes" : "No";
+        $green->is_aclub_future = $green->is_aclub_future ? "Yes" : "No";
+        $green->is_red_club = $green->is_red_club ? "Yes" : "No";
+        $green->share_to_aclub = $green->share_to_aclub ? "Yes" : "No";
+        $green->share_to_cat = $green->share_to_cat ? "Yes" : "No";
+        $green->share_to_mrg = $green->share_to_mrg ? "Yes" : "No";
+        $green->share_to_uob = $green->share_to_uob ? "Yes" : "No";
+        $ins = ["Green ID" => "green_id", "Fullname" => "fullname", "No HP" => "no_hp", "Keterangan Perintah" =>"keterangan_perintah", "Sumber" => "sumber", "Sales" => "sales_username", "Progress" => "progress", "AClub Stock" => "is_aclub_stock", "AClub Future" => "is_aclub_future", "CAT" => "is_cat", "MRG" => "is_mrg_premiere", "UOB" => "is_UOB", "Red Club" => "is_red_club", "Share To AClub" => "share_to_aclub", "Share To CAT" => "share_to_cat", "Share to MRG" => "share_to_mrg", "Share to UOB" => "share_to_uob"];
+        $heads = $ins;
+        return view('profile\profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins]);
+    }
+
+    public function editClient(Request $request) {
+        $this->validate($request, [
+                'green_id' => 'required',
+                'fullname' => 'required',
+                'no_hp' => 'required'
+            ]);
+        $err = [];
+        $isaclubstock = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
+        $isaclubfuture = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
+        $ismrg = strtolower($request->is_mrg_premiere) == "yes" ? 1 : 0;
+        $iscat = strtolower($request->is_cat) == "yes" ? 1 : 0;
+        $isuob = strtolower($request->is_UOB) == "yes" ? 1 : 0;
+        $isred = strtolower($request->is_red_club) == "yes" ? 1 : 0;
+        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
+        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
+        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
+        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
+        try {
+            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $request->keterangan_perintah, $request->sumber, $this->nullify($request->sales_username), $request->progress, $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob, '2011-1-1']);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {

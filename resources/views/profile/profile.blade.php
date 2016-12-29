@@ -58,7 +58,9 @@ $(document).ready(function(){
 							<button type="submit" class="btn btn-default">Submit</button>
                             <button type="reset" class="btn btn-default">Reset</button>
                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                            @if ($route != "green")
+                                <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                            @endif
 						</form>
 					</div> 
 				</div>
@@ -100,6 +102,12 @@ $(document).ready(function(){
             
 
 	<br><br>
+
+    @if(count($errors) > 0)
+        @foreach($errors->all() as $error)
+            <h4>{{$error}}</h4>
+        @endforeach
+    @endif
 	
 @endsection
 </html>
