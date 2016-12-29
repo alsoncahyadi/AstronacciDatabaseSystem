@@ -49,20 +49,24 @@ class UOBController extends Controller
 
     public function editClient(Request $request) {
         $this->validate($request, [
+                'all_pc_id' => 'required',
                 'client_id' => 'required',
                 'fullname' => 'required',
                 'expired_date' => 'required',
-                'email' => 'required|email',
+                'email' => 'email',
                 'no_hp' => 'required',
                 'address' => 'required',
             ]);
+        DB::beginTransaction();
         $err = [];
         try {
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $request->line_id, $request->bb_pin, $request->twitter, $request->address, $request->city, $request->marital_status, $request->jenis_kelamin, $request->no_telp, $request->provinsi, $request->facebook]);
-            DB::select("call edit_uob(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->client_id, $request->class, $request->nomor, $this->nullify($request->expired_date), $request->kategori, $request->bulan, $request->bank, $request->nomor_rekening, $request->RDI_niaga, $request->RDI_BCA, $request->trading_via, $request->source, $request->sales_username]);
+            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
+            DB::select("call edit_uob(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->client_id, $this->nullify($request->class), $this->nullify($request->nomor), $this->nullify($request->expired_date), $this->nullify($request->kategori), $this->nullify($request->bulan), $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->RDI_niaga), $this->nullify($request->RDI_BCA), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales_username)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
@@ -72,7 +76,7 @@ class UOBController extends Controller
                 'client' => 'required',
                 'nama' => 'required',
                 'expired' => 'required',
-                'email' => 'required|email',
+                'email' => 'email',
                 'telepon' => 'required',
                 'alamat' => 'required',
             ]);

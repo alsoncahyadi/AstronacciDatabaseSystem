@@ -59,21 +59,27 @@ class GrowController extends Controller
 
     public function editClient(Request $request) {
         $this->validate($request, [
+                'all_pc_id' => 'required',
                 'grow_id' => 'required',
                 'fullname' => 'required',
-                'no_hp' => 'required'
+                'no_hp' => 'required',
+                'email' => 'email',
+                'address' => 'required'
             ]);
+        DB::beginTransaction();
         $err = [];
         $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
         $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
         $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
         $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $request->line_id, $request->bb_pin, $request->twitter, $request->address, $request->city, $request->marital_status, $request->jenis_kelamin, $request->no_telp, $request->provinsi, $request->facebook]);
+            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
             DB::select("call edit_grow(?,?,?,?,?,?)", [$request->grow_id, $aclub, $mrg, $cat, $uob, $request->all_pc_id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
+            DB::rollback(); 
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 

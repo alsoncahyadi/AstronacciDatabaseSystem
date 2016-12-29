@@ -64,6 +64,7 @@ class RedClubController extends Controller
                 'email' => 'required|email',
                 'lastname' => 'required',
             ]);
+        DB::beginTransaction();
         $err = [];
         $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
         $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
@@ -72,8 +73,10 @@ class RedClubController extends Controller
         try {
             DB::select("call edit_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $this->nullify($request->join_date), $this->nullify($request->no_hp), $this->nullify($request->all_pc_id), $this->nullify($request->occupation), $this->nullify($request->jenis_kelamin), $this->nullify($request->status_perkawinan), $this->nullify($request->alamat), $this->nullify($request->kota), $this->nullify($request->line_id), $this->nullify($request->blackberry_pin), $this->nullify($request->annual_come), $this->nullify($request->country), $this->nullify($request->birthdate), $this->nullify($request->interest), $this->nullify($request->hobby), $this->nullify($request->spesific),  $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $this->nullify($request->security_question), $this->nullify($request->security_answer), $this->nullify($request->facebook), $aclub, $mrg, $cat, $uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+        	DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
@@ -86,7 +89,7 @@ class RedClubController extends Controller
             ]);
 
         //echo $request;
-            DB::beginTransaction();
+        DB::beginTransaction();
         $err = [];
         $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
         $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;

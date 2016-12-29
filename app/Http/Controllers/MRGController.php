@@ -63,26 +63,26 @@ class MRGController extends Controller
 
     public function editClient(Request $request) {
         $this->validate($request, [
+        		'all_pc_id' => 'required',
                 'account' => 'required',
                 'fullname' => 'required',
-                'join_date' => 'required',
                 'address' => 'required',
-                'city' => 'required',
-                'no_telp' => 'required',
-                'email' => 'required|email',
-                'type' => 'required',
-                'sales_username' => 'required'
+                'no_hp' => 'required',
+                'email' => 'email',
             ]);
         echo $request->all_pc_id;
         echo ("call edit_mrg(".$request->all_pc_id. $request->account. $request->join_date. $request->type. $request->sales_username);
         $err = [];
+        DB::beginTransaction();
         try {
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $request->line_id, $request->bb_pin, $request->twitter, $request->address, $request->city, $request->marital_status, $request->jenis_kelamin, $request->no_telp, $request->provinsi, $request->facebook]);
-            DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $request->join_date, $request->type, $request->sales_username]);
+            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
+            DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $this->nullify($request->join_date), $this->nullify($request->type), $this->nullify($request->sales_username)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+        	DB::rollback();
             $err[] = $ex->getMessage();
         }
         //return redirect(route('dashboard'))->withErrors($err);
+        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
@@ -95,18 +95,21 @@ class MRGController extends Controller
                 'alamat' => 'required',
                 'kota' => 'required',
                 'telepon' => 'required',
-                'email' => 'required|email',
+                'email' => 'email',
                 'type' => 'required',
                 'sales' => 'required'
             ]);
         //input ke database
         //DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->address','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
         $err = [];
+        DB::beginTrasaction();
         try {
             DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+        	DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect(route('dashboard'))->withErrors($err);
     }
 

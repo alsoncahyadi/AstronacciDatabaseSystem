@@ -85,6 +85,7 @@ class GreenController extends Controller
                 'fullname' => 'required',
                 'no_hp' => 'required'
             ]);
+        DB::beginTransaction();
         $err = [];
         $isaclubstock = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
         $isaclubfuture = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
@@ -97,10 +98,12 @@ class GreenController extends Controller
         $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
         $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $request->keterangan_perintah, $request->sumber, $this->nullify($request->sales_username), $request->progress, $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob]);
+            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $this->nullify($request->keterangan_perintah), $this->nullify($request->sumber), $this->nullify($request->sales_username), $this->nullify($request->progress), $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
@@ -112,6 +115,7 @@ class GreenController extends Controller
 
 
         //echo $request;
+        DB::beginTransaction();
         $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
         $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
         $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
@@ -120,8 +124,10 @@ class GreenController extends Controller
         try {
             DB::select("call input_green(?,?,?,?,?,?,?,?,?,?)", [$request->nama, $request->no_hp, $request->keterangan_perintah, $request->sumber, $request->progress, $request->sales, $aclub, $mrg, $cat, $uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
             $err[] = $ex->getMessage();
         }
+        DB::commit();
         return redirect()->back()->withErrors($err);
 
     }
