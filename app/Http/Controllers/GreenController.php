@@ -97,7 +97,7 @@ class GreenController extends Controller
         $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
         $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $request->keterangan_perintah, $request->sumber, $this->nullify($request->sales_username), $request->progress, $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob, '2011-1-1']);
+            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $request->keterangan_perintah, $request->sumber, $this->nullify($request->sales_username), $request->progress, $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }

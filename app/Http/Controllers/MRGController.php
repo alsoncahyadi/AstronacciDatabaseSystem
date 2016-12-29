@@ -51,7 +51,7 @@ class MRGController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $mrg = DB::select("select * from master_client INNER JOIN mrg on (master_client.all_pc_id = mrg.all_pc_id) where master_client.all_pc_id = ?", [$id]);
+        $mrg = DB::select("call select_detail_mrg(?)", [$id]);
         $mrg = $mrg[0];
         $ins = ["Account" => "account", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
         $heads = ["PC ID" => "all_pc_id"] + $ins;
@@ -82,8 +82,8 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect(route('dashboard'))->withErrors($err);
-        //return redirect()->back()->withErrors($err);
+        //return redirect(route('dashboard'))->withErrors($err);
+        return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {

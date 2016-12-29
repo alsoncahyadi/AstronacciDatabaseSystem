@@ -65,9 +65,11 @@
 							<tr class="gradeA">
 							@foreach ($atts as $att)
                                 @if ($route == 'green')
-                                    <td> <a href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
+                                @elseif ($route == 'RedClub')
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}">{{$client->$att}} </a></td>
                                 @else
-								    <td> <a href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
+								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
                                 @endif
 							@endforeach
 							</tr>
