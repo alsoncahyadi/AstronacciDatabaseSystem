@@ -65,6 +65,11 @@ Route::post('/CAT/import', [
     'as' => 'CAT.import'
     ]);
 
+Route::post('/CAT/edit', [
+    'uses' => 'CATController@editClient',
+    'as' => 'CAT.edit'
+    ]);
+
 // MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
