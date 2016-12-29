@@ -148,6 +148,11 @@ Route::post('/AClub/import', [
     'as' => 'AClub.import'
     ]);
 
+Route::post('/AClub/edit', [
+    'uses' => 'AClubController@editClient',
+    'as' => 'AClub.edit'
+    ]);
+
 //GREEN ROUTES
 Route::get('/green', [
     'uses' => 'GreenController@getTable',
@@ -167,6 +172,11 @@ Route::post('/green/insert', [
 Route::post('/green/import', [
     'uses' => 'GreenController@importExcel',
     'as' => 'green.import'
+    ]);
+
+Route::post('/green/edit', [
+    'uses' => 'GreenController@editClient',
+    'as' => 'green.edit'
     ]);
 
 //Red Club Route

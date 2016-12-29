@@ -31,10 +31,10 @@ class AClubController extends Controller
         // "Registration Date", "Kode Paket",  "Sales", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Keterangan", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"
 
         //Judul kolom yang ditampilkan pada tabel
-       $heads = ["PC ID", "User ID", "Interest and Hobby", "Trading Experience Year", "Your Stock Future Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Created At", "Occupation", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook"];//kecuali is"an dan add_time
+       $heads = ["PC ID", "User ID", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Interest and Hobby", "Trading Experience Year", "Your Stock Future Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Occupation"];//kecuali is"an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "user_id", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "created_at", "occupation", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
+        $atts = ["all_pc_id", "user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "occupation"];
         return view('content\table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
@@ -44,9 +44,31 @@ class AClubController extends Controller
     }
 
     public function clientDetail($id) {
-        //echo "Aclub Detail <br>";
+        //echo "CAT Detail <br>";
         //echo $id;
-		return view('profile\profile');
+        $aclub = DB::select("call select_detail_aclub(?)", [$id]);
+        $aclub = $aclub[0];
+        $ins = ["User ID" => "user_id", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Interest and Hobby" => "interest_and_hobby", "Trading Year Experience" => "trading_experience_year", "Your Stock and Future Broker" => "your_stock_future_broker", "Annual Income" => "annual_income", "Security Question" => "security_question", "Security Answer" => "security_answer", "Status" => "status", "Keterangan" => "keterangan", "Website" => "website", "State" => "state", "Occupation" => "occupation"];
+        $heads = ["PC ID" => "all_pc_id"] + $ins;
+        return view('profile\profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins]);
+    }
+
+    public function editClient(Request $request) {
+        $this->validate($request, [
+                'user_id' => 'required',
+                'fullname' => 'required',
+                'email' => 'required|email',
+                'no_hp' => 'required',
+                'address' => 'required',
+            ]);
+        $err = [];
+        try {
+            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $request->line_id, $request->bb_pin, $request->twitter, $request->address, $request->city, $request->marital_status, $request->jenis_kelamin, $request->no_telp, $request->provinsi, $request->facebook]);
+            DB::select("call edit_aclub(?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->user_id, $request->interest_and_hobby, $this->nullify($request->trading_experience_year), $request->your_stock_future_broker, $this->nullify($request->annual_income), $request->security_question, $request->security_answer, $request->status, $request->keterangan, $request->website, $request->state, $request->occupation]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {
