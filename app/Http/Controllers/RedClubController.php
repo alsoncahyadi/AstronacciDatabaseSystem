@@ -44,9 +44,37 @@ class RedClubController extends Controller
     }
 
     public function clientDetail($id) {
-        //echo "Aclub Detail <br>";
+        //echo "CAT Detail <br>";
         //echo $id;
-		return view('profile\profile');
+        $red = DB::select("SELECT * FROM RedClub WHERE username = ?", [$id]);
+        $red = $red[0];
+        $ins = ["Username" => "username", "Firstname" => "firstname", "Lastname" => "lastname", "Email" => "email", "Join Date" => "join_date", "No HP" => "no_hp", "Occupation" => "occupation", "Jenis Kelamin" => "jenis_kelamin", "Status Perkawinan" => "status_perkawinan", "Alamat" => "alamat", "Kota" => "kota", "Line ID" => "line_id", "Blackberry PIN" => "blackberry_pin", "Annual Come" => "annual_come", "Country" => "country", "Birthdate" => "birthdate", "Interest" => "interest", "Hobby" => "hobby", "Specific" => "spesific", "Your Stock and Future Broker" => "your_stock_and_future_broker", "Trading Experience Year" => "trading_experience_year", "Trading Type" => "trading_type", "Security Question" => "security_question", "Security Answer" => "security_answer", "Facebook" => "facebook", "Share to AClub" => "share_to_aclub", "Share to MRG" => "share_to_mrg", "Share to CAT" => "share_to_cat", "Share to UOB" => "share_to_uob"];
+        $heads = ["PC ID" => "all_pc_id"] + $ins;
+        $red->share_to_aclub = $red->share_to_aclub ? "Yes" : "No";
+        $red->share_to_cat = $red->share_to_cat ? "Yes" : "No";
+        $red->share_to_mrg = $red->share_to_mrg ? "Yes" : "No";
+        $red->share_to_uob = $red->share_to_uob ? "Yes" : "No";
+        return view('profile\profile', ['route'=>'RedClub', 'client'=>$red, 'heads'=>$heads, 'ins'=>$ins]);
+    }
+
+    public function editClient(Request $request) {
+        $this->validate($request, [
+                'username' => 'required',
+                'firstname' => 'required',
+                'email' => 'required|email',
+                'lastname' => 'required',
+            ]);
+        $err = [];
+        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
+        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
+        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
+        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
+        try {
+            DB::select("call edit_redclub(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->username, $request->firstname, $request->lastname, $request->email, $this->nullify($request->join_date), $this->nullify($request->no_hp), $this->nullify($request->all_pc_id), $this->nullify($request->occupation), $this->nullify($request->jenis_kelamin), $this->nullify($request->status_perkawinan), $this->nullify($request->alamat), $this->nullify($request->kota), $this->nullify($request->line_id), $this->nullify($request->blackberry_pin), $this->nullify($request->annual_come), $this->nullify($request->country), $this->nullify($request->birthdate), $this->nullify($request->interest), $this->nullify($request->hobby), $this->nullify($request->spesific),  $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->trading_experience_year),$this->nullify($request->trading_type), $this->nullify($request->security_question), $this->nullify($request->security_answer), $this->nullify($request->facebook), $aclub, $mrg, $cat, $uob]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {

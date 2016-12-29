@@ -200,6 +200,11 @@ Route::post('/RedClub/import', [
     'as' => 'RedClub.import'
     ]);
 
+Route::post('/RedClub/edit', [
+    'uses' => 'RedClubController@editClient',
+    'as' => 'RedClub.edit'
+    ]);
+
 //Grow Route
 Route::get('/grow', [
     'uses' => 'GrowController@getTable',
