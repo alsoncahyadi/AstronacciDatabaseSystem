@@ -32,10 +32,10 @@ class MRGController extends Controller
         $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Account", "Tanggal Join", "Type", "Sales"]; //semua kecuali yg is"an dan add_time
+        $heads = ["PC ID", "Account", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Tanggal Join", "Type", "Sales"]; //semua kecuali yg is"an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "account", "join_date", "type", "sales_username"]; 
+        $atts = ["all_pc_id", "account", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "join_date", "type", "sales_username"]; 
         foreach ($mrgs as $mrg) {
             $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
             $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
@@ -51,7 +51,39 @@ class MRGController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        return view('profile\profile');
+        $mrg = DB::select("select * from master_client INNER JOIN mrg on (master_client.all_pc_id = mrg.all_pc_id) where master_client.all_pc_id = ?", [$id]);
+        $mrg = $mrg[0];
+        $ins = ["Account" => "account", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
+        $heads = ["PC ID" => "all_pc_id"] + $ins;
+
+        //$atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "account", "join_date", "type", "sales_username"];
+        echo $mrg->all_pc_id;
+        return view('profile\profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins]);
+    }
+
+    public function editClient(Request $request) {
+        $this->validate($request, [
+                'account' => 'required',
+                'fullname' => 'required',
+                'join_date' => 'required',
+                'address' => 'required',
+                'city' => 'required',
+                'no_telp' => 'required',
+                'email' => 'required|email',
+                'type' => 'required',
+                'sales_username' => 'required'
+            ]);
+        echo $request->all_pc_id;
+        echo ("call edit_mrg(".$request->all_pc_id. $request->account. $request->join_date. $request->type. $request->sales_username);
+        $err = [];
+        try {
+            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $request->line_id, $request->bb_pin, $request->twitter, $request->address, $request->city, $request->marital_status, $request->jenis_kelamin, $request->no_telp, $request->provinsi, $request->facebook]);
+            DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $request->join_date, $request->type, $request->sales_username]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect(route('dashboard'))->withErrors($err);
+        //return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {
@@ -75,7 +107,7 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+        return redirect(route('dashboard'))->withErrors($err);
     }
 
     public function importExcel() {
@@ -155,14 +187,25 @@ class MRGController extends Controller
         return redirect()->back()->withErrors([$err]);
     }
 
-    /*public function exportExcel() {
-            $data = MRG::get()->toArray();
-            print_r($data);
-            return Excel::create('testexportmrg', function($excel) use ($data) {
-                $excel->sheet('Sheet1', function($sheet) use ($data)
-                {
-                    $sheet->fromArray($data);
-                });
-            })->download('xls');
-        }*/
+    public function exportExcel() {
+        $data = DB::select("call select_mrg()");
+        $array = [];
+        $heads = ["PC ID" => "all_pc_id", "Account" => "account", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('testexportmrg', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
 }

@@ -86,6 +86,16 @@ Route::post('/MRG/import', [
     'as' => 'MRG.import'
     ]);
 
+Route::post('/MRG/edit', [
+    'uses' => 'MRGController@editClient',
+    'as' => 'MRG.edit'
+    ]);
+
+Route::get('/MRGexport', [
+    'uses' => 'MRGController@exportExcel',
+    'as' => 'MRG.export'
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',

@@ -36,30 +36,29 @@ $(document).ready(function(){
                 <div class="panel-body" >
 					<div id="bod1">
 						<div class="form-group">
-							<div style="height:60px">
-								<label>Nama</label><br>
-								Michael Tjandra<br><br>
-							</div>
-							<div style="height:60px">
-								<label>Gender</label><br>
-								Ayam<br>
-							</div>
+                            @foreach ($heads as $key => $value)
+                                <div style="height:60px">
+                                    <label>{{$key}}</label><br>
+                                    {{$client->$value}}<br><br>
+                                </div>
+                            @endforeach
 						</div>
 					</div>
 					<div id="bod2" style="display:none">
-						<form role="form">
+						<form role="form" method="post" action="{{route($route . '.edit')}}">
 							<div class="form-group">
-								<div style="height:60px">
-									<label>Nama</label>
-									<input class="form-control">
-								</div>
-								<div style="height:60px">
-									<label>Gender</label>
-									<input class="form-control">
-								</div>
+								
+                                @foreach ($ins as $key => $value)
+                                    <div style="height:60px">
+                                        <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                    </div>
+                                @endforeach
 							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
                             <button type="reset" class="btn btn-default">Reset</button>
+                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
 						</form>
 					</div> 
 				</div>
