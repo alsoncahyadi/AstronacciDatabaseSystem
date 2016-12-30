@@ -11,10 +11,34 @@
 |
 */
 
+/* Roles
+0 : superadmin, all privileges
+1 : A-Club
+2 : MRG
+3 : CAT
+4 : UOB
+5 : Sales
+*/
+
 Route::get('/', 'Auth\LoginController@index')->middleware('auth');
 
 Auth::routes();
 
+Route::get('/adduser', [
+	'as' => 'adduser',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0'],
+	function(){ 
+		return view('auth/register');
+	},
+	]);
+
+Route::get('/register',
+	function(){ 
+		return redirect()->route('adduser');
+	}
+	);
+	
 Route::get('/home', 'HomeController@index');
 
 Route::get('/dashboard', [
@@ -29,7 +53,8 @@ Route::get('/dashboard1', [
 	
 Route::get('/dashboard2', [
     'uses' => 'Auth\LoginController@index2',
-    'as' => 'dashboard2'
+    'as' => 'dashboard2',
+	'middleware' => 'ashop',
     ]);
 		
 Route::get('list', [
@@ -47,7 +72,9 @@ Route::post('roleAssign', [
 // CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
-    'as' => 'CAT'
+    'as' => 'CAT',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '3'],
     ]);
 
 Route::get('/CAT/{id}', [
@@ -73,7 +100,9 @@ Route::post('/CAT/edit', [
 // MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
-    'as' => 'MRG'
+    'as' => 'MRG',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '2'],
     ]);
 
 Route::get('/MRG/{id}', [
@@ -130,7 +159,9 @@ Route::post('/UOB/edit', [
 //A-CLUB ROUTES
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',
-    'as' => 'AClub'
+    'as' => 'AClub',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1'],
     ]);
 
 Route::get('/AClub/{id}', [
