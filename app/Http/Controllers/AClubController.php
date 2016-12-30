@@ -50,10 +50,11 @@ class AClubController extends Controller
         $aclub = $aclub[0];
         $ins = ["User ID" => "user_id", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Interest and Hobby" => "interest_and_hobby", "Trading Year Experience" => "trading_experience_year", "Your Stock and Future Broker" => "your_stock_future_broker", "Annual Income" => "annual_income", "Security Question" => "security_question", "Security Answer" => "security_answer", "Status" => "status", "Keterangan" => "keterangan", "Website" => "website", "State" => "state", "Occupation" => "occupation"];
         $heads = ["PC ID" => "all_pc_id"] + $ins;
-        $aclubreg = DB::select("call select_detail_aclub_2(?)", [$id]);
-        $aclubreg = $aclubreg[0];
-        $insreg = ["Registration ID" => "registration_id", "Sales" => "sales_username", "Broker" => "broker", "Paket" => "paket", "Registration Type" => "registration_type", "Registration Date" => "registration_date", "Jenis" => "jenis", "Nominal" => "nominal", "Percentage" => "percentage", "Comission" => "comission_for_sales", "Paid" => "paid", "Paid Date" => "paid_date", "Debt" => "debt", "Frekuensi" => "frekuensi", "Keterangan Ref" => "keterangan_ref", "Message" => "message", "Start Date" => "start_date", "Bulan Member" => "bulan_member", "Expired Date" => "expired_date", "Bonus Member Day" => "bonus_member_day", "Expired Date Bonus" => "expired_date_bonus", "Sumber Data" => "sumber_data"];
-        return view('profile\profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientreg'=>$aclubreg, 'insreg'=>$insreg]);
+        $clientsreg = DB::select("call select_detail_aclub_2(?)", [$id]);
+        $headsreg = ["Registration ID", "Sales", "Broker", "Paket", "Registration Type", "Registration Date", "Jenis", "Nominal", "Percentage", "Comission", "Paid", "Paid Date", "Debt", "Frekuensi", "Keterangan Ref", "Message", "Start Date", "Bulan Member", "Expired Date", "Bonus Member Day", "Expired Date Bonus", "Sumber Data"];
+        $attsreg = ["registration_id", "sales_username", "broker", "paket", "registration_type", "registration_date", "jenis", "nominal", "percentage", "comission_for_sales", "paid", "paid_date", "debt", "frekuensi", "keterangan_ref", "message", "start_date", "bulan_member", "expired_date", "bonus_member_day", "expired_date_bonus", "sumber_data"];
+        $insreg = [];
+        return view('profile\profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'insreg'=>$insreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
     }
 
     public function editClient(Request $request) {

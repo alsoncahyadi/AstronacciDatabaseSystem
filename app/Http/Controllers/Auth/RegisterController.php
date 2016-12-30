@@ -39,6 +39,18 @@ class RegisterController extends Controller
         //$this->middleware('guest');
     }
 
+	public function register(\Illuminate\Http\Request $request)
+	{
+		// validate the form 
+		$this->validator($request->all())->validate();
+
+		// add the user
+		$this->create($request->all());
+
+		// redirect user
+		return redirect()->back();
+	}
+	
     /**
      * Get a validator for an incoming registration request.
      *
