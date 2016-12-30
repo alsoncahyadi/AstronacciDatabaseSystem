@@ -52,7 +52,7 @@ Route::get('/dashboard1', [
     ]);
 	
 Route::get('/dashboard2', [
-    'uses' => 'Auth\LoginController@index2',
+    'uses' => 'HomeController@index2',
     'as' => 'dashboard2',
 	'middleware' => 'ashop',
     ]);

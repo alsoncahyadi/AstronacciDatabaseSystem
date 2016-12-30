@@ -25,6 +25,8 @@ class HomeController extends Controller
     {
         return view('dashboard\dashboard');
     }
-
+	public function index2() {
+        return view('dashboard\dashboard2');
+    }
 }
 
