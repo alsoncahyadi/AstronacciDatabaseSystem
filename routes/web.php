@@ -32,13 +32,13 @@ Route::get('/adduser', [
 		return view('auth/register');
 	},
 	]);
-
+/* to be uncommented
 Route::get('/register',
 	function(){ 
 		return redirect()->route('adduser');
 	}
 	);
-	
+*/
 Route::get('/home', 'HomeController@index');
 
 Route::get('/dashboard', [
