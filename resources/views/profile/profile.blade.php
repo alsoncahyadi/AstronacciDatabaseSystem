@@ -42,6 +42,16 @@ $(document).ready(function(){
                                     {{$client->$value}}<br><br>
                                 </div>
                             @endforeach
+                            @if(($route == "CAT") || ($route == "AClub"))
+                                <hr>
+                                <H3>REGISTRASI</H3><br>
+                                @foreach ($insreg as $keyreg => $value)
+                                    <div style="height:60px">
+                                        <label>{{$keyreg}}</label><br>
+                                        {{$clientreg->$value}}<br><br>
+                                    </div>
+                                @endforeach
+                            @endif
 						</div>
 					</div>
 					<div id="bod2" style="display:none">
