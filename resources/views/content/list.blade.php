@@ -46,7 +46,7 @@
                     <br><br>
                     <a href="#" class="button turquoise" style="text-align: center"><span>✎</span>Edit</a>
                     <a href="#" class="button turquoise" style="text-align: center"><span>✗</span>Delete</a>
-                    <a href="#" class="button turquoise" style="text-align: center"><span>+</span>New User</a>
+                    <a href="/adduser" class="button turquoise" style="text-align: center"><span>+</span>New User</a>
                 </div>
                 <!-- /.panel-body -->
             </div>
