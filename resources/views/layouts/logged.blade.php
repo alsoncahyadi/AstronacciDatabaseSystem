@@ -139,10 +139,7 @@
 
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
-                    <ul class="nav" id="side-menu"  style="background-color:#dd1111;">
-                        <li id="t2">
-                            
-                        </li>                        
+                    <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
                         <li id="t1">
                             <a href="index.html" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -175,6 +172,9 @@
                         </li>
                         <li id="t2">
                             <a href="{{ url('dashboard2') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop</a>
+                        </li>
+						<li id="t3">
+                            <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> List</a>
                         </li>
                     </ul>
                 </div>
