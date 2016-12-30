@@ -105,16 +105,28 @@
 						</div>
                     @endforeach
                     @if(($route == "CAT") || ($route == "AClub"))
-                        <hr>
-                        <H3>REGISTRASI</H3><br>
-                        @foreach ($insreg as $keyreg => $value)
-							<div class="col-lg-2" style="height:30px">
-								<label>{{$keyreg}}</label>
-							</div>
-							<div class="col-lg-10" style="height:30px">
-								: {{$clientreg->$value}}<br>
-							</div>
-                        @endforeach
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
+                                <thead>
+                                    <tr>
+                                    @foreach ($headsreg as $headreg)
+                                        <th> {{$headreg}} </th>
+                                    @endforeach
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach ($clientsreg as $clientreg)
+                                    <tr class="gradeA">
+                                    @foreach ($attsreg as $attreg)
+                                            <td> {{$clientreg->$attreg}} </td>
+                                    @endforeach
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->    
+
+                        
                     @endif
 				</div>
 			</div>

@@ -48,10 +48,10 @@ class CATController extends Controller
         $cat = $cat[0];
         $ins = ["CAT ID" => "cat_user_id", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Username" => "cat_username", "Password" => "password", "Tanggal Daftar" => "tanggal_pendaftaran", "Tanggal Kelas Akhir" => "tanggal_kelas_berakhir", "Sales" => "sales_username"];
         $heads = ["PC ID" => "all_pc_id"] + $ins;
-        $catreg = DB::select("call select_detail_cat_2(?)", [$id]);
-        $catreg = $catreg[0];
-        $insreg = ["Angsuran ke" => "angsuran_ke", "Tanggal Pembayaran Angsuran" => "tanggal_pembayaran_angsuran", "Pembayaran Angsuran" => "pembayaran_angsuran"];
-		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientreg'=>$catreg, 'insreg'=>$insreg]);
+        $clientsreg = DB::select("call select_detail_cat_2(?)", [$id]);
+        $headsreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
+        $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
+		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
     }
 
     public function editClient(Request $request) {

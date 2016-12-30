@@ -82,11 +82,11 @@ class UOBController extends Controller
             ]);
 
         $err = [];
-        DB::beginTransaction():
+        DB::beginTransaction();
 		try {
 			DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
 		}  catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback():
+            DB::rollback();
             $err[] = $ex->getMessage();
         }
         DB::commit();
