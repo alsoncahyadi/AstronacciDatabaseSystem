@@ -97,6 +97,22 @@ Route::post('/CAT/edit', [
     'as' => 'CAT.edit'
     ]);
 
+Route::post('/CAT/inserttrans', [
+    'uses' => 'CATController@addTrans',
+    'as' => 'CAT.inserttrans'
+    ]);
+
+//route delete masih ngaco
+Route::get('/CAT/trans/{id}', [
+    'uses' => 'CATController@detailTrans',
+    'as' => 'CAT.transdetail'
+    ]);
+
+Route::delete('/CAT/trans/{id1}/{id2}', [
+    'uses' => 'CATController@deleteTrans',
+    'as' => 'CAT/trans.deletetrans'
+    ]);
+
 // MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
@@ -182,6 +198,11 @@ Route::post('/AClub/import', [
 Route::post('/AClub/edit', [
     'uses' => 'AClubController@editClient',
     'as' => 'AClub.edit'
+    ]);
+
+Route::post('/AClub/inserttrans', [
+    'uses' => 'AClubController@addTrans',
+    'as' => 'AClub.inserttrans'
     ]);
 
 //GREEN ROUTES

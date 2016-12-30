@@ -48,11 +48,15 @@ class CATController extends Controller
         $cat = $cat[0];
         $ins = ["CAT ID" => "cat_user_id", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Username" => "cat_username", "Password" => "password", "Tanggal Daftar" => "tanggal_pendaftaran", "Tanggal Kelas Akhir" => "tanggal_kelas_berakhir", "Sales" => "sales_username"];
         $heads = ["PC ID" => "all_pc_id"] + $ins;
+
         $clientsreg = DB::select("call select_detail_cat_2(?)", [$id]);
         $headsreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
         $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
-		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
+        //ADD TRANSAKSI
+        $insreg = ["User ID", "Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
+		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg, 'insreg' => $insreg]);
     }
+
 
     public function editClient(Request $request) {
         $this->validate($request, [
@@ -99,7 +103,7 @@ class CATController extends Controller
         DB::beginTransaction();
         $err = [];
         try {
-            DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$this->nullify($request->sales),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
+            DB::select("call inputCAT(?,?,?,?)", [$this->nullify($request->user_id),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();
@@ -107,6 +111,41 @@ class CATController extends Controller
         DB::commit();
         return redirect()->back()->withErrors($err);
 
+    }
+
+    public function addTrans(Request $request) {
+         DB::beginTransaction();
+        $err = [];
+        try {
+            DB::select("call inputCAT_pembayaran(?,?,?,?)", [$this->nullify($request->user_id),$request->angsuran_ke,$request->tanggal_pembayaran_angsuran,$request->pembayaran_angsuran]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
+            $err[] = $ex->getMessage();
+        }
+        DB::commit();
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function detailTrans($id){
+        echo ($id);
+         $clientsreg = DB::select("select * from laporan_pembayaran_cat where angsuran_ke = (?)", [$id]);
+         $clientsreg = $clientsreg[0];
+        $headsreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
+        $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
+        return view('profile\transaction', ['route'=>'CAT/trans',  'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
+    }
+
+    public function deleteTrans($id1, $id2){
+        echo ($id1);
+        echo ($id2);
+        $err = [];
+        try{
+            DB::select("call delete_laporan_pembayaran_cat(?,?)", [$id1],[$id2]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        
+        return redirect()->back()->withErrors($err);
     }
 
     public function importExcel() {

@@ -104,30 +104,7 @@
 							: {{$client->$value}}<br>
 						</div>
                     @endforeach
-                    @if(($route == "CAT") || ($route == "AClub"))
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
-                                <thead>
-                                    <tr>
-                                    @foreach ($headsreg as $headreg)
-                                        <th> {{$headreg}} </th>
-                                    @endforeach
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach ($clientsreg as $clientreg)
-                                    <tr class="gradeA">
-                                    @foreach ($attsreg as $attreg)
-                                            <td> {{$clientreg->$attreg}} </td>
-                                    @endforeach
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                            <!-- /.table-responsive -->    
-
-                        
-                    @endif
+                   
 				</div>
 			</div>
 			<div id="bod2" style="display:none">
@@ -157,32 +134,56 @@
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
-            <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
-            <thead>
-				<tr>
-				
-					<th> head </th>
-					<th> head2</th>
-					<th> head3</th>
-				
-					
-				</tr>
-            </thead>
-			<tbody>
-			
-				<tr class="gradeA">
-				
-                    
-                        <td> tes </td>
-                        <td> tes2 </td>
-                        <td> tes3 </td>
-                    
-				
-				</tr>
-			
-			</tbody>
-		</table>
+           @if(($route == "CAT") || ($route == "AClub"))
+           <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+           <div id="addcli" class="panel-collapse collapse">
+            <div class="panel-body">
+                <form method="post" action="{{route($route . '.inserttrans')}}">
+                    @foreach ($insreg as $atr)
+                    <div class="form-group">
+                        <label>{{$atr}}</label>
+                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                    </div>
+                    @endforeach
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    <input type="submit" class="btn btn-default" value="Insert">
+                    <button type="reset" class="btn btn-default">Reset Form</button>
+                </form>
+            </div>
         </div>
+
+        
+        @endif
+        <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
+            <thead>
+                <tr>
+                    @foreach ($headsreg as $headreg)
+                    <th> {{$headreg}} </th>
+                    @endforeach
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($clientsreg as $clientreg)
+                
+                <tr class="gradeA">
+
+                    @foreach ($attsreg as $attreg)
+                    
+                    @if ($route == 'CAT')
+                    <td>  <a target="_blank" href="{{route($route . '.transdetail', ['id' => $clientreg->angsuran_ke])}}">{{$clientreg->$attreg}} </td>
+                    @elseif ($route == "AClub")
+                    <td> {{$clientreg->$attreg}} </td>
+                    @endif
+
+                    @endforeach
+                    
+                </tr>
+                
+                @endforeach
+            </tbody>
+        </table>
+    </div>
         <!-- /.panel-body -->
     </div>
     
