@@ -39,7 +39,10 @@ class RegisterController extends Controller
         //$this->middleware('guest');
     }
 
-	public function register(\Illuminate\Http\Request $request)
+	/**
+	 * Override template register function
+	 */
+	public function register(Request $request)
 	{
 		// validate the form 
 		$this->validator($request->all())->validate();

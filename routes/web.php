@@ -54,13 +54,13 @@ Route::get('/dashboard1', [
 Route::get('/dashboard2', [
     'uses' => 'HomeController@index2',
     'as' => 'dashboard2',
-	'middleware' => 'ashop',
+	'middleware' => ['auth', 'ashop'],
     ]);
 		
 Route::get('list', [
 	'uses' => 'RolelistController@index',
 	'as' => 'rolelist',
-	'middleware' => 'ashop' /*['auth', 'roles']*/ ,
+	'middleware' => ['auth', 'roles'],
 	'roles' => ['0'],
 	]);
 	

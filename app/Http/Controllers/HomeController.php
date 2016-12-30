@@ -23,10 +23,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if (\Auth::user()->hasRole((\Auth::user()->username), '1')) {
+			// return view on aclub
+		}
         return view('dashboard\dashboard');
     }
-	public function index2() {
-        return view('dashboard\dashboard2');
+	public function index2()
+	{
+		return view('dashboard\dashboard2');
     }
 }
 
