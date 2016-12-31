@@ -107,7 +107,7 @@
 			
             @foreach ($users as $user)
             <tr>			
-				<td style="color:black"><input id="ischanged{{ $idx }}" type="checkbox" style="" name="ischanged{{ $idx }}"><b>{{ $user->username }}<input type="hidden" name="username{{ $idx }}" value="{{ $user->username }}"> </b></td>
+				<td style="color:black"><input id="ischanged{{ $idx }}" type="checkbox" style="display:none" name="ischanged{{ $idx }}"><b>{{ $user->username }}<input type="hidden" name="username{{ $idx }}" value="{{ $user->username }}"> </b></td>
 				<td style="color:black"><b>{{ $user->fullname }}</b></td>
 				<td><select id="roles{{ $idx }}" onchange="checkChange({{ $idx }})" name="roles{{ $idx }}">
 					<option value="0" {{ $user->hasRole($user->username, '0') ? 'selected' : ''}} >Superadmin</option>
@@ -118,6 +118,7 @@
 					<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 				</select></td>
 				<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
+				<td><button type="submit" name="delbut" value="{{ $idx }}">Delete</button></td>
 					{{ csrf_field() }}
 				<br>				
             </tr>
@@ -125,7 +126,7 @@
             @endforeach
 			<tr>
 			<input type="hidden" name="numusers" value="{{ $idx }}">
-			<button type="submit">Assign Roles</button>
+			<button type="submit" name="assbut">Assign Roles</button>
 			</tr>
 			</form>
             </table>
