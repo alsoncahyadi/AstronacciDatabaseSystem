@@ -73,7 +73,7 @@
                             <label for="role" class="col-md-4 control-label">Role</label>
 
                             <div class="col-md-6">								
-                                <input id="role" type="text" class="form-control" value="5" name="role" >
+                                <input id="role" type="text" class="form-control" value="5" name="role" required>
                             </div>
                         </div>
 						
@@ -81,7 +81,7 @@
                             <label for="fullname" class="col-md-4 control-label">Fullname</label>
 
                             <div class="col-md-6">								
-                                <input id="fullname" type="text" class="form-control" name="fullname" >
+                                <input id="fullname" type="text" class="form-control" name="fullname" required>
                             </div>
                         </div>
 						
