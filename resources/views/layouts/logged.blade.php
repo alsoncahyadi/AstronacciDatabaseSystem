@@ -138,6 +138,17 @@
             <!-- /.navbar-top-links -->
 
             <div class="navbar-default sidebar" role="navigation">
+				@if (Auth::user()->hasRole((Auth::user()->username), '1'))
+					<script>load('{{route('AClub')}}')</script>
+				@elseif (Auth::user()->hasRole((Auth::user()->username), '2'))
+					<script>load('{{route('MRG')}}')</script>
+				@elseif (Auth::user()->hasRole((Auth::user()->username), '3'))
+					<script>load('{{route('CAT')}}')</script>
+				@elseif (Auth::user()->hasRole((Auth::user()->username), '4'))
+					<script>load('{{route('UOB')}}')</script>
+				@elseif (Auth::user()->hasRole((Auth::user()->username), '5'))
+					<!-- <script>load('{{route('sales')}}')</script> -->
+				@endif
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
                         <li id="t1">

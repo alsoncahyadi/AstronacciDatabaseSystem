@@ -149,7 +149,9 @@ Route::get('/MRGexport', [
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
-    'as' => 'UOB'
+    'as' => 'UOB',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '4'],
     ]);
 
 Route::get('/UOB/{id}', [
