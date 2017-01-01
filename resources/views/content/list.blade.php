@@ -41,6 +41,18 @@
 				document.getElementById("ischanged"+idx).checked = false;
 			}
 		}
+		function checkDel(idx) {
+			var seldel = document.getElementById("isdel"+idx);
+			var delbut = document.getElementById("delbut"+idx);
+			if (seldel.checked) {				
+				seldel.checked = false;
+				delbut.innerHTML = "Delete";
+			}
+			else {
+				seldel.checked = true;
+				delbut.innerHTML = "Undo";
+			}
+		}
 	</script>
                 <div id="bod1" class="panel-body">
 					<form action="{{ route('admin.assign') }}" method="post">
@@ -69,7 +81,7 @@
 									<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 								</select></td>
 								<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
-								<td><button type="submit" name="delbut" value="{{ $idx }}">Delete</button></td>
+								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button onclick="checkDel({{ $idx }})" type="button" id="delbut{{ $idx }}">Delete</button></td>
 									{{ csrf_field() }}
 								<br>				
 							</tr>
