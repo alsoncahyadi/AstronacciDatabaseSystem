@@ -85,6 +85,13 @@
                             </div>
                         </div>
 						
+						<div class="form-group">
+								<label for="phonenum" class="col-md-4 control-label">Phone number</label>	
+								<div class="col-md-6">								
+									<input id="phonenum" type="text" class="form-control" name="phonenum">
+								</div>
+						</div>
+						
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
