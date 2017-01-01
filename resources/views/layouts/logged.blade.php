@@ -147,16 +147,16 @@
 				@elseif (Auth::user()->hasRole((Auth::user()->username), '4'))
 					<script>load('{{route('UOB')}}')</script>
 				@elseif (Auth::user()->hasRole((Auth::user()->username), '5'))
-					<!-- <script>load('{{route('sales')}}')</script> -->
+					
 				@endif
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
                         <li id="t1">
                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
+                            <ul class="nav nav-second-level">							
                                 <li>
                                     <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>
-                                </li>
+                                </li>							
                                 <li>
                                     <a onclick="load('{{route('MRG')}}')" href="#" style="color:white;">Admin MRG</a>
                                 </li>

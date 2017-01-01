@@ -34,7 +34,7 @@ Route::get('/adduser', [
 	]);
 /* to be uncommented
 Route::get('/register',
-	function(){ 
+	function(){
 		return redirect()->route('adduser');
 	}
 	);
@@ -67,6 +67,8 @@ Route::get('list', [
 Route::post('roleAssign', [
 	'uses' => 'RolelistController@postAssignRoles',
 	'as' => 'admin.assign',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0'],
 	]);
 
 // CAT ROUTES
@@ -79,27 +81,37 @@ Route::get('/CAT', [
 
 Route::get('/CAT/{id}', [
     'uses' => 'CATController@clientDetail',
-    'as' => 'CAT.detail'
+    'as' => 'CAT.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '3'],
     ]);
 
 Route::post('/CAT/insert', [
     'uses' => 'CATController@addClient',
-    'as' => 'CAT.insert'
+    'as' => 'CAT.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '3'],
     ]);
 
 Route::post('/CAT/import', [
     'uses' => 'CATController@importExcel',
-    'as' => 'CAT.import'
+    'as' => 'CAT.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '3'],
     ]);
 
 Route::post('/CAT/edit', [
     'uses' => 'CATController@editClient',
-    'as' => 'CAT.edit'
+    'as' => 'CAT.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '3'],
     ]);
 
 Route::post('/CAT/inserttrans', [
     'uses' => 'CATController@addTrans',
-    'as' => 'CAT.inserttrans'
+    'as' => 'CAT.inserttrans',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '3'],
     ]);
 
 //route delete masih ngaco
@@ -123,27 +135,37 @@ Route::get('/MRG', [
 
 Route::get('/MRG/{id}', [
     'uses' => 'MRGController@clientDetail',
-    'as' => 'MRG.detail'
+    'as' => 'MRG.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '2'],
     ]);
 
 Route::post('/MRG/insert', [
     'uses' => 'MRGController@addClient',
-    'as' => 'MRG.insert'
+    'as' => 'MRG.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '2'],
     ]);
 
 Route::post('/MRG/import', [
     'uses' => 'MRGController@importExcel',
-    'as' => 'MRG.import'
+    'as' => 'MRG.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '2'],
     ]);
 
 Route::post('/MRG/edit', [
     'uses' => 'MRGController@editClient',
-    'as' => 'MRG.edit'
+    'as' => 'MRG.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '2'],
     ]);
 
 Route::get('/MRGexport', [
     'uses' => 'MRGController@exportExcel',
-    'as' => 'MRG.export'
+    'as' => 'MRG.export',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '2'],
     ]);
 
 //UOB ROUTES
@@ -156,22 +178,30 @@ Route::get('/UOB', [
 
 Route::get('/UOB/{id}', [
     'uses' => 'UOBController@clientDetail',
-    'as' => 'UOB.detail'
+    'as' => 'UOB.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '4'],
     ]);
 
 Route::post('/UOB/insert', [
     'uses' => 'UOBController@addClient',
-    'as' => 'UOB.insert'
+    'as' => 'UOB.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '4'],
     ]);
 
 Route::post('/UOB/import', [
     'uses' => 'UOBController@importExcel',
-    'as' => 'UOB.import'
+    'as' => 'UOB.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '4'],
     ]);	
 
 Route::post('/UOB/edit', [
     'uses' => 'UOBController@editClient',
-    'as' => 'UOB.edit'
+    'as' => 'UOB.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '4'],
     ]);
 
 //A-CLUB ROUTES
@@ -184,103 +214,143 @@ Route::get('/AClub', [
 
 Route::get('/AClub/{id}', [
     'uses' => 'AClubController@clientDetail',
-    'as' => 'AClub.detail'
+    'as' => 'AClub.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1'],
     ]);
 
 Route::post('/AClub/insert', [
     'uses' => 'AClubController@addClient',
-    'as' => 'AClub.insert'
+    'as' => 'AClub.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1'],
     ]);
 
 Route::post('/AClub/import', [
     'uses' => 'AClubController@importExcel',
-    'as' => 'AClub.import'
+    'as' => 'AClub.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1'],
     ]);
 
 Route::post('/AClub/edit', [
     'uses' => 'AClubController@editClient',
-    'as' => 'AClub.edit'
+    'as' => 'AClub.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1'],
     ]);
 
 Route::post('/AClub/inserttrans', [
     'uses' => 'AClubController@addTrans',
-    'as' => 'AClub.inserttrans'
+    'as' => 'AClub.inserttrans',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1'],
     ]);
 
 //GREEN ROUTES
 Route::get('/green', [
     'uses' => 'GreenController@getTable',
-    'as' => 'green'
+    'as' => 'green',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
-    'as' => 'green.detail'
+    'as' => 'green.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/insert', [
     'uses' => 'GreenController@addClient',
-    'as' => 'green.insert'
+    'as' => 'green.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/import', [
     'uses' => 'GreenController@importExcel',
-    'as' => 'green.import'
+    'as' => 'green.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/edit', [
     'uses' => 'GreenController@editClient',
-    'as' => 'green.edit'
+    'as' => 'green.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 //Red Club Route
 Route::get('/RedClub', [
     'uses' => 'RedClubController@getTable',
-    'as' => 'RedClub'
+    'as' => 'RedClub',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/RedClub/{id}', [
     'uses' => 'RedClubController@clientDetail',
-    'as' => 'RedClub.detail'
+    'as' => 'RedClub.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/RedClub/insert', [
     'uses' => 'RedClubController@addClient',
-    'as' => 'RedClub.insert'
+    'as' => 'RedClub.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/RedClub/import', [
     'uses' => 'RedClubController@importExcel',
-    'as' => 'RedClub.import'
+    'as' => 'RedClub.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/RedClub/edit', [
     'uses' => 'RedClubController@editClient',
-    'as' => 'RedClub.edit'
+    'as' => 'RedClub.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 //Grow Route
 Route::get('/grow', [
     'uses' => 'GrowController@getTable',
-    'as' => 'grow'
+    'as' => 'grow',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/grow/{id}', [
     'uses' => 'GrowController@clientDetail',
-    'as' => 'grow.detail'
+    'as' => 'grow.detail',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/grow/insert', [
     'uses' => 'GrowController@addClient',
-    'as' => 'grow.insert'
+    'as' => 'grow.insert',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/grow/import', [
     'uses' => 'GrowController@importExcel',
-    'as' => 'grow.import'
+    'as' => 'grow.import',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/grow/edit', [
     'uses' => 'GrowController@editClient',
-    'as' => 'grow.edit'
+    'as' => 'grow.edit',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
