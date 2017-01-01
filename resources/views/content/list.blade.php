@@ -130,11 +130,12 @@
 							<div class="form-group">
 								<label for="role" class="control-label">Role</label>							
 								<select id="role" class="form-control" name="role" required>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+									<option value="0">Superadmin</option>
+                                    <option value="1">A-Club admin</option>
+                                    <option value="2">MRG admin</option>
+                                    <option value="3">CAT admin</option>
+                                    <option value="4">UOB admin</option>
+                                    <option value="5">Sales</option>
                                 </select>
 							</div>
 							<div class="form-group">
@@ -142,9 +143,13 @@
 								<input id="fullname" type="text" class="form-control" name="fullname" required>
 							</div>
 							<div class="form-group">
+								<label for="phonenum" class="control-label">Phone number</label>					
+								<input id="phonenum" type="text" class="form-control" name="phonenum">
+							</div>
+							<div class="form-group">
 								<div class="col-md-6">
 									<button type="submit" class="btn btn-primary">
-										Register
+										Add User
 									</button>
 								</div>
 							</div>
