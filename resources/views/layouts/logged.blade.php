@@ -152,7 +152,7 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
                         <li id="t1">
-                            <a href="index.html" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
+                            <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>

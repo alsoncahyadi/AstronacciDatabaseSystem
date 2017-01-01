@@ -10,7 +10,7 @@ class RolelistController extends Controller
     public function index()
     {
     	$users = User::all();
-        return view('listuser', compact('users'));
+        return view('content/list', compact('users'));
     }
 
 	public function postAssignRoles(Request $request)
