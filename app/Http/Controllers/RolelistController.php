@@ -15,23 +15,25 @@ class RolelistController extends Controller
 
 	public function postAssignRoles(Request $request)
 	{		
-		for ($idx = 0;$idx < $request['numusers'];$idx++){
-			if ($request['isdel'.$idx]){
-				$del = User::where('username', $request['username'.$idx])->first();
-				$del->delete();
-			}
-			else if ($request['ischanged'.$idx]){
-				$user = User::where('username', $request['username'.$idx])->first();
-				if ($request['ashop'.$idx]) {
-					$user->a_shop_auth = '1';
+		if (isset($request['assbut'])){
+			for ($idx = 0;$idx < $request['numusers'];$idx++){
+				if ($request['isdel'.$idx]){
+					$del = User::where('username', $request['username'.$idx])->first();
+					$del->delete();
 				}
-				else {
-					$user->a_shop_auth = '0';
+				else if ($request['ischanged'.$idx]){
+					$user = User::where('username', $request['username'.$idx])->first();
+					if ($request['ashop'.$idx]) {
+						$user->a_shop_auth = '1';
+					}
+					else {
+						$user->a_shop_auth = '0';
+					}
+					$user->role = $request['roles'.$idx];
+					$user->save();
 				}
-				$user->role = $request['roles'.$idx];
-				$user->save();
 			}
+			return redirect()->back();
 		}
-		return redirect()->back();
 	}
 }

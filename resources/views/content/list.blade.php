@@ -87,7 +87,7 @@
 									<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 								</select></td>
 								<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
-								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button class="button turquoise" style="border: 0; margin:0px" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}"><span>-</span>Delete</button></td></td>
+								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" class="button turquoise" style="border: 0; margin:0px" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}"><span>-</span>Delete</button></td></td>
 									{{ csrf_field() }}
 								<br>				
 							</tr>
