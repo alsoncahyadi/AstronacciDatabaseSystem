@@ -193,7 +193,7 @@
             </div>
         </nav>
 		
-		<div id="page-wrapper">
+		<div id="page-wrapper" style="padding-bottom:10px">
 			@yield('content')
 		</div>
     </div>

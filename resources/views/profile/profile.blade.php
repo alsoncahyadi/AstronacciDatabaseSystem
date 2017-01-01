@@ -93,7 +93,7 @@
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
         </div>
 		
-        <div class="panel-body" >
+        <div class="panel-body">
 			<div id="bod1">
 				<div class="form-group">
                     @foreach ($heads as $key => $value)
