@@ -2,7 +2,7 @@
 @section('content')
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Setting</h1>
+                    <h1 class="page-header" style="color:red">Manage Users</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -35,15 +35,19 @@
 			var ashopcb = document.getElementById("ashop"+idx);
 			var rolesel = document.getElementById("roles"+idx);
 			if ((ashopcb.checked != ashopcb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
-				document.getElementById("ischanged"+idx).checked = true;	
-				document.getElementById(idx).style.backgroundColor = "yellow";
+				document.getElementById("ischanged"+idx).checked = true;
+				if (!document.getElementById("isdel"+idx).checked) {
+					document.getElementById(idx).style.backgroundColor = "yellow";
+				}
 			}
 			else {
 				document.getElementById("ischanged"+idx).checked = false;
-				if (idx % 2 == 0){
-					document.getElementById(idx).style.backgroundColor = "white";
-				} else {
-					document.getElementById(idx).style.backgroundColor = "#e7e7e7";
+				if (!document.getElementById("isdel"+idx).checked) {
+					if (idx % 2 == 0){
+						document.getElementById(idx).style.backgroundColor = "white";
+					} else {
+						document.getElementById(idx).style.backgroundColor = "#e7e7e7";
+					}
 				}
 			}
 		}
@@ -52,24 +56,34 @@
 			var delbut = document.getElementById("delbut"+idx);
 			if (seldel.checked) {				
 				seldel.checked = false;
-				delbut.innerHTML = "Delete";
+				delbut.innerHTML = "X";
+				if (document.getElementById("ischanged"+idx).checked == true){
+					document.getElementById(idx).style.backgroundColor = "yellow";
+				} else
+				if (idx % 2 == 0){
+					document.getElementById(idx).style.backgroundColor = "white";
+				} else {
+					document.getElementById(idx).style.backgroundColor = "#e7e7e7";
+				}
+				
 			}
 			else {
 				seldel.checked = true;
 				delbut.innerHTML = "Undo";
+				document.getElementById(idx).style.backgroundColor = "red";
 			}
 		}
 	</script>
                 <div id="bod1" class="panel-body">
 					<form action="{{ route('admin.assign') }}" method="post">
-						<table class="responstable" style="margin-top:-100px">
+						<table class="responstable" style="margin-top:-20px">
 							
 							<tr>            
 							<th>Username</th>
 							<th>Fullname</th>
 							<th>Role</th>
 							<th>A Shop</th>
-							<th>Delete?</th>
+							<th>Delete</th>
 							</tr>
 							
 							<?php $idx = 0; ?>
@@ -87,7 +101,7 @@
 									<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 								</select></td>
 								<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
-								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" class="button turquoise" style="border: 0; margin:0px" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}"><span>-</span>Delete</button></td></td>
+								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}">X</button></td></td>
 									{{ csrf_field() }}
 								<br>				
 							</tr>
