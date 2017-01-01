@@ -22,7 +22,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-static-top" style="background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
             <div class="container">
                 <div class="navbar-header" style="height:100px">
 

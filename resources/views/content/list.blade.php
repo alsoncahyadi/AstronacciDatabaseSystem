@@ -30,9 +30,21 @@
 		});
 	});
 	</script>
+	<script>
+		function checkChange(idx) {
+			var ashopcb = document.getElementById("ashop"+idx);
+			var rolesel = document.getElementById("roles"+idx);
+			if ((ashopcb.checked != ashopcb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
+				document.getElementById("ischanged"+idx).checked = true;				
+			}
+			else {
+				document.getElementById("ischanged"+idx).checked = false;
+			}
+		}
+	</script>
                 <div id="bod1" class="panel-body">
 					<form action="{{ route('admin.assign') }}" method="post">
-						<table class="responstable">
+						<table class="responstable" style="margin-top:-100px">
 							
 							<tr>            
 							<th>Username</th>
@@ -66,9 +78,7 @@
 						</table>
 						<br><br>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
-						<button type="submit" name="assbut">Assign Roles</button>
-						<a href="#" class="button turquoise" style="text-align: center"><span>✎</span>Edit</a>
-						<a href="#" class="button turquoise" style="text-align: center"><span>✗</span>Delete</a>
+						<button class="button turquoise" style="border: 0;" type="submit" name="assbut"><span>✎</span>Save</button>
 					</form>
                 </div>
                 <!-- /.panel-body -->
@@ -113,15 +123,19 @@
 								<input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
 							</div>
 							<div class="form-group">
-								<label for="ashop" class="col-md-4 control-label">A Shop Auth</label>
-								<div class="col-md-6">
-									<input name="ashop" value="0" type="hidden">
-									<input id="ashop" type="checkbox" name="ashop" ><br><br>
-								</div>
+								<label for="ashop" class="control-label">A Shop Auth</label>
+								<input name="ashop" value="0" type="hidden">
+								<input id="ashop" type="checkbox" name="ashop" >
 							</div>
 							<div class="form-group">
-								<label for="role" class="col-md-4 control-label">Role</label>							
-								<input id="role" type="text" class="form-control" value="5" name="role" required>
+								<label for="role" class="control-label">Role</label>							
+								<select id="role" class="form-control" name="role" required>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
 							</div>
 							<div class="form-group">
 								<label for="fullname" class="control-label">Fullname</label>					
@@ -139,21 +153,6 @@
                 </div>
                 <!-- /.panel-body -->
             </div>
-
-			<script>
-				function checkChange(idx) {
-					var ashopcb = document.getElementById("ashop"+idx);
-					var rolesel = document.getElementById("roles"+idx);
-					if ((ashopcb.checked != ashopcb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
-						document.getElementById("ischanged"+idx).checked = true;				
-					}
-					else {
-						document.getElementById("ischanged"+idx).checked = false;
-					}
-				}
-			</script>
-			
-            
 	
 @endsection
 </html>
