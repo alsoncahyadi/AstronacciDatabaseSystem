@@ -35,10 +35,16 @@
 			var ashopcb = document.getElementById("ashop"+idx);
 			var rolesel = document.getElementById("roles"+idx);
 			if ((ashopcb.checked != ashopcb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
-				document.getElementById("ischanged"+idx).checked = true;				
+				document.getElementById("ischanged"+idx).checked = true;	
+				document.getElementById(idx).style.backgroundColor = "yellow";
 			}
 			else {
 				document.getElementById("ischanged"+idx).checked = false;
+				if (idx % 2 == 0){
+					document.getElementById(idx).style.backgroundColor = "white";
+				} else {
+					document.getElementById(idx).style.backgroundColor = "#e7e7e7";
+				}
 			}
 		}
 		function checkDel(idx) {
@@ -69,7 +75,7 @@
 							<?php $idx = 0; ?>
 							
 							@foreach ($users as $user)
-							<tr>			
+							<tr id="{{$idx}}">			
 								<td><input id="ischanged{{ $idx }}" type="checkbox" style="display:none" name="ischanged{{ $idx }}"><b>{{ $user->username }}<input type="hidden" name="username{{ $idx }}" value="{{ $user->username }}"> </b></td>
 								<td style="color:black"><b>{{ $user->fullname }}</b></td>
 								<td><select id="roles{{ $idx }}" onchange="checkChange({{ $idx }})" name="roles{{ $idx }}">
@@ -81,7 +87,7 @@
 									<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 								</select></td>
 								<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
-								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button onclick="checkDel({{ $idx }})" type="button" id="delbut{{ $idx }}">Delete</button></td>
+								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button class="button turquoise" style="border: 0; margin:0px" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}"><span>-</span>Delete</button></td></td>
 									{{ csrf_field() }}
 								<br>				
 							</tr>
