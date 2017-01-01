@@ -89,7 +89,8 @@
 							<?php $idx = 0; ?>
 							
 							@foreach ($users as $user)
-							<tr id="{{$idx}}">			
+							@if (Auth::user()->username != $user->username)
+							<tr id="{{$idx}}">
 								<td><input id="ischanged{{ $idx }}" type="checkbox" style="display:none" name="ischanged{{ $idx }}"><b>{{ $user->username }}<input type="hidden" name="username{{ $idx }}" value="{{ $user->username }}"> </b></td>
 								<td style="color:black"><b>{{ $user->fullname }}</b></td>
 								<td><select id="roles{{ $idx }}" onchange="checkChange({{ $idx }})" name="roles{{ $idx }}">
@@ -103,9 +104,10 @@
 								<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
 								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}">X</button></td></td>
 									{{ csrf_field() }}
-								<br>				
+								<br>
 							</tr>
 							<?php $idx = $idx + 1; ?>
+							@endif
 							@endforeach
 						</table>
 						<br><br>
