@@ -139,6 +139,11 @@
            <div id="addcli" class="panel-collapse collapse">
             <div class="panel-body">
                 <form method="post" action="{{route($route . '.inserttrans')}}">
+                    @if ($route == "CAT")
+                        <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                    @elseif ($route == "AClub")
+                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                    @endif
                     @foreach ($insreg as $atr)
                     <div class="form-group">
                         <label>{{$atr}}</label>
@@ -177,6 +182,12 @@
                     @endif
 
                     @endforeach
+
+                    @if ($route == 'CAT')
+                    <td><a href="{{route('CAT/trans.deletetrans', ['id1' => $clientreg->cat_user_id, 'id2' => $clientreg->angsuran_ke])}}"> Delete </a></td>
+                    @elseif ($route == 'AClub')
+                    <td><a href="{{route('AClub/trans.deletetrans', ['id' => $clientreg->registration_id])}}"> Delete </a></td>
+                    @endif
                     
                 </tr>
                 

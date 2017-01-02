@@ -53,7 +53,7 @@ class CATController extends Controller
         $headsreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
         $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
         //ADD TRANSAKSI
-        $insreg = ["User ID", "Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
+        $insreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
 		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg, 'insreg' => $insreg]);
     }
 
@@ -140,7 +140,7 @@ class CATController extends Controller
         echo ($id2);
         $err = [];
         try{
-            DB::select("call delete_laporan_pembayaran_cat(?,?)", [$id1],[$id2]);
+            DB::select("call delete_laporan_pembayaran_cat(?,?)", [$id1, $id2]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }

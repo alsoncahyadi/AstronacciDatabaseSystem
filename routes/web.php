@@ -120,7 +120,7 @@ Route::get('/CAT/trans/{id}', [
     'as' => 'CAT.transdetail'
     ]);
 
-Route::delete('/CAT/trans/{id1}/{id2}', [
+Route::get('/CAT/deletetrans/{id1}/{id2}', [
     'uses' => 'CATController@deleteTrans',
     'as' => 'CAT/trans.deletetrans'
     ]);
@@ -245,6 +245,11 @@ Route::post('/AClub/inserttrans', [
     'as' => 'AClub.inserttrans',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClub/deletetrans/{id}', [
+    'uses' => 'AClubController@deleteTrans',
+    'as' => 'AClub/trans.deletetrans'
     ]);
 
 //GREEN ROUTES

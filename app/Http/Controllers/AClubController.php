@@ -55,7 +55,7 @@ class AClubController extends Controller
         $headsreg = ["Registration ID", "Sales", "Broker", "Paket", "Registration Type", "Registration Date", "Jenis", "Nominal", "Percentage", "Comission", "Paid", "Paid Date", "Debt", "Frekuensi", "Keterangan Ref", "Message", "Start Date", "Bulan Member", "Expired Date", "Bonus Member Day", "Expired Date Bonus", "Sumber Data"];
         $attsreg = ["registration_id", "sales_username", "broker", "paket", "registration_type", "registration_date", "jenis", "nominal", "percentage", "comission_for_sales", "paid", "paid_date", "debt", "frekuensi", "keterangan_ref", "message", "start_date", "bulan_member", "expired_date", "bonus_member_day", "expired_date_bonus", "sumber_data"];
         //ADD TRANSAKSI
-        $insreg = ["User_ID", "Registration Date", "Kode Paket", "Sales Username", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"];
+        $insreg = ["Registration Date", "Kode Paket", "Sales Username", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"];
         return view('profile\profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'insreg'=>$insreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
     }
 
@@ -114,6 +114,18 @@ class AClubController extends Controller
             $err[] = $ex->getMessage();
         }
         DB::commit();
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function deleteTrans($id){
+        echo ($id);
+        $err = [];
+        try{
+            DB::select("call delete_aclub_registration_alt(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        
         return redirect()->back()->withErrors($err);
     }
 
