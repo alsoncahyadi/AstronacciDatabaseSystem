@@ -129,7 +129,13 @@
 			</div> 
 		</div>
 
-        <a href="{{route($route . '.deleteclient', ['id' => $client->cat_user_id])}}"> Delete Client </a>
+        <?php
+            if($route == "CAT") $userid = "cat_user_id";
+            else if ($route == "AClub") $userid = "";
+            else if ($route == "MRG") $userid = "account";
+
+        ?>
+        <a href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
     </div>
 
 

@@ -175,6 +175,13 @@ Route::get('/MRGexport', [
 	'roles' => ['0', '2'],
     ]);
 
+Route::get('/MRG/deleteclient/{id}', [
+    'uses' => 'MRGController@deleteClient',
+    'as' => 'MRG.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',

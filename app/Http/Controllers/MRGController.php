@@ -113,6 +113,16 @@ class MRGController extends Controller
         return redirect(route('dashboard'))->withErrors($err);
     }
 
+    public function deleteClient($id) {
+        echo "delete" . $id;
+        try {
+            DB::select("call delete_mrg(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function importExcel() {
         $err = [];
         if(Input::hasFile('import_file')){
