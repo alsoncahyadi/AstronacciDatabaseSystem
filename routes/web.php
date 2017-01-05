@@ -396,3 +396,10 @@ Route::post('/grow/edit', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
+
+Route::get('/grow/deleteclient/{id}', [
+    'uses' => 'GrowController@deleteClient',
+    'as' => 'grow.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
