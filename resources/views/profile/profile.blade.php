@@ -69,6 +69,7 @@
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
+    </div>
 	<script>
 	$(document).ready(function(){
 		$("#hide").click(function(){
@@ -127,14 +128,18 @@
 				</form>
 			</div> 
 		</div>
+
+        <a href="{{route($route . '.deleteclient', ['id' => $client->cat_user_id])}}"> Delete Client </a>
     </div>
 
+
+    @if(($route == "CAT") || ($route == "AClub"))
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
-           @if(($route == "CAT") || ($route == "AClub"))
+           
            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
            <div id="addcli" class="panel-collapse collapse">
             <div class="panel-body">
@@ -158,7 +163,7 @@
         </div>
 
         
-        @endif
+
         <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
             <thead>
                 <tr>
@@ -197,7 +202,7 @@
     </div>
         <!-- /.panel-body -->
     </div>
-    
+    @endif
 
 	<br><br>
 

@@ -114,6 +114,13 @@ Route::post('/CAT/inserttrans', [
 	'roles' => ['0', '3'],
     ]);
 
+Route::get('/CAT/deleteclient/{id}', [
+    'uses' => 'CATController@deleteClient',
+    'as' => 'CAT.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
+    ]);
+
 //route delete masih ngaco
 Route::get('/CAT/trans/{id}', [
     'uses' => 'CATController@detailTrans',

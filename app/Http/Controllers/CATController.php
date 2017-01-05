@@ -113,6 +113,16 @@ class CATController extends Controller
 
     }
 
+    public function deleteClient($id) {
+        echo "delete" . $id;
+        try {
+            DB::select("call delete_cat(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function addTrans(Request $request) {
          DB::beginTransaction();
         $err = [];
