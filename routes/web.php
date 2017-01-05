@@ -263,7 +263,16 @@ Route::post('/AClub/inserttrans', [
 
 Route::get('/AClub/deletetrans/{id}', [
     'uses' => 'AClubController@deleteTrans',
-    'as' => 'AClub/trans.deletetrans'
+    'as' => 'AClub/trans.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClub/deleteclient/{id}', [
+    'uses' => 'AClubController@deleteClient',
+    'as' => 'AClub.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
     ]);
 
 //GREEN ROUTES

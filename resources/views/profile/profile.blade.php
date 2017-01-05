@@ -131,7 +131,7 @@
 
         <?php
             if($route == "CAT") $userid = "cat_user_id";
-            else if ($route == "AClub") $userid = "";
+            else if ($route == "AClub") $userid = "user_id";
             else if ($route == "MRG") $userid = "account";
 
         ?>
