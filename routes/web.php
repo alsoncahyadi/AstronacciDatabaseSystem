@@ -361,6 +361,13 @@ Route::post('/RedClub/edit', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::get('/RedClub/deleteclient/{id}', [
+    'uses' => 'RedClubController@deleteClient',
+    'as' => 'RedClub.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 //Grow Route
 Route::get('/grow', [
     'uses' => 'GrowController@getTable',
