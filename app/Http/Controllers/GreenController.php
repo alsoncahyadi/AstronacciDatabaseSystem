@@ -132,6 +132,16 @@ class GreenController extends Controller
 
     }
 
+    public function deleteClient($id) {
+        echo "delete" . $id;
+        try {
+            DB::select("call delete_green(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function importExcel() {
         $err = [];
         if(Input::hasFile('import_file')){

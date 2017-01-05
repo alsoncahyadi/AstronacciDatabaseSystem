@@ -318,6 +318,13 @@ Route::post('/green/edit', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::get('/green/deleteclient/{id}', [
+    'uses' => 'GreenController@deleteClient',
+    'as' => 'green.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 //Red Club Route
 Route::get('/RedClub', [
     'uses' => 'RedClubController@getTable',

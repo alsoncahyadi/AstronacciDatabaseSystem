@@ -134,6 +134,7 @@
             else if ($route == "AClub") $userid = "user_id";
             else if ($route == "MRG") $userid = "account";
             else if ($route == "UOB") $userid = "client_id";
+            else if ($route == "green") $userid = "green_id";
 
         ?>
         <a href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
