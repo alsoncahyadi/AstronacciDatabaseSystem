@@ -93,6 +93,16 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteClient($id) {
+        echo "delete" . $id;
+        try {
+            DB::select("call delete_uob(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function importExcel() {
         $err = [];
         if(Input::hasFile('import_file')){
