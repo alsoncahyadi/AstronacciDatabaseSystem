@@ -147,7 +147,7 @@
 				@elseif (Auth::user()->hasRole((Auth::user()->username), '4'))
 					<script>load('{{route('UOB')}}')</script>
 				@elseif (Auth::user()->hasRole((Auth::user()->username), '5'))
-					
+					<script>load('{{route('sales')}}')</script>
 				@endif
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        

@@ -74,6 +74,8 @@ Route::post('roleAssign', [
 Route::get('/sales', [
 	'uses' => 'SalesController@getTable',
 	'as' => 'sales',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '5'],
 	]);
 
 // CAT ROUTES
