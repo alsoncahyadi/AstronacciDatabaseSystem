@@ -178,6 +178,9 @@
                                 <li>
                                     <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
                                 </li>
+                                <li>
+                                    <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Sales</a>
+                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
