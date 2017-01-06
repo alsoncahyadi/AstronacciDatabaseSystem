@@ -70,6 +70,11 @@ Route::post('roleAssign', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0'],
 	]);
+	
+Route::get('/sales', [
+	'uses' => 'SalesController@getTable',
+	'as' => 'sales',
+	]);
 
 // CAT ROUTES
 Route::get('/CAT', [

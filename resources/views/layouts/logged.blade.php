@@ -167,9 +167,6 @@
                                     <a onclick="load('{{route('CAT')}}')" href="#" style="color:white;">Admin CAT</a>
                                 </li>
                                 <li>
-                                    <a href="#" style="color:white;">Sales</a>
-                                </li>
-                                <li>
                                     <a onclick="load('{{route('green')}}')" href="#" style="color:white;">Green</a>
                                 </li>
                                 <li>
@@ -179,7 +176,7 @@
                                     <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
                                 </li>
                                 <li>
-                                    <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Sales</a>
+                                    <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
