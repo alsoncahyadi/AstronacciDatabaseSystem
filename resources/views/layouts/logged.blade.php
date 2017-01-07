@@ -138,55 +138,75 @@
             <!-- /.navbar-top-links -->
 
             <div class="navbar-default sidebar" role="navigation">
-				@if (Auth::user()->hasRole((Auth::user()->username), '1'))
+				@if (Auth::user()->hasAnyRole(['1']))
 					<script>load('{{route('AClub')}}')</script>
-				@elseif (Auth::user()->hasRole((Auth::user()->username), '2'))
+				@elseif (Auth::user()->hasAnyRole(['2']))
 					<script>load('{{route('MRG')}}')</script>
-				@elseif (Auth::user()->hasRole((Auth::user()->username), '3'))
+				@elseif (Auth::user()->hasAnyRole(['3']))
 					<script>load('{{route('CAT')}}')</script>
-				@elseif (Auth::user()->hasRole((Auth::user()->username), '4'))
+				@elseif (Auth::user()->hasAnyRole(['4']))
 					<script>load('{{route('UOB')}}')</script>
-				@elseif (Auth::user()->hasRole((Auth::user()->username), '5'))
+				@elseif (Auth::user()->hasAnyRole(['5']))
 					<script>load('{{route('sales')}}')</script>
 				@endif
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
                         <li id="t1">
                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">							
+                            <ul class="nav nav-second-level">
+							@if (Auth::user()->hasAnyRole(['0', '1']))
                                 <li>
                                     <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>
-                                </li>							
+                                </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '2']))
                                 <li>
                                     <a onclick="load('{{route('MRG')}}')" href="#" style="color:white;">Admin MRG</a>
                                 </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '4']))
                                 <li>
                                     <a onclick="load('{{route('UOB')}}')" href="#" style="color:white;">Admin UOB</a>
                                 </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '3']))
                                 <li>
                                     <a onclick="load('{{route('CAT')}}')" href="#" style="color:white;">Admin CAT</a>
                                 </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
                                 <li>
                                     <a onclick="load('{{route('green')}}')" href="#" style="color:white;">Green</a>
                                 </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
                                 <li>
                                     <a onclick="load('{{route('grow')}}')" href="#" style="color:white;">Grow</a>
                                 </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
                                 <li>
                                     <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
                                 </li>
+							@endif
+							@if (Auth::user()->hasAnyRole(['0', '5']))
                                 <li>
                                     <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
                                 </li>
+							@endif							
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+						@if (Auth::user()->hasAShop(Auth::user()->username))
                         <li id="t2">
                             <a href="{{ url('dashboard2') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop</a>
                         </li>
+						@endif
+						@if (Auth::user()->hasAnyRole(['0']))
 						<li id="t3">
                             <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> List</a>
                         </li>
+						@endif
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
