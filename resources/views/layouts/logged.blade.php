@@ -193,15 +193,27 @@
                                 <li>
                                     <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
                                 </li>
-							@endif							
+							@endif	
+
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
 						@if (Auth::user()->hasAShop(Auth::user()->username))
                         <li id="t2">
-                            <a href="{{ url('dashboard2') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop</a>
+                            <a href="{{ url('dashboard') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                @if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
+                                <li>
+                                    <a onclick="load('{{route('product')}}')" href="#" style="color:white;">Product</a>
+                                </li>
+                                @endif
+                                <li>
+                                    <a onclick="load('{{route('trans')}}')" href="#" style="color:white;">Transaction</a>
+                                </li>
+                                </ul>
                         </li>
 						@endif
+
 						@if (Auth::user()->hasAnyRole(['0']))
 						<li id="t3">
                             <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> List</a>

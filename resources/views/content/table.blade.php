@@ -6,7 +6,8 @@
             <!-- /.col-lg-12 -->
         </div>
     </div>	
-		
+	
+	@if(($route != 'product') and ($route != 'trans'))	
 	<div class="panel-group" id="accordion1">
 		<div class="panel">
 			<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Client</a>
@@ -40,7 +41,7 @@
 			</div>
 		</div>
     </div>
-	
+	@endif
 	
 	
 	<div class="row">
@@ -68,8 +69,10 @@
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
                                 @elseif ($route == 'RedClub')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}">{{$client->$att}} </a></td>
-                                @else
+                                @elseif (($route != 'product') and ($route != 'trans'))
 								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
+								@else
+									<td>{{$client->$att}}</td>
                                 @endif
 							@endforeach
 							</tr>
