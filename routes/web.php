@@ -332,6 +332,13 @@ Route::get('/green/deleteclient/{id}', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::post('/green/assign', [
+    'uses' => 'GreenController@assignClient',
+    'as' => 'green.assign',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+	
 //Red Club Route
 Route::get('/RedClub', [
     'uses' => 'RedClubController@getTable',
@@ -418,6 +425,7 @@ Route::get('/grow/deleteclient/{id}', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+//AShop Route
 Route::get('/product', [
     'uses' => 'ProductController@getTable',
     'as' => 'product',

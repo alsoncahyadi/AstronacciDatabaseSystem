@@ -58,14 +58,16 @@
 				List of {{ $route }} client
                 </div>
 				<!-- TODO FORM -->
-				<form action="" method="post"> 
+				<form action="{{ route('green.assign') }}" method="post">
                 <!-- /.panel-heading -->
                 <div class="panel-body">
 					<div style="overflow-x:scroll">
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
                         <thead>
 							<tr>
+							@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
 								<th> Select </th>
+							@endif
 							@foreach ($heads as $head)
 								<th> {{$head}} </th>
 							@endforeach
@@ -73,9 +75,21 @@
 							</tr>
                         </thead>
 						<tbody>
-						@foreach ($clients as $client)
+						<?php $idx = 0; ?>
+						@foreach ($clients as $client)																				
 							<tr class="gradeA">
-								<td style="text-align:center;"><input id="" onchange="" type="checkbox" style=""></td>
+								@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
+								<td style="text-align:center;">
+									<input id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+									@if($route == 'green')
+									<input type="hidden" name="id{{ $idx }}" value={{ $client->green_id }}>
+									@elseif($route == 'RedClub')
+									<input type="hidden" name="id{{ $idx }}" value={{ $client->username }}>
+									@elseif($route == 'grow')
+									<input type="hidden" name="id{{ $idx }}" value={{ $client->all_pc_id }}>
+									@endif
+								</td>
+								@endif
 							@foreach ($atts as $att)
                                 @if ($route == 'green')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
@@ -88,31 +102,33 @@
                                 @endif
 							@endforeach
 							</tr>
+							
+							<?php $idx = $idx + 1; ?>
+							
 						@endforeach
 						</tbody>
+						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
                     <!-- /.table-responsive -->
 					</div>
+					{{ csrf_field() }}
 					
+					@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
+					<input type="hidden" name="username" value={{ Auth::user()->username }}>
 					<div style="float:right">
 						&nbsp &nbsp Prospect to:
 						<select id="" onchange="" name="prospect">
-							<option value="1">A-Club admin</option>
-							<option value="2">MRG admin</option>
-							<option value="3">CAT admin</option>
-							<option value="4">UOB admin</option>
+							<option>A-Club</option>
+							<option>MRG</option>
+							<option>CAT</option>
+							<option>UOB</option>
 						</select>
 						&nbsp &nbsp Assign to:
-						<select id="" onchange="" name="assign">
-							<option value="0">0</option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-						</select>
+						<input type="text" name="assign">
+							
 						<button class="button turquoise" style="border: 0; margin:20px; margin-bottom:10px" type="submit" name="assbut"><span>✎</span>Save</button>
 					</div>
+					@endif
 				
                 </div>
                 <!-- /.panel-body -->

@@ -194,4 +194,22 @@ class GreenController extends Controller
         //    echo $er . "<br/>";
         return redirect()->back()->withErrors([$err]);
     }
+	
+	public function assignClient (Request $request) {
+		if (isset($request['assbut'])){
+			$err = [];
+			for ($idx = 0;$idx < $request['numusers'];$idx++){
+				if ($request['assigned'.$idx]){
+					try {
+						DB::select("call input_assign_green(?,?,?,?,?,?)", [$request['id'.$idx], $request['assign'], $request['prospect'], date('Y-m-d H:i:s'), $request['username'], 'to be added']);
+					} catch(\Illuminate\Database\QueryException $ex){
+						echo ($ex->getMessage()); 
+						$err[] = $ex->getMessage();
+					}
+					DB::commit();
+				}
+			}
+			return redirect()->back()->withErrors([$err]);
+		}
+	}
 }
