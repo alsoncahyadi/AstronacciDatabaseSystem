@@ -78,11 +78,11 @@
 						<table class="responstable" style="margin-top:-20px">
 							
 							<tr>            
-							<th>Username</th>
-							<th>Fullname</th>
-							<th>Role</th>
-							<th>A Shop</th>
-							<th>Delete</th>
+							<th style="text-align:center;">Username</th>
+							<th style="text-align:center;">Fullname</th>
+							<th style="text-align:center;">Role</th>
+							<th style="text-align:center;">A Shop</th>
+							<th style="text-align:center;">Delete</th>
 							</tr>
 							
 							<?php $idx = 0; ?>
@@ -91,7 +91,7 @@
 							@if (Auth::user()->username != $user->username)
 							<tr id="{{$idx}}">
 								<td><input id="ischanged{{ $idx }}" type="checkbox" style="display:none" name="ischanged{{ $idx }}"><b>{{ $user->username }}<input type="hidden" name="username{{ $idx }}" value="{{ $user->username }}"> </b></td>
-								<td style="color:black"><b>{{ $user->fullname }}</b></td>
+								<td style="text-align:center"><b>{{ $user->fullname }}</b></td>
 								<td><select id="roles{{ $idx }}" onchange="checkChange({{ $idx }})" name="roles{{ $idx }}">
 									<option value="0" {{ $user->hasRole($user->username, '0') ? 'selected' : ''}} >Superadmin</option>
 									<option value="1" {{ $user->hasRole($user->username, '1') ? 'selected' : ''}} >A-Club admin</option>
@@ -100,8 +100,8 @@
 									<option value="4" {{ $user->hasRole($user->username, '4') ? 'selected' : ''}} >UOB admin</option>
 									<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 								</select></td>
-								<td><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
-								<td><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}">X</button></td></td>
+								<td style="text-align:center;"><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
+								<td style="text-align:center;"><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}">X</button></td></td>
 									{{ csrf_field() }}
 								<br>
 							</tr>

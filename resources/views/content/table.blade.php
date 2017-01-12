@@ -75,7 +75,7 @@
 						<tbody>
 						@foreach ($clients as $client)
 							<tr class="gradeA">
-								<td><input id="" onchange="" type="checkbox" ></td>
+								<td style="text-align:center;"><input id="" onchange="" type="checkbox" style=""></td>
 							@foreach ($atts as $att)
                                 @if ($route == 'green')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
@@ -95,14 +95,21 @@
 					</div>
 					
 					<div style="float:right">
-						&nbsp &nbsp Assign to:
-						<select id="" onchange="" name="assign">
-							<option value="0">Superadmin</option>
+						&nbsp &nbsp Prospect to:
+						<select id="" onchange="" name="prospect">
 							<option value="1">A-Club admin</option>
 							<option value="2">MRG admin</option>
 							<option value="3">CAT admin</option>
 							<option value="4">UOB admin</option>
-							<option value="5">Sales</option>
+						</select>
+						&nbsp &nbsp Assign to:
+						<select id="" onchange="" name="assign">
+							<option value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
 						</select>
 						<button class="button turquoise" style="border: 0; margin:20px; margin-bottom:10px" type="submit" name="assbut"><span>✎</span>Save</button>
 					</div>
