@@ -7,10 +7,16 @@
         </div>
     </div>	
 	
-	@if(($route != 'product') and ($route != 'trans'))	
+	
 	<div class="panel-group" id="accordion1">
 		<div class="panel">
-			<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Client</a>
+			@if($route == 'product')
+				<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Product</a>
+			@elseif ($route == 'trans')
+				<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+			@else
+				<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Client</a>
+			@endif
 			<div id="addcli" class="panel-collapse collapse">
 				<div class="panel-body">
 					<form method="post" action="{{route($route . '.insert')}}">
@@ -27,6 +33,7 @@
 				</div>
 			</div>
 		</div>
+		@if(($route != 'product') and ($route != 'trans'))	
 		<div class="panel">
 			<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#impo">Import Excel File</a>       
 			<div id="impo" class="panel-collapse collapse">

@@ -425,40 +425,12 @@ Route::get('/product', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
-/*Route::get('/product/{id}', [
-    'uses' => 'ProductController@clientDetail',
-    'as' => 'trans.detail',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);
-
 Route::post('/product/insert', [
     'uses' => 'ProductController@addClient',
     'as' => 'product.insert',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
-
-Route::post('/product/import', [
-    'uses' => 'ProductController@importExcel',
-    'as' => 'product.import',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);
-
-Route::post('/product/edit', [
-    'uses' => 'ProductController@editClient',
-    'as' => 'product.edit',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);
-
-Route::get('/product/deleteclient/{id}', [
-    'uses' => 'ProductController@deleteClient',
-    'as' => 'product.deleteclient',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);*/
 
 Route::get('/trans', [
     'uses' => 'TransController@getTable',
@@ -468,37 +440,9 @@ Route::get('/trans', [
     ]);
 
 
-/*Route::get('/trans/{id}', [
-    'uses' => 'TransController@clientDetail',
-    'as' => 'trans.detail',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);
-
 Route::post('/trans/insert', [
     'uses' => 'TransController@addClient',
     'as' => 'trans.insert',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
-
-Route::post('/trans/import', [
-    'uses' => 'TransController@importExcel',
-    'as' => 'trans.import',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);
-
-Route::post('/trans/edit', [
-    'uses' => 'TransController@editClient',
-    'as' => 'trans.edit',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);
-
-Route::get('/trans/deleteclient/{id}', [
-    'uses' => 'TransController@deleteClient',
-    'as' => 'trans.deleteclient',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
-    ]);*/
