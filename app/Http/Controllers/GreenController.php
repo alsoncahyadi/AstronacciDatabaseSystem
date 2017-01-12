@@ -23,6 +23,9 @@ class GreenController extends Controller
 
     public function getTable() {
         $greens = DB::select("SELECT * FROM green");
+		
+		$salesusers = DB::select("SELECT sales_username FROM sales");
+		//dd($salesusers);
         //dd($mrgs);
 
         //Data untuk insert
@@ -51,7 +54,7 @@ class GreenController extends Controller
             }
         }
 
-        return view('content\table', ['route' => 'green', 'clients' => $greens, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'green', 'clients' => $greens, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';

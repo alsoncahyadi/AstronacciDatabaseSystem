@@ -124,8 +124,11 @@
 							<option>UOB</option>
 						</select>
 						&nbsp &nbsp Assign to:
-						<input type="text" name="assign">
-							
+						<select name="assign">
+						@foreach($sales as $sale)
+							<option>{{$sale->sales_username}}</option>
+						@endforeach
+						</select>
 						<button class="button turquoise" style="border: 0; margin:20px; margin-bottom:10px" type="submit" name="assbut"><span>✎</span>Save</button>
 					</div>
 					@endif
