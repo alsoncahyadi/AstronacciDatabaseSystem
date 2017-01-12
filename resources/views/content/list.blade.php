@@ -7,7 +7,6 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
-			<link href="{{ URL::asset('css/styling.css') }}" rel="stylesheet">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-child fa-fw"></i> Users

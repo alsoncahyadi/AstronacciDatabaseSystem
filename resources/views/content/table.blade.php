@@ -57,11 +57,15 @@
                 <div class="panel-heading">
 				List of {{ $route }} client
                 </div>
+				<!-- TODO FORM -->
+				<form action="" method="post"> 
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+					<div style="overflow-x:scroll">
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
                         <thead>
 							<tr>
+								<th> Select </th>
 							@foreach ($heads as $head)
 								<th> {{$head}} </th>
 							@endforeach
@@ -71,6 +75,7 @@
 						<tbody>
 						@foreach ($clients as $client)
 							<tr class="gradeA">
+								<td><input id="" onchange="" type="checkbox" ></td>
 							@foreach ($atts as $att)
                                 @if ($route == 'green')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
@@ -87,9 +92,25 @@
 						</tbody>
 					</table>
                     <!-- /.table-responsive -->
-                    
+					</div>
+					
+					<div style="float:right">
+						&nbsp &nbsp Assign to:
+						<select id="" onchange="" name="assign">
+							<option value="0">Superadmin</option>
+							<option value="1">A-Club admin</option>
+							<option value="2">MRG admin</option>
+							<option value="3">CAT admin</option>
+							<option value="4">UOB admin</option>
+							<option value="5">Sales</option>
+						</select>
+						<button class="button turquoise" style="border: 0; margin:20px; margin-bottom:10px" type="submit" name="assbut"><span>✎</span>Save</button>
+					</div>
+				
                 </div>
                 <!-- /.panel-body -->
+							
+				</form>
             </div>
             <!-- /.panel -->
         </div>
