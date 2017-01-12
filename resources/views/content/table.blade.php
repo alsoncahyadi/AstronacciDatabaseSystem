@@ -118,10 +118,10 @@
 					<div style="float:right">
 						&nbsp &nbsp Prospect to:
 						<select id="" onchange="" name="prospect">
-							<option>A-Club</option>
-							<option>MRG</option>
-							<option>CAT</option>
-							<option>UOB</option>
+							<option {{ Auth::user()->hasRole(Auth::user()->username, '1') ? 'selected' : ''}}>A-Club</option>
+							<option {{ Auth::user()->hasRole(Auth::user()->username, '2') ? 'selected' : ''}}>MRG</option>
+							<option {{ Auth::user()->hasRole(Auth::user()->username, '3') ? 'selected' : ''}}>CAT</option>
+							<option {{ Auth::user()->hasRole(Auth::user()->username, '4') ? 'selected' : ''}}>UOB</option>
 						</select>
 						&nbsp &nbsp Assign to:
 						<select name="assign">
