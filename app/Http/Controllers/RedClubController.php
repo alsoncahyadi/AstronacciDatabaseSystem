@@ -23,6 +23,8 @@ class RedClubController extends Controller
 
     public function getTable() {
         $aclubs = DB::select("select * from redclub");
+		
+		$salesusers = DB::select("SELECT sales_username FROM sales");
         //dd($mrgs);
 
         //Data untuk insert
@@ -35,7 +37,7 @@ class RedClubController extends Controller
 
         //Nama attribute pada sql
          $atts = ["username", "firstname", "lastname", "email", "join_date", "no_hp","all_pc_id", "occupation", "jenis_kelamin", "status_perkawinan", "alamat", "kota", "line_id", "blackberry_pin", "annual_come", "country", "birthdate", "interest", "hobby", "spesific", "your_stock_and_future_broker", "trading_experience_year", "trading_type", "security_question", "security_answer", "facebook", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob"];
-        return view('content\table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';
@@ -164,4 +166,22 @@ class RedClubController extends Controller
         //    echo $er . "<br/>";
         return redirect()->back()->withErrors([$err]);
     }
+	
+	public function assignClient (Request $request) {
+		if (isset($request['assbut'])){
+			$err = [];
+			for ($idx = 0;$idx < $request['numusers'];$idx++){
+				if ($request['assigned'.$idx]){
+					try {
+						DB::select("call input_assign_redclub(?,?,?,?,?,?)", [$request['id'.$idx], $request['assign'], $request['prospect'], date('Y-m-d H:i:s'), $request['username'], 'to be added']);
+					} catch(\Illuminate\Database\QueryException $ex){
+						echo ($ex->getMessage()); 
+						$err[] = $ex->getMessage();
+					}
+					DB::commit();
+				}
+			}
+			return redirect()->back()->withErrors([$err]);
+		}
+	}
 }

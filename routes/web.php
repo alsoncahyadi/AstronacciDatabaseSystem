@@ -382,6 +382,13 @@ Route::get('/RedClub/deleteclient/{id}', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::post('/RedClub/assign', [
+    'uses' => 'RedClubController@assignClient',
+    'as' => 'RedClub.assign',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+	
 //Grow Route
 Route::get('/grow', [
     'uses' => 'GrowController@getTable',
@@ -423,6 +430,13 @@ Route::get('/grow/deleteclient/{id}', [
     'as' => 'grow.deleteclient',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+	
+Route::post('/grow/assign', [
+    'uses' => 'GrowController@assignClient',
+    'as' => 'grow.assign',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 //AShop Route

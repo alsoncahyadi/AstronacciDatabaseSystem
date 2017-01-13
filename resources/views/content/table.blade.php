@@ -58,7 +58,14 @@
 				List of {{ $route }} client
                 </div>
 				<!-- TODO FORM -->
-				<form action="{{ route('green.assign') }}" method="post">
+				@if($route == 'green')
+					<form action="{{ route('green.assign') }}" method="post">
+				@elseif($route == 'RedClub')
+					<form action="{{ route('RedClub.assign') }}" method="post">
+				@else
+					<form action="{{ route('grow.assign') }}" method="post">
+				@endif
+				
                 <!-- /.panel-heading -->
                 <div class="panel-body">
 					<div style="overflow-x:scroll">
@@ -86,7 +93,7 @@
 									@elseif($route == 'RedClub')
 									<input type="hidden" name="id{{ $idx }}" value={{ $client->username }}>
 									@elseif($route == 'grow')
-									<input type="hidden" name="id{{ $idx }}" value={{ $client->all_pc_id }}>
+									<input type="hidden" name="id{{ $idx }}" value={{ $client->grow_id }}>
 									@endif
 								</td>
 								@endif

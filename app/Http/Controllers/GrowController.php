@@ -23,6 +23,8 @@ class GrowController extends Controller
 
     public function getTable() {
         $aclubs = DB::select("SELECT * FROM grow INNER JOIN master_client ON (master_client.all_pc_id = grow.all_pc_id)");
+		
+		$salesusers = DB::select("SELECT sales_username FROM sales");
         //dd($mrgs);
 
         //Data untuk insert
@@ -35,7 +37,7 @@ class GrowController extends Controller
 
         //Nama attribute pada sql
         $atts = ["all_pc_id", "grow_id", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "created_at", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
-        return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';
@@ -164,4 +166,22 @@ class GrowController extends Controller
         //    echo $er . "<br/>";
         return redirect()->back()->withErrors([$err]);
     }
+	
+	public function assignClient (Request $request) {
+		if (isset($request['assbut'])){
+			$err = [];
+			for ($idx = 0;$idx < $request['numusers'];$idx++){
+				if ($request['assigned'.$idx]){
+					try {
+						DB::select("call input_assign_grow(?,?,?,?,?,?)", [$request['id'.$idx], $request['assign'], $request['prospect'], date('Y-m-d H:i:s'), $request['username'], 'to be added']);
+					} catch(\Illuminate\Database\QueryException $ex){
+						echo ($ex->getMessage());
+						$err[] = $ex->getMessage();
+					}
+					DB::commit();
+				}
+			}
+			return redirect()->back()->withErrors([$err]);
+		}
+	}
 }
