@@ -41,9 +41,13 @@
 						</tbody>
 					</table>
                     <!-- /.table-responsive -->
-                <form>    
+                </form>    
                 </div>
                 <!-- /.panel-body -->
+				<form>
+					<input type="text">
+					<button type="submit">Report</button>
+				</form>
             </div>
             <!-- /.panel -->
         </div>

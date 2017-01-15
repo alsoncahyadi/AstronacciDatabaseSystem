@@ -32,7 +32,7 @@ class SalesController extends Controller
 						
 		$assgrow = DB::select("call select_assign_grow()");
 		
-		dd($assgrow);
+		//dd($assgrow);
 		
 		//$assredclub = DB::select("call select_assign_redclub()");
 		
