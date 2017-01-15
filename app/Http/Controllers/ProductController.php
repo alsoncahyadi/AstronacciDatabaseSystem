@@ -41,14 +41,15 @@ class ProductController extends Controller
 
     public function addClient(Request $request) {
        $this->validate($request, [
-                'product_name' => 'required',
             ]);
 
         //echo $request;
         DB::beginTransaction();
         $err = [];
+        $username = \Auth::user()->username;
         try {
-            DB::select("call input_product(?)", [$request->product_name]);
+            DB::select("call input_product(?)", [$this->nullify($request->product_name)]);
+            DB::select("call add_username_to_log(?)", [$username]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();
