@@ -22,8 +22,17 @@
 					<form method="post" action="{{route($route . '.insert')}}">
 						@foreach ($ins as $atr)
 							<div class="form-group">
-								<label>{{$atr}}</label>
-								<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+								@if ($atr == 'Product ID')
+									<label>{{$atr}}</label><br>
+									<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+									@foreach($prods as $prod)
+									<option value = {{$prod->product_id}}>{{$prod->product_id}}</option>
+					               @endforeach
+									</select>
+								@else
+									<label>{{$atr}}</label>
+									<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+								@endif
 							</div>
 						@endforeach
 						<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
