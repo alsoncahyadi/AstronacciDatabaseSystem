@@ -16,6 +16,7 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+				<h1>{{ $user }}</h1>
 				<form>
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
                         <thead>
