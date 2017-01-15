@@ -204,7 +204,7 @@ class GreenController extends Controller
 			for ($idx = 0;$idx < $request['numusers'];$idx++){
 				if ($request['assigned'.$idx]){
 					try {
-						DB::select("call input_assign_green(?,?,?,?,?,?)", [$request['id'.$idx], $request['assign'], $request['prospect'], date('Y-m-d H:i:s'), $request['username'], 'to be added']);
+						DB::select("call input_assign_green(?,?,?,?,?)", [$request['id'.$idx], $request['assign'], $request['prospect'], $request['username'], 'to be added']);
 					} catch(\Illuminate\Database\QueryException $ex){
 						echo ($ex->getMessage()); 
 						$err[] = $ex->getMessage();
