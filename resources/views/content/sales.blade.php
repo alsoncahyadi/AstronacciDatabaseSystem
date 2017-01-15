@@ -22,23 +22,23 @@
                         <thead>
 							<tr>
 								<th> Select </th>
-								<th> Name </th>
-								<th> Email </th>
-								<th> Phone </th>
-								<th> Assigned By </th>
-								<th> Status </th>
+								@foreach ($heads as $head)
+									<th> {{$head}} </th>
+								@endforeach
 							</tr>
                         </thead>
 						<tbody>
+						<?php $idx = 0; ?>
+							@foreach ($clients as $client)																				
 							<tr class="gradeA">
-								<td>a</td>
-								<td>b</td>
-								<td>c</td>
-								<td>d</td>
-								<td>e</td>
-								<td>f</td>
+								@foreach ($atts as $att)
+									<td>{{$client->$att}}</td>
+								@endforeach
 							</tr>
+							<?php $idx = $idx + 1; ?>	
+						@endforeach
 						</tbody>
+						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
                     <!-- /.table-responsive -->
                 </form>    

@@ -46,7 +46,17 @@ class SalesController extends Controller
 
         //Nama attribute pada sql
         $atts = ["green_id", "client_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "class", "nomor", "expired_date", "kategori", "bulan", "bank", "nomor_rekening", "RDI_niaga", "RDI_BCA", "trading_via", "source", "sales_username"];
-        return view('content\sales', ['user'=>$username]);
+        foreach ($assgrow as $mrg) {
+            $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
+            $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
+            $mrg->is_mrg_premiere = $mrg->is_mrg_premiere ? "Yes" : "No";
+            $mrg->is_aclub_stock = $mrg->is_aclub_stock ? "Yes" : "No";
+            $mrg->is_aclub_future = $mrg->is_aclub_future ? "Yes" : "No";
+            foreach ($atts as $att) {
+                if (!$mrg->$att) $mrg->$att = "-";
+            }
+        }
+		return view('content\sales', ['user'=>$username , 'clients' => $assgrow, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
 }
