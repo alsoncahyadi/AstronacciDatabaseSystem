@@ -6,7 +6,20 @@
             <!-- /.col-lg-12 -->
         </div>
     </div>	
-		
+	
+	<script>
+	function hidePopup() {
+		alert("hey");
+		var popup = document.getElementById("popup");
+		popup.style.visibility = "hidden";
+	}
+	
+	function showPopup(id) {
+		alert("woy");
+		var popup = document.getElementById("popup");
+		popup.style.visibility = "visible";		
+	}
+	</script>
 	
 	<div class="row">
         <div class="col-lg-12">
@@ -15,39 +28,41 @@
 				List of Sales Prospect
                 </div>
                 <!-- /.panel-heading -->
-                <div class="panel-body">
-				<h1>{{ $user }}</h1>
+                <div class="panel-body" onload="alert('Test');">
+				<h1>Clients</h1>
 				<form>
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
-                        <thead>
+						<?php $idx = 0; ?>
+                        <thead>							
 							<tr>
-								<th> Select </th>
-								@foreach ($heads as $head)
-									<th> {{$head}} </th>
-								@endforeach
+							<th>Report</th>
+							@foreach ($heads as $head)
+								<th> {{$head}} </th>
+							@endforeach
 							</tr>
                         </thead>
 						<tbody>
-						<?php $idx = 0; ?>
 							@foreach ($clients as $client)																				
 							<tr class="gradeA">
+								<td><button type="button" onclick="showPopup(1)">Report</button></td>
 								@foreach ($atts as $att)
 									<td>{{$client->$att}}</td>
 								@endforeach
 							</tr>
-							<?php $idx = $idx + 1; ?>	
-						@endforeach
+							<?php $idx = $idx + 1; ?>
+							@endforeach
 						</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
                     <!-- /.table-responsive -->
-                </form>    
+                </form>
                 </div>
-                <!-- /.panel-body -->
-				<form>
-					<input type="text">
+				<form id="popup" name="popup">
+					<textarea></textarea>
+					<br />
 					<button type="submit">Report</button>
 				</form>
+                <!-- /.panel-body -->				
             </div>
             <!-- /.panel -->
         </div>
