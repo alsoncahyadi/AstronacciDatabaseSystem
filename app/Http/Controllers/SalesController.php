@@ -23,40 +23,17 @@ class SalesController extends Controller
     }
 
     public function getTable() {
-		//Select seluruh tabel
-        $assgreen = DB::select("call select_assign_green()");
-		
 		$username = \Auth::user()->username;
-		
-		//dd($assgreen);
 						
-		$assgrow = DB::select("call select_assign_grow()");
-		
-		//dd($assgrow);
-		
-		//$assredclub = DB::select("call select_assign_redclub()");
-		
-		//dd($assredclub);
-
-        //Data untuk insert
-        $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
+		$assigns = DB::select("call select_assign(?)",[$username]);
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Client ID", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Address", "City", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Class", "Nomor", "Tanggal Expired", "Kategori", "Bulan", "Bank", "Nomor Rekening", "RDI Niaga", "RDI BCA", "Trading", "Source", "Sales"]; //kecuali is" an dan add_time
+        $heads = ["Type", "Assign ID",  "ID", "Sales Username", "Prospect To", "Assign Time", "Assign Edited Time", "Admin Username", "Keterangan", "Last Edited Time", "Report", "Is Success", "Report Time", "Fullname", "No HP", "Email", "Address", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB", "All PC ID". "Green Grow Red Add Time", "Green Grow Red Edited Time"]; //kecuali is" an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["green_id", "client_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "class", "nomor", "expired_date", "kategori", "bulan", "bank", "nomor_rekening", "RDI_niaga", "RDI_BCA", "trading_via", "source", "sales_username"];
-        foreach ($assgrow as $mrg) {
-            $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
-            $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
-            $mrg->is_mrg_premiere = $mrg->is_mrg_premiere ? "Yes" : "No";
-            $mrg->is_aclub_stock = $mrg->is_aclub_stock ? "Yes" : "No";
-            $mrg->is_aclub_future = $mrg->is_aclub_future ? "Yes" : "No";
-            foreach ($atts as $att) {
-                if (!$mrg->$att) $mrg->$att = "-";
-            }
-        }
-		return view('content\sales', ['user'=>$username , 'clients' => $assgrow, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        $atts = ["type", "assign_id",  "id", "sales_username", "prospect_to", "assign_time", "assign_edited_time", "admin_username", "keterangan", "last_edited_time", "report", "is_success", "report_time", "fullname", "no_hp", "email", "address", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "all_pc_id", "green_grow_red_add_time", "green_grow_red_edited_time"];
+        
+		return view('content\sales', ['route' => 'sales', 'user'=>$username , 'clients' => $assigns, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
 }
