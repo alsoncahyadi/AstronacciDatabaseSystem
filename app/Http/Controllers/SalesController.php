@@ -36,4 +36,20 @@ class SalesController extends Controller
 		return view('content\sales', ['route' => 'sales', 'user'=>$username , 'clients' => $assigns, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
+	public function reportDetail($type, $id) {		
+		return view('content\report', ['type'=>$type, 'id'=>$id]);
+	}
+	
+	public function addGreenReport(Request $request) {		
+		$err = [];
+		$success = ($request['issuccess']=='on' ? 1 : 0);
+		try {
+			DB::select("call add_report_green(?,?,?)", [$request['id'], $request['report'], $success]);
+		} catch(\Illuminate\Database\QueryException $ex){
+			echo ($ex->getMessage());
+			$err[] = $ex->getMessage();
+		}
+		DB::commit();			
+		return redirect()->back()->withErrors([$err]);	
+	}
 }

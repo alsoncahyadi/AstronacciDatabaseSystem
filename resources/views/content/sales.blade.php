@@ -44,7 +44,7 @@
 						<tbody>
 							@foreach ($clients as $client)																				
 							<tr class="gradeA">
-								<td><button type="button" onclick="showPopup(1)">Report</button></td>
+								<td><a target="_blank" href="{{route('report.detail', ['type'=> $client->type, 'id' => $client->assign_id])}}">Report</a><input type="text" value={{$client->assign_id}}></td>
 								@foreach ($atts as $att)
 									<td>{{$client->$att}}</td>
 								@endforeach
@@ -57,11 +57,6 @@
                     <!-- /.table-responsive -->
                 </form>
                 </div>
-				<form id="popup" name="popup">
-					<textarea></textarea>
-					<br />
-					<button type="submit">Report</button>
-				</form>
                 <!-- /.panel-body -->				
             </div>
             <!-- /.panel -->
