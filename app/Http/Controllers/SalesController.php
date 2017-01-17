@@ -52,4 +52,30 @@ class SalesController extends Controller
 		DB::commit();			
 		return redirect()->back()->withErrors([$err]);	
 	}
+	
+	public function addGrowReport(Request $request) {		
+		$err = [];
+		$success = ($request['issuccess']=='on' ? 1 : 0);
+		try {
+			DB::select("call add_report_grow(?,?,?)", [$request['id'], $request['report'], $success]);
+		} catch(\Illuminate\Database\QueryException $ex){
+			echo ($ex->getMessage());
+			$err[] = $ex->getMessage();
+		}
+		DB::commit();			
+		return redirect()->back()->withErrors([$err]);	
+	}
+	
+	public function addRedclubReport(Request $request) {		
+		$err = [];
+		$success = ($request['issuccess']=='on' ? 1 : 0);
+		try {
+			DB::select("call add_report_redclub(?,?,?)", [$request['id'], $request['report'], $success]);
+		} catch(\Illuminate\Database\QueryException $ex){
+			echo ($ex->getMessage());
+			$err[] = $ex->getMessage();
+		}
+		DB::commit();			
+		return redirect()->back()->withErrors([$err]);	
+	}
 }

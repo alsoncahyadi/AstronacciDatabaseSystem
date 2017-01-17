@@ -91,6 +91,20 @@ Route::post('reportGreen', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4', '5'],
     ]);
+	
+Route::post('reportGrow', [
+    'uses' => 'SalesController@addGrowReport',
+    'as' => 'report.grow',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4', '5'],
+    ]);
+	
+Route::post('reportRedclub', [
+    'uses' => 'SalesController@addRedclubReport',
+    'as' => 'report.redclub',
+	'middleware' => ['auth', 'roles'],
+	'roles' => ['0', '1', '2', '3', '4', '5'],
+    ]);
 
 // CAT ROUTES
 Route::get('/CAT', [

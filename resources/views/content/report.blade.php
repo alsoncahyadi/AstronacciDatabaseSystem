@@ -9,14 +9,12 @@
         </div>
     </div>
             <!-- /.row -->
-
-            
-		<form method="post" action="{{route('report.green')}}">
+        
+		<form method="post" action="{{route('report.'.$type)}}">
 			<textarea name="report"></textarea>
 			<br />
-			<input name="issuccess" type="checkbox">
-			<input type="text" value={{$type}}>
-			<input name="id" type="text" value={{$id}}>
+			<input name="issuccess" type="checkbox">			
+			<input name="id" type="hidden" value={{$id}}>
 			<br />
 			<button name="assbut" type="submit">Report</button>
 			{{ csrf_field() }}

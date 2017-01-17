@@ -44,7 +44,7 @@
 						<tbody>
 							@foreach ($clients as $client)																				
 							<tr class="gradeA">
-								<td><a target="_blank" href="{{route('report.detail', ['type'=> $client->type, 'id' => $client->assign_id])}}">Report</a><input type="text" value={{$client->assign_id}}></td>
+								<td><a target="_blank" href="{{route('report.detail', ['type'=> $client->type, 'id' => $client->assign_id])}}">Report</a></td>
 								@foreach ($atts as $att)
 									<td>{{$client->$att}}</td>
 								@endforeach
