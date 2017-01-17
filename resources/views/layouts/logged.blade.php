@@ -221,6 +221,10 @@
                             <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> List</a>
                         </li>
 						@endif
+
+                        <li id="t3">
+                            <a style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> Assignment</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

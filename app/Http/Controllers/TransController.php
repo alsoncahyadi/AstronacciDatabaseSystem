@@ -30,10 +30,11 @@ class TransController extends Controller
         $ins = ["Product ID", "Jumlah", "Total Pembayaran", "Nama Pembeli", "All PC ID", "Sales Username", "Sale Date"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Purchase ID", "Product ID", "Jumlah", "Total Pembayaran", "Nama Pembeli", "All PC ID", "Sales Username", "Sale Date"]; 
+        $heads = ["Purchase ID", "Product ID", "Jumlah", "Total Pembayaran", "Nama Pembeli", "All PC ID", "Sales Username", "Sale Date", 
+        "Admin Username"]; 
 
         //Nama attribute pada sql
-        $atts = ["purchase_id", "product_id", "jumlah", "total_pembayaran", "nama_pembeli", "all_pc_id", "sales_username", "sale_date"];
+        $atts = ["purchase_id", "product_id", "jumlah", "total_pembayaran", "nama_pembeli", "all_pc_id", "sales_username", "sale_date", "admin_username"];
         return view('content\table', ['route' => 'trans', 'prods' => $prods, 'clients' => $transactions, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
@@ -47,7 +48,7 @@ class TransController extends Controller
         $err = [];
         $username = \Auth::user()->username;
         try {
-            DB::select("call input_product_sale(?,?,?,?,?,?,?)", [$request->product_id, $this->nullify($request->jumlah), $request->total_pembayaran, $this->nullify($request->nama_pembeli), $this->nullify($request->all_pc_id), $this->nullify($request->sales_username), $this->nullify($request->sale_date)]);
+            DB::select("call input_product_sale(?,?,?,?,?,?,?,?)", [$request->product_id, $this->nullify($request->jumlah), $request->total_pembayaran, $this->nullify($request->nama_pembeli), $this->nullify($request->all_pc_id), $this->nullify($request->sales_username), $this->nullify($request->sale_date), $username]);
             DB::select("call add_username_to_log(?)", [$username]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
