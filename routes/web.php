@@ -85,21 +85,21 @@ Route::get('/report/{type}/{id}', [
 	'roles' => ['0', '1', '2', '3', '4', '5'],
     ]);
 	
-Route::post('reportGreen', [
+Route::post('/report/green', [
     'uses' => 'SalesController@addGreenReport',
     'as' => 'report.green',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4', '5'],
     ]);
 	
-Route::post('reportGrow', [
+Route::post('/report/grow', [
     'uses' => 'SalesController@addGrowReport',
     'as' => 'report.grow',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4', '5'],
     ]);
 	
-Route::post('reportRedclub', [
+Route::post('/report/redclub', [
     'uses' => 'SalesController@addRedclubReport',
     'as' => 'report.redclub',
 	'middleware' => ['auth', 'roles'],

@@ -40,42 +40,60 @@ class SalesController extends Controller
 		return view('content\report', ['type'=>$type, 'id'=>$id]);
 	}
 	
-	public function addGreenReport(Request $request) {		
+	public function addGreenReport(Request $request) {
+		
+		$username = DB::select("SELECT sales_username FROM assign_green WHERE green_assign_id = " . $request['id']);
+		
 		$err = [];
-		$success = ($request['issuccess']=='on' ? 1 : 0);
-		try {
-			DB::select("call add_report_green(?,?,?)", [$request['id'], $request['report'], $success]);
-		} catch(\Illuminate\Database\QueryException $ex){
-			echo ($ex->getMessage());
-			$err[] = $ex->getMessage();
+		
+		if(($username[0]->sales_username) == (\Auth::user()->username)){
+			$success = ($request['issuccess']=='on' ? 1 : 0);
+			try {
+				DB::select("call add_report_green(?,?,?)", [$request['id'], $request['report'], $success]);
+			} catch(\Illuminate\Database\QueryException $ex){
+				echo ($ex->getMessage());
+				$err[] = $ex->getMessage();
+			}
+			DB::commit();
 		}
-		DB::commit();			
 		return redirect()->back()->withErrors([$err]);	
 	}
 	
-	public function addGrowReport(Request $request) {		
+	public function addGrowReport(Request $request) {
+		
+		$username = DB::select("SELECT sales_username FROM assign_grow WHERE grow_assign_id = " . $request['id']);
+		
 		$err = [];
-		$success = ($request['issuccess']=='on' ? 1 : 0);
-		try {
-			DB::select("call add_report_grow(?,?,?)", [$request['id'], $request['report'], $success]);
-		} catch(\Illuminate\Database\QueryException $ex){
-			echo ($ex->getMessage());
-			$err[] = $ex->getMessage();
+		
+		if(($username[0]->sales_username) == (\Auth::user()->username)){				
+			$success = ($request['issuccess']=='on' ? 1 : 0);
+			try {
+				DB::select("call add_report_grow(?,?,?)", [$request['id'], $request['report'], $success]);
+			} catch(\Illuminate\Database\QueryException $ex){
+				echo ($ex->getMessage());
+				$err[] = $ex->getMessage();
+			}
+			DB::commit();									
 		}
-		DB::commit();			
-		return redirect()->back()->withErrors([$err]);	
+		return redirect()->back()->withErrors([$err]);
 	}
 	
 	public function addRedclubReport(Request $request) {		
+	
+		$username = DB::select("SELECT sales_username FROM assign_redclub WHERE redclub_assign_id = " . $request['id']);
+		
 		$err = [];
+		
+		if(($username[0]->sales_username) == (\Auth::user()->username)){
 		$success = ($request['issuccess']=='on' ? 1 : 0);
-		try {
-			DB::select("call add_report_redclub(?,?,?)", [$request['id'], $request['report'], $success]);
-		} catch(\Illuminate\Database\QueryException $ex){
-			echo ($ex->getMessage());
-			$err[] = $ex->getMessage();
+			try {
+				DB::select("call add_report_redclub(?,?,?)", [$request['id'], $request['report'], $success]);
+			} catch(\Illuminate\Database\QueryException $ex){
+				echo ($ex->getMessage());
+				$err[] = $ex->getMessage();
+			}
+			DB::commit();
 		}
-		DB::commit();			
 		return redirect()->back()->withErrors([$err]);	
 	}
 }
