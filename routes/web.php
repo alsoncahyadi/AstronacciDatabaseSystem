@@ -43,18 +43,8 @@ Route::get('/home', 'HomeController@index');
 
 Route::get('/dashboard', [
     'uses' => 'Auth\LoginController@index',
-    'as' => 'dashboard'
-    ]);
-
-Route::get('/dashboard1', [
-    'uses' => 'Auth\LoginController@index1',
-    'as' => 'dashboard1'
-    ]);
-	
-Route::get('/dashboard2', [
-    'uses' => 'HomeController@index2',
-    'as' => 'dashboard2',
-	'middleware' => ['auth', 'ashop'],
+    'as' => 'dashboard',
+	'middleware' => 'auth'
     ]);
 		
 Route::get('list', [
@@ -75,35 +65,35 @@ Route::get('/sales', [
 	'uses' => 'SalesController@getTable',
 	'as' => 'sales',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '5'],
+	'roles' => ['5'],
 	]);
 	
 Route::get('/report/{type}/{id}', [
     'uses' => 'SalesController@reportDetail',
     'as' => 'report.detail',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1', '2', '3', '4', '5'],
+	'roles' => ['5'],
     ]);
 	
 Route::post('/report/green', [
     'uses' => 'SalesController@addGreenReport',
     'as' => 'report.green',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1', '2', '3', '4', '5'],
+	'roles' => ['5'],
     ]);
 	
 Route::post('/report/grow', [
     'uses' => 'SalesController@addGrowReport',
     'as' => 'report.grow',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1', '2', '3', '4', '5'],
+	'roles' => ['5'],
     ]);
 	
 Route::post('/report/redclub', [
     'uses' => 'SalesController@addRedclubReport',
     'as' => 'report.redclub',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1', '2', '3', '4', '5'],
+	'roles' => ['5'],
     ]);
 
 // CAT ROUTES
@@ -159,12 +149,16 @@ Route::get('/CAT/deleteclient/{id}', [
 //route delete masih ngaco
 Route::get('/CAT/trans/{id}', [
     'uses' => 'CATController@detailTrans',
-    'as' => 'CAT.transdetail'
+    'as' => 'CAT.transdetail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
     ]);
 
 Route::get('/CAT/deletetrans/{id1}/{id2}', [
     'uses' => 'CATController@deleteTrans',
-    'as' => 'CAT/trans.deletetrans'
+    'as' => 'CAT/trans.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
     ]);
 
 // MRG ROUTES
@@ -471,28 +465,25 @@ Route::post('/grow/assign', [
 Route::get('/product', [
     'uses' => 'ProductController@getTable',
     'as' => 'product',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
+    'middleware' => ['auth', 'ashop'],
     ]);
 
 Route::post('/product/insert', [
     'uses' => 'ProductController@addClient',
     'as' => 'product.insert',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
+    'roles' => ['0'],
     ]);
 
 Route::get('/trans', [
     'uses' => 'TransController@getTable',
     'as' => 'trans',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
+    'middleware' => ['auth', 'ashop'],
     ]);
 
 
 Route::post('/trans/insert', [
     'uses' => 'TransController@addClient',
     'as' => 'trans.insert',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3', '4'],
+    'middleware' => ['auth', 'ashop'],
     ]);
