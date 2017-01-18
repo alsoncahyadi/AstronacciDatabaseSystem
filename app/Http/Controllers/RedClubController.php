@@ -27,6 +27,7 @@ class RedClubController extends Controller
 		$salesusers = DB::select("SELECT sales_username FROM sales");
         //dd($mrgs);
 
+        $foreigns = DB::select("SELECT all_pc_id, fullname FROM master_client");
         //Data untuk insert
         $ins = ["Username", "Firstname", "Lastname", "Email", "Tanggal Join", "No HP", "PC ID", "Occupation", "Jenis Kelamin", "Status Perkawinan", "Alamat", "Kota", " Line ID", "BB Pin", " Annual Come", "Country", "Birthdate", "Interest", "Hobby", "Spesific", "Stock and Future Broker", "Trading Experience Year", "Trading Type", "Security Question", "Security Answer", "Facebook", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB"];
 
@@ -37,7 +38,7 @@ class RedClubController extends Controller
 
         //Nama attribute pada sql
          $atts = ["username", "firstname", "lastname", "email", "join_date", "no_hp","all_pc_id", "occupation", "jenis_kelamin", "status_perkawinan", "alamat", "kota", "line_id", "blackberry_pin", "annual_come", "country", "birthdate", "interest", "hobby", "spesific", "your_stock_and_future_broker", "trading_experience_year", "trading_type", "security_question", "security_answer", "facebook", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob"];
-        return view('content\table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content\table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers, 'foreigns'=>$foreigns]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';

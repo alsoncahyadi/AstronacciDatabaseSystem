@@ -29,6 +29,13 @@
 									<option value = {{$prod->product_id}}>{{$prod->product_id}}</option>
 					               @endforeach
 									</select>
+								@elseif ($atr == 'PC ID')
+									<label>{{$atr}}</label><br>
+									<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+									@foreach($foreigns as $foreign)
+									<option value = {{$foreign->all_pc_id}}>{{$foreign->all_pc_id}}->{{$foreign->fullname}}</option>
+					               @endforeach
+									</select>
 								@else
 									<label>{{$atr}}</label>
 									<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">

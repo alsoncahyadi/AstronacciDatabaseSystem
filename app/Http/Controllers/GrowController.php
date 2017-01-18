@@ -27,6 +27,7 @@ class GrowController extends Controller
 		$salesusers = DB::select("SELECT sales_username FROM sales");
         //dd($mrgs);
 
+		$foreigns = DB::select("SELECT all_pc_id, fullname FROM master_client");
         //Data untuk insert
         $ins = ["PC ID", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB"];
 
@@ -37,7 +38,7 @@ class GrowController extends Controller
 
         //Nama attribute pada sql
         $atts = ["all_pc_id", "grow_id", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "created_at", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook"];
-        return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers, 'foreigns'=>$foreigns]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';
