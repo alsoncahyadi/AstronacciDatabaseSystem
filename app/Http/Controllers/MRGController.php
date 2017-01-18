@@ -28,6 +28,7 @@ class MRGController extends Controller
         $mrgs = DB::select("call select_mrg()");
         //dd($mrgs);
 
+        $salesusers = DB::select("SELECT sales_username FROM sales");
         //Data untuk insert
         $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
 
@@ -46,7 +47,7 @@ class MRGController extends Controller
                 if (!$mrg->$att) $mrg->$att = "-";
             }
         }
-        return view('content\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetail($id) {

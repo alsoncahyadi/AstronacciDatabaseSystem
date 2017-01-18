@@ -25,6 +25,8 @@ class CATController extends Controller
         $cats = DB::select("call select_cat()");
         //dd($mrgs);
 
+        $salesusers = DB::select("SELECT sales_username FROM sales");
+
         //Data untuk insert
         $ins = ["Sales", "Batch", "User ID", "No Induk", "Pendaftaran", "Kelas Berakhir", "Nama", "Jenis Kelamin", "Email", "Telepon", "Alamat", "Kota", "Tanggal Lahir", "Username", "Password"];
 
@@ -33,7 +35,7 @@ class CATController extends Controller
 
         //Nama attribute pada sql
         $atts = ["all_pc_id", "cat_user_id", "cat_no_induk", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "cat_username", "password", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username"];
-        return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
    // }
         //$tab = ["asdf", "bsb", "adf"];
         //$a = 'a';
