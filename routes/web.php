@@ -487,3 +487,9 @@ Route::post('/trans/insert', [
     'as' => 'trans.insert',
     'middleware' => ['auth', 'ashop'],
     ]);
+
+//Assignment Routes
+Route::get('/assign', [
+    'uses' => 'AssignmentController@getTable',
+    'as' => 'assign',
+    ]);

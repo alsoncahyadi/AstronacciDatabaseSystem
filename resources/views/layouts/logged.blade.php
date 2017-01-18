@@ -222,8 +222,8 @@
                         </li>
 						@endif
 
-                        <li id="t3">
-                            <a style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> Assignment</a>
+                        <li id="t4">
+                            <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> Assignment</a>
                         </li>
                     </ul>
                 </div>

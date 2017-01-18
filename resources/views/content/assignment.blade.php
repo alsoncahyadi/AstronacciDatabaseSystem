@@ -1,7 +1,71 @@
+@extends('layouts.logged')
+@section('content')
+            
+	<script>
+	$(document).ready(function(){
+		$("#hide").click(function(){
+			$("#bod1").hide();
+			$("#bod2").show();
+			$("#hide").hide();
+			$("#show").show();
+		});
+		$("#show").click(function(){
+			$("#bod2").hide();
+			$("#bod1").show();
+			$("#show").hide();
+			$("#hide").show();
+		});
+	});
+	</script>
+	<script>
+		function checkChange(idx) {
+			var ashopcb = document.getElementById("ashop"+idx);
+			var rolesel = document.getElementById("roles"+idx);
+			if ((ashopcb.checked != ashopcb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
+				document.getElementById("ischanged"+idx).checked = true;
+				if (!document.getElementById("isdel"+idx).checked) {
+					document.getElementById(idx).style.backgroundColor = "yellow";
+				}
+			}
+			else {
+				document.getElementById("ischanged"+idx).checked = false;
+				if (!document.getElementById("isdel"+idx).checked) {
+					if (idx % 2 == 0){
+						document.getElementById(idx).style.backgroundColor = "white";
+					} else {
+						document.getElementById(idx).style.backgroundColor = "#e7e7e7";
+					}
+				}
+			}
+		}
+		function checkDel(idx) {
+			var seldel = document.getElementById("isdel"+idx);
+			var delbut = document.getElementById("delbut"+idx);
+			if (seldel.checked) {				
+				seldel.checked = false;
+				delbut.innerHTML = "X";
+				if (document.getElementById("ischanged"+idx).checked == true){
+					document.getElementById(idx).style.backgroundColor = "yellow";
+				} else
+				if (idx % 2 == 0){
+					document.getElementById(idx).style.backgroundColor = "white";
+				} else {
+					document.getElementById(idx).style.backgroundColor = "#e7e7e7";
+				}
+				
+			}
+			else {
+				seldel.checked = true;
+				delbut.innerHTML = "Undo";
+				document.getElementById(idx).style.backgroundColor = "red";
+			}
+		}
+	</script>
+
 	<div>
 		<div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header" style="color:red">Dashboard</h1>
+                <h1 class="page-header" style="color:red">List of Assignment</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -173,3 +237,4 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
+ @endsection
