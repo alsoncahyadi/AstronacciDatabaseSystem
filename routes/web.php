@@ -95,6 +95,18 @@ Route::post('/report/redclub', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['5'],
     ]);
+	
+Route::get('/updatePassword', [
+	'uses' => 'PassController@getForm',
+	'as' => 'updatepass',
+	'middleware' => ['auth'],
+	]);
+	
+Route::post('/insertPassword', [
+	'uses' => 'PassController@updatePass',
+	'as' => 'insertpass',
+	'middleware' => ['auth'],
+	]);
 
 // CAT ROUTES
 Route::get('/CAT', [

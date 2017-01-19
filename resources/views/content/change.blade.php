@@ -7,7 +7,8 @@
         </div>
     </div>	
 	
-	<form method="post" action="{{route($route . '.insert')}}">
+	<form method="post" action="{{route('insertpass')}}">
+		
 	
 		<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
             <label for="password" class="col-md-4 control-label">Old Password</label>
@@ -15,9 +16,9 @@
             <div class="col-md-6">
                 <input id="password" type="password" class="form-control" name="oldpassword" required>
 
-                @if ($errors->has('password'))
+                @if ($errors->has('oldpassword'))
                     <span class="help-block">
-                        <strong>{{ $errors->first('password') }}</strong>
+                        <strong>{{ $errors->first('oldpassword') }}</strong>
                     </span>
                 @endif
             </div>
@@ -26,7 +27,7 @@
             <label for="password" class="col-md-4 control-label">New Password</label>
 
             <div class="col-md-6">
-                <input id="password" type="password" class="form-control" name="newpassword" required>
+                <input id="password" type="password" class="form-control" name="password" required>
 
                 @if ($errors->has('password'))
                     <span class="help-block">
@@ -43,6 +44,8 @@
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
             </div>
         </div>
+		
+		{{ csrf_field() }}
 		
 		<input type="submit" class="btn btn-default" value="Confirm">
 	</form>
