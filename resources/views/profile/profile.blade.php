@@ -97,6 +97,7 @@
         <div class="panel-body">
 			<div id="bod1">
 				<div class="form-group">
+                    <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
                     @foreach ($heads as $key => $value)
                         <div class="col-lg-2" style="height:30px">
                             <label>{{$key}}</label>
@@ -111,7 +112,7 @@
 			<div id="bod2" style="display:none">
 				<form role="form" method="post" action="{{route($route . '.edit')}}">
 					<div class="form-group">
-						
+						<!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                         @foreach ($ins as $key => $value)
                             <div style="height:60px">
                                 <label>{{$key}}</label>

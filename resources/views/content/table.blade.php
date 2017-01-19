@@ -99,6 +99,7 @@
 							@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
 								<th> Select </th>
 							@endif
+							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							@foreach ($heads as $head)
 								<th> {{$head}} </th>
 							@endforeach
@@ -107,26 +108,27 @@
                         </thead>
 						<tbody>
 						<?php $idx = 0; ?>
+						<!-- Menampilkan seluruh client untuk PC terkait, dari list pada variabel clients -->
 						@foreach ($clients as $client)																				
 							<tr class="gradeA">
 								@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
 								<td style="text-align:center;">
 									<input id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-									@if($route == 'green')
+									@if($route == 'green') 
 									<input type="hidden" name="id{{ $idx }}" value={{ $client->green_id }}>
-									@elseif($route == 'RedClub')
+									@elseif($route == 'RedClub') 
 									<input type="hidden" name="id{{ $idx }}" value={{ $client->username }}>
-									@elseif($route == 'grow')
-									<input type="hidden" name="id{{ $idx }}" value={{ $client->grow_id }}>
+									@elseif($route == 'grow') 
+									<input type="hidden" name="id{{ $idx }}" value={{ $client->grow_id }}> 
 									@endif
 								</td>
 								@endif
 							@foreach ($atts as $att)
-                                @if ($route == 'green')
+                                @if ($route == 'green') <!-- Client Green diidentifikasi berdasarkan green_id (untuk dilihat detailnya) -->
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
-                                @elseif ($route == 'RedClub')
+                                @elseif ($route == 'RedClub') <!-- Client RedClub diidentifikasi berdasarkan username (untuk dilihat detailnya) -->
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}">{{$client->$att}} </a></td>
-                                @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign'))
+                                @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
 								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
 								@else
 									<td>{{$client->$att}}</td>

@@ -1,16 +1,19 @@
  function load($pc) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("tab").innerHTML = this.responseText;
-                $('#dataTables').DataTable({
-                    responsive: true
-                });
-            }
-        };
-        xmlhttp.open("GET", $pc, true);
-        xmlhttp.send();
+    //Javascript untuk ajax request
+    //Ajax digunakan untuk mengambil tabel/konten untk page tertentu
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            //Konten yang diperoleh dari ajax dimasukkan ke dalam div tab
+            document.getElementById("tab").innerHTML = this.responseText;
+            $('#dataTables').DataTable({
+                responsive: true
+            });
+        }
     };
+    xmlhttp.open("GET", $pc, true);
+    xmlhttp.send();
+};
 function salesinput($id, $type){
 	document.getElementById("inputid").value = $id;
 	document.getElementById("inputtype").value = $type;
