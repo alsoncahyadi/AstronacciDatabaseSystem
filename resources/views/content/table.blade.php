@@ -39,8 +39,8 @@
 									@elseif ($atr == 'Sales')
 										<label>{{$atr}}</label><br>
 										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-										@foreach($sales as $sales)
-										<option value = {{$sales->sales_username}}>{{$sales->sales_username}}</option>
+										@foreach($sales as $sale)
+										<option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
 						               @endforeach
 										</select>
 									@else
