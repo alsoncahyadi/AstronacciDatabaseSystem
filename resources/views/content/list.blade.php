@@ -73,6 +73,7 @@
 			}
 		}
 	</script>
+	<a href="{{ route('updatepass')}}">update pass</a>
                 <div id="bod1" class="panel-body">
 					<form action="{{ route('admin.assign') }}" method="post">
 						<table class="responstable" style="margin-top:-20px">
