@@ -98,14 +98,16 @@
 			<div id="bod1">
 				<div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
-                    @foreach ($heads as $key => $value)
-                        <div class="col-lg-2" style="height:30px">
-                            <label>{{$key}}</label>
-                        </div>
-						<div class="col-lg-10" style="height:30px">
-							: {{$client->$value}}<br>
-						</div>
-                    @endforeach
+                    
+                        @foreach ($heads as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client->$value}}<br>
+                            </div>
+                        @endforeach
+                    
                    
 				</div>
 			</div>
@@ -113,17 +115,19 @@
 				<form role="form" method="post" action="{{route($route . '.edit')}}">
 					<div class="form-group">
 						<!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                        @foreach ($ins as $key => $value)
-                            <div style="height:60px">
-                                <label>{{$key}}</label>
-                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                            </div>
-                        @endforeach
+                        
+                                @foreach ($ins as $key => $value)
+                                    <div style="height:60px">
+                                        <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                    </div>
+                                @endforeach
+                        
 					</div>
 					<button type="submit" class="btn btn-default">Submit</button>
                     <button type="reset" class="btn btn-default">Reset</button>
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    @if ($route != "green")
+                    @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
                         <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
                     @endif
 				</form>
@@ -138,7 +142,9 @@
             else if ($route == "green") $userid = "green_id";
             else if ($route == "grow") $userid = "grow_id";
             else if ($route == "RedClub") $userid = "username";
-
+            else if ($route == "assigngreen") $userid = "green_assign_id";
+            else if ($route == "assigngrow") $userid = "grow_assign_id";
+            else if ($route == "assignredclub") $userid = "redclub_assign_id";
         ?>
         <a href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
     </div>

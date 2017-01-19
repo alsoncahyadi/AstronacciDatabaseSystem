@@ -190,9 +190,19 @@
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
                                 @elseif ($route == 'RedClub')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}">{{$client->$att}} </a></td>
-                                @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign'))
+                                @elseif ($route == 'assign')
+                                		@if ($client->type == 'green')
+								    		<td> <a target="_blank" href="{{route($route . '.greendetail', ['id' => $client->assign_id])}}">{{$client->$att}} </a></td>
+								    	@elseif ($client->type == 'grow')
+								    		<td> <a target="_blank" href="{{route($route . '.growdetail', ['id' => $client->assign_id])}}">{{$client->$att}} </a></td>
+								    	@else ($client->type == 'redclub')
+								    		<td> <a target="_blank" href="{{route($route . '.redclubdetail', ['id' => $client->assign_id])}}">{{$client->$att}} </a></td>
+								    	@endif
+                                @elseif (($route != 'product') and ($route != 'trans'))
 								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
+								
 								@else
+
 									<td>{{$client->$att}}</td>
                                 @endif
 							@endforeach

@@ -505,3 +505,49 @@ Route::get('/assign', [
     'uses' => 'AssignmentController@getTable',
     'as' => 'assign',
     ]);
+
+Route::get('/assign/green/{id}', [
+    'uses' => 'AssignmentController@clientDetailGreen',
+    'as' => 'assign.greendetail',
+    ]);
+
+Route::get('/assign/grow/{id}', [
+    'uses' => 'AssignmentController@clientDetailGrow',
+    'as' => 'assign.growdetail',
+    ]);
+
+Route::get('/assign/redclub/{id}', [
+    'uses' => 'AssignmentController@clientDetailRedClub',
+    'as' => 'assign.redclubdetail',
+    ]);
+
+Route::post('/assign/green/edit', [
+    'uses' => 'AssignmentController@editClientGreen',
+    'as' => 'assigngreen.edit',
+    ]);
+
+Route::post('/assign/grow/edit', [
+    'uses' => 'AssignmentController@editClientGrow',
+    'as' => 'assigngrow.edit',
+    ]);
+
+Route::post('/assign/redclub/edit', [
+    'uses' => 'AssignmentController@editClientRedClub',
+    'as' => 'assignredclub.edit',
+    ]);
+
+Route::get('/assign/green/deleteclient/{id}', [
+    'uses' => 'AssignmentController@deleteClientGreen',
+    'as' => 'assigngreen.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    ]);
+
+Route::get('/assign/grow/deleteclient/{id}', [
+    'uses' => 'AssignmentController@deleteClientGrow',
+    'as' => 'assigngrow.deleteclient',
+    ]);
+
+Route::get('/assign/redclub/deleteclient/{id}', [
+    'uses' => 'AssignmentController@deleteClientRedClub',
+    'as' => 'assignredclub.deleteclient',
+    ]);
