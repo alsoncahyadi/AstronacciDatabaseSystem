@@ -11,7 +11,9 @@
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
 				@if($route == 'product')
-					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Product</a>
+					@if(Auth::user()->hasAnyRole(['0']))
+						<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Product</a>
+					@endif
 				@elseif ($route == 'trans')
 					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
 				@else

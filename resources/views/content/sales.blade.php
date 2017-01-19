@@ -31,8 +31,7 @@
                 <div class="panel-body">
 				<h1>Clients</h1>
 				<form>
-                    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
-						<?php $idx = 0; ?>
+                    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">						
                         <thead>							
 							<tr>
 							<th>Report</th>
@@ -42,17 +41,18 @@
 							</tr>
                         </thead>
 						<tbody>
-							@foreach ($clients as $client)																				
-							<tr class="gradeA">
-								<td><a target="_blank" onclick="salesinput('{{$client->assign_id}}','{{$client->type}}')">Report</a></td>
-								@foreach ($atts as $att)
-									<td>{{$client->$att}}</td>
-								@endforeach
-							</tr>
-							<?php $idx = $idx + 1; ?>
+							@foreach ($clients as $client)
+								@if (($client->report_time) <= 0)
+								<tr class="gradeA">
+									<td><a target="_blank" onclick="salesinput('{{$client->assign_id}}','{{$client->type}}')">Report</a></td>
+									@foreach ($atts as $att)
+										<td>{{$client->$att}}</td>
+									@endforeach
+								</tr>
+								@endif
 							@endforeach
 						</tbody>
-						<input type="hidden" name="numusers" value="{{ $idx }}">
+						
 					</table>
                     <!-- /.table-responsive -->
                 </form>

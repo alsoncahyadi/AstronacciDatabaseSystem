@@ -191,7 +191,7 @@
                                     <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
                                 </li>
 							@endif
-							@if (Auth::user()->hasAnyRole(['0', '5']))
+							@if (Auth::user()->hasAnyRole(['5']))
                                 <li>
                                     <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
                                 </li>
@@ -204,11 +204,11 @@
                         <li id="t2">
                             <a href="{{ url('dashboard') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                @if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
+                                
                                 <li>
                                     <a onclick="load('{{route('product')}}')" href="#" style="color:white;">Product</a>
                                 </li>
-                                @endif
+                                
                                 <li>
                                     <a onclick="load('{{route('trans')}}')" href="#" style="color:white;">Transaction</a>
                                 </li>
