@@ -84,7 +84,7 @@ class AssignmentController extends Controller
         return view('profile\profile', ['route'=>'assignredclub', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
-    public function editClient(Request $request) {
+    public function editClientGreen(Request $request) {
         //Validasi input
         $this->validate($request, [
             ]);
@@ -94,14 +94,81 @@ class AssignmentController extends Controller
         try {
             //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
             //Edit atribut master client
-            DB::select("call edit_assign_green(?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut MRG
-            DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $this->nullify($request->join_date), $this->nullify($request->type), $this->nullify($request->sales_username)]);
+            DB::select("call edit_assign_green(?,?,?,?,?,?)", [$request->green_assign_id, $request->green_id, $this->nullify($request->sales_username), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();
         }
         DB::commit();
         return redirect()->back()->withErrors($err);
+    }
+
+    public function editClientGrow(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+            ]);
+        //Inisialisasi array error
+        $err = [];
+        DB::beginTransaction();
+        try {
+            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
+            //Edit atribut master client
+            DB::select("call edit_assign_grow(?,?,?,?,?,?)", [$request->grow_assign_id, $request->grow_id, $this->nullify($request->sales_username), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
+            $err[] = $ex->getMessage();
+        }
+        DB::commit();
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function editClientRedClub(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+            ]);
+        $username = \Auth::user()->username;
+        //Inisialisasi array error
+        $err = [];
+        DB::beginTransaction();
+        try {
+            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
+            //Edit atribut master client
+            DB::select("call edit_assign_redclub(?,?,?,?,?,?)", [$request->redclub_assign_id, $username, $this->nullify($request->sales_username), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            DB::rollback();
+            $err[] = $ex->getMessage();
+        }
+        DB::commit();
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function deleteClientGreen($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            DB::select("call delete_assign_green(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
+    public function deleteClientGrow($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            DB::select("call delete_assign_grow(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
+    public function deleteClientRedClub($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            DB::select("call delete_assign_redclub(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
     }
 }

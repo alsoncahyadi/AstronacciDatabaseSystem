@@ -539,7 +539,6 @@ Route::post('/assign/redclub/edit', [
 Route::get('/assign/green/deleteclient/{id}', [
     'uses' => 'AssignmentController@deleteClientGreen',
     'as' => 'assigngreen.deleteclient',
-    'middleware' => ['auth', 'roles'],
     ]);
 
 Route::get('/assign/grow/deleteclient/{id}', [

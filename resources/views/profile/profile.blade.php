@@ -129,6 +129,14 @@
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                     @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
                         <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                    @elseif ($route == 'assigngrow')
+                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
+                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
+                    @elseif ($route == 'assigngreen')
+                        <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
+                        <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
+                    @elseif ($route == 'assignredclub')
+                        <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
                     @endif
 				</form>
 			</div> 
