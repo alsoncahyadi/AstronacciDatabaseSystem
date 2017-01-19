@@ -17,26 +17,25 @@ class MRGController extends Controller
         if ($newstring === ''){
            return null;
         }
-
-        //echo "masuk sini";
         return $newstring;
     }
-    //
+    
     public function getTable() {
         //Select seluruh tabel
-        //$mrgs = MRG::all();
         $mrgs = DB::select("call select_mrg()");
-        //dd($mrgs);
 
+        //Daftar username sales
         $salesusers = DB::select("SELECT sales_username FROM sales");
         //Data untuk insert
         $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Account", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Tanggal Join", "Type", "Sales"]; //semua kecuali yg is"an dan add_time
+        $heads = ["PC ID", "Account", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status Pernikahan", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Tanggal Join", "Type", "Sales", "Tanggal Ditambahkan"]; //semua kecuali yg is"an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "account", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "join_date", "type", "sales_username"]; 
+        $atts = ["all_pc_id", "account", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "join_date", "type", "sales_username", "add_time"]; 
+
+        //Mengganti is_PC dari boolean menjadi yes atau no, mengganti null menjadi '-'
         foreach ($mrgs as $mrg) {
             $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
             $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
@@ -47,6 +46,7 @@ class MRGController extends Controller
                 if (!$mrg->$att) $mrg->$att = "-";
             }
         }
+        //Return view table dengan parameter
         return view('content\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
@@ -54,15 +54,18 @@ class MRGController extends Controller
         //Select seluruh data client $id yang ditampilkan di detail
         $mrg = DB::select("call select_detail_mrg(?)", [$id]);
         $mrg = $mrg[0];
-        $ins = ["Account" => "account", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
+
+        //Nama atribut form yang ditampilkan dan nama pada SQL
+        $ins = ["Account" => "account", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
+        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = ["PC ID" => "all_pc_id"] + $ins;
 
-        //$atts = ["all_pc_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "account", "join_date", "type", "sales_username"];
-        echo $mrg->all_pc_id;
+        //Return view profile dengan parameter
         return view('profile\profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {
+        //Validasi input
         $this->validate($request, [
         		'all_pc_id' => 'required',
                 'account' => 'required',
@@ -71,24 +74,25 @@ class MRGController extends Controller
                 'no_hp' => 'required',
                 'email' => 'email',
             ]);
-        echo $request->all_pc_id;
-        echo ("call edit_mrg(".$request->all_pc_id. $request->account. $request->join_date. $request->type. $request->sales_username);
+        //Inisialisasi array error
         $err = [];
         DB::beginTransaction();
         try {
+            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
+            //Edit atribut master client
             DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
+            //Edit atribut MRG
             DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $this->nullify($request->join_date), $this->nullify($request->type), $this->nullify($request->sales_username)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
         	DB::rollback();
             $err[] = $ex->getMessage();
         }
-        //return redirect(route('dashboard'))->withErrors($err);
         DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {
-        //Insert
+        //Validasi input
         $this->validate($request, [
                 'account' => 'required',
                 'nama' => 'required',
@@ -100,11 +104,11 @@ class MRGController extends Controller
                 'type' => 'required',
                 'sales' => 'required'
             ]);
-        //input ke database
-        //DB::select("call inputMRG($request->account,'$request->nama',$request->tanggal_join,'$request->address','$request->kota','$request->telepon','$request->email','$request->type','$request->sales')");
+        //Inisialisi array error
         $err = [];
         DB::beginTrasaction();
         try {
+            //Input data ke SQL
             DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
         } catch(\Illuminate\Database\QueryException $ex){ 
         	DB::rollback();
@@ -115,7 +119,7 @@ class MRGController extends Controller
     }
 
     public function deleteClient($id) {
-        echo "delete" . $id;
+        //Menghapus client dengan ID tertentu
         try {
             DB::select("call delete_mrg(?)", [$id]);
         } catch(\Illuminate\Database\QueryException $ex){ 
@@ -125,10 +129,10 @@ class MRGController extends Controller
     }
 
     public function importExcel() {
-        $err = [];
-        if(Input::hasFile('import_file')){
-            $path = Input::file('import_file')->getRealPath();
-            $data = Excel::load($path, function($reader) {
+        $err = []; //Inisialisasi array error
+        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
+            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
+            $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
@@ -173,10 +177,9 @@ class MRGController extends Controller
                     }
                 } //end validasi
 
-                //Jika tidak ada error, import
+                //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
-                        echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try { 
                           DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$value->account, $value->nama,$value->tanggal_join,$value->alamat,$value->kota,$value->telepon,$value->email,$value->type,$value->sales]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
@@ -195,16 +198,13 @@ class MRGController extends Controller
             $err[] = $msg;
         }
 
-
-        //foreach ($err as $er) 
-        //    echo $er . "<br/>";
         return redirect()->back()->withErrors([$err]);
     }
 
     public function exportExcel() {
         $data = DB::select("call select_mrg()");
         $array = [];
-        $heads = ["PC ID" => "all_pc_id", "Account" => "account", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
+        $heads = ["PC ID" => "all_pc_id", "Account" => "account", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {

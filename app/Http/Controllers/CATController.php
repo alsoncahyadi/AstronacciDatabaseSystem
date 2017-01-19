@@ -16,41 +16,39 @@ class CATController extends Controller
         if ($newstring === ''){
            return null;
         }
-
-        //echo "masuk sini";
         return $newstring;
     }
 
     public function getTable() {
+        //Select seluruh tabel
         $cats = DB::select("call select_cat()");
-        //dd($mrgs);
-
+        //Daftar username sales
         $salesusers = DB::select("SELECT sales_username FROM sales");
 
         //Data untuk insert
         $ins = ["Sales", "Batch", "User ID", "No Induk", "Pendaftaran", "Kelas Berakhir", "Nama", "Jenis Kelamin", "Email", "Telepon", "Alamat", "Kota", "Tanggal Lahir", "Username", "Password"];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "CAT ID", "No Induk", "Fullname", "Email", "No HP", "Birthdate", "Line ID", "BB Pin", "Twitter", "Address", "City", "Marital Status", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Username", "Password", "Batch", "Tanggal Daftar", "Tanggal Kelas Akhir", "Sales"]; //kecuali is" an, sm add_time
+        $heads = ["PC ID", "CAT ID", "No Induk", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Address", "City", "Status Pernikahan", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Username", "Password", "Batch", "Pendaftaran", "Kelas Akhir", "Sales", "Tanggal Ditambahkan"]; //kecuali is" an, sm add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "cat_user_id", "cat_no_induk", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "cat_username", "password", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username"];
+        $atts = ["all_pc_id", "cat_user_id", "cat_no_induk", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "cat_username", "password", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username", "add_time"];
+
+        //Return view table dengan parameter
         return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
-   // }
-        //$tab = ["asdf", "bsb", "adf"];
-        //$a = 'a';
-        //return $tab['a'];
-        //return view('table/table', ['posts' => $tab, 'route' => 'CAT.detail']);
     }
 
     public function clientDetail($id) {
-        //echo "CAT Detail <br>";
-        //echo $id;
+        //Select seluruh data client $id yang ditampilkan di detail
         $cat = DB::select("call select_detail_cat(?)", [$id]);
         $cat = $cat[0];
-        $ins = ["CAT ID" => "cat_user_id", "Fullname" => "fullname", "Email" => "email", "No HP" => "no_hp", "Birthdate" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Marital Status" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Username" => "cat_username", "Password" => "password", "Tanggal Daftar" => "tanggal_pendaftaran", "Tanggal Kelas Akhir" => "tanggal_kelas_berakhir", "Sales" => "sales_username"];
+
+        //Nama atribut form yang ditampilkan dan nama pada SQL
+        $ins = ["CAT ID" => "cat_user_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Username" => "cat_username", "Password" => "password", "Pendaftaran" => "tanggal_pendaftaran", "Kelas Akhir" => "tanggal_kelas_berakhir", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
+        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = ["PC ID" => "all_pc_id"] + $ins;
 
+        //Mendapatkan daftar transaksi
         $clientsreg = DB::select("call select_detail_cat_2(?)", [$id]);
         $headsreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
         $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
@@ -61,6 +59,7 @@ class CATController extends Controller
 
 
     public function editClient(Request $request) {
+        //Validasi input
         $this->validate($request, [
                 'email' => 'email',
                 'address' => 'required',
@@ -75,9 +74,13 @@ class CATController extends Controller
                 'all_pc_id' => 'required'
             ]);
         DB::beginTransaction();
+        //Inisialisasi array error
         $err = [];
         try {
+            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
+            //Edit atribut master client
             DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
+            //Edit atribut CAT
             DB::select("call edit_cat(?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->cat_user_id, $request->cat_no_induk, $request->cat_username, $this->nullify($request->password), $request->batch, $request->tanggal_pendaftaran, $request->tanggal_kelas_berakhir, $this->nullify($request->sales_username)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
@@ -88,6 +91,7 @@ class CATController extends Controller
     }
 
     public function addClient(Request $request) {
+        //Validasi input
         $this->validate($request, [
                 'batch' => 'required',
                 'user_id' => 'required',
@@ -101,10 +105,11 @@ class CATController extends Controller
                 'username' => 'required'
             ]);
 
-        //echo $request;
+        //Inisialisasi array error
         DB::beginTransaction();
         $err = [];
         try {
+            //Input data ke SQL
             DB::select("call inputCAT(?,?,?,?)", [$this->nullify($request->user_id),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
@@ -116,7 +121,7 @@ class CATController extends Controller
     }
 
     public function deleteClient($id) {
-        echo "delete" . $id;
+        //Menghapus client dengan ID tertentu
         try {
             DB::select("call delete_cat(?)", [$id]);
         } catch(\Illuminate\Database\QueryException $ex){ 
@@ -161,10 +166,10 @@ class CATController extends Controller
     }
 
     public function importExcel() {
-        $err = [];
+        $err = []; //Inisialisasi array error
         if(Input::hasFile('import_file')){
-            $path = Input::file('import_file')->getRealPath();
-            $data = Excel::load($path, function($reader) {
+            $path = Input::file('import_file')->getRealPath(); //Mengecek apakah file diberikan
+            $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
@@ -213,11 +218,10 @@ class CATController extends Controller
                     }
                 } //end validasi
 
-                //Jika tidak ada error, import
+                //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
-                        echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
-                        try { 
+                        try {
                             DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->sales,$value->batch,$value->user_id,$value->no_induk,$value->pendaftaran,$value->kelas_berakhir,$value->username,$value->password,$value->nama,$value->jenis_kelamin,$value->email,$value->telepon,$value->alamat,$value->kota, $value->tanggal_lahir]);
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
@@ -235,9 +239,6 @@ class CATController extends Controller
             $err[] = $msg;
         }
 
-
-        //foreach ($err as $er) 
-        //    echo $er . "<br/>";
         return redirect()->back()->withErrors([$err]);
     }
 }
