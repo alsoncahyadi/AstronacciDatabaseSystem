@@ -42,12 +42,13 @@ class UOBController extends Controller
         //Select seluruh data client $id yang ditampilkan di detail
         $uob = DB::select("call select_detail_uob(?)", [$id]);
         $uob = $uob[0];
+        $salesusers = DB::select("SELECT sales_username FROM sales");
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Client ID" => "client_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Class" => "class", "Nomor" => "nomor", "Expired" => "expired_date", "Kategori" => "kategori", "Bulan" => "bulan", "Bank" => "bank", "Nomor Rekening" => "nomor_rekening", "RDI Niaga" => "RDI_niaga", "RDI BCA" => "RDI_BCA", "Trading Via" => "trading_via", "Source" => "source", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = ["PC ID" => "all_pc_id"] + $ins;
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'UOB', 'client'=>$uob, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile\profile', ['route'=>'UOB', 'client'=>$uob, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClient(Request $request) {

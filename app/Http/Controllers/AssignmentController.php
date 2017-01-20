@@ -42,14 +42,15 @@ class AssignmentController extends Controller
         $assign = DB::select("SELECT * FROM assign_green WHERE green_assign_id = $id");
         $assign = $assign[0];
         //dd($assign);
+        $salesusers = DB::select("SELECT sales_username FROM sales");
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Sales" => "sales_username", "Prospect To" => "prospect_to", "Admin Username" => "admin_username", "Keterangan" => "keterangan"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["Green Assign ID"  => "green_assign_id", "Green ID" => "green_id"] + $ins;
+        $heads = ["Green Assign ID"  => "green_assign_id", "Green ID" => "green_id", "Assign Time" => "assign_time", "Report" => "report", "Is Success" => "is_succes", "Report Time" => "report_time"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'assigngreen', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile\profile', ['route'=>'assigngreen', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetailGrow($id) {
@@ -58,14 +59,15 @@ class AssignmentController extends Controller
         $assign = DB::select("SELECT * FROM assign_grow WHERE grow_assign_id = $id");
         $assign = $assign[0];
         //dd($assign);
+        $salesusers = DB::select("SELECT sales_username FROM sales");
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Sales" => "sales_username", "Prospect To" => "prospect_to", "Admin Username" => "admin_username", "Keterangan" => "keterangan"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["Grow Assign ID"  => "grow_assign_id", "Grow ID" => "grow_id"] + $ins;
+        $heads = ["Grow Assign ID"  => "grow_assign_id", "Grow ID" => "grow_id", "Assign Time" => "assign_time", "Report" => "report", "Is Success" => "is_succes", "Report Time" => "report_time"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'assigngrow', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile\profile', ['route'=>'assigngrow', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetailRedClub($id) {
@@ -74,19 +76,22 @@ class AssignmentController extends Controller
         $assign = DB::select("SELECT * FROM assign_redclub WHERE redclub_assign_id = $id");
         $assign = $assign[0];
         //dd($assign);
+        $salesusers = DB::select("SELECT sales_username FROM sales");
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Sales" => "sales_username", "Prospect To" => "prospect_to", "Admin Username" => "admin_username", "Keterangan" => "keterangan"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["RedClub Assign ID"  => "redclub_assign_id"] + $ins;
+        $heads = ["RedClub Assign ID"  => "redclub_assign_id", "Assign Time" => "assign_time", "Report" => "report", "Is Success" => "is_succes", "Report Time" => "report_time"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'assignredclub', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile\profile', ['route'=>'assignredclub', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClientGreen(Request $request) {
         //Validasi input
         $this->validate($request, [
+            'sales' => 'required',
+            'prospect_to' => 'required'
             ]);
         //Inisialisasi array error
         $err = [];
@@ -94,7 +99,7 @@ class AssignmentController extends Controller
         try {
             //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
             //Edit atribut master client
-            DB::select("call edit_assign_green(?,?,?,?,?,?)", [$request->green_assign_id, $request->green_id, $this->nullify($request->sales_username), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
+            DB::select("call edit_assign_green(?,?,?,?,?,?)", [$request->green_assign_id, $request->green_id, $this->nullify($request->sales), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();
@@ -106,6 +111,8 @@ class AssignmentController extends Controller
     public function editClientGrow(Request $request) {
         //Validasi input
         $this->validate($request, [
+            'sales' => 'required',
+            'prospect_to' => 'required'
             ]);
         //Inisialisasi array error
         $err = [];
@@ -113,7 +120,7 @@ class AssignmentController extends Controller
         try {
             //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
             //Edit atribut master client
-            DB::select("call edit_assign_grow(?,?,?,?,?,?)", [$request->grow_assign_id, $request->grow_id, $this->nullify($request->sales_username), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
+            DB::select("call edit_assign_grow(?,?,?,?,?,?)", [$request->grow_assign_id, $request->grow_id, $this->nullify($request->sales), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();
@@ -125,6 +132,8 @@ class AssignmentController extends Controller
     public function editClientRedClub(Request $request) {
         //Validasi input
         $this->validate($request, [
+            'sales' => 'required',
+            'prospect_to' => 'required'
             ]);
         $username = \Auth::user()->username;
         //Inisialisasi array error
@@ -133,7 +142,7 @@ class AssignmentController extends Controller
         try {
             //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
             //Edit atribut master client
-            DB::select("call edit_assign_redclub(?,?,?,?,?,?)", [$request->redclub_assign_id, $username, $this->nullify($request->sales_username), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
+            DB::select("call edit_assign_redclub(?,?,?,?,?,?)", [$request->redclub_assign_id, $username, $this->nullify($request->sales), $request->prospect_to, $this->nullify($request->admin_username), $this->nullify($request->keterangan)]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();
             $err[] = $ex->getMessage();

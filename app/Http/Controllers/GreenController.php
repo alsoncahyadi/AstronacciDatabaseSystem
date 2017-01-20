@@ -60,6 +60,7 @@ class GreenController extends Controller
         //Select seluruh data client $id yang ditampilkan di detail
         $green = DB::select("SELECT * FROM green WHERE green_id = ?", [$id]);
         $green = $green[0];
+        $salesusers = DB::select("SELECT sales_username FROM sales");
         //Mengganti is_PC dan share_to dari boolean menjadi yes atau no
         $green->is_UOB = $green->is_UOB ? "Yes" : "No";
         $green->is_cat = $green->is_cat ? "Yes" : "No";
@@ -74,7 +75,7 @@ class GreenController extends Controller
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Green ID" => "green_id", "Nama" => "fullname", "No HP" => "no_hp", "Keterangan Perintah" =>"keterangan_perintah", "Sumber" => "sumber", "Sales" => "sales_username", "Progress" => "progress", "AClub Stock" => "is_aclub_stock", "AClub Future" => "is_aclub_future", "CAT" => "is_cat", "MRG" => "is_mrg_premiere", "UOB" => "is_UOB", "Red Club" => "is_red_club", "Share To AClub" => "share_to_aclub", "Share To CAT" => "share_to_cat", "Share to MRG" => "share_to_mrg", "Share to UOB" => "share_to_uob", "Tanggal Ditambahkan" => "add_time"];
         $heads = $ins;
-        return view('profile\profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile\profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClient(Request $request) {

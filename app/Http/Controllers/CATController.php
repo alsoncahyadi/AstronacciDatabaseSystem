@@ -42,7 +42,7 @@ class CATController extends Controller
         //Select seluruh data client $id yang ditampilkan di detail
         $cat = DB::select("call select_detail_cat(?)", [$id]);
         $cat = $cat[0];
-
+        $salesusers = DB::select("SELECT sales_username FROM sales");
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["CAT ID" => "cat_user_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Username" => "cat_username", "Password" => "password", "Pendaftaran" => "tanggal_pendaftaran", "Kelas Akhir" => "tanggal_kelas_berakhir", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
@@ -54,7 +54,7 @@ class CATController extends Controller
         $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
         //ADD TRANSAKSI
         $insreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
-		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg, 'insreg' => $insreg]);
+		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg, 'insreg' => $insreg, 'sales'=>$salesusers]);
     }
 
 

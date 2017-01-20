@@ -119,7 +119,17 @@
                                 @foreach ($ins as $key => $value)
                                     <div style="height:60px">
                                         <label>{{$key}}</label>
-                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                        @if($key == 'Sales')
+                                            <br>
+                                            <select id = "myList" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                            @foreach($sales as $sale)
+                                            <option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
+                                            @endforeach
+                                            </select>
+                                        @else
+                                            <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                        @endif
+                                        
                                     </div>
                                 @endforeach
                         

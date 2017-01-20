@@ -55,13 +55,15 @@ class MRGController extends Controller
         $mrg = DB::select("call select_detail_mrg(?)", [$id]);
         $mrg = $mrg[0];
 
+        $salesusers = DB::select("SELECT sales_username FROM sales");
+
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Account" => "account", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = ["PC ID" => "all_pc_id"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile\profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClient(Request $request) {
@@ -106,7 +108,7 @@ class MRGController extends Controller
             ]);
         //Inisialisi array error
         $err = [];
-        DB::beginTrasaction();
+        DB::beginTransaction();
         try {
             //Input data ke SQL
             DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
