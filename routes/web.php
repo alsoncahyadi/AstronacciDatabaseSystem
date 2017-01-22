@@ -504,49 +504,69 @@ Route::post('/trans/insert', [
 Route::get('/assign', [
     'uses' => 'AssignmentController@getTable',
     'as' => 'assign',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/assign/green/{id}', [
     'uses' => 'AssignmentController@clientDetailGreen',
     'as' => 'assign.greendetail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/assign/grow/{id}', [
     'uses' => 'AssignmentController@clientDetailGrow',
     'as' => 'assign.growdetail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/assign/redclub/{id}', [
     'uses' => 'AssignmentController@clientDetailRedClub',
     'as' => 'assign.redclubdetail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/assign/green/edit', [
     'uses' => 'AssignmentController@editClientGreen',
     'as' => 'assigngreen.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/assign/grow/edit', [
     'uses' => 'AssignmentController@editClientGrow',
     'as' => 'assigngrow.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/assign/redclub/edit', [
     'uses' => 'AssignmentController@editClientRedClub',
     'as' => 'assignredclub.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/assign/green/deleteclient/{id}', [
     'uses' => 'AssignmentController@deleteClientGreen',
     'as' => 'assigngreen.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/assign/grow/deleteclient/{id}', [
     'uses' => 'AssignmentController@deleteClientGrow',
     'as' => 'assigngrow.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/assign/redclub/deleteclient/{id}', [
     'uses' => 'AssignmentController@deleteClientRedClub',
     'as' => 'assignredclub.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
