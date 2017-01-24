@@ -151,10 +151,10 @@
 				@elseif (Auth::user()->hasAnyRole(['5']))
 					<script>load('{{route('sales')}}')</script>
 				@endif
-                <div class="sidebar-nav navbar-collapse">
+                <div class="sidebar-nav navbar-collapse">					
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
                         <li id="t1">
-                            <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard<span class="fa arrow"></span></a>
+                            <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard {{Route::currentRouteName()}}<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
 							@if (Auth::user()->hasAnyRole(['0', '1']))
                                 <li>

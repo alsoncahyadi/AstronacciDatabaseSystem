@@ -39,7 +39,10 @@ Route::get('/register',
 	}
 	);
 */
-Route::get('/home', 'HomeController@index');
+Route::get('/home', [
+	'uses' => 'HomeController@index', 
+	'as' => 'home',
+	]);
 
 Route::get('/dashboard', [
     'uses' => 'Auth\LoginController@index',
