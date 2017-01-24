@@ -139,7 +139,7 @@
             </ul>
             <!-- /.navbar-top-links -->
 
-            <div class="navbar-default sidebar" role="navigation">
+            <div class="navbar-default sidebar" role="navigation" style="width:15%">
 				@if (Auth::user()->hasAnyRole(['1']))
 					<script>load('{{route('AClub')}}')</script>
 				@elseif (Auth::user()->hasAnyRole(['2']))
@@ -152,10 +152,12 @@
 					<script>load('{{route('sales')}}')</script>
 				@endif
                 <div class="sidebar-nav navbar-collapse">					
-                    <ul class="nav" id="side-menu"  style="background-color:#dd1111;">                        
-                        <li id="t1">
-                            <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard {{Route::currentRouteName()}}<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
+                    <ul class="nav" id="side-menu"  style="background-color:#dd1111">
+					
+						<li>
+							<a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard {{Route::currentRouteName()}}<span class="fa arrow"></span></a>
+                        </li>
+						@if(Route::currentRouteName() == 'home')
 							@if (Auth::user()->hasAnyRole(['0', '1']))
                                 <li>
                                     <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>
@@ -196,10 +198,8 @@
                                     <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
                                 </li>
 							@endif	
-
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+						@endif
+                        
 						@if (Auth::user()->hasAShop(Auth::user()->username))
                         <li id="t2">
                             <a href="{{ url('dashboard') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
@@ -231,7 +231,7 @@
             </div>
         </nav>
 		
-		<div id="page-wrapper" style="padding-bottom:10px">
+		<div id="page-wrapper" style="padding-bottom:10px; margin-left:15%">
 			@yield('content')
 		</div>
     </div>
