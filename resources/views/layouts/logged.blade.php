@@ -153,10 +153,11 @@
 				@endif
                 <div class="sidebar-nav navbar-collapse">					
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111">
-					
+						<ul class="nav">
 						<li>
 							<a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard {{Route::currentRouteName()}}<span class="fa arrow"></span></a>
                         </li>
+						<ul class="nav nav-second-level">
 						@if(Route::currentRouteName() == 'home')
 							@if (Auth::user()->hasAnyRole(['0', '1']))
                                 <li>
@@ -199,12 +200,16 @@
                                 </li>
 							@endif	
 						@endif
-                        
+						</ul>
+						</ul>
+                        <li></li>
 						@if (Auth::user()->hasAShop(Auth::user()->username))
-                        <li id="t2">
-                            <a href="{{ url('dashboard') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                        <li>
+                            <a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                        </li>
                             <ul class="nav nav-second-level">
                                 
+								@if(Route::currentRouteName() == 'home')
                                 <li>
                                     <a onclick="load('{{route('product')}}')" href="#" style="color:white;">Product</a>
                                 </li>
@@ -212,8 +217,9 @@
                                 <li>
                                     <a onclick="load('{{route('trans')}}')" href="#" style="color:white;">Transaction</a>
                                 </li>
-                                </ul>
-                        </li>
+								@endif
+                            </ul>
+							<li></li>
 						@endif
 
 						@if (Auth::user()->hasAnyRole(['0']))
