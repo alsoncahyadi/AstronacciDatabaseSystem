@@ -1,8 +1,6 @@
 	<div>
 		<div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header" style="color:red">Dashboard</h1>
-            </div>
+            <br><br>
             <!-- /.col-lg-12 -->
         </div>
     </div>	
@@ -12,12 +10,15 @@
 			<div class="panel">
 				@if($route == 'product')
 					@if(Auth::user()->hasAnyRole(['0']))
-						<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Product</a>
+						<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Product</a>
+						<br>
 					@endif
 				@elseif ($route == 'trans')
-					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Transaction</a>
+					<br>
 				@else
-					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Client</a>
+					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Client</a>
+					<br>
 				@endif
 				<div id="addcli" class="panel-collapse collapse">
 					<div class="panel-body">
@@ -95,7 +96,7 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
 					<div style="overflow-x:scroll">
-                    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables">
+                    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables" style="font-size:80%;">
                         <thead>
 							<tr>
 							@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
@@ -127,11 +128,11 @@
 								@endif
 							@foreach ($atts as $att)
                                 @if ($route == 'green') <!-- Client Green diidentifikasi berdasarkan green_id (untuk dilihat detailnya) -->
-                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}">{{$client->$att}} </a></td>
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif ($route == 'RedClub') <!-- Client RedClub diidentifikasi berdasarkan username (untuk dilihat detailnya) -->
-                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}">{{$client->$att}} </a></td>
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
-								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}">{{$client->$att}} </a></td>
+								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 								@else
 									<td>{{$client->$att}}</td>
                                 @endif
