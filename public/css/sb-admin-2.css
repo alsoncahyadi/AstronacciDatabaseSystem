@@ -22,8 +22,8 @@ body {
     border-left: 1px solid #e7e7e7;
   }
 }
-#t1 :hover, #t2 :hover,
-#t1 :focus, #t2 :focus{
+#t1 :hover, #t2 :hover, #t3 :hover, #t4 :hover,
+#t1 :focus, #t2 :focus, #t3 :focus, #t4 :focus{
   background-color: black;
 }
 .nav .nav-second-level :hover {
