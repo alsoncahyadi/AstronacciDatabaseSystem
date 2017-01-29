@@ -10,6 +10,7 @@
     <meta name="author" content="">
 
     <title>Astronacci Database System</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('images/favicon.ico') }}" />
 
     <!-- Bootstrap Core CSS -->
     <link href="{{ URL::asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -26,8 +27,6 @@
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 	
 	<link href="{{ URL::asset('css/styling.css') }}" rel="stylesheet">
-
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
 	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
@@ -53,6 +52,9 @@
 <!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
 
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
+
+    <!-- Icon Script -->
+    <script src="https://use.fontawesome.com/e365a82a3d.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -205,7 +207,7 @@
                         <li></li>
 						@if (Auth::user()->hasAShop(Auth::user()->username))
                         <li>
-                            <a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                            <a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
                         </li>
                             <ul class="nav nav-second-level">
                                 
@@ -224,12 +226,12 @@
 
 						@if (Auth::user()->hasAnyRole(['0']))
 						<li id="t3">
-                            <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> List</a>
+                            <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-group fa-fw"></i> List</a>
                         </li>
 						@endif
 
                         <li id="t4">
-                            <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-bar-chart-o fa-fw"></i> Assignment</a>
+                            <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Assignment</a>
                         </li>
                     </ul>
                 </div>
@@ -238,7 +240,8 @@
         </nav>
 		
 		<div id="page-wrapper" style="padding-bottom:10px; margin-left:15%">
-			@yield('content')
+			<img src="{{ URL::asset('images/pojokatas.png') }}"style="position:absolute; top:95; right:0;"/>
+            @yield('content')
 		</div>
     </div>
 
