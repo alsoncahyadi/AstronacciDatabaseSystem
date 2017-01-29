@@ -65,7 +65,7 @@
 
                             <div class="col-md-6">
 								<input name="ashop" value="0" type="hidden">
-                                <input id="ashop" type="checkbox" class="form-control" name="ashop" >
+                                <input id="ashop" type="checkbox" class="form-control" name="ashop" style="width:25px; height:25px;">
                             </div>
                          </div>
 
