@@ -60,7 +60,7 @@
     <![endif]-->
 
 </head>
-<body style="overflow-x:hidden">
+<body style="overflow-x:hidden;  background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
     <div id="wrapper" style="margin:15px">
 
 	<div class="row">
