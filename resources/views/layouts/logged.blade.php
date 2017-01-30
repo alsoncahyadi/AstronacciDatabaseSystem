@@ -121,11 +121,14 @@
                         <i class="fa fa-user fa-fw" style="color:black;"></i> <i class="fa fa-caret-down" style="color:black;"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="{{ route('updatepass')}}"><i class="fa fa-user fa-fw"></i> Profile</a>
+                        <li><a href="{{ route('updatepass')}}"><i class="fa fa-user fa-fw"></i> Change Password</a>
                         </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
+                        @if (Auth::user()->hasAnyRole(['0']))
+							<li>
+								<a href="{{ url('list') }}"><i class="fa fa-gear fa-fw"></i> User List</a>
+							</li>
+                        @endif
+						<li class="divider"></li>
                         <li><a href="{{ url('/logout') }}"
                                 onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();">
@@ -224,13 +227,7 @@
 							<li></li>
 						@endif
 
-						@if (Auth::user()->hasAnyRole(['0']))
-						<li id="t3">
-                            <a href="{{ url('list') }}" style="color:white;"><i class="fa fa-group fa-fw"></i> List</a>
-                        </li>
-						@endif
-
-                        <li id="t4">
+                        <li id="t3">
                             <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Assignment</a>
                         </li>
                     </ul>
