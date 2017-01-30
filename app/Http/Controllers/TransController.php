@@ -50,7 +50,7 @@ class TransController extends Controller
         $err = [];
         $username = \Auth::user()->username;
         try {
-            DB::select("call input_product_sale(?,?,?,?,?,?,?,?)", [$request->product_id, $this->nullify($request->jumlah), $request->total_pembayaran, $this->nullify($request->nama_pembeli), $this->nullify($request->all_pc_id), $this->nullify($request->sales_username), $this->nullify($request->sale_date), $username]);
+            DB::select("call input_product_sale(?,?,?,?,?,?,?,?)", [$request->product_id, $this->nullify($request->jumlah), $request->total_pembayaran, $this->nullify($request->nama_pembeli), $this->nullify($request->all_pc_id), $this->nullify($request->sales), $this->nullify($request->sale_date), $username]);
             DB::select("call add_username_to_log(?)", [$username]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             DB::rollback();

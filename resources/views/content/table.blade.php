@@ -10,12 +10,13 @@
 			<div class="panel">
 				@if($route == 'product')
 					@if(Auth::user()->hasAnyRole(['0']))
-						<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Product</a>
+						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Product</a>
 						<br>
 						<br>
 					@endif
 				@elseif ($route == 'trans')
-					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Transaction</a>
+					<!--<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Transaction</a>-->
+					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
 					<br>
 					<br>
 				@else
