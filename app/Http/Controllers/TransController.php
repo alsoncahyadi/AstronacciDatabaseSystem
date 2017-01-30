@@ -37,7 +37,7 @@ class TransController extends Controller
 
         //Nama attribute pada sql
         $atts = ["purchase_id", "product_id", "jumlah", "total_pembayaran", "nama_pembeli", "all_pc_id", "sales_username", "sale_date", "admin_username"];
-        return view('content\table', ['route' => 'trans', 'prods' => $prods, 'clients' => $transactions, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'trans', 'prods' => $prods, 'clients' => $transactions, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function addClient(Request $request) {

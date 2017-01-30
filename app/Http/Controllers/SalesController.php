@@ -33,11 +33,11 @@ class SalesController extends Controller
         //Nama attribute pada sql
         $atts = ["type", "assign_id",  "id", "sales_username", "prospect_to", "assign_time", "assign_edited_time", "admin_username", "keterangan", "last_edited_time", "report", "is_succes", "report_time", "fullname", "no_hp", "email", "address", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "all_pc_id", "green_grow_red_add_time", "green_grow_red_edited_time"];
         
-		return view('content\sales', ['route' => 'sales', 'user'=>$username , 'clients' => $assigns, 'heads'=>$heads, 'atts'=>$atts]);
+		return view('content/sales', ['route' => 'sales', 'user'=>$username , 'clients' => $assigns, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
 	public function reportDetail($type, $id) {		
-		return view('content\report', ['type'=>$type, 'id'=>$id]);
+		return view('content/report', ['type'=>$type, 'id'=>$id]);
 	}
 	
 	public function addGreenReport(Request $request) {

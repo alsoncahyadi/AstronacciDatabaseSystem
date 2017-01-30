@@ -34,7 +34,7 @@ class ProductController extends Controller
 
         //Nama attribute pada sql
         $atts = ["product_id", "product_name"];
-        return view('content\table', ['route' => 'product', 'clients' => $products, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'product', 'clients' => $products, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     

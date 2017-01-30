@@ -33,7 +33,7 @@ class AssignmentController extends Controller
         //Nama attribute pada sql
         $atts = ["type", "assign_id",  "id", "sales_username", "prospect_to", "assign_time", "assign_edited_time", "admin_username", "keterangan", "last_edited_time", "report", "is_succes", "report_time", "fullname", "no_hp", "email", "address", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "all_pc_id", "green_grow_red_add_time", "green_grow_red_edited_time"];
 
-        return view('content\assignment', ['route' => 'assign', 'clients' => $assignments, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/assignment', ['route' => 'assign', 'clients' => $assignments, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetailGreen($id) {
@@ -50,7 +50,7 @@ class AssignmentController extends Controller
         $heads = ["Green Assign ID"  => "green_assign_id", "Green ID" => "green_id", "Assign Time" => "assign_time", "Report" => "report", "Is Success" => "is_succes", "Report Time" => "report_time"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'assigngreen', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'assigngreen', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetailGrow($id) {
@@ -67,7 +67,7 @@ class AssignmentController extends Controller
         $heads = ["Grow Assign ID"  => "grow_assign_id", "Grow ID" => "grow_id", "Assign Time" => "assign_time", "Report" => "report", "Is Success" => "is_succes", "Report Time" => "report_time"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'assigngrow', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'assigngrow', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetailRedClub($id) {
@@ -84,7 +84,7 @@ class AssignmentController extends Controller
         $heads = ["RedClub Assign ID"  => "redclub_assign_id", "Assign Time" => "assign_time", "Report" => "report", "Is Success" => "is_succes", "Report Time" => "report_time"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'assignredclub', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'assignredclub', 'client'=>$assign, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClientGreen(Request $request) {

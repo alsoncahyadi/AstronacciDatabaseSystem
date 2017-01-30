@@ -36,7 +36,7 @@ class RedClubController extends Controller
         //Nama attribute pada sql
          $atts = ["username", "firstname", "lastname", "email", "join_date", "no_hp","all_pc_id", "occupation", "jenis_kelamin", "status_perkawinan", "alamat", "kota", "line_id", "blackberry_pin", "annual_come", "country", "birthdate", "interest", "hobby", "spesific", "your_stock_and_future_broker", "trading_experience_year", "trading_type", "security_question", "security_answer", "facebook", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "added_time"];
          //Return view table dengan parameter
-        return view('content\table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers, 'foreigns'=>$foreigns]);
+        return view('content/table', ['route' => 'RedClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers, 'foreigns'=>$foreigns]);
     }
 
     public function clientDetail($id) {
@@ -53,7 +53,7 @@ class RedClubController extends Controller
         $red->share_to_mrg = $red->share_to_mrg ? "Yes" : "No";
         $red->share_to_uob = $red->share_to_uob ? "Yes" : "No";
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'RedClub', 'client'=>$red, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile/profile', ['route'=>'RedClub', 'client'=>$red, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {

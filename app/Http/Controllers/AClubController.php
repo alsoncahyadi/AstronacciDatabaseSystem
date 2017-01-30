@@ -32,7 +32,7 @@ class AClubController extends Controller
         //Nama attribute pada sql
         $atts = ["all_pc_id", "user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "occupation", "add_time"];
         //Return view table dengan parameter
-        return view('content\table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
@@ -50,7 +50,7 @@ class AClubController extends Controller
         //ADD TRANSAKSI
         $insreg = ["Registration Date", "Kode Paket", "Sales Username", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"];
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'insreg'=>$insreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
+        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'insreg'=>$insreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
     }
 
     public function editClient(Request $request) {

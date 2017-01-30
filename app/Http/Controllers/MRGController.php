@@ -47,7 +47,7 @@ class MRGController extends Controller
             }
         }
         //Return view table dengan parameter
-        return view('content\table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetail($id) {
@@ -63,7 +63,7 @@ class MRGController extends Controller
         $heads = ["PC ID" => "all_pc_id"] + $ins;
 
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClient(Request $request) {

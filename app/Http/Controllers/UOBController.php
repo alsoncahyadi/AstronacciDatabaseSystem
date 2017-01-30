@@ -35,7 +35,7 @@ class UOBController extends Controller
         //Nama attribute pada sql
         $atts = ["all_pc_id", "client_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "class", "nomor", "expired_date", "kategori", "bulan", "bank", "nomor_rekening", "RDI_niaga", "RDI_BCA", "trading_via", "source", "sales_username", "add_time"];
         //Return view table dengan parameter
-        return view('content\table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetail($id) {
@@ -48,7 +48,7 @@ class UOBController extends Controller
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = ["PC ID" => "all_pc_id"] + $ins;
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'UOB', 'client'=>$uob, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClient(Request $request) {

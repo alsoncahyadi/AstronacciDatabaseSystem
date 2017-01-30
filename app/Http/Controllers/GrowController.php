@@ -35,7 +35,7 @@ class GrowController extends Controller
         //Nama attribute pada sql
         $atts = ["all_pc_id", "grow_id", "share_to_aclub", "share_to_mrg", "share_to_cat", "share_to_uob", "created_at", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "created_at"];
         //Return view table dengan parameter
-        return view('content\table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers, 'foreigns'=>$foreigns]);
+        return view('content/table', ['route' => 'grow', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers, 'foreigns'=>$foreigns]);
     }
 
     public function clientDetail($id) {
@@ -52,7 +52,7 @@ class GrowController extends Controller
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = ["PC ID" => "all_pc_id"] + $ins;
         //Return view profile dengan parameter
-        return view('profile\profile', ['route'=>'grow', 'client'=>$grow, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile/profile', ['route'=>'grow', 'client'=>$grow, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {

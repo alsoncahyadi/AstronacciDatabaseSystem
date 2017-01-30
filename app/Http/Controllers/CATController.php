@@ -35,7 +35,7 @@ class CATController extends Controller
         $atts = ["all_pc_id", "cat_user_id", "cat_no_induk", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "cat_username", "password", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username", "add_time"];
 
         //Return view table dengan parameter
-        return view('content\table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetail($id) {
@@ -54,7 +54,7 @@ class CATController extends Controller
         $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
         //ADD TRANSAKSI
         $insreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
-		return view('profile\profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg, 'insreg' => $insreg, 'sales'=>$salesusers]);
+		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg, 'insreg' => $insreg, 'sales'=>$salesusers]);
     }
 
 
@@ -149,7 +149,7 @@ class CATController extends Controller
          $clientsreg = $clientsreg[0];
         $headsreg = ["Angsuran ke", "Tanggal Pembayaran Angsuran", "Pembayaran Angsuran"];
         $attsreg = ["angsuran_ke", "tanggal_pembayaran_angsuran", "pembayaran_angsuran"];
-        return view('profile\transaction', ['route'=>'CAT/trans',  'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
+        return view('profile/transaction', ['route'=>'CAT/trans',  'clientsreg'=>$clientsreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
     }
 
     public function deleteTrans($id1, $id2){

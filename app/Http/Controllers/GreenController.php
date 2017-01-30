@@ -53,7 +53,7 @@ class GreenController extends Controller
             }
         }
         //Return view table dengan parameter
-        return view('content\table', ['route' => 'green', 'clients' => $greens, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'green', 'clients' => $greens, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function clientDetail($id) {
@@ -75,7 +75,7 @@ class GreenController extends Controller
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins = ["Green ID" => "green_id", "Nama" => "fullname", "No HP" => "no_hp", "Keterangan Perintah" =>"keterangan_perintah", "Sumber" => "sumber", "Sales" => "sales_username", "Progress" => "progress", "AClub Stock" => "is_aclub_stock", "AClub Future" => "is_aclub_future", "CAT" => "is_cat", "MRG" => "is_mrg_premiere", "UOB" => "is_UOB", "Red Club" => "is_red_club", "Share To AClub" => "share_to_aclub", "Share To CAT" => "share_to_cat", "Share to MRG" => "share_to_mrg", "Share to UOB" => "share_to_uob", "Tanggal Ditambahkan" => "add_time"];
         $heads = $ins;
-        return view('profile\profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
     }
 
     public function editClient(Request $request) {
