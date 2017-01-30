@@ -121,7 +121,7 @@
                         <i class="fa fa-user fa-fw" style="color:black;"></i> <i class="fa fa-caret-down" style="color:black;"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="{{ route('updatepass')}}"><i class="fa fa-user fa-fw"></i> Change Password</a>
+                        <li><a href="{{ url('updatePassword')}}"><i class="fa fa-user fa-fw"></i> Change Password</a>
                         </li>
                         @if (Auth::user()->hasAnyRole(['0']))
 							<li>
