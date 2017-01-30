@@ -24,3 +24,34 @@ function salesinput($id, $type){
 	document.getElementById("panel1").style.display = 'none';
 	
 }
+
+$(document).ready(function(){
+		$("#addclib").click(function(){
+			$("#addcli").show();			
+			$("#import").hide();			
+		});
+		$("#show").click(function(){
+			$("#bod2").hide();
+			$("#bod1").show();
+			$("#show").hide();
+			$("#hide").show();
+		});
+	});
+	
+function addcli(){
+	if (!$("#addcli").is(":visible")){
+		$("#addcli").show();			
+		$("#import").hide();
+	} else {
+		$("#addcli").hide();
+	}
+}
+function importex(){
+	if (!$("import").is(":visible")){
+		$("#addcli").hide();			
+		$("#import").show();
+	} else {
+		$("#import").hide();
+	}
+}
+

@@ -4,7 +4,7 @@
             <!-- /.col-lg-12 -->
         </div>
     </div>	
-	
+
 	@if ($route != 'assign')
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
@@ -12,16 +12,20 @@
 					@if(Auth::user()->hasAnyRole(['0']))
 						<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Product</a>
 						<br>
+						<br>
 					@endif
 				@elseif ($route == 'trans')
 					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Transaction</a>
 					<br>
+					<br>
 				@else
-					<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Client</a>
+					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
 					<br>
 				@endif
-				<div id="addcli" class="panel-collapse collapse">
-					<div class="panel-body">
+				<br>
+				<div id="addcli" style="display:none">
+					<div class="panel panel-default" style="padding:15px" >
 						<form method="post" action="{{route($route . '.insert')}}">
 							@foreach ($ins as $atr)
 								<div class="form-group">
@@ -60,22 +64,21 @@
 				</div>
 			</div>
 		@endif
+		<div id="import" style="display:none">
 		@if(($route != 'product') and ($route != 'trans') and ($route != 'assign'))	
-		<div class="panel">
-			<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#impo">Import Excel File</a>       
-			<div id="impo" class="panel-collapse collapse">
-				<div class="panel-body">
-					<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-						<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-						<input type="file" name="import_file" />
-						<br>
-						<button class="btn btn-primary">Import .xls File</button>
-					</form>
-				</div>
+		<div class="panel panel-default" style="padding:15px">
+			<div class="panel-body">
+				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+					<input type="file" name="import_file" />
+					<br>
+					<button class="btn btn-primary">Import .xls File</button>
+				</form>
 			</div>
 		</div>
-    </div>
 	@endif
+		</div>
+    </div>
 	
 	
 	<div class="row">
