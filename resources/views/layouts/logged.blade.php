@@ -54,7 +54,7 @@
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
     <!-- Icon Script -->
-    <script src="https://use.fontawesome.com/e365a82a3d.js"></script>
+    <script src="{{ URL::asset('js/e365a82a3d.js') }}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

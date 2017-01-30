@@ -118,8 +118,9 @@ class RedClubController extends Controller
             DB::select("call delete_redclub(?)", [$id]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
+			echo $ex->getMessage();
         }
-        return redirect("home");
+        //return redirect("home");
     }
 
     public function importExcel() {

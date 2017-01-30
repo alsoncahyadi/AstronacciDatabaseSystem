@@ -25,8 +25,7 @@
     <!-- Custom Fonts -->
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
+	<link href="{{ URL::asset('css/font-awesome.min..css') }}" rel="stylesheet">
 	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
 	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
 	    <!-- Scripts -->
@@ -65,29 +64,13 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			<h1 class="page-header">Profile</h1>
+			<h1>Profile</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
     </div>
-	<script>
-	$(document).ready(function(){
-		$("#hide").click(function(){
-			$("#bod1").hide();
-			$("#bod2").show();
-			$("#hide").hide();
-			$("#show").show();
-			
-		});
-		$("#show").click(function(){
-			$("#bod2").hide();
-			$("#bod1").show();
-			$("#show").hide();
-			$("#hide").show();
-		});
-	});
-	</script>
-    <div class="panel panel-default">
+	
+    <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
@@ -107,9 +90,21 @@
                                 : {{$client->$value}}<br>
                             </div>
                         @endforeach
-                    
-                   
 				</div>
+				<?php
+					if($route == "CAT") $userid = "cat_user_id";
+					else if ($route == "AClub") $userid = "user_id";
+					else if ($route == "MRG") $userid = "account";
+					else if ($route == "UOB") $userid = "client_id";
+					else if ($route == "green") $userid = "green_id";
+					else if ($route == "grow") $userid = "grow_id";
+					else if ($route == "RedClub") $userid = "username";
+					else if ($route == "assigngreen") $userid = "green_assign_id";
+					else if ($route == "assigngrow") $userid = "grow_assign_id";
+					else if ($route == "assignredclub") $userid = "redclub_assign_id";
+				?>
+				<button class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </button>
+
 			</div>
 			<div id="bod2" style="display:none">
 				<form role="form" method="post" action="{{route($route . '.edit')}}">
@@ -152,24 +147,11 @@
 			</div> 
 		</div>
 
-        <?php
-            if($route == "CAT") $userid = "cat_user_id";
-            else if ($route == "AClub") $userid = "user_id";
-            else if ($route == "MRG") $userid = "account";
-            else if ($route == "UOB") $userid = "client_id";
-            else if ($route == "green") $userid = "green_id";
-            else if ($route == "grow") $userid = "grow_id";
-            else if ($route == "RedClub") $userid = "username";
-            else if ($route == "assigngreen") $userid = "green_assign_id";
-            else if ($route == "assigngrow") $userid = "grow_assign_id";
-            else if ($route == "assignredclub") $userid = "redclub_assign_id";
-        ?>
-        <a href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
-    </div>
+     </div>
 
 
     @if(($route == "CAT") || ($route == "AClub"))
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
@@ -197,7 +179,8 @@
             </div>
         </div>
 
-        
+        <br>
+        <br>
 
         <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
             <thead>
@@ -248,6 +231,32 @@
     @endif
 	
 </div>
+<script>
+	$(document).ready(function(){
+		$("#hide").click(function(){
+			$("#bod1").hide();
+			$("#bod2").show();
+			$("#hide").hide();
+			$("#show").show();
+			
+		});
+		$("#show").click(function(){
+			$("#bod2").hide();
+			$("#bod1").show();
+			$("#show").hide();
+			$("#hide").show();
+		});
+		$("delete").click(function(){
+			$("#delete").hide();
+			$("#condel").show();
+			
+		});
+	});
+	function del(){
+		if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
+			window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
 
+	}
+	</script>
 </body>
 </html>
