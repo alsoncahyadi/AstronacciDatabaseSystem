@@ -11,9 +11,21 @@ class MockupController extends Controller
 {
     public function index()
     {
-        $aclubs = DB::select("select * from master_client");
+        $clients = DB::select("select * from master_client");
         //Data untuk insert
-        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Keterangan", "Security Question", "Security Answer"];
+        $ins = ["User ID", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin"];
+
+        //ACLUB exclusive form
+        $aclubforms = ["Aclub Personalized Form1", "Aclub Personalized Form2", "Aclub Personalized Form3"];
+
+        //UOB exclusive form
+        $uobforms = ["UOB Personalized Form 1", "UOB Personalized Form 2"];
+
+        //MRG exclusive form
+        $mrgforms = ["MRG Personalized Form 1", "MRG Personalized Form 2", "MRG Personalized Form 3"];
+
+        //CAT exclusive form
+        $catforms = ["CAT Personalized Form 1", "CAT Personalized Form 2"];
 
         //Judul kolom yang ditampilkan pada tabel
        $heads = ["PC ID", "User ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status", "Gender", "Telepon", "Provinsi", "Facebook", "Interest", "Trading_Experience_Year", "Stock_&_Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Occupation", "Tanggal Ditambahkan"];//kecuali is"an dan add_time
@@ -22,6 +34,10 @@ class MockupController extends Controller
         $atts = ["all_pc_id", "user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "occupation", "add_time"];
         //Return view table dengan parameter
 
-        return view('content/addclient', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/addclient', 
+            ['clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 
+                'ins'=>$ins, 'aclub' => $aclubforms, 'uob' => $uobforms, 
+                'mrg' => $mrgforms, 'cat' => $catforms]
+            );
     }
 }
