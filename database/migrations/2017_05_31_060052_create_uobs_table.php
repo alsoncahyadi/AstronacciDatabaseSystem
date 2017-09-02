@@ -15,11 +15,9 @@ class CreateUobsTable extends Migration
     {
         Schema::create('uobs', function (Blueprint $table) {
             $table->string('client_id', 50);
+            $table->primary('client_id');
             $table->unsignedInteger('master_id');            
-            $table->foreign('master_id')->references('master_id')
-                ->on('master_clients')
-                ->onDelete('cascade');
-
+           
             $table->string('sales_name');
             $table->text('sumber_data');
 
@@ -44,6 +42,10 @@ class CreateUobsTable extends Migration
 
             $table->text('keterangan');
             $table->timestamps();
+
+            $table->foreign('master_id')->references('master_id')
+                ->on('master_clients')
+                ->onDelete('cascade');
 
 
         });

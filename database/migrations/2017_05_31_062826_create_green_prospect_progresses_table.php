@@ -16,9 +16,6 @@ class CreateGreenProspectProgressesTable extends Migration
         Schema::create('green_prospect_progresses', function (Blueprint $table) {
             $table->increments('progress_id');
             $table->unsignedInteger('green_id');
-            $table->foreign('green_id')->references('green_id')
-                ->on('green_prospect_clients')
-                ->onDelete('cascade');
             $table->date('date');
             $table->string('sales_name');
             $table->string('status', 20); //GOAL - BUY, GOAL - JOIN, NO ANSWER, TIDAK GOAL, DALAM PROSES
@@ -26,6 +23,10 @@ class CreateGreenProspectProgressesTable extends Migration
             $table->bigInteger('nominal');
             $table->text('keterangan');
             $table->timestamps();
+
+            $table->foreign('green_id')->references('green_id')
+                ->on('green_prospect_clients')
+                ->onDelete('cascade');
         });
     }
 

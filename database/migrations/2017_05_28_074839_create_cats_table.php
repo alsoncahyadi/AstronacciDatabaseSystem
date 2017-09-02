@@ -4,24 +4,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-/**
-  *User ID
-  *Batch
-  *Sales
-  *Sumber Data
-  *INFO ATA
-  *Nomer Induk
-  *DP Date
-  *DP Nominal
-  *Payment Date
-  *Payment Nominal
-  *Opening Class
-  *End Class
-  *Ujian
-  *Status
-  *Keterangan
-*/
-
 class CreateCatsTable extends Migration
 {
 
@@ -40,10 +22,6 @@ class CreateCatsTable extends Migration
             $table->unique('nomor_induk');
           //
             $table->unsignedInteger('master_id');
-            $table->foreign('master_id')->references('master_id')
-                ->on('master_clients')
-                ->onDelete('cascade');
-
             $table->string('batch', 20)->nullable();
             $table->string('sales', 100)->nullable();
             $table->string('sumber_data', 20)->nullable();
@@ -57,6 +35,10 @@ class CreateCatsTable extends Migration
             $table->string('status', 20)->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
+
+            $table->foreign('master_id')->references('master_id')
+                ->on('master_clients')
+                ->onDelete('cascade');
             });
     }
 

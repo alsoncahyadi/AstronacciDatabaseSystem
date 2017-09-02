@@ -16,13 +16,6 @@ class CreateAclubTransactionsTable extends Migration
         Schema::create('aclub_transactions', function (Blueprint $table) {
             $table->increments('transaction_id');
             $table->string('user_id', 50);
-            $table->foreign('user_id')->references('user_id')
-                ->on('aclub_members')
-                ->onDelete('cascade');
-            // $table->unsignedInteger('master_id');
-            // $table->foreign('master_id')->references('master_id')
-            //     ->on('master_clients')
-            //     ->onDelete('cascade');
             $table->date('payment_date')->nullable();
             $table->string('kode', 5);
             $table->string('status', 20);
@@ -33,6 +26,10 @@ class CreateAclubTransactionsTable extends Migration
             $table->date('yellow_zone');
             $table->date('red_zone');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')
+                ->on('aclub_members')
+                ->onDelete('cascade');
         });
     }
 

@@ -17,12 +17,13 @@ class CreateMrgAccountsTable extends Migration
             $table->string('accounts_number', 20);
             $table->primary('accounts_number');
             $table->unsignedInteger('master_id');            
-            $table->foreign('master_id')->references('master_id')
-                ->on('mrgs')
-                ->onDelete('cascade');
             $table->string('account_type', 20);
             $table->string('sales_name');
             $table->timestamps();
+
+            $table->foreign('master_id')->references('master_id')
+                ->on('mrgs')
+                ->onDelete('cascade');
         });
     }
 

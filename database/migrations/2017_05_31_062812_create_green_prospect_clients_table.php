@@ -23,7 +23,6 @@ class CreateGreenProspectClientsTable extends Migration
             $table->string('pemberi');
             $table->text('sumber_data');
             $table->text('keterangan_perintah');
-            // $table->unique('email');
             $table->timestamps();
         });
     }

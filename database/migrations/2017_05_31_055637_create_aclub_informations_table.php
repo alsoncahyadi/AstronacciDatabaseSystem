@@ -16,12 +16,13 @@ class CreateAclubInformationsTable extends Migration
         Schema::create('aclub_informations', function (Blueprint $table) {
           $table->unsignedInteger('master_id');
           $table->primary('master_id');
-          $table->foreign('master_id')->references('master_id')
-              ->on('master_clients')
-              ->onDelete('cascade');
           $table->text('sumber_data')->nullable();
           $table->text('keterangan')->  nullable();
           $table->timestamps();
+          
+          $table->foreign('master_id')->references('master_id')
+              ->on('master_clients')
+              ->onDelete('cascade');
         });
     }
 
