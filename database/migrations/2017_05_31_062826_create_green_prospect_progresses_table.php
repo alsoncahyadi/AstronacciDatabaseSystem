@@ -23,7 +23,6 @@ class CreateGreenProspectProgressesTable extends Migration
             $table->bigInteger('nominal');
             $table->text('keterangan');
             $table->timestamps();
-
             $table->foreign('green_id')->references('green_id')
                 ->on('green_prospect_clients')
                 ->onDelete('cascade');
