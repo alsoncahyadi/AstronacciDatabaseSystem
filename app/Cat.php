@@ -8,4 +8,8 @@ class Cat extends Model
 {
     //
     protected $table = 'cats';
+
+    public function master() {
+        $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
+    }
 }
