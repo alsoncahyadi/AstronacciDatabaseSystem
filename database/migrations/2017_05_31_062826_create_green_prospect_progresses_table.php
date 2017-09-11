@@ -26,6 +26,12 @@ class CreateGreenProspectProgressesTable extends Migration
             $table->foreign('green_id')->references('green_id')
                 ->on('green_prospect_clients')
                 ->onDelete('cascade');
+            $table->unsignedInteger('created_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedInteger('updated_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');  
         });
     }
 

@@ -13,16 +13,22 @@ class CreateMrgsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mrgs', function($t) {
-            $t->unsignedInteger('master_id');
-            $t->primary('master_id');  
-            $t->text('sumber_data')->nullable();
-            $t->date('join_date')->nullable();
-            $t->timestamps();
+        Schema::create('mrgs', function($table) {
+            $table->unsignedInteger('master_id');
+            $table->primary('master_id');  
+            $table->text('sumber_data')->nullable();
+            $table->date('join_date')->nullable();
+            $table->timestamps();
 
-            $t->foreign('master_id')->references('master_id')
+            $table->foreign('master_id')->references('master_id')
                 ->on('master_clients')
                 ->onDelete('cascade');
+            $table->unsignedInteger('created_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedInteger('updated_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');  
         });
     }
 

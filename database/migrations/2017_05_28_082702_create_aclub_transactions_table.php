@@ -30,6 +30,12 @@ class CreateAclubTransactionsTable extends Migration
             $table->foreign('user_id')->references('user_id')
                 ->on('aclub_members')
                 ->onDelete('cascade');
+            $table->unsignedInteger('created_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedInteger('updated_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');  
         });
     }
 

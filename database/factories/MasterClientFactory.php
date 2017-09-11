@@ -18,5 +18,7 @@ $factory->define(App\MasterClient::class, function (Faker\Generator $faker) {
         'bbm' => 'bbm_id_example',
         'whatsapp' => 'whatsapp_example',
         'facebook' => 'facebook_example',
+        'created_by' => 999,
+        'updated_by' => 999,      
     ];
 });

@@ -28,5 +28,7 @@ $factory->define(App\AclubTransaction::class, function (Faker\Generator $faker) 
         'masa_tenggang' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
         'yellow_zone' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
         'red_zone' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
+        'created_by' => 999,
+        'updated_by' => 999,              
     ];
 });

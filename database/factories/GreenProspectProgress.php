@@ -8,6 +8,8 @@ $factory->define(App\GreenProspectProgress::class, function (Faker\Generator $fa
         'status' => $faker->randomElement(['GOAL-BUY', 'GOAL-JOIN','NO ANSWER', 'NO GOAL', 'IN PROGRESS']), 
         'nama_product' => $faker->randomElement(['UOB','CAT','A-CLUB','MRG']), 
         'nominal' => $faker->randomNumber($nbDigits = 2)*10000,
-        'keterangan' => '-'
+        'keterangan' => '-',
+        'created_by' => 999,
+        'updated_by' => 999,
     ];
 });

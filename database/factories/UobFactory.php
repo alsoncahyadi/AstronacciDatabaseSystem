@@ -27,5 +27,7 @@ $factory->define(App\Uob::class, function (Faker\Generator $faker) {
         'status' => '-',
         'trading_via' => '-',
         'keterangan' => '-',
+        'created_by' => 999,
+        'updated_by' => 999,      
     ];
 });

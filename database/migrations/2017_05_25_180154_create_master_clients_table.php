@@ -31,6 +31,12 @@ class CreateMasterClientsTable extends Migration
             $table->string('whatsapp', 20)->nullable();
             $table->string('facebook', 20)->nullable();
             $table->timestamps();
+            $table->unsignedInteger('created_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedInteger('updated_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');            
         });
 
         $statement = "ALTER TABLE master_clients AUTO_INCREMENT = 100001;";

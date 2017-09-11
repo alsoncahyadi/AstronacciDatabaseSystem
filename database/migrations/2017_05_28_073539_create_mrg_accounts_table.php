@@ -24,6 +24,12 @@ class CreateMrgAccountsTable extends Migration
             $table->foreign('master_id')->references('master_id')
                 ->on('mrgs')
                 ->onDelete('cascade');
+            $table->unsignedInteger('created_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedInteger('updated_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');  
         });
     }
 

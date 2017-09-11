@@ -24,6 +24,12 @@ class CreateGreenProspectClientsTable extends Migration
             $table->text('sumber_data');
             $table->text('keterangan_perintah');
             $table->timestamps();
+            $table->unsignedInteger('created_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->unsignedInteger('updated_by')->references('id')
+                ->on('users')
+                ->onDelete('cascade');  
         });
     }
 

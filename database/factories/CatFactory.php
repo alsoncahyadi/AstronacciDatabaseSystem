@@ -20,5 +20,7 @@ $factory->define(App\Cat::class, function (Faker\Generator $faker) {
         'tanggal_ujian' => $faker->dateTimeBetween($startDate = "now", $endDate = "30 days")->format('Y-m-d'),
         'status' => '-',
         'keterangan' => '-',
+        'created_by' => 999,
+        'updated_by' => 999,      
     ];
 });

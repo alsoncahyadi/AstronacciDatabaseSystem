@@ -10,5 +10,7 @@ $factory->define(App\GreenProspectClient::class, function (Faker\Generator $fake
         'pemberi' => $faker->name,
         'sumber_data' => $faker->name,
         'keterangan_perintah' => 'keterangan_perintah'.$faker->randomNumber($nbDigits = 2),
+        'created_by' => 999,
+        'updated_by' => 999,      
     ];
 });
