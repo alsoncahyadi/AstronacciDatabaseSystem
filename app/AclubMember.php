@@ -16,4 +16,12 @@ class AclubMember extends Model
     public function aclub_transactions() {
         return $this->hasMany('App\AclubTransaction', 'master_id', 'master_id');
     }
+
+    public function createdby() {
+        return $this->belongsTo('App\User', 'created_by');
+    }
+
+    public function updatedby() {
+        return $this->belongsTo('App\User', 'updated_by');
+    }
 }

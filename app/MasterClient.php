@@ -32,4 +32,12 @@ class MasterClient extends Model
     public function aclub_members() {
         return $this->hasMany('App\AclubMember', 'master_id', 'master_id');
     }
+
+    public function createdby() {
+        return $this->belongsTo('App\User', 'created_by');
+    }
+
+    public function updatedby() {
+        return $this->belongsTo('App\User', 'updated_by');
+    }
 }
