@@ -37,7 +37,7 @@ and this command line to rollback all migrations and seedings, and do the migrat
 
 	php artisan db:refresh
 
-and thi command line to rollback all migration and seedings, and do the migration and seeding again:
+and this command line to rollback all migrations and seedings, and do the migration and seeding again:
 
 	php artisan db:refresh --seed
 
