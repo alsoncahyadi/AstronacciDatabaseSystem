@@ -12,4 +12,12 @@ class GreenProspectClient extends Model
     public function progresses() {
         return $this->hasMany('App\GreenProspectProgress', 'green_id', 'green_id');
     }
+
+    public function createdby() {
+        return $this->belongsTo('App\User', 'created_by');
+    }
+
+    public function updatedby() {
+        return $this->belongsTo('App\User', 'updated_by');
+    }
 }
