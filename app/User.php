@@ -69,10 +69,6 @@ class User extends Authenticatable
         return $this->hasMany('App\AclubMember', 'id', 'created_by');
     }
 
-    public function updateAclubMembers() {
-        return $this->hasMany('App\AclubInformation', 'id', 'updated_by');
-    }
-
     public function createAclubTransactions() {
         return $this->hasMany('App\AclubTransaction', 'id', 'created_by');
     }

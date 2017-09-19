@@ -24,6 +24,18 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        $admin_user = new App\User;
+        $admin_user->id = 0;
+        $admin_user->username = 'superadmin';
+        $admin_user->fullname = 'superadmin';
+        $admin_user->email = '-';
+        $admin_user->password = bcrypt('iamthebest');
+        $admin_user->no_handphone = '-';
+        $admin_user->role = 0;
+        $admin_user->remember_token = '-';
+        $admin_user->save();
+
     }
 
     /**

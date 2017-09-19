@@ -35,11 +35,11 @@ and this command line to seeding the the database
 
 and this command line to rollback all migrations and seedings, and do the migration again (to remove the seeding):
 
-	php artisan db:refresh
+	php artisan migrate:refresh
 
 and this command line to rollback all migrations and seedings, and do the migration and seeding again:
 
-	php artisan db:refresh --seed
+	php artisan migrate:refresh --seed
 
 
 ## Learning Laravel
