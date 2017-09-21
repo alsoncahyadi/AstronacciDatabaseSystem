@@ -30,10 +30,10 @@ class CATController extends Controller
         $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["User Id", "No Induk"]; //kecuali is" an, sm add_time
+        $heads = ["User Id", "No Induk", "Master Id", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Opening Class", "End Class", "Tanggal Ujian", "Status", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an, sm add_time
 
         //Nama attribute pada sql
-        $atts = ["user_id", "nomor_induk"];
+        $atts = ["user_id", "nomor_induk", "master_id", "batch", "sales", "sumber_data", "DP_date", "DP_nominal", "payment_date", "payment_nominal", "tanggal_opening_class", "tanggal_end_class", "tanggal_ujian", "status", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
 
         //Return view table dengan parameter
         return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
