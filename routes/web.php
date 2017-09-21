@@ -115,7 +115,7 @@ Route::post('/insertPassword', [
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
     'as' => 'CAT',
-	'middleware' => ['auth', 'roles'],
+	// 'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '3'],
     ]);
 

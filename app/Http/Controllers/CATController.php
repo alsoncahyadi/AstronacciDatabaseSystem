@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\Cat;
 
 class CATController extends Controller
 {
@@ -21,21 +22,21 @@ class CATController extends Controller
 
     public function getTable() {
         //Select seluruh tabel
-        $cats = DB::select("call select_cat()");
+        $cats = Cat::all();
         //Daftar username sales
-        $salesusers = DB::select("SELECT sales_username FROM sales");
+        //$salesusers = DB::select("SELECT sales_username FROM sales");
 
         //Data untuk insert
-        $ins = ["Sales", "Batch", "User ID", "No Induk", "Pendaftaran", "Kelas Berakhir", "Nama", "Jenis Kelamin", "Email", "Telepon", "Alamat", "Kota", "Tanggal Lahir", "Username", "Password"];
+        $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "CAT ID", "No Induk", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Address", "City", "Status Pernikahan", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Username", "Password", "Batch", "Pendaftaran", "Kelas Akhir", "Sales", "Tanggal Ditambahkan"]; //kecuali is" an, sm add_time
+        $heads = ["User Id", "No Induk"]; //kecuali is" an, sm add_time
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "cat_user_id", "cat_no_induk", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "cat_username", "password", "batch", "tanggal_pendaftaran", "tanggal_kelas_berakhir", "sales_username", "add_time"];
+        $atts = ["user_id", "nomor_induk"];
 
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
