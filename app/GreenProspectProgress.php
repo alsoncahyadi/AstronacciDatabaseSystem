@@ -13,11 +13,11 @@ class GreenProspectProgress extends Model
         return $this->belongsTo('App\GreenProspectClient', 'green_id', 'green_id');
     }
 
-    public function createdby() {
+    public function createdBy() {
         return $this->belongsTo('App\User', 'created_by');
     }
 
-    public function updatedby() {
+    public function updatedBy() {
         return $this->belongsTo('App\User', 'updated_by');
     }
 }
