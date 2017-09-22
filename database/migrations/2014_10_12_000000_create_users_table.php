@@ -20,7 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('no_handphone');
-            $table->integer('role');            
+            $table->integer('role');
+            $table->integer('a_shop_auth');     
             $table->rememberToken();
             $table->timestamps();
         });
@@ -33,6 +34,7 @@ class CreateUsersTable extends Migration
         $admin_user->password = bcrypt('iamthebest');
         $admin_user->no_handphone = '-';
         $admin_user->role = 0;
+        $admin_user->a_shop_auth = 1;
         $admin_user->remember_token = '-';
         $admin_user->save();
 
