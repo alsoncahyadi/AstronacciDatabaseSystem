@@ -18,6 +18,7 @@ class CreateAclubInformationsTable extends Migration
           $table->primary('master_id');
           $table->text('sumber_data')->nullable();
           $table->text('keterangan')->  nullable();
+
           $table->timestamps();
           
           $table->foreign('master_id')->references('master_id')

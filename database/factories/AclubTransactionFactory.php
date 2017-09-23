@@ -24,6 +24,7 @@ $factory->define(App\AclubTransaction::class, function (Faker\Generator $faker) 
         'status' => $faker->randomElement(['Baru', 'Perpanjang','Tidak Aktif']), 
         'nominal' => $faker->randomNumber($nbDigits = 2)*10000,
         'start_date' => $start,
+        'sales_name' => $faker->name,
         'expired_date' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
         'masa_tenggang' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
         'yellow_zone' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),

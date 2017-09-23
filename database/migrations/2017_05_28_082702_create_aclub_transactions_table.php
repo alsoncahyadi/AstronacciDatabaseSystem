@@ -26,6 +26,7 @@ class CreateAclubTransactionsTable extends Migration
             $table->date('yellow_zone');
             $table->date('red_zone');
             $table->timestamps();
+            $table->string('sales_name');
 
             $table->foreign('user_id')->references('user_id')
                 ->on('aclub_members')
