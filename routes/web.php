@@ -24,6 +24,10 @@ Route::get('/', 'Auth\LoginController@index')->middleware('auth');
 
 Auth::routes();
 
+Route::get('/mockup', [
+    'uses' => 'MockupController@index', 
+    ]);
+
 Route::get('/adduser', [
 	'as' => 'adduser',
 	'middleware' => ['auth', 'roles'],
