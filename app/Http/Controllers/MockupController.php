@@ -8,7 +8,7 @@ class MockupController extends Controller
 {
     public function index()
     {
-        $clients = DB::select("select * from Master_clients");
+        $clients = DB::select("select * from master_clients");
         //Data untuk insert
         $ins = ["User ID", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin"];
         //ACLUB exclusive form
@@ -18,7 +18,7 @@ class MockupController extends Controller
         //MRG exclusive form
         $mrgforms = ["MRG Personalized Form 1", "MRG Personalized Form 2", "MRG Personalized Form 3"];
         //CAT exclusive form
-        $catforms = ["CAT Personalized Form 1", "CAT Personalized Form 2"];
+        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Tanggal Opening Class", "Tanggal End Class", "Keterangan"];
         //Judul kolom yang ditampilkan pada tabel
        $heads = ["PC ID", "User ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status", "Gender", "Telepon", "Provinsi", "Facebook", "Interest", "Trading_Experience_Year", "Stock_&_Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Occupation", "Tanggal Ditambahkan"];//kecuali is"an dan add_time
         //Nama attribute pada sql
@@ -29,5 +29,22 @@ class MockupController extends Controller
                 'ins'=>$ins, 'aclub' => $aclubforms, 'uob' => $uobforms, 
                 'mrg' => $mrgforms, 'cat' => $catforms]
             );
+    }
+
+     public function addCat(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+            ]);
+
+        dd($request->flag);
+
+        $cat = new \App\Cat;
+        $cat->user_id = $request->user_id;
+        $cat->nomor_induk = $request->nomor_induk;
+        $cat->batch = $request->sales;
+        $cat->sumber_data = $request->sumber_data;
+
+        $cat->save();
+
     }
 }

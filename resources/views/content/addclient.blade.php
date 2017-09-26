@@ -7,7 +7,7 @@
 	</div>
 </div>
 	<div class="panel panel-default" style="padding:15px" >
-		<form method="post">
+		<form method="post" action="{{route('insert')}}">
 			<div class="form-group">
 				<label>Nama</label>
 				<input id="input" class="form-control" type="text" autocomplete="off">
@@ -69,6 +69,7 @@
 					@endforeach
 				</div>
 				<div id="cat" style="display: none;">
+					
 					@foreach ($cat as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>

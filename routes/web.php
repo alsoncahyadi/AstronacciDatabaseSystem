@@ -28,6 +28,11 @@ Route::get('/mockup', [
     'uses' => 'MockupController@index', 
     ]);
 
+Route::post('/insert', [
+    'uses' => 'MockupController@addCat',
+    'as' => 'insert'
+    ]);
+
 Route::get('/adduser', [
 	'as' => 'adduser',
 	'middleware' => ['auth', 'roles'],
