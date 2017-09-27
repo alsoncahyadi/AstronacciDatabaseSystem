@@ -61,6 +61,7 @@
 					@endforeach
 				</div>
 				<div id="uob" style="display: none;">
+					<input type="hidden" name="uob" value="1">
 					@foreach ($uob as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
@@ -69,7 +70,7 @@
 					@endforeach
 				</div>
 				<div id="cat" style="display: none;">
-					
+					<input type="hidden" name="cat" value="1">
 					@foreach ($cat as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
@@ -79,6 +80,9 @@
 				</div>
 				<br>
 				<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+				<input type="hidden" id="flag" name="flag" value="" />
+				<input type="hidden" id="master" name="master" value="" />
+				<input type="hidden" id="master_id" name="master_id" value="" />
 				<input type="submit" class="btn btn-default" value="Insert">
 				<span onclick="reset()"><button type="reset" class="btn btn-default">Reset Form</button></span>
 			</div>
@@ -94,6 +98,11 @@
 	var emails = [
 		@foreach ($clients as $client)
 			'{{$client->email}}', 
+		@endforeach
+	]
+	var ids = [
+		@foreach ($clients as $client)
+			'{{$client->master_id}}', 
 		@endforeach
 	]
 	$('#input').on( 'input', function() {
@@ -131,12 +140,16 @@
 		document.getElementById("cat").style.display = "none";	
 		if ($( "#pc option:checked" ).val() == "A-Club"){
 			document.getElementById("aclub").style.display = "inline";
+			document.getElementById("flag").value = 'aclub';
 		} else if ($( "#pc option:checked" ).val() == "UOB"){
 			document.getElementById("uob").style.display = "inline";
+			document.getElementById("flag").value = 'uob';
 		} else if ($( "#pc option:checked" ).val() == "MRG"){
 			document.getElementById("mrg").style.display = "inline";
+			document.getElementById("flag").value = 'mrg';
 		} else if ($( "#pc option:checked" ).val() == "CAT"){
 			document.getElementById("cat").style.display = "inline";
+			document.getElementById("flag").value = 'cat';
 		}
 	});
 	function exec(id) {
@@ -145,9 +158,12 @@
 			document.getElementById("addcli").style.display = "none";
 			document.getElementById("addcli2").style.display = "inline";
 			document.getElementById("input").value = fullnames[id];
+			document.getElementById("master").value = '1';
+			document.getElementById("master_id").value = ids[id];
 		} else {
 			document.getElementById("addcli2").style.display = "none";
 			document.getElementById("addcli").style.display = "inline";
+			document.getElementById("master").value = '0';
 		}
 		document.getElementById("next").style.display = "inline";
 		window.scrollTo(0, 0);

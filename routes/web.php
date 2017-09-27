@@ -29,7 +29,7 @@ Route::get('/mockup', [
     ]);
 
 Route::post('/insert', [
-    'uses' => 'MockupController@addCat',
+    'uses' => 'MockupController@addClient',
     'as' => 'insert'
     ]);
 

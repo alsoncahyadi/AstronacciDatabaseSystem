@@ -18,7 +18,7 @@ class MockupController extends Controller
         //MRG exclusive form
         $mrgforms = ["MRG Personalized Form 1", "MRG Personalized Form 2", "MRG Personalized Form 3"];
         //CAT exclusive form
-        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Tanggal Opening Class", "Tanggal End Class", "Keterangan"];
+        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Tanggal Opening Class", "Tanggal End Class", "Tanggal Ujian", "Status", "Keterangan"];
         //Judul kolom yang ditampilkan pada tabel
        $heads = ["PC ID", "User ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status", "Gender", "Telepon", "Provinsi", "Facebook", "Interest", "Trading_Experience_Year", "Stock_&_Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Occupation", "Tanggal Ditambahkan"];//kecuali is"an dan add_time
         //Nama attribute pada sql
@@ -31,20 +31,35 @@ class MockupController extends Controller
             );
     }
 
-     public function addCat(Request $request) {
+     public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
             ]);
 
-        dd($request->flag);
+        if ($request->master == 1){
+            if ($request->flag == 'cat') {
+                $this->addCAT($request);
+            } 
+        }
+    }
 
+    public function addCAT(Request $request) {
         $cat = new \App\Cat;
+        $cat->master_id = $request->master_id;
         $cat->user_id = $request->user_id;
         $cat->nomor_induk = $request->nomor_induk;
         $cat->batch = $request->sales;
         $cat->sumber_data = $request->sumber_data;
+        $cat->DP_date = $request->tanggal_dp;
+        $cat->DP_nominal = $request->nominal_dp;
+        $cat->payment_date = $request->tanggal_payment;
+        $cat->payment_nominal = $request->nominal_payment;
+        $cat->tanggal_opening_class = $request->tanggal_opening_class;
+        $cat->tanggal_end_class = $request->tanggal_end_class;
+        $cat->tanggal_ujian = $request->tanggal_ujian;
+        $cat->status = $request->status;
+        $cat->keterangan = $request->keterangan;
 
         $cat->save();
-
     }
 }
