@@ -21,6 +21,27 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
 
+## How to do the migration and seeding by ramosjanoah
+
+Make sure you have database named 'ads' in your mysql DBMS.
+To do the migration, use this command line in terminal in project directory:
+
+	php artisan migrate
+
+and this command line to seeding the the database
+
+	php artisan db:seed
+
+
+and this command line to rollback all migrations and seedings, and do the migration again (to remove the seeding):
+
+	php artisan migrate:refresh
+
+and this command line to rollback all migrations and seedings, and do the migration and seeding again:
+
+	php artisan migrate:refresh --seed
+
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
