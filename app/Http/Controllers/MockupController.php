@@ -14,7 +14,7 @@ class MockupController extends Controller
         //ACLUB exclusive form
         $aclubforms = ["Aclub Personalized Form1", "Aclub Personalized Form2", "Aclub Personalized Form3"];
         //UOB exclusive form
-        $uobforms = ["UOB Personalized Form 1", "UOB Personalized Form 2"];
+        $uobforms = ["Client ID", "Sales Name", "Sumber Data", "Tanggal Gabung", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
         //MRG exclusive form
         $mrgforms = ["MRG Personalized Form 1", "MRG Personalized Form 2", "MRG Personalized Form 3"];
         //CAT exclusive form
@@ -39,7 +39,9 @@ class MockupController extends Controller
         if ($request->master == 1){
             if ($request->flag == 'cat') {
                 $this->addCAT($request);
-            } 
+            } else if ($request->flag == 'uob') {
+                $this->addUOB($request);
+            }
         }
     }
 
@@ -61,5 +63,34 @@ class MockupController extends Controller
         $cat->keterangan = $request->keterangan;
 
         $cat->save();
+    }
+
+    public function addUOB(Request $request) {
+        $uob = new \App\Uob;
+
+        $uob->master_id = $request->master_id;
+        $uob->client_id = $request->user_id;
+        $uob->sales_name = $request->nomor_induk;
+        $uob->sumber_data = $request->sales;
+        $uob->join_date = $request->sumber_data;
+        $uob->nomor_ktp = $request->tanggal_dp;
+        $uob->tanggal_expired_ktp = $request->nominal_dp;
+        $uob->nomor_npwp = $request->tanggal_payment;
+        $uob->alamat_surat = $request->nominal_payment;
+        $uob->saudara_tidak_serumah = $request->tanggal_opening_class;
+        $uob->nama_ibu_kandung = $request->tanggal_end_class;
+        $uob->bank_pribadi = $request->tanggal_ujian;
+        $uob->nomor_rekening_pribadi = $request->status;
+        $uob->tanggal_rdi_done = $request->keterangan;
+        $uob->rdi_bank;
+        $uob->nomor_rdi;
+        $uob->tanggal_top_up;
+        $uob->nominal_top_up;
+        $uob->tanggal_trading;
+        $uob->status;
+        $uob->trading_via;
+        $uob->keterangan;
+
+        $uob->save();
     }
 }
