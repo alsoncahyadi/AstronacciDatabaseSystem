@@ -136,7 +136,7 @@
                                 @elseif ($route == 'RedClub') <!-- Client RedClub diidentifikasi berdasarkan username (untuk dilihat detailnya) -->
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
-								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->user_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 								@else
 									<td>{{$client->$att}}</td>
                                 @endif
