@@ -46,11 +46,33 @@ class MockupController extends Controller
     }
 
     public function addCAT(Request $request) {
+        //dd('masuk2');
+        $this->validate($request, [
+            'master_id' => 'required|exists:master_clients,master_id',
+            'user_id' => 'required|string:50',
+            'nomor_induk' => 'required|string:50',
+            'batch' => 'string:20',
+            'sales' => 'string:100',
+            'sumber_data' => 'string:20',
+            'tanggal_dp' => 'date',
+            'nominal_dp' => 'integer',
+            'tanggal_payment' => 'date',
+            'nominal_payment' => 'integer',
+            'tanggal_opening_class' => 'date',
+            'tanggal_end_class' => 'date|after:tanggal_opening_class',
+            'tanggal_ujian' => 'date',
+            'status' => 'string:20',
+            'keterangan' => ''
+            ]);
+
+        dd($errors);
+
         $cat = new \App\Cat;
         $cat->master_id = $request->master_id;
         $cat->user_id = $request->user_id;
         $cat->nomor_induk = $request->nomor_induk;
-        $cat->batch = $request->sales;
+        $cat->batch = $request->batch;
+        $cat->sales_name = $request->sales;
         $cat->sumber_data = $request->sumber_data;
         $cat->DP_date = $request->tanggal_dp;
         $cat->DP_nominal = $request->nominal_dp;
@@ -63,9 +85,13 @@ class MockupController extends Controller
         $cat->keterangan = $request->keterangan;
 
         $cat->save();
+
+        return redirect()->back()->withErrors($errors);
     }
 
     public function addUOB(Request $request) {
+        $this->validate($request, [
+            ]);
         $uob = new \App\Uob;
 
         $uob->master_id = $request->master_id;
