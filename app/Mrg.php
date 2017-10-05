@@ -10,11 +10,11 @@ class Mrg extends Model
     protected $table = 'mrgs';
 
     public function master() {
-        $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
+        return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }
 
     public function accounts() {
-        $this->hasMany('App\MrgAccount', 'master_id', 'master_id');
+        return $this->hasMany('App\MrgAccount', 'master_id', 'master_id');
     }
 
     public function createdBy() {

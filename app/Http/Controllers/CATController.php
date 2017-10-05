@@ -44,8 +44,7 @@ class CATController extends Controller
         $cat = Cat::where('user_id', $id)->first();
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins= ["Master ID"=> "master_id",
-                "User ID" => "user_id",
+        $ins= ["User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales",
@@ -58,14 +57,9 @@ class CATController extends Controller
                 "Tanggal End Class"=> "tanggal_end_class",
                 "Tanggal Ujian" => "tanggal_ujian",
                 "Status" => "status",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at",
-                "Created By" => "created_by",
-                "Updated By" => "updated_by"];
-        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
+                "Keterangan" => "keterangan"];
         $heads = $ins;
-        dd($cat);   
+        
 		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins]);
     }
 

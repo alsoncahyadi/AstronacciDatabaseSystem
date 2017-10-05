@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
+use App\AclubInformation;
+use App\MasterClient;
 
 class AClubController extends Controller
 {
@@ -37,20 +39,37 @@ class AClubController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $aclub = DB::select("call select_detail_aclub(?)", [$id]);
-        $aclub = $aclub[0];
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["User ID" => "user_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", " Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Interest and Hobby" => "interest_and_hobby", "Trading Year Experience" => "trading_experience_year", "Your Stock & Future Broker" => "your_stock_future_broker", "Annual Income" => "annual_income", "Security Question" => "security_question", "Security Answer" => "security_answer", "Status" => "status", "Keterangan" => "keterangan", "Website" => "website", "State" => "state", "Occupation" => "occupation", "Tanggal Ditambahkan" => "add_time"];
-        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["PC ID" => "all_pc_id"] + $ins;
+        $aclub_master = MasterClient::where('master_id', $id)->first();
 
-        $clientsreg = DB::select("call select_detail_aclub_2(?)", [$id]);
-        $headsreg = ["Registration ID", "Sales", "Broker", "Paket", "Registration Type", "Registration Date", "Jenis", "Nominal", "Percentage", "Comission", "Paid", "Paid Date", "Debt", "Frekuensi", "Keterangan Ref", "Message", "Start Date", "Bulan Member", "Expired Date", "Bonus Member Day", "Expired Date Bonus", "Sumber Data"];
-        $attsreg = ["registration_id", "sales_username", "broker", "paket", "registration_type", "registration_date", "jenis", "nominal", "percentage", "comission_for_sales", "paid", "paid_date", "debt", "frekuensi", "keterangan_ref", "message", "start_date", "bulan_member", "expired_date", "bonus_member_day", "expired_date_bonus", "sumber_data"];
-        //ADD TRANSAKSI
-        $insreg = ["Registration Date", "Kode Paket", "Sales Username", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"];
-        //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'insreg'=>$insreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
+
+        $aclub_information = $aclub_master->aclubInformation;
+
+        $aclub_master->keterangan = $aclub_information->keterangan;
+        $aclub_master->sumber_data = $aclub_information->sumber_data;
+
+        //Nama atribut form yang ditampilkan dan nama pada SQL
+        $ins= ["Master ID" => "master_id",
+                "RedClub User ID" => "redclub_user_id",
+                "RedClub password" => "redclub_password",
+                "Name" => "name",
+                "Telephone Number" => "telephone_number",
+                "Email" => "email",
+                "Birth date" => "birthdate",
+                "Address" => "address",
+                "City" => "city",
+                "Province" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Sumber Data (A-Club)"=> "sumber_data",
+                "Keterangan (A-Club)"=> "keterangan"];
+        $heads = $ins;
+
+        dd($aclub_master);
+
+        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_master, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {

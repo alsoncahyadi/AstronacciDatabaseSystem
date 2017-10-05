@@ -10,7 +10,7 @@ class Uob extends Model
     protected $table = 'uobs';
 
     public function master() {
-        $this->belongsTo('App\Uob', 'master_id', 'master_id');
+        return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }
 
     public function createdBy() {

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
-use App\MRG;
+use App\Mrg;
 use DB;
 
 class MRGController extends Controller
@@ -52,18 +52,36 @@ class MRGController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $mrg = DB::select("call select_detail_mrg(?)", [$id]);
-        $mrg = $mrg[0];
+        $mrg = MRG::where('master_id', $id)->first();
 
-        $salesusers = DB::select("SELECT sales_username FROM sales");
+        //$master = $mrg->master;
+        //$mrg->redclub_user_id = $master->redclub_user_id;
+        //$mrg->redclub_password = $master->redclub_password;
+        //$mrg->name = $master->name;
+        //$mrg->telephone_number = $master->telephone_number;
+        //$mrg->email = $master->email;
+        //$mrg->birthdate = $master->birthdate;
+        //$mrg->address = $master->address;
+        //$mrg->city = $master->city;
+        //$mrg->province = $master->province;
+        //$mrg->gender = $master->gender;
+        //$mrg->line_id = $master->line_id;
+        //$mrg->bbm = $master->bbm;
+        //$mrg->whatsapp = $master->whatsapp;
+        //$mrg->facebook = $master->facebook;
 
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["Account" => "account", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
-        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["PC ID" => "all_pc_id"] + $ins;
+        $ins= ["Sumber Data (MRG)" => "sumber_data",
+                "Join Date (MRG)" => "join_date",
+                ];
+
+        $heads = $ins;  
+
+        $accounts = $mrg->accounts()->get();
+
+        // mrg accounts belom dimasukin
 
         //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {
