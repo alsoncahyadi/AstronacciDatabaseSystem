@@ -47,7 +47,7 @@ class CATController extends Controller
         $ins= ["User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
-                "Sales" => "sales",
+                "Sales" => "sales_name",
                 "Sumber Data" => "sumber_data",
                 "DP Date" => "DP_date",
                 "DP Nominal " => "DP_nominal",
@@ -59,6 +59,8 @@ class CATController extends Controller
                 "Status" => "status",
                 "Keterangan" => "keterangan"];
         $heads = $ins;
+
+        dd($cat);
         
 		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins]);
     }

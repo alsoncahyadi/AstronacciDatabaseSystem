@@ -40,34 +40,19 @@ class AClubController extends Controller
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
         $aclub_master = MasterClient::where('master_id', $id)->first();
-
-
         $aclub_information = $aclub_master->aclubInformation;
 
         $aclub_master->keterangan = $aclub_information->keterangan;
         $aclub_master->sumber_data = $aclub_information->sumber_data;
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins= ["Master ID" => "master_id",
-                "RedClub User ID" => "redclub_user_id",
-                "RedClub password" => "redclub_password",
-                "Name" => "name",
-                "Telephone Number" => "telephone_number",
-                "Email" => "email",
-                "Birth date" => "birthdate",
-                "Address" => "address",
-                "City" => "city",
-                "Province" => "province",
-                "Gender" => "gender",
-                "Line ID" => "line_id",
-                "BBM" => "bbm",
-                "WhatsApp" => "whatsapp",
-                "Facebook" => "facebook",
-                "Sumber Data (A-Club)"=> "sumber_data",
+        $ins= ["Sumber Data (A-Club)"=> "sumber_data",
                 "Keterangan (A-Club)"=> "keterangan"];
         $heads = $ins;
 
-        dd($aclub_master);
+        $aclub_members = $aclub_master->aclubMembers()->get();
+
+        // dd($aclub_members);
 
         return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_master, 'heads'=>$heads, 'ins'=>$ins]);
     }

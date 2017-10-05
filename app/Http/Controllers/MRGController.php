@@ -72,7 +72,7 @@ class MRGController extends Controller
 
         $ins= ["Sumber Data (MRG)" => "sumber_data",
                 "Join Date (MRG)" => "join_date",
-                ];
+                "Sales" => "sales_name"];
 
         $heads = $ins;  
 
