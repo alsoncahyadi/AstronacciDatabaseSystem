@@ -6,9 +6,9 @@
 		<!-- /.col-lg-12 -->
 	</div>
 </div>
-	<div class="panel panel-default" style="padding:15px" >
+	<div class="panel panel-default" style="padding:15px 280px;" >
 		<form method="post" action="{{route('insert')}}">
-			<div class="form-group">
+			<div class="form-group" id="ads_nama">
 				<label>Nama</label>
 				<input id="input" class="form-control" type="text" autocomplete="off">
 				<ul class="list-group" style="position:absolute;">
@@ -17,23 +17,45 @@
 			</div>
 			<div id="addcli" style="display: none">
 				@foreach ($ins as $atr)
-				<div class="form-group">				
+				<?php
+					$str_id = $atr;
+					$str_id = str_replace(' ', '', $str_id);
+				?>
+				<div class="form-group" id="{{$str_id}}">				
 					<label>{{$atr}}</label>
-					<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+					<?php if ($str_id == 'JenisKelamin') : ?>
+							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+								<option>Pria</option>
+								<option>Wanita</option>
+								<option>Hermaphrodite</option>
+								<option>Null</option>
+							</select>
+					<?php elseif ($str_id == 'TanggalLahir') : ?>
+							<input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+					<?php elseif (($str_id == 'NoHP') || ($str_id == 'NoTelepon')) : ?>
+							<input class="form-control no-spin" type="number" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+					<?php else : ?>
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+					<?php endif; ?>
 				</div>
 				@endforeach
 			</div>
 
 			<div id="addcli2" style="display: none">
 				@foreach ($ins as $atr)
-				<div class="form-group">
+				<?php
+					$str_id = $atr;
+					$str_id = str_replace(' ', '', $str_id);
+				?>
+				<div class="form-group" id="{{$str_id}}">
 					<label>{{$atr}}</label>
-					<p class="form-control-static">Example Data</p>
+					<p class="form-control">Example Data</p>
 				</div>
 				@endforeach
 			</div>
 
 			<div id="next" style="display: none;">
+				<br>
 				<div class="form-group">
 					<label>Profit Center</label>
 					<select id="pc" class="form-control">
@@ -43,6 +65,7 @@
 						<option>CAT</option>
 					</select>
 				</div>
+				<br>
 				<div class="form-group">
 				<div id="aclub">
 					@foreach ($aclub as $atr)
