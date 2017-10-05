@@ -21,6 +21,7 @@ class UOBController extends Controller
     }
 
     public function getTable() {
+<<<<<<< HEAD
         //Select seluruh tabel
         $uobs = Uob::All();
 
@@ -29,6 +30,18 @@ class UOBController extends Controller
 
         //Judul kolom yang ditampilkan pada tabel
         $heads = ["Client ID", "Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an dan add_time
+=======
+		//Select seluruh tabel
+        $uobs = Uob:all()
+        //Daftar username sales
+        // $salesusers = DB::select("SELECT sales_username FROM sales");
+
+        //Data untuk insert
+        // $ins = ["Client ID", "Nomor Induk ", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
+
+        //Judul kolom yang ditampilkan pada tabel
+        $heads = ["Master ID", "Client ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Address", "City", "Status Pernikahan", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Class", "Nomor", "Expired", "Kategori", "Bulan", "Bank", "Nomor Rekening", "RDI Niaga", "RDI BCA", "Trading Via", "Source", "Sales", "Tanggal Ditambahkan"]; //kecuali is" an dan add_time
+>>>>>>> eb19dc2ba663d5e1e472eaf76dd96180d95d0bc3
 
         //Nama attribute pada sql
         $atts = ["client_id","master_id", "sales_name", "sumber_data", "join_date", "nomor_ktp", "tanggal_expired_ktp", "nomor_npwp", "alamat_surat", "saudara_tidak_serumah", "nama_ibu_kandung", "bank_pribadi", "nomor_rekening_pribadi", "tanggal_rdi_done", "rdi_bank", "nomor_rdi", "tanggal_top_up", "nominal_top_up", "tanggal_trading", "status", "trading_via", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
