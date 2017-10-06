@@ -41,6 +41,14 @@ Route::get('/adduser', [
 		return view('auth/register');
 	},
 	]);
+
+Route::get('/addclient', [
+    'uses' => 'MockupController@getClientInfo',
+    'as' => 'getClient',
+    //'middleware' => ['auth', 'roles'],
+    //'roles' => ['0', '1'],
+    ]);
+
 /* to be uncommented
 Route::get('/register',
 	function(){

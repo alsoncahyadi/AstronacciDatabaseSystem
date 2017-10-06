@@ -7,10 +7,10 @@ use DB;
 class MockupController extends Controller
 {
     public function index()
-    {
-        $clients = DB::select("select * from master_clients");
+    {        
+        $clients = DB::select("select master_id, name, email from master_clients");
         //Data untuk insert
-        $ins = ["User ID", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin"];
+        $ins = ["User ID", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Whatsapp", "Jenis Kelamin"];        
         //ACLUB exclusive form
         $aclubforms = ["Aclub Personalized Form1", "Aclub Personalized Form2", "Aclub Personalized Form3"];
         //UOB exclusive form
@@ -31,7 +31,20 @@ class MockupController extends Controller
             );
     }
 
-     public function addClient(Request $request) {
+    public function getClientInfo(Request $request) {
+        $dummy = DB::select("select * from master_clients where master_id = " . $request['id']);
+        //Data untuk insert
+        $ins = ["User ID", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Whatsapp", "Jenis Kelamin"];
+        //Nama kolom
+        $colname = ["master_id", "telephone_number", "address", "city", "province", "email", "birthdate", "line_id", "bbm", "facebook", "whatsapp", "gender"];
+        //Return view table dengan parameter
+        return view('content/clientdetail', 
+            ['colname' => $colname, 'ins'=>$ins, 'dummy' => $dummy]
+            );
+        //return $request['id'];
+    }
+
+    public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
             ]);
@@ -41,6 +54,10 @@ class MockupController extends Controller
                 $this->addCAT($request);
             } 
         }
+    }
+
+    public function autoFill(Request $request) {
+        
     }
 
     public function addCAT(Request $request) {

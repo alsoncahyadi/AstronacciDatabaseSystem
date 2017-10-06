@@ -15,23 +15,19 @@
 				    <div id="dropdown"></div>
 				</ul>
 			</div>
+			
+
 			<div id="addcli" style="display: none">
 				@foreach ($ins as $atr)
-				<div class="form-group">				
+				<div class="form-group">
 					<label>{{$atr}}</label>
 					<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 				</div>
 				@endforeach
 			</div>
-
-			<div id="addcli2" style="display: none">
-				@foreach ($ins as $atr)
-				<div class="form-group">
-					<label>{{$atr}}</label>
-					<p class="form-control-static">Example Data</p>
-				</div>
-				@endforeach
+			<div id="tab">
 			</div>
+			<!-- PASTE CODE HERE -->
 
 			<div id="next" style="display: none;">
 				<div class="form-group">
@@ -110,11 +106,11 @@
 		var joinName = '<li class="list-group-item" style="cursor:pointer;" onclick="exec(-1)">Tambahkan Client Baru + </li>';
 		var listlen = 0;
 		if (inputString != ""){
-			
+
 			var arrayLength = fullnames.length;
 			for (var i = 0; i < arrayLength; i++) {
 				if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
-				    joinName += ' <li class="list-group-item" onclick="exec(' + i + ')" style="cursor:pointer;">' 
+				    joinName += ' <li class="list-group-item" onclick="exec(' + ids[i] + ', \'' + fullnames[i] + '\')" style="cursor:pointer;">' 
 				    			+ fullnames[i] + '<br><p style="font-style:italic; color:gray">'
 				    			+ emails[i] + '</p></li>';
 				    listlen++;
@@ -152,16 +148,16 @@
 			document.getElementById("flag").value = 'cat';
 		}
 	});
-	function exec(id) {
+	function exec(id, name) {
 		document.getElementById("dropdown").innerHTML = "";
 		if (id != -1){
+			load('{{route('getClient')}}?id=' + id);
 			document.getElementById("addcli").style.display = "none";
-			document.getElementById("addcli2").style.display = "inline";
-			document.getElementById("input").value = fullnames[id];
+			document.getElementById("input").value = name;
 			document.getElementById("master").value = '1';
 			document.getElementById("master_id").value = ids[id];
 		} else {
-			document.getElementById("addcli2").style.display = "none";
+			document.getElementById("tab").innerHTML = "";
 			document.getElementById("addcli").style.display = "inline";
 			document.getElementById("master").value = '0';
 		}
