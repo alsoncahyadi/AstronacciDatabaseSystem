@@ -26,19 +26,15 @@
 				    <div id="dropdown"></div>
 				</ul>
 			</div>
-			
+
 
 			<div id="addcli" style="display: none">
 				@foreach ($ins as $atr)
-<<<<<<< HEAD
-				<div class="form-group">
-=======
 				<?php
 					$str_id = $atr;
 					$str_id = str_replace(' ', '', $str_id);
 				?>
 				<div class="form-group" id="{{$str_id}}">				
->>>>>>> c42f4194f59e3c2ee871a046e4843468fdde1ec0
 					<label>{{$atr}}</label>
 					<?php if ($str_id == 'JenisKelamin') : ?>
 							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -57,22 +53,8 @@
 				</div>
 				@endforeach
 			</div>
-<<<<<<< HEAD
-			<div id="tab">
-=======
 
-			<div id="addcli2" style="display: none">
-				@foreach ($ins as $atr)
-				<?php
-					$str_id = $atr;
-					$str_id = str_replace(' ', '', $str_id);
-				?>
-				<div class="form-group" id="{{$str_id}}">
-					<label>{{$atr}}</label>
-					<p class="form-control">Example Data</p>
-				</div>
-				@endforeach
->>>>>>> c42f4194f59e3c2ee871a046e4843468fdde1ec0
+			<div id="tab">
 			</div>
 			<!-- PASTE CODE HERE -->
 

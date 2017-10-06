@@ -10,11 +10,7 @@ class MockupController extends Controller
     {        
         $clients = DB::select("select master_id, name, email from master_clients");
         //Data untuk insert
-<<<<<<< HEAD
         $ins = ["User ID", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Whatsapp", "Jenis Kelamin"];        
-=======
-        $ins = ["User ID", "Tanggal Lahir", "Jenis Kelamin", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Line ID", "Pin BB", "Facebook", "Twitter"];
->>>>>>> c42f4194f59e3c2ee871a046e4843468fdde1ec0
         //ACLUB exclusive form
         $aclubforms = ["Aclub Personalized Form1", "Aclub Personalized Form2", "Aclub Personalized Form3"];
         //UOB exclusive form
