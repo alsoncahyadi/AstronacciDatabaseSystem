@@ -111,6 +111,13 @@ Route::post('/insertPassword', [
 	'middleware' => ['auth'],
 	]);
 
+Route::get('/{id}', [
+    'uses' => 'DetailController@clientDetail',
+    'as' => 'detail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
+
 // CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',

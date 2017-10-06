@@ -65,8 +65,9 @@ class CATController extends Controller
                 "Updated By" => "updated_by"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = $ins;
+        $insreg = ["Cuki"];
         //dd($cat);   
-		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins]);
+		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
     }
 
 

@@ -50,30 +50,35 @@
 
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </head>
 <body style="overflow-x:hidden;  background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
     <div id="wrapper" style="margin:15px">
-
-	<div class="row">
-		<div class="col-lg-12">
-			<h1>{{$route}} Profile</h1>
-		</div>
-		<!-- /.col-lg-12 -->
-	</div>
+    	<div class="row">
+    		<div class="col-lg-12">
+    			<h1>Profile</h1>
+    		</div>
+    		<!-- /.col-lg-12 -->
+    	</div>
     </div>
-	
+	               <?php
+                    if($route == "CAT") $userid = "cat_user_id";
+                    else if ($route == "AClub") $userid = "user_id";
+                    else if ($route == "MRG") $userid = "account";
+                    else if ($route == "UOB") $userid = "client_id";
+                    else if ($route == "green") $userid = "green_id";
+                    else if ($route == "grow") $userid = "grow_id";
+                    else if ($route == "RedClub") $userid = "username";
+                    else if ($route == "assigngreen") $userid = "green_assign_id";
+                    else if ($route == "assigngrow") $userid = "grow_assign_id";
+                    else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                ?>
+                
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <button class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </button>
         </div>
 		
         <div class="panel-body">
@@ -90,58 +95,16 @@
                             </div>
                         @endforeach
 				</div>
-				<?php
-					if($route == "CAT") $userid = "cat_user_id";
-					else if ($route == "AClub") $userid = "user_id";
-					else if ($route == "MRG") $userid = "account";
-					else if ($route == "UOB") $userid = "client_id";
-					else if ($route == "green") $userid = "green_id";
-					else if ($route == "grow") $userid = "grow_id";
-					else if ($route == "RedClub") $userid = "username";
-					else if ($route == "assigngreen") $userid = "green_assign_id";
-					else if ($route == "assigngrow") $userid = "grow_assign_id";
-					else if ($route == "assignredclub") $userid = "redclub_assign_id";
-				?>
-				<a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
 
 			</div>
 			
 		</div>
-
+        {{$client->$userid}}
+        <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $userid])}}"> AClub </a>
+        <a class="btn btn-default" style="margin:10px;" href="{{route('MRG.detail', ['id' => $client->$userid])}}"> MRG </a>
+        <a class="btn btn-default" style="margin:10px;" href="{{route('CAT.detail', ['id' => $userid])}}"> CAT </a>
+        <a class="btn btn-default" style="margin:10px;" href="{{route('UOB.detail', ['id' => $client->$userid])}}"> UOB </a>
      </div>
-
-
-    @if(($route == "CAT") || ($route == "AClub"))
-    <div class="panel panel-default" style="margin:15px">
-        <div class="panel-heading">
-            <i class="fa fa-money fa-fw"></i> Transactions
-        </div>
-        <div class="panel-body">
-            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
-            <div id="addcli" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <form method="post" action="{{route($route . '.inserttrans')}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @endif
-                        @foreach ($insreg as $atr)
-                        <div class="form-group">
-                            <label>{{$atr}}</label>
-                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-                        </div>
-                        @endforeach
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="submit" class="btn btn-default" value="Insert">
-                        <button type="reset" class="btn btn-default">Reset Form</button>
-                    </form>
-                </div>
-            </div>
-            <br><br>
-        </div>
-    </div>
-    @endif
 
 	<br><br>
 
