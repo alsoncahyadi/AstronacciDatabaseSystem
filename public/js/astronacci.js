@@ -1,8 +1,9 @@
  function load($pc) {
     //Javascript untuk ajax request
     //Ajax digunakan untuk mengambil tabel/konten untk page tertentu
+
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function() {    	
         if (this.readyState == 4 && this.status == 200) {
             //Konten yang diperoleh dari ajax dimasukkan ke dalam div tab
             document.getElementById("tab").innerHTML = this.responseText;

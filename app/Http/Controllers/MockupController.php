@@ -46,6 +46,20 @@ class MockupController extends Controller
         }
     }
 
+    
+    public function getClientInfo(Request $request) {
+        $dummy = DB::select("select * from master_clients where master_id = " . $request['id']);
+        //Data untuk insert
+        $ins = ["User ID", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Whatsapp", "Jenis Kelamin"];
+        //Nama kolom
+        $colname = ["master_id", "telephone_number", "address", "city", "province", "email", "birthdate", "line_id", "bbm", "facebook", "whatsapp", "gender"];
+        //Return view table dengan parameter
+        return view('content/clientdetail', 
+            ['colname' => $colname, 'ins'=>$ins, 'dummy' => $dummy]
+            );
+        //return $request['id'];
+    }
+
     public function addMaster(Request $request) {
         $this->validate($request, [
             'red_club_user_id' => 'string:100',
@@ -86,6 +100,10 @@ class MockupController extends Controller
         if ($request->master == 0) {
             $this->id = $master->id;
         }
+    }
+
+    public function autoFill(Request $request) {
+        
     }
 
     public function addCAT(Request $request) {
