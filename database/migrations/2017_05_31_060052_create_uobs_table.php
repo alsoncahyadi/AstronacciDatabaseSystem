@@ -19,15 +19,15 @@ class CreateUobsTable extends Migration
             $table->unsignedInteger('master_id');            
            
             $table->string('sales_name');
-            $table->text('sumber_data');
+            $table->text('sumber_data')->nullable();
 
             $table->date('join_date');
             $table->string('nomor_ktp', 20);
-            $table->date('tanggal_expired_ktp');
+            $table->date('tanggal_expired_ktp')->nullable();
             $table->string('nomor_npwp', 40);
-            $table->text('alamat_surat');
-            $table->text('saudara_tidak_serumah');
-            $table->text('nama_ibu_kandung');
+            $table->text('alamat_surat')->nullable();
+            $table->text('saudara_tidak_serumah')->nullable();
+            $table->text('nama_ibu_kandung')->nullable();
 
             $table->string('bank_pribadi');
             $table->string('nomor_rekening_pribadi', 50);
@@ -40,7 +40,7 @@ class CreateUobsTable extends Migration
             $table->string('status');
             $table->string('trading_via');
 
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
 
             $table->foreign('master_id')->references('master_id')

@@ -16,13 +16,13 @@ class CreateGreenProspectClientsTable extends Migration
         Schema::create('green_prospect_clients', function (Blueprint $table) {
             $table->increments('green_id');
             $table->date('date');
-            $table->string('name', 100)->nullable();
-            $table->string('phone', 50)->nullable();
+            $table->string('name', 100);
+            $table->string('phone', 50);
             $table->string('email', 255);
-            $table->text('interest');
-            $table->string('pemberi');
-            $table->text('sumber_data');
-            $table->text('keterangan_perintah');
+            $table->text('interest')->nullable();
+            $table->string('pemberi')->nullable();
+            $table->text('sumber_data')->nullable();
+            $table->text('keterangan_perintah')->nullable();
             $table->timestamps();
             $table->unsignedInteger('created_by')->references('id')
                 ->on('users')
