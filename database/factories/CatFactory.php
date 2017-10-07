@@ -9,7 +9,7 @@ $factory->define(App\Cat::class, function (Faker\Generator $faker) {
         'nomor_induk' => $faker->unique()->name,
         'master_id' => $faker->randomElement(App\MasterClient::pluck('master_id')->toArray()),
         'batch' => $faker->randomDigit,
-        'sales' => $faker->name,
+        'sales_name' => $faker->name,
         'sumber_data' => '-',
         'DP_date' => $faker->dateTimeBetween($startDate = "now", $endDate = "30 days")->format('Y-m-d'),
         'DP_nominal' => 0,
