@@ -82,15 +82,23 @@
 					@foreach ($aclub as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
+						@else
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@endif
 					</div>
 					@endforeach
 				</div>
 				<div id="mrg" style="display: none;">
 					@foreach ($mrg as $atr)
-					<div class="form-group">				
+					<div class="form-group">
 						<label>{{$atr}}</label>
-						<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
+						@else
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@endif
 					</div>
 					@endforeach
 				</div>
@@ -99,7 +107,11 @@
 					@foreach ($uob as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
+						@else
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@endif
 					</div>
 					@endforeach
 				</div>
@@ -108,7 +120,11 @@
 					@foreach ($cat as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
+						@else
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@endif
 					</div>
 					@endforeach
 				</div>
@@ -198,6 +214,7 @@
 			document.getElementById("addcli2").style.display = "none";
 			document.getElementById("addcli").style.display = "inline";
 			document.getElementById("master").value = '0';
+			document.getElementById("master_id").value = ids[id];
 		}
 		document.getElementById("next").style.display = "inline";
 		window.scrollTo(0, 0);
