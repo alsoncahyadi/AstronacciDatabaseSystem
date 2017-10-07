@@ -17,6 +17,7 @@ class CreateAclubMembersTable extends Migration
             $table->string('user_id', 50);
             $table->primary('user_id');
             $table->unsignedInteger('master_id');
+            $table->string('sales_name');
             $table->string('group', 5); // S, F atau RD
             $table->timestamps();
             // Tanggal-tanggal penting didapatkan dari transaksi

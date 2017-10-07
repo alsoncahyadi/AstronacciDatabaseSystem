@@ -18,7 +18,7 @@ class CreateMrgAccountsTable extends Migration
             $table->primary('accounts_number');
             $table->unsignedInteger('master_id');            
             $table->string('account_type', 20);
-
+            $table->string('sales_name');
             $table->timestamps();
 
             $table->foreign('master_id')->references('master_id')

@@ -17,7 +17,6 @@ class CreateMrgsTable extends Migration
             $table->unsignedInteger('master_id');
             $table->primary('master_id');  
             $table->text('sumber_data')->nullable();
-            $table->string('sales_name');
             $table->date('join_date')->nullable();
             $table->timestamps();
 

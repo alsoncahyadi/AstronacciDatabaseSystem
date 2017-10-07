@@ -23,7 +23,7 @@ class CreateCatsTable extends Migration
           //
             $table->unsignedInteger('master_id');
             $table->string('batch', 20);
-            $table->string('sales_name', 100);
+            $table->string('sales_name');
             $table->string('sumber_data', 20)->nullable();
             $table->date('DP_date')->nullable();
             $table->bigInteger('DP_nominal')->nullable();
