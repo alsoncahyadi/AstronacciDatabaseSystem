@@ -17,14 +17,14 @@ class CreateAclubTransactionsTable extends Migration
             $table->increments('transaction_id');
             $table->string('user_id', 50);
             $table->date('payment_date')->nullable();
-            $table->string('kode', 5);
-            $table->string('status', 20);
-            $table->bigInteger('nominal');
-            $table->date('start_date');
-            $table->date('expired_date');
-            $table->date('masa_tenggang');
-            $table->date('yellow_zone');
-            $table->date('red_zone');
+            $table->string('kode', 5)->nullable();
+            $table->string('status', 20)->nullable();
+            $table->bigInteger('nominal')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('expired_date')->nullable();
+            $table->date('masa_tenggang')->nullable();
+            $table->date('yellow_zone')->nullable();
+            $table->date('red_zone')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')

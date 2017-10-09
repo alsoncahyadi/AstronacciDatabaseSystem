@@ -16,8 +16,8 @@ class CreateGreenProspectClientsTable extends Migration
         Schema::create('green_prospect_clients', function (Blueprint $table) {
             $table->increments('green_id');
             $table->date('date');
-            $table->string('name', 100);
-            $table->string('phone', 50);
+            $table->string('name', 100)->nullable();
+            $table->string('phone', 50)->nullable();
             $table->string('email', 255);
             $table->text('interest')->nullable();
             $table->string('pemberi')->nullable();

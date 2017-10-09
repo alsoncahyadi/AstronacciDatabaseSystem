@@ -22,8 +22,8 @@ class CreateCatsTable extends Migration
             $table->unique('nomor_induk');
           //
             $table->unsignedInteger('master_id');
-            $table->string('batch', 20);
-            $table->string('sales_name');
+            $table->string('batch', 20)->nullable();
+            $table->string('sales_name')->nullable();
             $table->string('sumber_data', 20)->nullable();
             $table->date('DP_date')->nullable();
             $table->bigInteger('DP_nominal')->nullable();
