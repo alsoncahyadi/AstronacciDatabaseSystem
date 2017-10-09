@@ -16,7 +16,6 @@ class CreateMrgsTable extends Migration
         Schema::create('mrgs', function($table) {
             $table->unsignedInteger('master_id');
             $table->primary('master_id');  
-            $table->string('sales_name');
             $table->text('sumber_data')->nullable();
             $table->date('join_date')->nullable();
             $table->timestamps();

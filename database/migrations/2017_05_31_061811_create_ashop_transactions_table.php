@@ -16,9 +16,9 @@ class CreateAshopTransactionsTable extends Migration
         Schema::create('ashop_transactions', function (Blueprint $table) {
             $table->increments('transaction_id');
             $table->unsignedInteger('master_id');
-            $table->string('product_type'); // Video, E-Book, Seasonal Report, Event, Other
-            $table->string('product_name');
-            $table->bigInteger('nominal');
+            $table->string('product_type')->nullable(); // Video, E-Book, Seasonal Report, Event, Other
+            $table->string('product_name')->nullable();
+            $table->bigInteger('nominal')->nullable();
             $table->timestamps();
 
             $table->foreign('master_id')->references('master_id')
