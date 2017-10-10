@@ -22,7 +22,7 @@ class CATController extends Controller
 
     public function getTable() {
         //Select seluruh tabel
-        $cats = Cat::all();
+        $cats = Cat::paginate(15);
         //Daftar username sales
         //$salesusers = DB::select("SELECT sales_username FROM sales");
 

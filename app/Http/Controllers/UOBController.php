@@ -20,10 +20,10 @@ class UOBController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
+    public function getTable(Request $request) {
 
         //Select seluruh tabel
-        $uobs = Uob::All();
+        $uobs = Uob::paginate(15);
 
         //Data untuk insert
         $ins = [];
