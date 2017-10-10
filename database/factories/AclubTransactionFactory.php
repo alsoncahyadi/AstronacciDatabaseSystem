@@ -24,11 +24,11 @@ $factory->define(App\AclubTransaction::class, function (Faker\Generator $faker) 
         'status' => $faker->randomElement(['Baru', 'Perpanjang','Tidak Aktif']), 
         'nominal' => $faker->randomNumber($nbDigits = 2)*10000,
         'start_date' => $start,
-        'expired_date' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
-        'masa_tenggang' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
-        'yellow_zone' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
-        'red_zone' => ($start->add(new DateInterval($PXD)))->format('Y-m-d'),
+        'expired_date' => ($start->add(new DateInterval($PXD))),
+        'masa_tenggang' => ($start->add(new DateInterval($PXD))),
+        'yellow_zone' => ($start->add(new DateInterval($PXD))),
+        'red_zone' => ($start->add(new DateInterval($PXD))),
         'created_by' => 999,
-        'updated_by' => 999,              
+        'updated_by' => 999,
     ];
 });
