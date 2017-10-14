@@ -23,18 +23,72 @@ class AClubController extends Controller
 
     public function getTable() {
         //Select seluruh tabel
-        $aclubs = DB::select("call selectaclub_member()");
+        $aclub_info = AclubInformation::paginate(15);
+        foreach ($aclub_info as $aclub_master) {
+            $master = $aclub_master->master;
+            $aclub_master->redclub_user_id = $master->redclub_user_id;
+            $aclub_master->redclub_password = $master->redclub_password;
+            $aclub_master->name = $master->name;
+            $aclub_master->telephone_number = $master->telephone_number;
+            $aclub_master->email = $master->email;
+            $aclub_master->birthdate = $master->birthdate;
+            $aclub_master->address = $master->address;
+            $aclub_master->city = $master->city;
+            $aclub_master->province = $master->province;
+            $aclub_master->gender = $master->gender;
+            $aclub_master->line_id = $master->line_id;
+            $aclub_master->bbm = $master->bbm;
+            $aclub_master->whatsapp = $master->whatsapp;
+            $aclub_master->facebook = $master->facebook;
+        }
+        //Daftar username sales
+        //$salesusers = DB::select("SELECT sales_username FROM sales");
 
         //Data untuk insert
-        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Keterangan", "Security Question", "Security Answer"];
+        $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
-       $heads = ["PC ID", "User ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status", "Gender", "Telepon", "Provinsi", "Facebook", "Interest", "Trading_Experience_Year", "Stock_&_Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Occupation", "Tanggal Ditambahkan"];//kecuali is"an dan add_time
+        $heads = ["Master ID",
+                "RedClub User ID",
+                "RedClub Password",
+                "Nama",
+                "Nomor Telepon",
+                "Email",
+                "Tanggal Lahir",
+                "Alamat",
+                "Kota",
+                "Provinsi",
+                "Gender",
+                "Line ID",
+                "BBM",
+                "WhatsApp",
+                "Facebook",
+                "Sumber Data (A-Club)",
+                "Keterangan (A-Club)"];
+
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "occupation", "add_time"];
+        $atts = ["master_id",
+                "redclub_user_id",
+                "redclub_password",
+                "name",
+                "telephone_number",
+                "email",
+                "birthdate",
+                "address",
+                "city",
+                "province",
+                "gender",
+                "line_id",
+                "bbm",
+                "whatsapp",
+                "facebook",
+                "sumber_data",
+                "keterangan"];
+
+        // dd($aclub_info);
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {

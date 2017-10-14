@@ -22,32 +22,71 @@ class MRGController extends Controller
     
     public function getTable() {
         //Select seluruh tabel
-        $mrgs = DB::select("call select_mrg()");
+        //Select seluruh tabel
+        $mrgs = Mrg::paginate(15);
+        foreach ($mrgs as $mrg_master) {
+            $master = $mrg_master->master;
+            $mrg_master->redclub_user_id = $master->redclub_user_id;
+            $mrg_master->redclub_password = $master->redclub_password;
+            $mrg_master->name = $master->name;
+            $mrg_master->telephone_number = $master->telephone_number;
+            $mrg_master->email = $master->email;
+            $mrg_master->birthdate = $master->birthdate;
+            $mrg_master->address = $master->address;
+            $mrg_master->city = $master->city;
+            $mrg_master->province = $master->province;
+            $mrg_master->gender = $master->gender;
+            $mrg_master->line_id = $master->line_id;
+            $mrg_master->bbm = $master->bbm;
+            $mrg_master->whatsapp = $master->whatsapp;
+            $mrg_master->facebook = $master->facebook;
+        }
 
-        //Daftar username sales
-        $salesusers = DB::select("SELECT sales_username FROM sales");
+
         //Data untuk insert
-        $ins = ["Account", "Nama", "Tanggal Join", "Alamat", "Kota", "Telepon", "Email", "Type", "Sales"];
+        $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Account", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status Pernikahan", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Tanggal Join", "Type", "Sales", "Tanggal Ditambahkan"]; //semua kecuali yg is"an dan add_time
+        $heads = ["Master ID",
+                "RedClub User ID",
+                "RedClub Password",
+                "Nama",
+                "Nomor Telepon",
+                "Email",
+                "Tanggal Lahir",
+                "Alamat",
+                "Kota",
+                "Provinsi",
+                "Gender",
+                "Line ID",
+                "BBM",
+                "WhatsApp",
+                "Facebook",
+                "Sumber Data (MRG)",
+                "Join Date (MRG)"];
+
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "account", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "join_date", "type", "sales_username", "add_time"]; 
+        $atts = ["master_id",
+                "redclub_user_id",
+                "redclub_password",
+                "name",
+                "telephone_number",
+                "email",
+                "birthdate",
+                "address",
+                "city",
+                "province",
+                "gender",
+                "line_id",
+                "bbm",
+                "whatsapp",
+                "facebook",
+                "sumber_data",
+                "join_date"];
 
-        //Mengganti is_PC dari boolean menjadi yes atau no, mengganti null menjadi '-'
-        foreach ($mrgs as $mrg) {
-            $mrg->is_UOB = $mrg->is_UOB ? "Yes" : "No";
-            $mrg->is_cat = $mrg->is_cat ? "Yes" : "No";
-            $mrg->is_mrg_premiere = $mrg->is_mrg_premiere ? "Yes" : "No";
-            $mrg->is_aclub_stock = $mrg->is_aclub_stock ? "Yes" : "No";
-            $mrg->is_aclub_future = $mrg->is_aclub_future ? "Yes" : "No";
-            foreach ($atts as $att) {
-                if (!$mrg->$att) $mrg->$att = "-";
-            }
-        }
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
