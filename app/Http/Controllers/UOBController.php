@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
-use App\UOB;
+use App\Uob;
 
 class UOBController extends Controller
 {
@@ -20,33 +20,75 @@ class UOBController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
+    public function getTable(Request $request) {
+
         //Select seluruh tabel
-        $uobs = Uob::All();
+        $uobs = Uob::paginate(15);
 
         //Data untuk insert
         $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an dan add_time
+        $heads = ["Client ID", "Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an dan add_time
 
         //Nama attribute pada sql
-        $atts = ["master_id", "sales_name", "sumber_data", "join_date", "nomor_ktp", "tanggal_expired_ktp", "nomor_npwp", "alamat_surat", "saudara_tidak_serumah", "nama_ibu_kandung", "bank_pribadi", "nomor_rekening_pribadi", "tanggal_rdi_done", "rdi_bank", "nomor_rdi", "tanggal_top_up", "nominal_top_up", "tanggal_trading", "status", "trading_via", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
+        $atts = ["client_id","master_id", "sales_name", "sumber_data", "join_date", "nomor_ktp", "tanggal_expired_ktp", "nomor_npwp", "alamat_surat", "saudara_tidak_serumah", "nama_ibu_kandung", "bank_pribadi", "nomor_rekening_pribadi", "tanggal_rdi_done", "rdi_bank", "nomor_rdi", "tanggal_top_up", "nominal_top_up", "tanggal_trading", "status", "trading_via", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
         //Return view table dengan parameter
         return view('content/table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $uob = DB::select("call select_detail_uob(?)", [$id]);
-        $uob = $uob[0];
-        $salesusers = DB::select("SELECT sales_username FROM sales");
+        $uob = Uob::where('client_id', $id)->first();
+
+        // dd($uob);   
+        $master = $uob->master;
+        $uob->master_id = $master->master_id;
+        $uob->redclub_user_id = $master->redclub_user_id;
+        $uob->redclub_password = $master->redclub_password;
+        $uob->name = $master->name;
+        $uob->telephone_number = $master->telephone_number;
+        $uob->email = $master->email;
+        $uob->birthdate = $master->birthdate;
+        $uob->address = $master->address;
+        $uob->city = $master->city;
+        $uob->province = $master->province;
+        $uob->gender = $master->gender;
+        $uob->line_id = $master->line_id;
+        $uob->bbm = $master->bbm;
+        $uob->whatsapp = $master->whatsapp;
+        $uob->facebook = $master->facebook;
+
+
         //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["Client ID" => "client_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Class" => "class", "Nomor" => "nomor", "Expired" => "expired_date", "Kategori" => "kategori", "Bulan" => "bulan", "Bank" => "bank", "Nomor Rekening" => "nomor_rekening", "RDI Niaga" => "RDI_niaga", "RDI BCA" => "RDI_BCA", "Trading Via" => "trading_via", "Source" => "source", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
-        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["PC ID" => "all_pc_id"] + $ins;
-        //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+
+        $ins= [
+                "Client ID" => "client_id",
+                "Master ID" => "master_id",
+                "Sales Name" => "sales_name",
+                "Sumber Data" => "sumber_data",
+                "Join Date" => "join_date",
+                "Nomor KTP" => "nomor_ktp",
+                "Tanggal Expired KTP" => "tanggal_expired_ktp",
+                "Nomor NPWP" => "nomor_npwp",
+                "Alamat Surat" => "alamat_surat",
+                "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+                "Nama Ibu Kandung" => "nama_ibu_kandung",
+                "Bank Pribadi" => "bank_pribadi",
+                "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                "Tanggal RDI Done" => "tanggal_rdi_done",
+                "RDI Bank" => "rdi_bank",
+                "Nomor RDI" => "nomor_rdi",
+                "Tanggal Top-up" => "tanggal_top_up",
+                "Nominal" => "nominal_top_up",
+                "Tanggal Trading" => "tanggal_trading",
+                "Status" => "status",
+                "Trading via" => "trading_via",
+                "Keterangan" => "keterangan"];
+
+        $heads = $ins;
+
+        return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads' => $heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {

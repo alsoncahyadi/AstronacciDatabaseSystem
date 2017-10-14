@@ -26,7 +26,7 @@ class MasterClient extends Model
     }
 
     public function aclubInformation() {
-        return $this->hasOne('App\AclubTransaction', 'master_id', 'master_id');
+        return $this->hasOne('App\AclubInformation', 'master_id', 'master_id');
     }
 
     public function aclubMembers() {
