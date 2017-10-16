@@ -111,7 +111,7 @@
      </div>
 
 
-    @if(($route == "CAT") || ($route == "AClub"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -119,24 +119,25 @@
         <div class="panel-body">
             <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
             <div id="addcli" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <form method="post" action="{{route($route . '.inserttrans')}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @endif
-                        @foreach ($insreg as $atr)
-                        <div class="form-group">
-                            <label>{{$atr}}</label>
-                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-                        </div>
-                        @endforeach
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="submit" class="btn btn-default" value="Insert">
-                        <button type="reset" class="btn btn-default">Reset Form</button>
-                    </form>
-                </div>
+            <div class="panel-body">
+                <form method="post" action="{{route($route . '.inserttrans')}}">
+                    @if ($route == "CAT")
+                        <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                    @elseif ($route == "AClub")
+                        <input name="user_id" type="hidden" value="{{$member->user_id}}">
+                    @elseif ($route == "MRG")
+                        <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                    @endif
+                    @foreach ($insreg as $atr)
+                    <div class="form-group">
+                        <label>{{$atr}}</label>
+                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                    </div>
+                    @endforeach
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    <input type="submit" class="btn btn-default" value="Insert">
+                    <button type="reset" class="btn btn-default">Reset Form</button>
+                </form>
             </div>
             <br><br>
         </div>

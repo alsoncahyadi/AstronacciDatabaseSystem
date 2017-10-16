@@ -16,12 +16,12 @@ class CreateGreenProspectProgressesTable extends Migration
         Schema::create('green_prospect_progresses', function (Blueprint $table) {
             $table->increments('progress_id');
             $table->unsignedInteger('green_id');
-            $table->date('date');
-            $table->string('sales_name');
-            $table->string('status', 20); //GOAL - BUY, GOAL - JOIN, NO ANSWER, TIDAK GOAL, DALAM PROSES
-            $table->text('nama_product');
-            $table->bigInteger('nominal');
-            $table->text('keterangan');
+            $table->date('date')->nullable()->nullable();
+            $table->string('sales_name')->nullable();
+            $table->string('status', 20)->nullable(); //GOAL - BUY, GOAL - JOIN, NO ANSWER, TIDAK GOAL, DALAM PROSES
+            $table->text('nama_product')->nullable();
+            $table->bigInteger('nominal')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->foreign('green_id')->references('green_id')
                 ->on('green_prospect_clients')

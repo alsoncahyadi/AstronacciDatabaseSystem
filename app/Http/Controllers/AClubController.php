@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
+use App\AclubInformation;
+use App\MasterClient;
 
 class AClubController extends Controller
 {
@@ -21,36 +23,96 @@ class AClubController extends Controller
 
     public function getTable() {
         //Select seluruh tabel
-        $aclubs = DB::select("call selectaclub_member()");
-
-        //Data untuk insert
-        $ins = ["User ID", "Nama", "No HP", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Twitter", "Jenis Kelamin", "Occupation", "Website", "State", "Interest and Hobby", "Trading Experience Year", "Your Stock and Future Broker", "Annual Income", "Status", "Keterangan", "Security Question", "Security Answer"];
+        $aclub_info = AclubInformation::paginate(15);
+        foreach ($aclub_info as $aclub_master) {
+            $master = $aclub_master->master;
+            $aclub_master->redclub_user_id = $master->redclub_user_id;
+            $aclub_master->redclub_password = $master->redclub_password;
+            $aclub_master->name = $master->name;
+            $aclub_master->telephone_number = $master->telephone_number;
+            $aclub_master->email = $master->email;
+            $aclub_master->birthdate = $master->birthdate;
+            $aclub_master->address = $master->address;
+            $aclub_master->city = $master->city;
+            $aclub_master->province = $master->province;
+            $aclub_master->gender = $master->gender;
+            $aclub_master->line_id = $master->line_id;
+            $aclub_master->bbm = $master->bbm;
+            $aclub_master->whatsapp = $master->whatsapp;
+            $aclub_master->facebook = $master->facebook;
+        }
 
         //Judul kolom yang ditampilkan pada tabel
-       $heads = ["PC ID", "User ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Alamat", "Kota", "Status", "Gender", "Telepon", "Provinsi", "Facebook", "Interest", "Trading_Experience_Year", "Stock_&_Broker", "Annual Income", "Security Question", "Security Answer", "Status", "Keterangan", "Website", "State", "Occupation", "Tanggal Ditambahkan"];//kecuali is"an dan add_time
+        $heads = ["Master ID",
+                "RedClub User ID",
+                "RedClub Password",
+                "Nama",
+                "Nomor Telepon",
+                "Email",
+                "Tanggal Lahir",
+                "Alamat",
+                "Kota",
+                "Provinsi",
+                "Gender",
+                "Line ID",
+                "BBM",
+                "WhatsApp",
+                "Facebook",
+                "Sumber Data (A-Club)",
+                "Keterangan (A-Club)"];
+
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "user_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "interest_and_hobby", "trading_experience_year", "your_stock_future_broker", "annual_income", "security_question", "security_answer", "status", "keterangan", "website","state", "occupation", "add_time"];
+        $atts = ["master_id",
+                "redclub_user_id",
+                "redclub_password",
+                "name",
+                "telephone_number",
+                "email",
+                "birthdate",
+                "address",
+                "city",
+                "province",
+                "gender",
+                "line_id",
+                "bbm",
+                "whatsapp",
+                "facebook",
+                "sumber_data",
+                "keterangan"];
+
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'AClub', 'clients' => $aclubs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $aclub = DB::select("call select_detail_aclub(?)", [$id]);
-        $aclub = $aclub[0];
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["User ID" => "user_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", " Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Interest and Hobby" => "interest_and_hobby", "Trading Year Experience" => "trading_experience_year", "Your Stock & Future Broker" => "your_stock_future_broker", "Annual Income" => "annual_income", "Security Question" => "security_question", "Security Answer" => "security_answer", "Status" => "status", "Keterangan" => "keterangan", "Website" => "website", "State" => "state", "Occupation" => "occupation", "Tanggal Ditambahkan" => "add_time"];
-        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["PC ID" => "all_pc_id"] + $ins;
+        $aclub_master = MasterClient::where('master_id', $id)->first();
+        $aclub_information = $aclub_master->aclubInformation;
 
-        $clientsreg = DB::select("call select_detail_aclub_2(?)", [$id]);
-        $headsreg = ["Registration ID", "Sales", "Broker", "Paket", "Registration Type", "Registration Date", "Jenis", "Nominal", "Percentage", "Comission", "Paid", "Paid Date", "Debt", "Frekuensi", "Keterangan Ref", "Message", "Start Date", "Bulan Member", "Expired Date", "Bonus Member Day", "Expired Date Bonus", "Sumber Data"];
-        $attsreg = ["registration_id", "sales_username", "broker", "paket", "registration_type", "registration_date", "jenis", "nominal", "percentage", "comission_for_sales", "paid", "paid_date", "debt", "frekuensi", "keterangan_ref", "message", "start_date", "bulan_member", "expired_date", "bonus_member_day", "expired_date_bonus", "sumber_data"];
-        //ADD TRANSAKSI
-        $insreg = ["Registration Date", "Kode Paket", "Sales Username", "Registration Type", "Start Date", "Bulan Member", "Bonus Member", "Sumber Data", "Broker", "Message", "Jenis", "Nominal Member", "Percentage", "Paid", "Paid Date", "Debt", "Frekuensi"];
-        //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub, 'heads'=>$heads, 'ins'=>$ins, 'clientsreg'=>$clientsreg, 'insreg'=>$insreg, 'attsreg'=>$attsreg, 'headsreg'=>$headsreg]);
+        $aclub_master->keterangan = $aclub_information->keterangan;
+        $aclub_master->sumber_data = $aclub_information->sumber_data;
+
+        //Nama atribut form yang ditampilkan dan nama pada SQL
+        $ins= ["Sumber Data (A-Club)"=> "sumber_data",
+                "Keterangan (A-Club)"=> "keterangan"];
+        $heads = $ins;
+
+        //untuk insert transaction
+        $insreg = ["Payment Date",
+                    "Kode",
+                    "Status",
+                    "Nominal",
+                    "Start Date",
+                    "Expired Date",
+                    "Masa Tenggang",
+                    "Yellow Zone",
+                    "Red Zone",
+                    "Sales Name"];
+
+        $aclub_members = $aclub_master->aclubMembers()->get();
+
+        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_master, 'member'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
     }
 
     public function editClient(Request $request) {
@@ -80,30 +142,30 @@ class AClubController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function addClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'user_id' => 'required',
-                'nama' => 'required',
-                'email' => 'email',
-                'no_hp' => 'required',
-                'alamat' => 'required',
-            ]);
+    // public function addClient(Request $request) {
+    //     //Validasi input
+    //     $this->validate($request, [
+    //             'user_id' => 'required',
+    //             'nama' => 'required',
+    //             'email' => 'email',
+    //             'no_hp' => 'required',
+    //             'alamat' => 'required',
+    //         ]);
 
-        //Inisialisasi array error
-        DB::beginTransaction();
-        $err = [];
-        try {
-            //Input data ke SQL
-             DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $this->nullify($request->no_telepon), $request->alamat, $this->nullify($request->kota), $this->nullify($request->provinsi), $request->email, $this->nullify($request->tanggal_lahir), $this->nullify($request->line_id), $this->nullify($request->pin_bb), $this->nullify($request->facebook), $this->nullify($request->twitter), $this->nullify($request->jenis_kelamin), $this->nullify($request->occupation), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->annual_income), $this->nullify($request->status), $this->nullify($request->keterangan),$this->nullify($request->security_question), $this->nullify($request->security_answer)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
+    //     //Inisialisasi array error
+    //     DB::beginTransaction();
+    //     $err = [];
+    //     try {
+    //         //Input data ke SQL
+    //          DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $this->nullify($request->no_telepon), $request->alamat, $this->nullify($request->kota), $this->nullify($request->provinsi), $request->email, $this->nullify($request->tanggal_lahir), $this->nullify($request->line_id), $this->nullify($request->pin_bb), $this->nullify($request->facebook), $this->nullify($request->twitter), $this->nullify($request->jenis_kelamin), $this->nullify($request->occupation), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->annual_income), $this->nullify($request->status), $this->nullify($request->keterangan),$this->nullify($request->security_question), $this->nullify($request->security_answer)]);
+    //     } catch(\Illuminate\Database\QueryException $ex){ 
+    //         DB::rollback();
+    //         $err[] = $ex->getMessage();
+    //     }
+    //     DB::commit();
+    //     return redirect()->back()->withErrors($err);
 
-    }
+    // }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
@@ -116,15 +178,20 @@ class AClubController extends Controller
     }
 
     public function addTrans(Request $request) {
-         DB::beginTransaction();
-        $err = [];
-        try {
-            DB::select("call inputaclub_registration(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$this->nullify($request->user_id),$request->registration_date,$request->kode_paket,$request->sales_username, $request->registration_type,$request->start_date,$request->bulan_member, $request->bonus_member, $request->sumber_data, $request->broker, $request->message, $request->jenis, $request->nominal_number, $request->percentage, $request->paid, $request->paid_date, $request->debt, $request->frekuensi]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
+        $aclub_trans = new \App\AclubTransaction();
+        $aclub_trans->user_id = $request->user_id;
+        $aclub_trans->payment_date = $request->payment_date;
+        $aclub_trans->kode = $request->kode;
+        $aclub_trans->status = $request->status;
+        $aclub_trans->nominal = $request->nominal;
+        $aclub_trans->start_date = $request->start_date;
+        $aclub_trans->expired_date = $request->expired_date;
+        $aclub_trans->masa_tenggang = $request->masa_tenggang;
+        $aclub_trans->yellow_zone = $request->yellow_zone;
+        $aclub_trans->red_zone = $request->red_zone;
+        $aclub_trans->sales_name = $request->sales_name;
+
+        $aclub_trans->save();
         return redirect()->back()->withErrors($err);
     }
 
