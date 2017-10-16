@@ -112,7 +112,7 @@
      </div>
 
 
-    @if(($route == "CAT") || ($route == "AClub"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -126,7 +126,9 @@
                     @if ($route == "CAT")
                         <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                     @elseif ($route == "AClub")
-                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        <input name="user_id" type="hidden" value="{{$member->user_id}}">
+                    @elseif ($route == "MRG")
+                        <input name="user_id" type="hidden" value="{{$client->master_id}}">
                     @endif
                     @foreach ($insreg as $atr)
                     <div class="form-group">

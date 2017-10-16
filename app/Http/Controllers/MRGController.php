@@ -22,7 +22,6 @@ class MRGController extends Controller
     
     public function getTable() {
         //Select seluruh tabel
-        //Select seluruh tabel
         $mrgs = Mrg::paginate(15);
         foreach ($mrgs as $mrg_master) {
             $master = $mrg_master->master;
@@ -41,10 +40,6 @@ class MRGController extends Controller
             $mrg_master->whatsapp = $master->whatsapp;
             $mrg_master->facebook = $master->facebook;
         }
-
-
-        //Data untuk insert
-        $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
         $heads = ["Master ID",
@@ -86,7 +81,7 @@ class MRGController extends Controller
                 "join_date"];
 
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -113,14 +108,32 @@ class MRGController extends Controller
                 "Join Date (MRG)" => "join_date",
                 "Sales" => "sales_name"];
 
-        $heads = $ins;  
+        $heads = $ins;
+
+        // form transaction
+        $insreg = ["Account Number", "Account Type", "Sales Name"];
 
         $accounts = $mrg->accounts()->get();
 
         // mrg accounts belom dimasukin
 
         //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
+    }
+
+     public function addTrans(Request $request) {
+        $mrg_account = new \App\MrgAccount();
+
+        $mrg_account->master_id = $request->user_id;
+        $mrg_account->accounts_number = $request->account_number;
+        $mrg_account->account_type = $request->account_type;
+        $mrg_account->sales_name = $request->sales_name;
+
+        $mrg_account->save();
+        
+        $err = [];
+        
+        return redirect()->back()->withErrors($err);
     }
 
     public function editClient(Request $request) {
@@ -150,32 +163,32 @@ class MRGController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function addClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'account' => 'required',
-                'nama' => 'required',
-                'tanggal_join' => 'required',
-                'alamat' => 'required',
-                'kota' => 'required',
-                'telepon' => 'required',
-                'email' => 'email',
-                'type' => 'required',
-                'sales' => 'required'
-            ]);
-        //Inisialisi array error
-        $err = [];
-        DB::beginTransaction();
-        try {
-            //Input data ke SQL
-            DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-        	DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect(route('dashboard'))->withErrors($err);
-    }
+    // public function addClient(Request $request) {
+    //     //Validasi input
+    //     $this->validate($request, [
+    //             'account' => 'required',
+    //             'nama' => 'required',
+    //             'tanggal_join' => 'required',
+    //             'alamat' => 'required',
+    //             'kota' => 'required',
+    //             'telepon' => 'required',
+    //             'email' => 'email',
+    //             'type' => 'required',
+    //             'sales' => 'required'
+    //         ]);
+    //     //Inisialisi array error
+    //     $err = [];
+    //     DB::beginTransaction();
+    //     try {
+    //         //Input data ke SQL
+    //         DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
+    //     } catch(\Illuminate\Database\QueryException $ex){ 
+    //     	DB::rollback();
+    //         $err[] = $ex->getMessage();
+    //     }
+    //     DB::commit();
+    //     return redirect(route('dashboard'))->withErrors($err);
+    // }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu

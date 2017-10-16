@@ -212,6 +212,13 @@ Route::post('/MRG/edit', [
 	'roles' => ['0', '2'],
     ]);
 
+Route::post('/MRG/inserttrans', [
+    'uses' => 'MRGController@addTrans',
+    'as' => 'MRG.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
+    ]);
+
 Route::get('/MRGexport', [
     'uses' => 'MRGController@exportExcel',
     'as' => 'MRG.export',

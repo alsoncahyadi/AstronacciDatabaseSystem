@@ -25,16 +25,13 @@ class UOBController extends Controller
         //Select seluruh tabel
         $uobs = Uob::paginate(15);
 
-        //Data untuk insert
-        $ins = [];
-
         //Judul kolom yang ditampilkan pada tabel
         $heads = ["Client ID", "Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an dan add_time
 
         //Nama attribute pada sql
         $atts = ["client_id","master_id", "sales_name", "sumber_data", "join_date", "nomor_ktp", "tanggal_expired_ktp", "nomor_npwp", "alamat_surat", "saudara_tidak_serumah", "nama_ibu_kandung", "bank_pribadi", "nomor_rekening_pribadi", "tanggal_rdi_done", "rdi_bank", "nomor_rdi", "tanggal_top_up", "nominal_top_up", "tanggal_trading", "status", "trading_via", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -119,29 +116,29 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function addClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'client' => 'required',
-                'nama' => 'required',
-                'expired' => 'required',
-                'email' => 'email',
-                'telepon' => 'required',
-                'alamat' => 'required',
-            ]);
-        //Inisialisasi array error
-        $err = [];
-        DB::beginTransaction();
-		try {
-            //Input data ke SQL
-			DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
-		}  catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
-    }
+  //   public function addClient(Request $request) {
+  //       //Validasi input
+  //       $this->validate($request, [
+  //               'client' => 'required',
+  //               'nama' => 'required',
+  //               'expired' => 'required',
+  //               'email' => 'email',
+  //               'telepon' => 'required',
+  //               'alamat' => 'required',
+  //           ]);
+  //       //Inisialisasi array error
+  //       $err = [];
+  //       DB::beginTransaction();
+		// try {
+  //           //Input data ke SQL
+		// 	DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
+		// }  catch(\Illuminate\Database\QueryException $ex){ 
+  //           DB::rollback();
+  //           $err[] = $ex->getMessage();
+  //       }
+  //       DB::commit();
+  //       return redirect()->back()->withErrors($err);
+  //   }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu

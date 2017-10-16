@@ -23,20 +23,15 @@ class CATController extends Controller
     public function getTable() {
         //Select seluruh tabel
         $cats = Cat::paginate(15);
-        //Daftar username sales
-        //$salesusers = DB::select("SELECT sales_username FROM sales");
-
-        //Data untuk insert
-        $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["User Id", "No Induk", "Master Id", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Opening Class", "End Class", "Tanggal Ujian", "Status", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an, sm add_time
+        $heads = ["User Id", "No Induk", "Master Id", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Opening Class", "End Class", "Tanggal Ujian", "Status", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"];
 
         //Nama attribute pada sql
         $atts = ["user_id", "nomor_induk", "master_id", "batch", "sales", "sumber_data", "DP_date", "DP_nominal", "payment_date", "payment_nominal", "tanggal_opening_class", "tanggal_end_class", "tanggal_ujian", "status", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
 
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -58,8 +53,7 @@ class CATController extends Controller
                 "Tanggal Ujian" => "tanggal_ujian",
                 "Status" => "status",
                 "Keterangan" => "keterangan"];
-        $heads = $ins;
-        //dd($cat);   
+        $heads = $ins;   
 
 		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins]);
     }
@@ -97,35 +91,35 @@ class CATController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function addClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'batch' => 'required',
-                'user_id' => 'required',
-                'no_induk' => 'required',
-                'pendaftaran' => 'required',
-                'kelas_berakhir' => 'required',
-                'nama' => 'required',
-                'email' => 'email',
-                'telepon' => 'required',
-                'alamat' => 'required',
-                'username' => 'required'
-            ]);
+    // public function addClient(Request $request) {
+    //     //Validasi input
+    //     $this->validate($request, [
+    //             'batch' => 'required',
+    //             'user_id' => 'required',
+    //             'no_induk' => 'required',
+    //             'pendaftaran' => 'required',
+    //             'kelas_berakhir' => 'required',
+    //             'nama' => 'required',
+    //             'email' => 'email',
+    //             'telepon' => 'required',
+    //             'alamat' => 'required',
+    //             'username' => 'required'
+    //         ]);
 
-        //Inisialisasi array error
-        DB::beginTransaction();
-        $err = [];
-        try {
-            //Input data ke SQL
-            DB::select("call inputCAT(?,?,?,?)", [$this->nullify($request->user_id),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
+    //     //Inisialisasi array error
+    //     DB::beginTransaction();
+    //     $err = [];
+    //     try {
+    //         //Input data ke SQL
+    //         DB::select("call inputCAT(?,?,?,?)", [$this->nullify($request->user_id),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
+    //     } catch(\Illuminate\Database\QueryException $ex){ 
+    //         DB::rollback();
+    //         $err[] = $ex->getMessage();
+    //     }
+    //     DB::commit();
+    //     return redirect()->back()->withErrors($err);
 
-    }
+    // }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu

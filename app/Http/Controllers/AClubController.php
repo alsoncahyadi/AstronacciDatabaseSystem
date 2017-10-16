@@ -41,11 +41,6 @@ class AClubController extends Controller
             $aclub_master->whatsapp = $master->whatsapp;
             $aclub_master->facebook = $master->facebook;
         }
-        //Daftar username sales
-        //$salesusers = DB::select("SELECT sales_username FROM sales");
-
-        //Data untuk insert
-        $ins = [];
 
         //Judul kolom yang ditampilkan pada tabel
         $heads = ["Master ID",
@@ -86,9 +81,8 @@ class AClubController extends Controller
                 "sumber_data",
                 "keterangan"];
 
-        // dd($aclub_info);
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -104,11 +98,21 @@ class AClubController extends Controller
                 "Keterangan (A-Club)"=> "keterangan"];
         $heads = $ins;
 
+        //untuk insert transaction
+        $insreg = ["Payment Date",
+                    "Kode",
+                    "Status",
+                    "Nominal",
+                    "Start Date",
+                    "Expired Date",
+                    "Masa Tenggang",
+                    "Yellow Zone",
+                    "Red Zone",
+                    "Sales Name"];
+
         $aclub_members = $aclub_master->aclubMembers()->get();
 
-        // dd($aclub_members);
-
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_master, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_master, 'member'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
     }
 
     public function editClient(Request $request) {
@@ -138,30 +142,30 @@ class AClubController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function addClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'user_id' => 'required',
-                'nama' => 'required',
-                'email' => 'email',
-                'no_hp' => 'required',
-                'alamat' => 'required',
-            ]);
+    // public function addClient(Request $request) {
+    //     //Validasi input
+    //     $this->validate($request, [
+    //             'user_id' => 'required',
+    //             'nama' => 'required',
+    //             'email' => 'email',
+    //             'no_hp' => 'required',
+    //             'alamat' => 'required',
+    //         ]);
 
-        //Inisialisasi array error
-        DB::beginTransaction();
-        $err = [];
-        try {
-            //Input data ke SQL
-             DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $this->nullify($request->no_telepon), $request->alamat, $this->nullify($request->kota), $this->nullify($request->provinsi), $request->email, $this->nullify($request->tanggal_lahir), $this->nullify($request->line_id), $this->nullify($request->pin_bb), $this->nullify($request->facebook), $this->nullify($request->twitter), $this->nullify($request->jenis_kelamin), $this->nullify($request->occupation), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->annual_income), $this->nullify($request->status), $this->nullify($request->keterangan),$this->nullify($request->security_question), $this->nullify($request->security_answer)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
+    //     //Inisialisasi array error
+    //     DB::beginTransaction();
+    //     $err = [];
+    //     try {
+    //         //Input data ke SQL
+    //          DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $this->nullify($request->no_telepon), $request->alamat, $this->nullify($request->kota), $this->nullify($request->provinsi), $request->email, $this->nullify($request->tanggal_lahir), $this->nullify($request->line_id), $this->nullify($request->pin_bb), $this->nullify($request->facebook), $this->nullify($request->twitter), $this->nullify($request->jenis_kelamin), $this->nullify($request->occupation), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->annual_income), $this->nullify($request->status), $this->nullify($request->keterangan),$this->nullify($request->security_question), $this->nullify($request->security_answer)]);
+    //     } catch(\Illuminate\Database\QueryException $ex){ 
+    //         DB::rollback();
+    //         $err[] = $ex->getMessage();
+    //     }
+    //     DB::commit();
+    //     return redirect()->back()->withErrors($err);
 
-    }
+    // }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
@@ -174,15 +178,20 @@ class AClubController extends Controller
     }
 
     public function addTrans(Request $request) {
-         DB::beginTransaction();
-        $err = [];
-        try {
-            DB::select("call inputaclub_registration(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$this->nullify($request->user_id),$request->registration_date,$request->kode_paket,$request->sales_username, $request->registration_type,$request->start_date,$request->bulan_member, $request->bonus_member, $request->sumber_data, $request->broker, $request->message, $request->jenis, $request->nominal_number, $request->percentage, $request->paid, $request->paid_date, $request->debt, $request->frekuensi]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
+        $aclub_trans = new \App\AclubTransaction();
+        $aclub_trans->user_id = $request->user_id;
+        $aclub_trans->payment_date = $request->payment_date;
+        $aclub_trans->kode = $request->kode;
+        $aclub_trans->status = $request->status;
+        $aclub_trans->nominal = $request->nominal;
+        $aclub_trans->start_date = $request->start_date;
+        $aclub_trans->expired_date = $request->expired_date;
+        $aclub_trans->masa_tenggang = $request->masa_tenggang;
+        $aclub_trans->yellow_zone = $request->yellow_zone;
+        $aclub_trans->red_zone = $request->red_zone;
+        $aclub_trans->sales_name = $request->sales_name;
+
+        $aclub_trans->save();
         return redirect()->back()->withErrors($err);
     }
 
