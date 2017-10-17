@@ -63,6 +63,7 @@
 				<div class="form-group">
 					<label>Profit Center</label>
 					<select id="pc" class="form-control">
+						<option>-</option>
 						<option>A-Club</option>
 						<option>MRG</option>
 						<option>UOB</option>
@@ -71,7 +72,7 @@
 				</div>
 				<br>
 				<div class="form-group">
-				<div id="aclub">
+				<div id="aclub" style="display: none;">
 					@foreach ($aclub as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
@@ -180,7 +181,8 @@
 		document.getElementById("aclub").style.display = "none";
 		document.getElementById("mrg").style.display = "none";
 		document.getElementById("uob").style.display = "none";
-		document.getElementById("cat").style.display = "none";	
+		document.getElementById("cat").style.display = "none";
+		document.getElementById("flag").value = '-';	
 		if ($( "#pc option:checked" ).val() == "A-Club"){
 			document.getElementById("aclub").style.display = "inline";
 			document.getElementById("flag").value = 'aclub';
