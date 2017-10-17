@@ -26,6 +26,7 @@ Auth::routes();
 
 Route::get('/mockup', [
     'uses' => 'MockupController@index', 
+    'as' => 'mockup'
     ]);
 
 Route::post('/insert', [

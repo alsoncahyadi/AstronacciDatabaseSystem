@@ -17,11 +17,11 @@ class MockupController extends Controller
         //ACLUB exclusive form
         $aclubforms = ["User ID", "Group", "Sumber Data", "Keterangan"];
         //UOB exclusive form
-        $uobforms = ["Client ID", "Sales Name", "Sumber Data", "Tanggal Gabung", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
+        $uobforms = ["Client ID", "Sales Name", "Sumber Data", "Tanggal Gabung", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung"];
         //MRG exclusive form
         $mrgforms = ["Sumber Data", "Tanggal Join"];
         //CAT exclusive form
-        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Tanggal Opening Class", "Tanggal End Class", "Tanggal Ujian", "Status", "Keterangan"];
+        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales"];
        
         return view('content/addclient', 
             ['clients' => $clients, 
@@ -113,16 +113,16 @@ class MockupController extends Controller
             'nomor_induk' => 'required|string:50',
             'batch' => 'string:20',
             'sales' => 'string:100',
-            'sumber_data' => 'string:20',
-            'tanggal_dp' => 'date',
-            'nominal_dp' => 'integer',
-            'tanggal_payment' => 'date',
-            'nominal_payment' => 'integer',
-            'tanggal_opening_class' => 'date',
-            'tanggal_end_class' => 'date|after:tanggal_opening_class',
-            'tanggal_ujian' => 'date',
-            'status_Cat' => 'string:20',
-            'keterangan_cat' => ''
+            // 'sumber_data' => 'string:20',
+            // 'tanggal_dp' => 'date',
+            // 'nominal_dp' => 'integer',
+            // 'tanggal_payment' => 'date',
+            // 'nominal_payment' => 'integer',
+            // 'tanggal_opening_class' => 'date',
+            // 'tanggal_end_class' => 'date|after:tanggal_opening_class',
+            // 'tanggal_ujian' => 'date',
+            // 'status_Cat' => 'string:20',
+            // 'keterangan_cat' => ''
         ]);
 
         $cat = new \App\Cat;
@@ -136,20 +136,20 @@ class MockupController extends Controller
         $cat->nomor_induk = $request->nomor_induk;
         $cat->batch = $request->batch;
         $cat->sales_name = $request->sales;
-        $cat->sumber_data = $request->sumber_data;
-        $cat->DP_date = $request->tanggal_dp;
-        $cat->DP_nominal = $request->nominal_dp;
-        $cat->payment_date = $request->tanggal_payment;
-        $cat->payment_nominal = $request->nominal_payment;
-        $cat->tanggal_opening_class = $request->tanggal_opening_class;
-        $cat->tanggal_end_class = $request->tanggal_end_class;
-        $cat->tanggal_ujian = $request->tanggal_ujian;
-        $cat->status = $request->status_cat;
-        $cat->keterangan = $request->keterangan_cat;
+        // $cat->sumber_data = $request->sumber_data;
+        // $cat->DP_date = $request->tanggal_dp;
+        // $cat->DP_nominal = $request->nominal_dp;
+        // $cat->payment_date = $request->tanggal_payment;
+        // $cat->payment_nominal = $request->nominal_payment;
+        // $cat->tanggal_opening_class = $request->tanggal_opening_class;
+        // $cat->tanggal_end_class = $request->tanggal_end_class;
+        // $cat->tanggal_ujian = $request->tanggal_ujian;
+        // $cat->status = $request->status_cat;
+        // $cat->keterangan = $request->keterangan_cat;
 
         $cat->save();
 
-        return redirect()->back()->withErrors($errors);
+        return redirect()->back();
     }
 
     public function addUOB(Request $request) {
@@ -165,17 +165,17 @@ class MockupController extends Controller
             'alamat_surat' => 'required',
             'saudara_tidak_serumah' => 'required',
             'nama_ibu_kandung' => 'required',
-            'bank_pribadi' => 'required',
-            'nomor_rekening_pribadi' => 'required|string:50',
-            'tanggal_rdi_done' => 'required|date',
-            'rdi_bank' => 'required|string:20',
-            'nomor_rdi' => 'required',
-            'tanggal_top_up' => 'required|date',
-            'nominal_top_up' =>  'required',
-            'tanggal_trading' => 'required|date',
-            'status_uob' => 'required',
-            'trading_via' => 'required',
-            'keterangan_uob' => 'required'
+            // 'bank_pribadi' => 'required',
+            // 'nomor_rekening_pribadi' => 'required|string:50',
+            // 'tanggal_rdi_done' => 'required|date',
+            // 'rdi_bank' => 'required|string:20',
+            // 'nomor_rdi' => 'required',
+            // 'tanggal_top_up' => 'required|date',
+            // 'nominal_top_up' =>  'required',
+            // 'tanggal_trading' => 'required|date',
+            // 'status_uob' => 'required',
+            // 'trading_via' => 'required',
+            // 'keterangan_uob' => 'required'
         ]);
 
         $uob = new \App\Uob;
@@ -195,21 +195,21 @@ class MockupController extends Controller
         $uob->alamat_surat = $request->alamat_surat;
         $uob->saudara_tidak_serumah = $request->saudara_tidak_serumah;
         $uob->nama_ibu_kandung = $request->nama_ibu_kandung;
-        $uob->bank_pribadi = $request->bank_pribadi;
-        $uob->nomor_rekening_pribadi = $request->nomor_rekening_pribadi;
-        $uob->tanggal_rdi_done = $request->tanggal_rdi_done;
-        $uob->rdi_bank = $request->rdi_bank;
-        $uob->nomor_rdi = $request->nomor_rdi;
-        $uob->tanggal_top_up = $request->tanggal_top_up;
-        $uob->nominal_top_up = $request->nominal_top_up;
-        $uob->tanggal_trading = $request->tanggal_trading;
-        $uob->status = $request->status_uob;
-        $uob->trading_via = $request->trading_via;
-        $uob->keterangan = $request->keterangan_uob;
+        // $uob->bank_pribadi = $request->bank_pribadi;
+        // $uob->nomor_rekening_pribadi = $request->nomor_rekening_pribadi;
+        // $uob->tanggal_rdi_done = $request->tanggal_rdi_done;
+        // $uob->rdi_bank = $request->rdi_bank;
+        // $uob->nomor_rdi = $request->nomor_rdi;
+        // $uob->tanggal_top_up = $request->tanggal_top_up;
+        // $uob->nominal_top_up = $request->nominal_top_up;
+        // $uob->tanggal_trading = $request->tanggal_trading;
+        // $uob->status = $request->status_uob;
+        // $uob->trading_via = $request->trading_via;
+        // $uob->keterangan = $request->keterangan_uob;
 
         $uob->save();
 
-        return redirect()->back()->withErrors($errors);
+        return redirect()->back();
     }
 
     public function addMRG(Request $request) {
@@ -230,6 +230,8 @@ class MockupController extends Controller
         $mrg->join_date = $request->tanggal_join;
 
         $mrg->save();
+
+        return redirect()->back();
     }
 
     public function addAClub(Request $request) {
@@ -240,6 +242,8 @@ class MockupController extends Controller
             'sumber_data_aclub' => '',
             'keterangan_aclub' => ''
         ]);
+
+        $errors = [];
 
         $aclubMember = new \App\AclubMember;
 
@@ -263,5 +267,7 @@ class MockupController extends Controller
         $aclubInfo->keterangan = $request->keterangan_aclub;
 
         $aclubInfo->save();
+
+        return redirect()->back();
     }
 }
