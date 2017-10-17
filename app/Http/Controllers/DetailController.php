@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Input;
 use Excel;
-use App\Cat;
+use App\MasterClient;
 
 class DetailController extends Controller
 {
@@ -22,22 +22,19 @@ class DetailController extends Controller
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $cat = Cat::where('user_id', $id)->first();
+        $master = MasterClient::where('master_id', $id)->first();
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins= ["Master ID"=> "master_id",
-                "User ID" => "user_id",
-                "Nomor Induk" => "nomor_induk",
-                "Batch" => "batch",
-                "Sales" => "sales",
-                "Sumber Data" => "sumber_data",
-                "DP Date" => "DP_date",
-                "DP Nominal " => "DP_nominal",
-                "Payment Date" => "payment_date",
-                "Payment Nominal" => "payment_nominal",
-                "Tanggal Opening Class" => "tanggal_opening_class",
-                "Tanggal End Class"=> "tanggal_end_class",
-                "Tanggal Ujian" => "tanggal_ujian",
+                "Redclub User ID" => "redclub_user_id",
+                "Name" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Birthdate" => "birthdate",
+                "Address" => "address",
+                "City" => "city",
+                "Province" => "province",
+                "Gender" => "gender",
                 "Status" => "status",
                 "Keterangan" => "keterangan",
                 "Created At" => "created_at",
@@ -48,7 +45,7 @@ class DetailController extends Controller
         $heads = $ins;
         $insreg = ["Cuki"];
         //dd($cat);   
-		return view('profile/pcdetail', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
+		return view('profile/pcdetail', ['route'=>'CAT', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
     }
 
 }
