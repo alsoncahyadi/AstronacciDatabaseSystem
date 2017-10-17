@@ -111,7 +111,7 @@ Route::post('/insertPassword', [
 	'middleware' => ['auth'],
 	]);
 
-Route::get('/{id}', [
+Route::get('/member/{id}', [
     'uses' => 'DetailController@clientDetail',
     'as' => 'detail',
     'middleware' => ['auth', 'roles'],
