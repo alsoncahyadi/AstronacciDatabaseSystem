@@ -53,9 +53,20 @@ class CATController extends Controller
                 "Tanggal Ujian" => "tanggal_ujian",
                 "Status" => "status",
                 "Keterangan" => "keterangan"];
-        $heads = $ins;   
+        $heads = $ins;
 
-		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins]);\
+        $insreg = ["Sumber Data",
+                    "DP Date",
+                    "DP Nominal",
+                    "Payment Date",
+                    "Payment Nominal",
+                    "Tanggal Opening Class",
+                    "Tanggal End Class",
+                    "Tanggal Ujian",
+                    "Status",
+                    "Keterangan"];
+
+		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
     }
 
 

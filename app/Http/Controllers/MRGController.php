@@ -87,6 +87,7 @@ class MRGController extends Controller
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
         $mrg = MRG::where('master_id', $id)->first();
+        //dd($mrg);
 
         //$master = $mrg->master;
         //$mrg->redclub_user_id = $master->redclub_user_id;

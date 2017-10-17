@@ -102,8 +102,8 @@
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
 				?>
+                
 				<a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
-
 			</div>
 			
 		</div>
@@ -117,30 +117,79 @@
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
+            @if ($route == "CAT")
+                <?php $had_trans = false; ?>
+                @foreach ($insreg as $atr)
+                    <?php $atr2 = strtolower(str_replace(' ', '_',$atr)); ?>
+                    @if ($client->$atr2 != NULL)
+                        <?php $had_trans = true; ?>
+                    @endif
+                @endforeach
+                @if ($had_trans)
+                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Update Transaction</a>
+                <div id="addcli" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form method="post" action="{{route($route . '.inserttrans')}}">
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                            @foreach ($insreg as $atr)
+                            <div class="form-group">
+                                <label>{{$atr}}</label>
+                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                            </div>
+                            @endforeach
+                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                            <input type="submit" class="btn btn-default" value="Insert">
+                            <button type="reset" class="btn btn-default">Reset Form</button>
+                        </form>
+                    </div>
+                    <br><br>
+                </div>
+                @else
+                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+                <div id="addcli" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form method="post" action="{{route($route . '.inserttrans')}}">
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                            @foreach ($insreg as $atr)
+                            <div class="form-group">
+                                <label>{{$atr}}</label>
+                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                            </div>
+                            @endforeach
+                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                            <input type="submit" class="btn btn-default" value="Insert">
+                            <button type="reset" class="btn btn-default">Reset Form</button>
+                        </form>
+                    </div>
+                    <br><br>
+                </div>
+                @endif
+            @else
             <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
             <div id="addcli" class="panel-collapse collapse">
-            <div class="panel-body">
-                <form method="post" action="{{route($route . '.inserttrans')}}">
-                    @if ($route == "CAT")
-                        <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                    @elseif ($route == "AClub")
-                        <input name="user_id" type="hidden" value="{{$member->user_id}}">
-                    @elseif ($route == "MRG")
-                        <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                    @endif
-                    @foreach ($insreg as $atr)
-                    <div class="form-group">
-                        <label>{{$atr}}</label>
-                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-                    </div>
-                    @endforeach
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    <input type="submit" class="btn btn-default" value="Insert">
-                    <button type="reset" class="btn btn-default">Reset Form</button>
-                </form>
-            </div>
+                <div class="panel-body">
+                    <form method="post" action="{{route($route . '.inserttrans')}}">
+                        @if ($route == "CAT")
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                        @elseif ($route == "AClub")
+                            <input name="user_id" type="hidden" value="{{$member->user_id}}">
+                        @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @endif
+                        @foreach ($insreg as $atr)
+                        <div class="form-group">
+                            <label>{{$atr}}</label>
+                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                        </div>
+                        @endforeach
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        <input type="submit" class="btn btn-default" value="Insert">
+                        <button type="reset" class="btn btn-default">Reset Form</button>
+                    </form>
+                </div>
             <br><br>
-        </div>
+            </div>
+            @endif
     </div>
     @endif
 
