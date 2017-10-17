@@ -197,17 +197,17 @@
 	});
 	function exec(id, name) {
 		document.getElementById("dropdown").innerHTML = "";
-		if (id != -1){
+		if (id != -1){  //auto fill
 			load('{{route('getClient')}}?id=' + id);
 			document.getElementById("addcli").style.display = "none";
 			document.getElementById("input").value = name;
 			document.getElementById("master").value = '1';
-			document.getElementById("master_id").value = ids[id];
-		} else {
+			document.getElementById("master_id").value = id;
+		} else { //add new client
 			document.getElementById("tab").innerHTML = "";
 			document.getElementById("addcli").style.display = "inline";
 			document.getElementById("master").value = '0';
-			document.getElementById("master_id").value = ids[id];
+			document.getElementById("master_id").value = id;
 		}
 		document.getElementById("next").style.display = "inline";
 		window.scrollTo(0, 0);
