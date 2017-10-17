@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
 use App\AclubInformation;
+use App\AclubMember;
+use App\AclubTransaction;
 use App\MasterClient;
 
 class AClubController extends Controller
@@ -24,6 +26,11 @@ class AClubController extends Controller
     public function getTable() {
         //Select seluruh tabel
         $aclub_info = AclubInformation::paginate(15);
+
+        // $this->getAClubMember(100003);
+
+        // $this->getAClubTransaction(124);
+
         foreach ($aclub_info as $aclub_master) {
             $master = $aclub_master->master;
             $aclub_master->redclub_user_id = $master->redclub_user_id;
@@ -84,6 +91,80 @@ class AClubController extends Controller
         //Return view table dengan parameter
         return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
     }
+
+    public function getAClubMember($id) {
+        // detail master dengan master_id = $id
+        $aclub_information = AclubInformation::where('master_id', $id)->first();
+
+        // aclub_master adalah aclub_master nya
+        $aclub_master = $aclub_information->master;
+
+        // aclub_members adalah list member dari master_id = $id
+        $aclub_members = $aclub_master->aclubMembers;
+
+        $heads = ["Master ID",
+                "User ID",
+                "Sales Name",
+                "Group"];
+
+        $atts = ["master_id",
+                "user_id",
+                "sales_name",
+                "group"];
+
+        $insreg = ["User ID",
+                    "Payment Date", 
+                    "Sales",
+                    "Kode",
+                    "Nominal",
+                    "Start Date",
+                    "Keterangan"];
+
+        // yang ditampilin di page member cuman aclub_information dan aclub_members aja
+        dd($aclub_members);
+
+    }
+
+    public function getAClubTransaction($user_id) {
+        // aclub dengan user_id = $user_id
+        $aclub_member = AclubMember::where('user_id', $user_id)->first();
+
+        $aclub_transaction = $aclub_member->aclubTransactions;
+
+        $heads = ["Transaction ID",
+                    "User ID",
+                    "Payment Date",
+                    "Kode",
+                    "Nominal",
+                    "Start date",
+                    "Expired date",
+                    "Masa tenggang",
+                    "Yellow Zone",
+                    "Red Zone"];
+
+        $atts = ["transaction_id",
+                    "user_id",
+                    "payment_date",
+                    "kode",
+                    "status",
+                    "nominal",
+                    "start_date",
+                    "expired_date",
+                    "masa_tenggang",
+                    "yellow_zone",
+                    "red_zone"];
+
+        $insreg = ["Payment date", 
+                    "Kode", 
+                    "Nominal",
+                    "Start Date",
+                    "Keterangan"];
+
+        // yang ditampilin di page member cuman aclub_information dan aclub_members aja
+        dd($aclub_transaction);
+    }
+
+
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
