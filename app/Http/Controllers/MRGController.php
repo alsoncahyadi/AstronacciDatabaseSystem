@@ -87,23 +87,6 @@ class MRGController extends Controller
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
         $mrg = MRG::where('master_id', $id)->first();
-        //dd($mrg);
-
-        //$master = $mrg->master;
-        //$mrg->redclub_user_id = $master->redclub_user_id;
-        //$mrg->redclub_password = $master->redclub_password;
-        //$mrg->name = $master->name;
-        //$mrg->telephone_number = $master->telephone_number;
-        //$mrg->email = $master->email;
-        //$mrg->birthdate = $master->birthdate;
-        //$mrg->address = $master->address;
-        //$mrg->city = $master->city;
-        //$mrg->province = $master->province;
-        //$mrg->gender = $master->gender;
-        //$mrg->line_id = $master->line_id;
-        //$mrg->bbm = $master->bbm;
-        //$mrg->whatsapp = $master->whatsapp;
-        //$mrg->facebook = $master->facebook;
 
         $ins= ["Sumber Data (MRG)" => "sumber_data",
                 "Join Date (MRG)" => "join_date",
@@ -114,12 +97,15 @@ class MRGController extends Controller
         // form transaction
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
-        $accounts = $mrg->accounts()->get();
-
         // mrg accounts belom dimasukin
+        $clientsreg = $mrg->accounts()->get();
+        
+        $headsreg = ["Account Number", "Account Type", "Sales Name"];
+
+        $attsreg = ["accounts_number", "account_type", "sales_name"];
 
         //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
+        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
      public function addTrans(Request $request) {

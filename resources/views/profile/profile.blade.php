@@ -111,13 +111,13 @@
      </div>
 
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
-            @if ($route == "CAT")
+            @if (($route == "CAT") || ($route == "UOB"))
                 <?php $had_trans = false; ?>
                 @foreach ($insreg as $atr)
                     <?php $atr2 = strtolower(str_replace(' ', '_',$atr)); ?>
@@ -130,7 +130,11 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel-body">
                         <form method="post" action="{{route($route . '.inserttrans')}}">
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                            @if ($route == "CAT")
+                                <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                            @else
+                                <input name="user_id" type="hidden" value="{{$client->client_id}}">
+                            @endif
                             @foreach ($insreg as $atr)
                             <div class="form-group">
                                 <label>{{$atr}}</label>
@@ -164,6 +168,18 @@
                     <br><br>
                 </div>
                 @endif
+                <div class="form-group">
+                    <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
+                    
+                        @foreach ($headsreg as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client->$value}}<br>
+                            </div>
+                        @endforeach
+                </div>
             @else
             <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
             <div id="addcli" class="panel-collapse collapse">
@@ -189,6 +205,38 @@
                 </div>
             <br><br>
             </div>
+            <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
+                <thead>
+                    <tr>
+                        @foreach ($headsreg as $headreg)
+                        <th> {{$headreg}} </th>
+                        @endforeach
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clientsreg as $clientreg)
+                    
+                    <tr class="gradeA">
+
+                        @foreach ($attsreg as $attreg)
+                        
+                       
+                        <td> {{$clientreg->$attreg}} </td>
+
+                        @endforeach
+
+                        <!-- @if ($route == 'CAT')
+                        <td><a href="{{route('CAT/trans.deletetrans', ['id1' => $clientreg->cat_user_id, 'id2' => $clientreg->angsuran_ke])}}"> Delete </a></td>
+                        @elseif ($route == 'AClub')
+                        <td><a href="{{route('AClub/trans.deletetrans', ['id' => $clientreg->registration_id])}}"> Delete </a></td>
+                        @endif -->
+                        
+                    </tr>
+                    
+                    @endforeach
+                </tbody>
+            </table>
             @endif
     </div>
     @endif

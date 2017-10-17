@@ -283,6 +283,13 @@ Route::get('/UOB/deleteclient/{id}', [
     'roles' => ['0', '4'],
     ]);
 
+Route::post('/UOB/inserttrans', [
+    'uses' => 'UOBController@addTrans',
+    'as' => 'UOB.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
+    ]);
+
 //A-CLUB ROUTES
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',

@@ -43,16 +43,7 @@ class CATController extends Controller
                 "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales_name",
-                "Sumber Data" => "sumber_data",
-                "DP Date" => "DP_date",
-                "DP Nominal " => "DP_nominal",
-                "Payment Date" => "payment_date",
-                "Payment Nominal" => "payment_nominal",
-                "Tanggal Opening Class" => "tanggal_opening_class",
-                "Tanggal End Class"=> "tanggal_end_class",
-                "Tanggal Ujian" => "tanggal_ujian",
-                "Status" => "status",
-                "Keterangan" => "keterangan"];
+                ];
         $heads = $ins;
 
         $insreg = ["Sumber Data",
@@ -66,7 +57,18 @@ class CATController extends Controller
                     "Status",
                     "Keterangan"];
 
-		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
+        $headsreg = [ "Sumber Data" => 'sumber_data',
+                        "DP Date" => 'DP_date',
+                        "DP Nominal" => 'DP_nominal',
+                        "Payment Date" => 'payment_date',
+                        "Tanggal Opening Class" => "tanggal_opening_class",
+                        "Tanggal End Class" => 'tanggal_end_class',
+                        "Tanggal Ujian" => 'tanggal_ujian',
+                        "Status" => 'status',
+                        "Keterangan" => 'keterangan'
+                    ];
+
+		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg]);
     }
 
 
@@ -102,36 +104,6 @@ class CATController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    // public function addClient(Request $request) {
-    //     //Validasi input
-    //     $this->validate($request, [
-    //             'batch' => 'required',
-    //             'user_id' => 'required',
-    //             'no_induk' => 'required',
-    //             'pendaftaran' => 'required',
-    //             'kelas_berakhir' => 'required',
-    //             'nama' => 'required',
-    //             'email' => 'email',
-    //             'telepon' => 'required',
-    //             'alamat' => 'required',
-    //             'username' => 'required'
-    //         ]);
-
-    //     //Inisialisasi array error
-    //     DB::beginTransaction();
-    //     $err = [];
-    //     try {
-    //         //Input data ke SQL
-    //         DB::select("call inputCAT(?,?,?,?)", [$this->nullify($request->user_id),$request->batch,$request->user_id,$request->no_induk,$request->pendaftaran,$request->kelas_berakhir,$request->username,$this->nullify($request->password),$request->nama,$this->nullify($request->jenis_kelamin),$request->email,$request->telepon,$request->alamat,$this->nullify($request->kota), $this->nullify($request->tanggal_lahir)]);
-    //     } catch(\Illuminate\Database\QueryException $ex){ 
-    //         DB::rollback();
-    //         $err[] = $ex->getMessage();
-    //     }
-    //     DB::commit();
-    //     return redirect()->back()->withErrors($err);
-
-    // }
-
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
@@ -143,15 +115,15 @@ class CATController extends Controller
     }
 
     public function addTrans(Request $request) {
-         DB::beginTransaction();
-        $err = [];
-        try {
-            DB::select("call inputCAT_pembayaran(?,?,?,?)", [$this->nullify($request->user_id),$request->angsuran_ke,$request->tanggal_pembayaran_angsuran,$request->pembayaran_angsuran]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
+        //  DB::beginTransaction();
+        // $err = [];
+        // try {
+        //     DB::select("call inputCAT_pembayaran(?,?,?,?)", [$this->nullify($request->user_id),$request->angsuran_ke,$request->tanggal_pembayaran_angsuran,$request->pembayaran_angsuran]);
+        // } catch(\Illuminate\Database\QueryException $ex){ 
+        //     DB::rollback();
+        //     $err[] = $ex->getMessage();
+        // }
+        // DB::commit();
         return redirect()->back()->withErrors($err);
     }
 

@@ -98,6 +98,8 @@
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif ($route == 'MRG')
                                 	<td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'UOB')
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->client_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
 								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->user_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 								@else
