@@ -85,11 +85,9 @@ class UOBController extends Controller
 
         $heads = $ins;
 
-        $insreg = ["Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
+        $insreg = ["Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
 
-        $headsreg = [ "Bank Pribadi" => 'bank_pribadi',
-                        "Nomor Rekening Pribadi" => 'nomor_rekening_pribadi',
-                        "Tanggal RDI Done" => 'tanggal_rdi_done',
+        $headsreg = [  "Tanggal RDI Done" => 'tanggal_rdi_done',
                         "RDI Bank" => "rdi_bank",
                         "Nomor RDI" => 'nomor_rdi',
                         "Tanggal Top Up" => 'tanggal_top_up',
@@ -103,8 +101,10 @@ class UOBController extends Controller
         return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads' => $heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg]);
     }
 
-    public function addTrans(Request $request, $id) {
-        $uob = UOB::where('client_id',$id)->first();
+    public function addTrans(Request $request) {
+        $uob = UOB::where('client_id',$request->user_id)->first();
+
+        $err =[];
 
         $uob->bank_pribadi = $request->bank_pribadi;
         $uob->nomor_rekening_pribadi = $request->nomor_rekening_pribadi;

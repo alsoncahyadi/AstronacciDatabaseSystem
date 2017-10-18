@@ -9,6 +9,8 @@ class Uob extends Model
     //
     protected $table = 'uobs';
 
+    protected $primaryKey = 'client_id';
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }

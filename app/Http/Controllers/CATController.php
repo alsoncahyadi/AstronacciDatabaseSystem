@@ -46,21 +46,14 @@ class CATController extends Controller
                 ];
         $heads = $ins;
 
-        $insreg = ["Sumber Data",
-                    "DP Date",
-                    "DP Nominal",
-                    "Payment Date",
+        $insreg = ["Payment Date",
                     "Payment Nominal",
-                    "Tanggal Opening Class",
                     "Tanggal End Class",
                     "Tanggal Ujian",
                     "Status",
                     "Keterangan"];
 
-        $headsreg = [ "Sumber Data" => 'sumber_data',
-                        "DP Date" => 'DP_date',
-                        "DP Nominal" => 'DP_nominal',
-                        "Payment Date" => 'payment_date',
+        $headsreg = [ "Payment Date" => 'payment_date',
                         "Tanggal Opening Class" => "tanggal_opening_class",
                         "Tanggal End Class" => 'tanggal_end_class',
                         "Tanggal Ujian" => 'tanggal_ujian',
@@ -116,7 +109,7 @@ class CATController extends Controller
 
     public function addTrans(Request $request) {
         //  DB::beginTransaction();
-        // $err = [];
+        $err = [];
         // try {
         //     DB::select("call inputCAT_pembayaran(?,?,?,?)", [$this->nullify($request->user_id),$request->angsuran_ke,$request->tanggal_pembayaran_angsuran,$request->pembayaran_angsuran]);
         // } catch(\Illuminate\Database\QueryException $ex){ 
