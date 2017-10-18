@@ -15,13 +15,41 @@ class MockupController extends Controller
         //Data untuk insert
         $ins = ["Red Club User ID", "Red Club Password", "Nama", "No Telepon", "Email", "Birthdate", "Alamat", "Kota", "Provinsi", "Gender", "Line ID", "BBM", "Whatsapp", "Facebook"];
         //ACLUB exclusive form
-        $aclubforms = ["User ID", "Group", "Sumber Data", "Keterangan"];
+        $aclubforms = ["User ID",
+                        "Payment Date",
+                        "Sumber Data",
+                        "Sales Name",
+                        "Kode",
+                        "Status",
+                        "Nominal",
+                        "Start Date",
+                        "Expired Date",
+                        "Masa Tenggang",
+                        "Yellow Zone",
+                        "Red Zone",
+                        "Sumber Data",
+                        "Keterangan"];
+
         //UOB exclusive form
-        $uobforms = ["Client ID", "Sales Name", "Sumber Data", "Tanggal Gabung", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung"];
+        $uobforms = ["Client ID", 
+                "Sales Name", 
+                "Tanggal Join", 
+                "Nomor KTP", 
+                "Tanggal Expired KTP", 
+                "Nomor NPWP", 
+                "Alamat Surat", 
+                "Saudara Tidak Serumah", 
+                "Nama Ibu Kandung",
+                "Bank Pribadi",
+                "Nomer Rekening Pribadi",
+                "Sumber Data",
+                "Keterangan"];
+
         //MRG exclusive form
-        $mrgforms = ["Sumber Data", "Tanggal Join"];
+        $mrgforms = ["Sumber Data", "Tanggal Join",, "Account Number", "Account Type", "Sales Name"];
+        
         //CAT exclusive form
-        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales"];
+        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales", ];
        
         return view('content/addclient', 
             ['clients' => $clients, 
