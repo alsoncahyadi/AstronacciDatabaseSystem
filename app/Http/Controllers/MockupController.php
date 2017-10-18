@@ -17,7 +17,6 @@ class MockupController extends Controller
         //ACLUB exclusive form
         $aclubforms = ["User ID",
                         "Payment Date",
-                        "Sumber Data",
                         "Sales Name",
                         "Kode",
                         "Status",
@@ -46,10 +45,23 @@ class MockupController extends Controller
                 "Keterangan"];
 
         //MRG exclusive form
-        $mrgforms = ["Sumber Data", "Tanggal Join",, "Account Number", "Account Type", "Sales Name"];
+        $mrgforms = ["Sumber Data", 
+                    "Tanggal Join", 
+                    "Account Number", 
+                    "Account Type", 
+                    "Sales Name"];
         
         //CAT exclusive form
-        $catforms = ["User ID", "Nomor Induk", "Batch", "Sales", ];
+        $catforms = ["User ID", 
+                    // "Nomor Induk", 
+                    "Batch", 
+                    "Sales", 
+                    "Sumber Data",
+                    "DP Date",
+                    "DP Nominal",
+                    "Opening Class",
+                    "Status",
+                    "Keterangan"];
        
         return view('content/addclient', 
             ['clients' => $clients, 
@@ -138,19 +150,19 @@ class MockupController extends Controller
         $this->validate($request, [
             'master_id' => '',
             'user_id_cat' => 'required|string:50',
-            'nomor_induk' => 'required|string:50',
+            // 'nomor_induk' => 'required|string:50',
             'batch' => 'string:20',
             'sales' => 'string:100',
-            // 'sumber_data' => 'string:20',
-            // 'tanggal_dp' => 'date',
-            // 'nominal_dp' => 'integer',
+            'sumber_data' => 'string:20',
+            'tanggal_dp' => 'date',
+            'nominal_dp' => 'integer',
             // 'tanggal_payment' => 'date',
             // 'nominal_payment' => 'integer',
-            // 'tanggal_opening_class' => 'date',
+            'tanggal_opening_class' => 'date',
             // 'tanggal_end_class' => 'date|after:tanggal_opening_class',
             // 'tanggal_ujian' => 'date',
-            // 'status_Cat' => 'string:20',
-            // 'keterangan_cat' => ''
+            'status_Cat' => 'string:20',
+            'keterangan_cat' => ''
         ]);
 
         $cat = new \App\Cat;
@@ -244,7 +256,10 @@ class MockupController extends Controller
         $this->validate($request, [
             'master_id' => '',
             'sumber_data_mrg' => '',
-            'tanggal_join' => 'date'
+            'tanggal_join' => 'date',
+            "account_number" => 'required|string:20', 
+            "account_type" => 'required|string:20', 
+            "sales_name" => 'required|string:255'
         ]);
 
         $mrg = new \App\Mrg;
@@ -264,11 +279,19 @@ class MockupController extends Controller
 
     public function addAClub(Request $request) {
         $this->validate($request, [
-            'master_id' => '',
-            'user_id_aclub' => 'required|string:50',
-            'group' => 'required|string:5',
-            'sumber_data_aclub' => '',
-            'keterangan_aclub' => ''
+            'user_id' => 'required|string:50',
+            'payment_date' => 'date',
+            'sales_name' => '',
+            'kode' => '',
+            'status' => '',
+            'nominal' => '',
+            'start_date' => 'date',
+            'expired_date' => 'date',
+            'masa_tenggang' => 'date',
+            'yellow_zone' => 'date',
+            'red_zone' => 'date',
+            'sumber_data' => '',
+            'keterangan' => ''
         ]);
 
         $errors = [];
