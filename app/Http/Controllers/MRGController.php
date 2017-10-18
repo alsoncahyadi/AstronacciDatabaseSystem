@@ -21,8 +21,9 @@ class MRGController extends Controller
     }
     
     public function getTable() {
-        //Select seluruh tabel
         $mrgs = Mrg::paginate(15);
+
+        //ambil data master
         foreach ($mrgs as $mrg_master) {
             $master = $mrg_master->master;
             $mrg_master->redclub_user_id = $master->redclub_user_id;
@@ -41,7 +42,7 @@ class MRGController extends Controller
             $mrg_master->facebook = $master->facebook;
         }
 
-        //Judul kolom yang ditampilkan pada tabel
+        //judul kolom
         $heads = ["Master ID",
                 "RedClub User ID",
                 "RedClub Password",
@@ -61,7 +62,7 @@ class MRGController extends Controller
                 "Join Date (MRG)"];
 
 
-        //Nama attribute pada sql
+        //attribute sql
         $atts = ["master_id",
                 "redclub_user_id",
                 "redclub_password",
@@ -80,12 +81,10 @@ class MRGController extends Controller
                 "sumber_data",
                 "join_date"];
 
-        //Return view table dengan parameter
         return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
-        //Select seluruh data client $id yang ditampilkan di detail
         $mrg = MRG::where('master_id', $id)->first();
 
         $ins= ["Sumber Data (MRG)" => "sumber_data",
@@ -97,19 +96,28 @@ class MRGController extends Controller
         // form transaction
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
-        // mrg accounts belom dimasukin
         $clientsreg = $mrg->accounts()->get();
         
+        //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
 
+        //attribute sql account
         $attsreg = ["accounts_number", "account_type", "sales_name"];
 
-        //Return view profile dengan parameter
         return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
      public function addTrans(Request $request) {
+        $this->validate($request, [
+                'user_id' => '',
+                'account_number' => '',
+                'account_type' => '',
+                'sales_name' => ''
+            ]);
+
         $mrg_account = new \App\MrgAccount();
+
+        $err = [];
 
         $mrg_account->master_id = $request->user_id;
         $mrg_account->accounts_number = $request->account_number;
@@ -118,11 +126,10 @@ class MRGController extends Controller
 
         $mrg_account->save();
         
-        $err = [];
-        
         return redirect()->back()->withErrors($err);
     }
 
+    //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
@@ -149,33 +156,6 @@ class MRGController extends Controller
         DB::commit();
         return redirect()->back()->withErrors($err);
     }
-
-    // public function addClient(Request $request) {
-    //     //Validasi input
-    //     $this->validate($request, [
-    //             'account' => 'required',
-    //             'nama' => 'required',
-    //             'tanggal_join' => 'required',
-    //             'alamat' => 'required',
-    //             'kota' => 'required',
-    //             'telepon' => 'required',
-    //             'email' => 'email',
-    //             'type' => 'required',
-    //             'sales' => 'required'
-    //         ]);
-    //     //Inisialisi array error
-    //     $err = [];
-    //     DB::beginTransaction();
-    //     try {
-    //         //Input data ke SQL
-    //         DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$request->account, $request->nama,$request->tanggal_join,$request->alamat,$request->kota,$request->telepon,$request->email,$request->type,$request->sales]);
-    //     } catch(\Illuminate\Database\QueryException $ex){ 
-    //     	DB::rollback();
-    //         $err[] = $ex->getMessage();
-    //     }
-    //     DB::commit();
-    //     return redirect(route('dashboard'))->withErrors($err);
-    // }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu

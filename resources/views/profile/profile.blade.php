@@ -102,9 +102,50 @@
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
 				?>
+
+                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
                 
-				<a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
-			</div>
+            </div>
+
+                <div id="bod2" style="display:none">
+                    <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        <div class="form-group">
+                            <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
+                            
+                                    @foreach ($ins as $key => $value)
+                                        <div style="height:60px">
+                                            <label>{{$key}}</label>
+                                            @if($key == 'Sales')
+                                                <br>
+                                                <select id = "myList" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                                @foreach($sales as $sale)
+                                                <option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
+                                                @endforeach
+                                                </select>
+                                            @else
+                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                            @endif
+                                            
+                                        </div>
+                                    @endforeach
+                            
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
+                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                        @elseif ($route == 'assigngrow')
+                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
+                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
+                        @elseif ($route == 'assigngreen')
+                            <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
+                            <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
+                        @elseif ($route == 'assignredclub')
+                            <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
+                        @endif
+                    </form>
+                </div> 
 			
 		</div>
 
@@ -136,9 +177,10 @@
                                 <input name="user_id" type="hidden" value="{{$client->client_id}}">
                             @endif
                             @foreach ($insreg as $atr)
+                            <?php $atr_sql = strtolower(str_replace(' ', '_', $atr));?>
                             <div class="form-group">
                                 <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="{{$client->$atr_sql}}">
                             </div>
                             @endforeach
                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -154,6 +196,11 @@
                     <div class="panel-body">
                         <form method="post" action="{{route($route . '.inserttrans')}}">
                             <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                            @if ($route == "CAT")
+                                <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                            @else
+                                <input name="user_id" type="hidden" value="{{$client->client_id}}">
+                            @endif
                             @foreach ($insreg as $atr)
                             <div class="form-group">
                                 <label>{{$atr}}</label>

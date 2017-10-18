@@ -21,24 +21,21 @@ class CATController extends Controller
     }
 
     public function getTable() {
-        //Select seluruh tabel
         $cats = Cat::paginate(15);
 
-        //Judul kolom yang ditampilkan pada tabel
+        //judul kolom
         $heads = ["User Id", "No Induk", "Master Id", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Opening Class", "End Class", "Tanggal Ujian", "Status", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"];
 
-        //Nama attribute pada sql
+        //attribute sql
         $atts = ["user_id", "nomor_induk", "master_id", "batch", "sales", "sumber_data", "DP_date", "DP_nominal", "payment_date", "payment_nominal", "tanggal_opening_class", "tanggal_end_class", "tanggal_ujian", "status", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
 
-        //Return view table dengan parameter
         return view('content/table', ['route' => 'CAT', 'clients' => $cats, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
-        //Select seluruh data client $id yang ditampilkan di detail
         $cat = Cat::where('user_id', $id)->first();
 
-        //Nama atribut form yang ditampilkan dan nama pada SQL
+        //judul + sql
         $ins= ["User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
@@ -46,13 +43,16 @@ class CATController extends Controller
                 ];
         $heads = $ins;
 
+        //form transaction
         $insreg = ["Payment Date",
                     "Payment Nominal",
                     "Tanggal End Class",
                     "Tanggal Ujian",
                     "Status",
-                    "Keterangan"];
+                    "Keterangan"
+                    ];
 
+        //transaction
         $headsreg = [ "Payment Date" => 'payment_date',
                         "Tanggal Opening Class" => "tanggal_opening_class",
                         "Tanggal End Class" => 'tanggal_end_class',
@@ -64,7 +64,33 @@ class CATController extends Controller
 		return view('profile/profile', ['route'=>'CAT', 'client'=>$cat, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg]);
     }
 
+    public function addTrans(Request $request) {
+        $this->validate($request, [
+                'payment_date' => 'date',
+                'nominal' => '',
+                'tanggal_end_class' => 'date',
+                'tanggal_ujian' => 'date',
+                'status' => '',
+                'keterangan' => ''
+            ]);
 
+        $cat = CAT::where('user_id',$request->user_id)->first();
+
+        $err =[];
+
+        $cat->payment_date = $request->payment_date;
+        $cat->payment_nominal = $request->nominal;
+        $cat->tanggal_end_class = $request->tanggal_end_class;
+        $cat->tanggal_ujian = $request->tanggal_ujian;
+        $cat->status = $request->status;
+        $cat->keterangan = $request->keterangan;
+
+        $cat->update();
+
+        return redirect()->back()->withErrors($err);
+    }
+
+    //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
@@ -107,18 +133,7 @@ class CATController extends Controller
         return redirect("home");
     }
 
-    public function addTrans(Request $request) {
-        //  DB::beginTransaction();
-        $err = [];
-        // try {
-        //     DB::select("call inputCAT_pembayaran(?,?,?,?)", [$this->nullify($request->user_id),$request->angsuran_ke,$request->tanggal_pembayaran_angsuran,$request->pembayaran_angsuran]);
-        // } catch(\Illuminate\Database\QueryException $ex){ 
-        //     DB::rollback();
-        //     $err[] = $ex->getMessage();
-        // }
-        // DB::commit();
-        return redirect()->back()->withErrors($err);
-    }
+    
 
     public function detailTrans($id){
         echo ($id);

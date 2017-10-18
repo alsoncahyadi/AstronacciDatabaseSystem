@@ -21,44 +21,21 @@ class UOBController extends Controller
     }
 
     public function getTable(Request $request) {
-
-        //Select seluruh tabel
         $uobs = Uob::paginate(15);
 
-        //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Client ID", "Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"]; //kecuali is" an dan add_time
+        //judul kolom
+        $heads = ["Client ID", "Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"];
 
-        //Nama attribute pada sql
+        //attribute sql
         $atts = ["client_id","master_id", "sales_name", "sumber_data", "join_date", "nomor_ktp", "tanggal_expired_ktp", "nomor_npwp", "alamat_surat", "saudara_tidak_serumah", "nama_ibu_kandung", "bank_pribadi", "nomor_rekening_pribadi", "tanggal_rdi_done", "rdi_bank", "nomor_rdi", "tanggal_top_up", "nominal_top_up", "tanggal_trading", "status", "trading_via", "keterangan", "created_at", "updated_at", "created_by", "updated_by"];
-        //Return view table dengan parameter
+
         return view('content/table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
-        //Select seluruh data client $id yang ditampilkan di detail
         $uob = Uob::where('client_id', $id)->first();
 
-        // dd($uob);   
-        $master = $uob->master;
-        $uob->master_id = $master->master_id;
-        $uob->redclub_user_id = $master->redclub_user_id;
-        $uob->redclub_password = $master->redclub_password;
-        $uob->name = $master->name;
-        $uob->telephone_number = $master->telephone_number;
-        $uob->email = $master->email;
-        $uob->birthdate = $master->birthdate;
-        $uob->address = $master->address;
-        $uob->city = $master->city;
-        $uob->province = $master->province;
-        $uob->gender = $master->gender;
-        $uob->line_id = $master->line_id;
-        $uob->bbm = $master->bbm;
-        $uob->whatsapp = $master->whatsapp;
-        $uob->facebook = $master->facebook;
-
-
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-
+        //judul + sql
         $ins= [
                 "Client ID" => "client_id",
                 "Master ID" => "master_id",
@@ -85,8 +62,10 @@ class UOBController extends Controller
 
         $heads = $ins;
 
+        //form transaction
         $insreg = ["Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
 
+        //judul + sql transaction
         $headsreg = [  "Tanggal RDI Done" => 'tanggal_rdi_done',
                         "RDI Bank" => "rdi_bank",
                         "Nomor RDI" => 'nomor_rdi',
@@ -102,6 +81,20 @@ class UOBController extends Controller
     }
 
     public function addTrans(Request $request) {
+        $this->validate($request, [
+                'bank_pribadi' => '',
+                'nomor_rekening_pribadi' => '',
+                'tanggal_rdi_done' => 'date',
+                'rdi_bank' => '',
+                'nomor_rdi' => '',
+                'tanggal_top_up' => 'date',
+                'nominal_top_up' => '',
+                'tanggal_trading' => '',
+                'status' => '',
+                'trading_via' => '',
+                'keterangan' => ''
+            ]);
+
         $uob = UOB::where('client_id',$request->user_id)->first();
 
         $err =[];
@@ -123,6 +116,7 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [

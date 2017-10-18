@@ -9,6 +9,8 @@ class Cat extends Model
     //
     protected $table = 'cats';
 
+    protected $primaryKey = 'user_id';
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }
