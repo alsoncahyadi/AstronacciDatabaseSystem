@@ -129,6 +129,13 @@ Route::post('/insertPassword', [
 	'middleware' => ['auth'],
 	]);
 
+Route::get('/member/{id}', [
+    'uses' => 'DetailController@clientDetail',
+    'as' => 'detail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
+
 // CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
@@ -230,6 +237,13 @@ Route::post('/MRG/edit', [
 	'roles' => ['0', '2'],
     ]);
 
+Route::post('/MRG/inserttrans', [
+    'uses' => 'MRGController@addTrans',
+    'as' => 'MRG.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
+    ]);
+
 Route::get('/MRGexport', [
     'uses' => 'MRGController@exportExcel',
     'as' => 'MRG.export',
@@ -285,6 +299,13 @@ Route::get('/UOB/deleteclient/{id}', [
     'as' => 'UOB.deleteclient',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '4'],
+    ]);
+
+Route::post('/UOB/inserttrans', [
+    'uses' => 'UOBController@addTrans',
+    'as' => 'UOB.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '3'],
     ]);
 
 //A-CLUB ROUTES

@@ -10,7 +10,7 @@ class AclubTransaction extends Model
     protected $table = 'aclub_transactions';
 
     public function aclubMember() {
-        return $this->hasMany('App\AclubMember', 'master_id', 'master_id');
+        return $this->hasMany('App\AclubMember', 'user_id', 'user_id');
     }
 
     public function createdBy() {

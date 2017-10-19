@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\MasterClient;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -16,18 +17,18 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
+    public function index()
+    {
+        $clients = MasterClient::select('name','email','master_id')->get();
+        return view('dashboard/dashboard', ['clients' => $clients] );
+    }
+
+
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('dashboard/dashboard');
-    }
-	public function index2()
-	{
-		return view('dashboard/dashboard2');
-    }
+
 }
 
