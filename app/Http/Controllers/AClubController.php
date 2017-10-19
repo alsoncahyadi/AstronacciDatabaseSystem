@@ -167,33 +167,44 @@ class AClubController extends Controller
 
 
     public function clientDetail($id) {
-        //Select seluruh data client $id yang ditampilkan di detail
-        $aclub_master = MasterClient::where('master_id', $id)->first();
-        $aclub_information = $aclub_master->aclubInformation;
+        // detail master dengan master_id = $id
+        $aclub_information = AclubInformation::where('master_id', $id)->first();
 
-        $aclub_master->keterangan = $aclub_information->keterangan;
-        $aclub_master->sumber_data = $aclub_information->sumber_data;
+        // aclub_master adalah aclub_master nya
+        $aclub_master = $aclub_information->master;
 
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins= ["Sumber Data (A-Club)"=> "sumber_data",
-                "Keterangan (A-Club)"=> "keterangan"];
+        $ins = ["Master_id" => "master_id", 
+                "Sumber Data" => "sumber_data", 
+                "Keterangan" => "keterangan"];
+
         $heads = $ins;
 
-        //untuk insert transaction
-        $insreg = ["Payment Date",
+        // aclub_members adalah list member dari master_id = $id
+        $aclub_members = $aclub_master->aclubMembers();
+
+        $headsreg = ["User ID",
+                    "Payment Date", 
+                    "Sales",
                     "Kode",
-                    "Status",
                     "Nominal",
                     "Start Date",
-                    "Expired Date",
-                    "Masa Tenggang",
-                    "Yellow Zone",
-                    "Red Zone",
-                    "Sales Name"];
+                    "Keterangan"];
 
-        $aclub_members = $aclub_master->aclubMembers()->get();
+        $insreg = ["User ID",
+                    "Payment Date",
+                    "Sales",
+                    "Kode",
+                    "Nominal",
+                    "Start Date",
+                    "Keterangan"];
 
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_master, 'member'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
+        $attsreg = ["user_id", "payment_date", "sales_name", "kode", "nominal", "start_date", "keterangan"];
+
+
+
+        // yang ditampilin di page member cuman aclub_information dan aclub_members aja
+
+        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
     public function editClient(Request $request) {

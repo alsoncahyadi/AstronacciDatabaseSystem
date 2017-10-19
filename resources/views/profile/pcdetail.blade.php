@@ -100,11 +100,19 @@
 			
 		</div>
         {{$client->$userid}}
-        <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $userid])}}"> AClub </a>
-        <a class="btn btn-default" style="margin:10px;" href="{{route('MRG.detail', ['id' => $client->$userid])}}"> MRG </a>
-        <a class="btn btn-default" style="margin:10px;" href="{{route('CAT.detail', ['id' => $userid])}}"> CAT </a>
-        <a class="btn btn-default" style="margin:10px;" href="{{route('UOB.detail', ['id' => $client->$userid])}}"> UOB </a>
-     </div>
+        @if($aclub)
+            <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $aclub->master_id])}}" target="_blank"> AClub </a>
+        @endif
+        @if($mrg)
+        <a class="btn btn-default" style="margin:10px;" href="{{route('MRG.detail', ['id' => $mrg->master_id])}}" target="_blank"> MRG </a>
+        @endif
+        @if($cat)
+        <a class="btn btn-default" style="margin:10px;" href="{{route('CAT.detail', ['id' => $cat->user_id])}}" target="_blank"> CAT </a>
+        @endif
+        @if($uob)
+        <a class="btn btn-default" style="margin:10px;" href="{{route('UOB.detail', ['id' => $uob->client_id])}}" target="_blank"> UOB </a>
+        @endif 
+    </div>
 
 	<br><br>
 

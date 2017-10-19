@@ -23,6 +23,10 @@ class DetailController extends Controller
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
         $master = MasterClient::where('master_id', $id)->first();
+        $aclub = $master->aclubInformation;
+        $mrg = $master->mrg;
+        $uob = $master->uob;
+        $cat = $master->cat;
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins= ["Master ID"=> "master_id",
@@ -45,7 +49,7 @@ class DetailController extends Controller
         $heads = $ins;
         $insreg = ["Cuki"];
         //dd($cat);   
-		return view('profile/pcdetail', ['route'=>'CAT', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg]);
+		return view('profile/pcdetail', ['route'=>'CAT', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
     }
 
 }

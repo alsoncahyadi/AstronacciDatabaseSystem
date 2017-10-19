@@ -115,17 +115,7 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
-                                            @if($key == 'Sales')
-                                                <br>
-                                                <select id = "myList" name="{{strtolower(str_replace(' ', '_', $key))}}">
-                                                @foreach($sales as $sale)
-                                                <option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
-                                                @endforeach
-                                                </select>
-                                            @else
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                            @endif
-                                            
+                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}"
                                         </div>
                                     @endforeach
                             
@@ -235,7 +225,7 @@
                         @if ($route == "CAT")
                             <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                         @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$member->user_id}}">
+                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
