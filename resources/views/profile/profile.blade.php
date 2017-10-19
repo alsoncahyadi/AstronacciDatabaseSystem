@@ -106,45 +106,7 @@
 				<button class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </button>
 
 			</div>
-			<div id="bod2" style="display:none">
-				<form role="form" method="post" action="{{route($route . '.edit')}}">
-					<div class="form-group">
-						<!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                        
-                                @foreach ($ins as $key => $value)
-                                    <div style="height:60px">
-                                        <label>{{$key}}</label>
-                                        @if($key == 'Sales')
-                                            <br>
-                                            <select id = "myList" name="{{strtolower(str_replace(' ', '_', $key))}}">
-                                            @foreach($sales as $sale)
-                                            <option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
-                                            @endforeach
-                                            </select>
-                                        @else
-                                            <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                        @endif
-                                        
-                                    </div>
-                                @endforeach
-                        
-					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
-                    <button type="reset" class="btn btn-default">Reset</button>
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
-                        <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
-                    @elseif ($route == 'assigngrow')
-                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
-                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
-                    @elseif ($route == 'assigngreen')
-                        <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
-                        <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
-                    @elseif ($route == 'assignredclub')
-                        <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
-                    @endif
-				</form>
-			</div> 
+			
 		</div>
 
      </div>
@@ -182,41 +144,7 @@
         <br>
         <br>
 
-        <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
-            <thead>
-                <tr>
-                    @foreach ($headsreg as $headreg)
-                    <th> {{$headreg}} </th>
-                    @endforeach
-                    
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($clientsreg as $clientreg)
-                
-                <tr class="gradeA">
-
-                    @foreach ($attsreg as $attreg)
-                    
-                    @if ($route == 'CAT')
-                    <td>  <a target="_blank" href="{{route($route . '.transdetail', ['id' => $clientreg->angsuran_ke])}}">{{$clientreg->$attreg}} </td>
-                    @elseif ($route == "AClub")
-                    <td> {{$clientreg->$attreg}} </td>
-                    @endif
-
-                    @endforeach
-
-                    @if ($route == 'CAT')
-                    <td><a href="{{route('CAT/trans.deletetrans', ['id1' => $clientreg->cat_user_id, 'id2' => $clientreg->angsuran_ke])}}"> Delete </a></td>
-                    @elseif ($route == 'AClub')
-                    <td><a href="{{route('AClub/trans.deletetrans', ['id' => $clientreg->registration_id])}}"> Delete </a></td>
-                    @endif
-                    
-                </tr>
-                
-                @endforeach
-            </tbody>
-        </table>
+        <!--  -->
     </div>
         <!-- /.panel-body -->
     </div>
