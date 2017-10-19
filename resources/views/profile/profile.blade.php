@@ -115,7 +115,7 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}"
+                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
                                         </div>
                                     @endforeach
                             
@@ -140,7 +140,6 @@
 		</div>
 
      </div>
-
 
     @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB"))
     <div class="panel panel-default" style="margin:15px">
