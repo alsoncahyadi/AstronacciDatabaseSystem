@@ -68,6 +68,7 @@
 						<option>MRG</option>
 						<option>UOB</option>
 						<option>CAT</option>
+						<option>A-Shop</option>
 					</select>
 				</div>
 				<br>
@@ -76,7 +77,7 @@
 					@foreach ($aclub as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales Name"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -88,7 +89,7 @@
 					@foreach ($mrg as $atr)
 					<div class="form-group">
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales Name"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -101,7 +102,7 @@
 					@foreach ($uob as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales Name"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -112,6 +113,19 @@
 				<div id="cat" style="display: none;">
 					<input type="hidden" name="cat" value="1">
 					@foreach ($cat as $atr)
+					<div class="form-group">				
+						<label>{{$atr}}</label>
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
+						@else
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@endif
+					</div>
+					@endforeach
+				</div>
+				<div id="ashop" style="display: none;">
+					<input type="hidden" name="cat" value="1">
+					@foreach ($ashop as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
 						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
@@ -182,6 +196,7 @@
 		document.getElementById("mrg").style.display = "none";
 		document.getElementById("uob").style.display = "none";
 		document.getElementById("cat").style.display = "none";
+		document.getElementById("ashop").style.display = "none";
 		document.getElementById("flag").value = '-';	
 		if ($( "#pc option:checked" ).val() == "A-Club"){
 			document.getElementById("aclub").style.display = "inline";
@@ -195,6 +210,9 @@
 		} else if ($( "#pc option:checked" ).val() == "CAT"){
 			document.getElementById("cat").style.display = "inline";
 			document.getElementById("flag").value = 'cat';
+		} else if ($( "#pc option:checked" ).val() == "A-Shop"){
+			document.getElementById("ashop").style.display = "inline";
+			document.getElementById("flag").value = 'ashop';
 		}
 	});
 	function exec(id, name) {
