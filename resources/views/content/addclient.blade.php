@@ -236,6 +236,12 @@
 		document.getElementById("next").style.display = "none";
 		document.getElementById("addcli").style.display = "none";
 		document.getElementById("addcli2").style.display = "none";
+		document.getElementById("aclub").style.display = "none";
+		document.getElementById("mrg").style.display = "none";
+		document.getElementById("uob").style.display = "none";
+		document.getElementById("cat").style.display = "none";
+		document.getElementById("ashop").style.display = "none";
+		document.getElementById("flag").value = '-';
 	}
 </script>
 

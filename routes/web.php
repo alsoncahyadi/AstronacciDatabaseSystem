@@ -24,7 +24,7 @@ Route::get('/', 'Auth\LoginController@index')->middleware('auth');
 
 Auth::routes();
 
-Route::get('/mockup', [
+Route::get('/newMember', [
     'uses' => 'MockupController@index', 
     'as' => 'mockup'
     ]);
@@ -57,6 +57,7 @@ Route::get('/register',
 	}
 	);
 */
+
 Route::get('/home', [
 	'uses' => 'HomeController@index', 
 	'as' => 'home',
