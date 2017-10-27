@@ -180,15 +180,11 @@ class AClubController extends Controller
         $heads = $ins;
 
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers();
+        $aclub_members = $aclub_master->aclubMembers()->get();
 
         $headsreg = ["User ID",
-                    "Payment Date", 
-                    "Sales",
-                    "Kode",
-                    "Nominal",
-                    "Start Date",
-                    "Keterangan"];
+                    "Sales Name",
+                    "Group"];
 
         $insreg = ["User ID",
                     "Payment Date",
@@ -198,7 +194,7 @@ class AClubController extends Controller
                     "Start Date",
                     "Keterangan"];
 
-        $attsreg = ["user_id", "payment_date", "sales_name", "kode", "nominal", "start_date", "keterangan"];
+        $attsreg = ["user_id", "sales_name", "group"];
 
 
 
