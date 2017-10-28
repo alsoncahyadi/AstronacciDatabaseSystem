@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Input;
 use App\MasterClient;
 use Excel;
 use DB;
+use App\Cat;
+use App\Mrg;
+use App\Uob;
+use App\AclubMember;
 class MockupController extends Controller
 {
     private $id;
@@ -95,13 +99,28 @@ class MockupController extends Controller
     
     public function getClientInfo(Request $request) {
         $dummy = DB::select("select * from master_clients where master_id = " . $request['id']);
+
+        //$iscat = DB::select("select * from ");
+        $iscat = count(Cat::where("master_id", $request['id'])->get());
+        if ($iscat > 0) $iscat = 1;
+
+        $ismrg = count(Mrg::where("master_id", $request['id'])->get());
+        if ($ismrg > 0) $ismrg = 1;
+
+        $isuob = count(Uob::where("master_id", $request['id'])->get());
+        if ($isuob > 0) $isuob = 1;
+
+        $isacl = count(AclubMember::where("master_id", $request['id'])->get());
+        if ($isacl > 0) $isacl = 1;
+        
         //Data untuk insert
         $ins = ["User ID", "No Telepon", "Alamat", "Kota", "Provinsi", "Email", "Tanggal Lahir", "Line ID", "Pin BB", "Facebook", "Whatsapp", "Jenis Kelamin"];
         //Nama kolom
         $colname = ["master_id", "telephone_number", "address", "city", "province", "email", "birthdate", "line_id", "bbm", "facebook", "whatsapp", "gender"];
         //Return view table dengan parameter
         return view('content/clientdetail', 
-            ['colname' => $colname, 'ins'=>$ins, 'dummy' => $dummy]
+            ['colname' => $colname, 'ins'=>$ins, 'dummy' => $dummy, 
+            'iscat' => $iscat, 'ismrg' => $ismrg, 'isuob' => $isuob, 'isacl' => $isacl]
             );
         //return $request['id'];
     }
