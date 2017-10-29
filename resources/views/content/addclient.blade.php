@@ -73,7 +73,7 @@
 				</div>
 				<br>
 				<div class="form-group">
-				<div id="aclub" style="display: none;">
+				<div id="aclub" style="display: none;">					
 					@foreach ($aclub as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
@@ -122,7 +122,8 @@
 						@endif
 					</div>
 					@endforeach
-				</div>
+				</div>	
+				<p id="hahaha" style="display: none; padding-bottom: 50px"></p>
 				<div id="ashop" style="display: none;">
 					<input type="hidden" name="cat" value="1">
 					@foreach ($ashop as $atr)
@@ -141,10 +142,11 @@
 				<input type="hidden" id="flag" name="flag" value="" />
 				<input type="hidden" id="master" name="master" value="" />
 				<input type="hidden" id="master_id" name="master_id" value="" />
-				<input type="submit" class="btn btn-default" value="Insert">
+				<input type="submit" id="insert_button" class="btn btn-default" value="Insert">
 				<span onclick="reset()"><button type="reset" class="btn btn-default">Reset Form</button></span>
 			</div>
 		</form>
+		
 	</div>
 
 <script type="text/javascript">
@@ -191,30 +193,7 @@
         	return;
         document.getElementById("dropdown").innerHTML = "";
 	});
-	$( "#pc" ).change(function() {
-		document.getElementById("aclub").style.display = "none";
-		document.getElementById("mrg").style.display = "none";
-		document.getElementById("uob").style.display = "none";
-		document.getElementById("cat").style.display = "none";
-		document.getElementById("ashop").style.display = "none";
-		document.getElementById("flag").value = '-';	
-		if ($( "#pc option:checked" ).val() == "A-Club"){
-			document.getElementById("aclub").style.display = "inline";
-			document.getElementById("flag").value = 'aclub';
-		} else if ($( "#pc option:checked" ).val() == "UOB"){
-			document.getElementById("uob").style.display = "inline";
-			document.getElementById("flag").value = 'uob';
-		} else if ($( "#pc option:checked" ).val() == "MRG"){
-			document.getElementById("mrg").style.display = "inline";
-			document.getElementById("flag").value = 'mrg';
-		} else if ($( "#pc option:checked" ).val() == "CAT"){
-			document.getElementById("cat").style.display = "inline";
-			document.getElementById("flag").value = 'cat';
-		} else if ($( "#pc option:checked" ).val() == "A-Shop"){
-			document.getElementById("ashop").style.display = "inline";
-			document.getElementById("flag").value = 'ashop';
-		}
-	});
+
 	function exec(id, name) {
 		document.getElementById("dropdown").innerHTML = "";
 		if (id != -1){  //auto fill
@@ -223,7 +202,7 @@
 			document.getElementById("input").value = name;
 			document.getElementById("master").value = '1';
 			document.getElementById("master_id").value = id;
-		} else { //add new client
+		} else { //add new client			
 			document.getElementById("tab").innerHTML = "";
 			document.getElementById("addcli").style.display = "inline";
 			document.getElementById("master").value = '0';
@@ -231,6 +210,76 @@
 		}
 		document.getElementById("next").style.display = "inline";
 		window.scrollTo(0, 0);
+
+		$( "#pc" ).val('-');
+		document.getElementById("aclub").style.display = "none";
+		document.getElementById("mrg").style.display = "none";
+		document.getElementById("uob").style.display = "none";
+		document.getElementById("cat").style.display = "none";
+		document.getElementById("ashop").style.display = "none";
+		document.getElementById("hahaha").style.display = "none";
+		document.getElementById("flag").value = '-';
+		document.getElementById("insert_button").disabled = true;
+
+		$( "#pc" ).change(function() {
+			document.getElementById("aclub").style.display = "none";
+			document.getElementById("mrg").style.display = "none";
+			document.getElementById("uob").style.display = "none";
+			document.getElementById("cat").style.display = "none";
+			document.getElementById("ashop").style.display = "none";
+			document.getElementById("hahaha").style.display = "none";
+			document.getElementById("flag").value = '-';
+			document.getElementById("insert_button").disabled = true;
+
+			document.getElementById("hahaha").innerHTML = document.getElementById("ismrg").innerHTML;
+			if ($( "#pc option:checked" ).val() == "A-Club"){		
+				if (document.getElementById("isacl").innerHTML == 1) {
+					document.getElementById("hahaha").style.display = "inline";
+					document.getElementById("hahaha").innerHTML = "This user has been registered to A-Club profit center.";
+				} else {		
+					document.getElementById("insert_button").disabled = false;
+					document.getElementById("aclub").style.display = "inline";
+					document.getElementById("flag").value = 'aclub';
+				}
+			} else if ($( "#pc option:checked" ).val() == "UOB"){
+				if (document.getElementById("isuob").innerHTML == 1) {
+					document.getElementById("hahaha").style.display = "inline";
+					document.getElementById("hahaha").innerHTML = "This user has been registered to UOB profit center.";
+				} else {
+					document.getElementById("insert_button").disabled = false;
+					document.getElementById("uob").style.display = "inline";
+					document.getElementById("flag").value = 'uob';
+				}
+			} else if ($( "#pc option:checked" ).val() == "MRG"){
+				if (document.getElementById("ismrg").innerHTML == 1) {
+					document.getElementById("hahaha").style.display = "inline";
+					document.getElementById("hahaha").innerHTML = "This user has been registered to MRG profit center.";
+				} else {
+					document.getElementById("insert_button").disabled = false;
+					document.getElementById("mrg").style.display = "inline";
+					document.getElementById("flag").value = 'mrg';
+				}
+			} else if ($( "#pc option:checked" ).val() == "CAT"){
+				if (document.getElementById("iscat").innerHTML == 1) {
+					document.getElementById("hahaha").style.display = "inline";
+					document.getElementById("hahaha").innerHTML = "This user has been registered to CAT profit center.";
+				} else {
+					document.getElementById("insert_button").disabled = false;
+					document.getElementById("cat").style.display = "inline";
+					document.getElementById("flag").value = 'cat';
+				}
+			} else if ($( "#pc option:checked" ).val() == "A-Shop"){
+				document.getElementById("insert_button").disabled = false;
+				document.getElementById("ashop").style.display = "inline";
+				document.getElementById("flag").value = 'ashop';
+			}
+			
+		});
+
+		if (id == -1) {
+			document.getElementById("insert_button").disabled = false;
+		}
+
 	}
 	function reset(){
 		document.getElementById("next").style.display = "none";

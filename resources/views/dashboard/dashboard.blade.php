@@ -25,7 +25,16 @@
                 New Member
             </div>
             <div class="panel-body">
-                <button class="btn btn-primary" href=""> Add Membership </button>
+                <a class="btn btn-primary" href="{{route('mockup')}}"> Add Membership </a>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                View Profit Center
+            </div>
+            <div class="panel-body">
+                Waiting
+                <!--BOTTLENECK-->
             </div>
         </div>
     </div>

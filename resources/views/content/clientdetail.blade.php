@@ -1,4 +1,3 @@
-
 <?php $i = 0; ?>
 <div id="addcli2">
 	@foreach ($colname as $atr)
@@ -10,4 +9,10 @@
 		<?php $i++; ?>
 	</div>
 	@endforeach
+	
+	<p id="iscat" style="display:none"><?php echo $iscat?></p>
+	<p id="ismrg" style="display:none"><?php echo $ismrg?></p>
+	<p id="isuob" style="display:none"><?php echo $isuob?></p>
+	<p id="isacl" style="display:none"><?php echo $isacl?></p>
+
 </div>
