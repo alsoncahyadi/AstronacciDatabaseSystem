@@ -24,14 +24,18 @@ Route::get('/', 'Auth\LoginController@index')->middleware('auth');
 
 Auth::routes();
 
-Route::get('/mockup', [
+Route::get('/newMember', [
     'uses' => 'MockupController@index', 
-    'as' => 'mockup'
+    'as' => 'mockup',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0'],
     ]);
 
 Route::post('/insert', [
     'uses' => 'MockupController@addClient',
-    'as' => 'insert'
+    'as' => 'insert',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0'],
     ]);
 
 Route::get('/adduser', [
@@ -46,8 +50,8 @@ Route::get('/adduser', [
 Route::get('/addclient', [
     'uses' => 'MockupController@getClientInfo',
     'as' => 'getClient',
-    //'middleware' => ['auth', 'roles'],
-    //'roles' => ['0', '1'],
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0'],
     ]);
 
 /* to be uncommented
@@ -57,6 +61,7 @@ Route::get('/register',
 	}
 	);
 */
+
 Route::get('/home', [
 	'uses' => 'HomeController@index', 
 	'as' => 'home',
