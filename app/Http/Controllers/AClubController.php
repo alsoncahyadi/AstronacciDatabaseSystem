@@ -207,6 +207,16 @@ class AClubController extends Controller
         return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            DB::select("call delete_aclub(?)", [$id]);
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
@@ -258,16 +268,6 @@ class AClubController extends Controller
     //     return redirect()->back()->withErrors($err);
 
     // }
-
-    public function deleteClient($id) {
-        //Menghapus client dengan ID tertentu
-        try {
-            DB::select("call delete_aclub(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            $err[] = $ex->getMessage();
-        }
-        return redirect("home");
-    }
 
     public function addTrans(Request $request) {
         $aclub_trans = new \App\AclubTransaction();

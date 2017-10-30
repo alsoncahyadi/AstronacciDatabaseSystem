@@ -129,6 +129,17 @@ class MRGController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $mrg = Mrg::find($id);
+            $mrg->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
@@ -155,16 +166,6 @@ class MRGController extends Controller
         }
         DB::commit();
         return redirect()->back()->withErrors($err);
-    }
-
-    public function deleteClient($id) {
-        //Menghapus client dengan ID tertentu
-        try {
-            DB::select("call delete_mrg(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            $err[] = $ex->getMessage();
-        }
-        return redirect("home");
     }
 
     public function importExcel() {

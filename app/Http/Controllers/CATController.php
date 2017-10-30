@@ -90,6 +90,17 @@ class CATController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $cat = Cat::find($id);
+            $cat->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
@@ -122,18 +133,6 @@ class CATController extends Controller
         DB::commit();
         return redirect()->back()->withErrors($err);
     }
-
-    public function deleteClient($id) {
-        //Menghapus client dengan ID tertentu
-        try {
-            DB::select("call delete_cat(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            $err[] = $ex->getMessage();
-        }
-        return redirect("home");
-    }
-
-    
 
     public function detailTrans($id){
         echo ($id);

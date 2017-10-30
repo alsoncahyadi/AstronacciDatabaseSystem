@@ -116,6 +116,17 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $uob = Uob::find($id);
+            $uob->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
@@ -168,16 +179,6 @@ class UOBController extends Controller
   //       DB::commit();
   //       return redirect()->back()->withErrors($err);
   //   }
-
-    public function deleteClient($id) {
-        //Menghapus client dengan ID tertentu
-        try {
-            DB::select("call delete_uob(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            $err[] = $ex->getMessage();
-        }
-        return redirect("home");
-    }
 
     public function importExcel() {
         $err = []; //Inisialisasi array error
