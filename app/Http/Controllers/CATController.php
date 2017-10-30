@@ -101,6 +101,7 @@ class CATController extends Controller
         $cat = CAT::where('user_id',$request->user_id)->first();
         //Inisialisasi array error
         $err = [];
+
         try {
             $cat->user_id = $request->user_id;
             $cat->nomor_induk = $request->nomor_induk;
@@ -109,7 +110,6 @@ class CATController extends Controller
 
             $cat->update();
         } catch(\Illuminate\Database\QueryException $ex){
-            dd('error');
             $err[] = $ex->getMessage();
         }
         return redirect()->back()->withErrors($err);
