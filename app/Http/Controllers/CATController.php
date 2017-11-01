@@ -74,7 +74,7 @@ class CATController extends Controller
                 'keterangan' => ''
             ]);
 
-        $cat = CAT::where('user_id',$request->user_id)->first();
+        $cat = Cat::where('user_id',$request->user_id)->first();
 
         $err =[];
 
@@ -98,7 +98,7 @@ class CATController extends Controller
                 'batch' => '',
                 'sales' => ''
             ]);
-        $cat = CAT::where('user_id',$request->user_id)->first();
+        $cat = Cat::where('user_id',$request->user_id)->first();
         //Inisialisasi array error
         $err = [];
 
