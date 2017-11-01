@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
 use App\Uob;
+use Sofa\Eloquence\Eloquence;
 
 class UOBController extends Controller
 {
@@ -23,8 +24,26 @@ class UOBController extends Controller
     public function getTable(Request $request) {
 
         //Select seluruh tabel
-        $uobs = Uob::paginate(15);
-
+        //$uobs = Uob::paginate(15);
+        //$uobs = Uob::search('"Tunnel"', false)->get();
+        $keyword = $request['q'];
+        
+        $uobs = Uob::where('sales_name', 'like', "%{$keyword}%")
+                ->orWhere('sumber_data', 'like', "%{$keyword}%")
+                ->orWhere('nomor_ktp', 'like', "%{$keyword}%")
+                ->orWhere('nomor_npwp', 'like', "%{$keyword}%")
+                ->orWhere('alamat_surat', 'like', "%{$keyword}%")
+                ->orWhere('saudara_tidak_serumah', 'like', "%{$keyword}%")
+                ->orWhere('nama_ibu_kandung', 'like', "%{$keyword}%")
+                ->orWhere('bank_pribadi', 'like', "%{$keyword}%")
+                ->orWhere('rdi_bank', 'like', "%{$keyword}%")
+                ->orWhere('nomor_rdi', 'like', "%{$keyword}%")
+                ->orWhere('status', 'like', "%{$keyword}%")
+                ->orWhere('trading_via', 'like', "%{$keyword}%")
+                ->orWhere('keterangan', 'like', "%{$keyword}%")
+                ->paginate(15);
+        
+        //dd($uobs);
         //Data untuk insert
         $ins = [];
 
