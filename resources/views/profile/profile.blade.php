@@ -92,7 +92,7 @@
 				</div>
 				<?php
 					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "user_id";
+					else if ($route == "AClub") $userid = "master_id";
 					else if ($route == "MRG") $userid = "account";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
@@ -109,6 +109,7 @@
 
                 <div id="bod2" style="display:none">
                     <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
