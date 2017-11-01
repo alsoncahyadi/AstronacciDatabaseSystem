@@ -29,8 +29,37 @@ class TransController extends Controller
     }
 
     public function getTransactions($id) {
-        $ashop_transactions = MasterClient::where('master_id', $id)->first()->TransController()->get();
+        $ashop_transactions = AshopTransaction::where('master_id', $id)->first();
         dd($ashop_transactions);
+    }
+
+    public function ashopDetail($id) {
+        $master = MasterClient::find($id);
+        $ashop = AshopTransaction::where('master_id', $id)->first();
+
+        //judul + sql
+        $ins= ["User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Batch" => "batch",
+                "Sales" => "sales_name",
+                ];
+        $heads = $ins;
+
+        //form transaction
+        $insreg = ["Transaction ID",
+                    "Product Type",
+                    "Product Name",
+                    "Nominal"
+                    ];
+
+        //transaction
+        $headsreg = [ "Transaction ID" => 'transation_id',
+                        "Product Type" => "product_type",
+                        "Product Name" => 'product_name',
+                        "Nominal" => 'nominal'
+                    ];
+
+        return view('profile/profile', ['route'=>'AShop', 'client'=>$ashop, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg]);
     }
 
     public function addClient(Request $request) {

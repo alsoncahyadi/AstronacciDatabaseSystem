@@ -160,12 +160,12 @@
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111">
                       <ul class="nav">
                           <li>
-                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard <span class="fa arrow"></span></a>
+                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Client Member <span class="fa arrow"></span></a>
                          </li>
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>
-                        <a href="dashboard" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                        <a href="{{ url('product') }}" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
                     </li><!-- 
                     <ul class="nav nav-second-level">
 

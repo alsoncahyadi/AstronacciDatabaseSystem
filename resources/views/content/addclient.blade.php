@@ -68,7 +68,6 @@
 						<option>MRG</option>
 						<option>UOB</option>
 						<option>CAT</option>
-						<option>A-Shop</option>
 					</select>
 				</div>
 				<br>
@@ -124,19 +123,6 @@
 					@endforeach
 				</div>	
 				<p id="hahaha" style="display: none; padding-bottom: 50px"></p>
-				<div id="ashop" style="display: none;">
-					<input type="hidden" name="cat" value="1">
-					@foreach ($ashop as $atr)
-					<div class="form-group">				
-						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
-						@else
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-						@endif
-					</div>
-					@endforeach
-				</div>
 				<br>
 				<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
 				<input type="hidden" id="flag" name="flag" value="" />
@@ -268,10 +254,6 @@
 					document.getElementById("cat").style.display = "inline";
 					document.getElementById("flag").value = 'cat';
 				}
-			} else if ($( "#pc option:checked" ).val() == "A-Shop"){
-				document.getElementById("insert_button").disabled = false;
-				document.getElementById("ashop").style.display = "inline";
-				document.getElementById("flag").value = 'ashop';
 			}
 			
 		});

@@ -93,8 +93,6 @@ class MockupController extends Controller
             $this->addMRG($request);
         } else if ($request->flag == 'aclub') {
             $this->addAclub($request);
-        } else if ($request->flag == 'ashop') {
-            $this->addAShop($request);
         }
     }
 
@@ -374,31 +372,6 @@ class MockupController extends Controller
         $aclubTrans->yellow_zone = $request->yellow_zone;
 
         $aclubTrans->save();
-        return redirect()->back();
-    }
-
-    public function addAShop(Request $request) {
-        $this->validate($request, [
-            'product_type' => '',
-            'product_name' => '',
-            'nominal' => ''
-        ]);
-
-        $errors = [];
-
-        $ashop = new \App\AshopTransaction;
-
-        if ($request->master == 0) {
-            $ashop->master_id = $this->id;
-        } else {
-            $ashop->master_id = $request->master_id;
-        }
-        $ashop->product_type = $request->product_type;
-        $ashop->product_name = $request->product_name;
-        $ashop->nominal = $request->nominal;
-
-        $ashop->save();
-
         return redirect()->back();
     }
 }
