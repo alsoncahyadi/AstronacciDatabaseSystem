@@ -168,7 +168,7 @@ class AClubController extends Controller
 
     public function clientDetail($id) {
         // detail master dengan master_id = $id
-        $aclub_information = AclubInformation::where('master_id', $id)->first();
+        $aclub_information = AclubInformation::find($id);
 
         // aclub_master adalah aclub_master nya
         $aclub_master = $aclub_information->master;
@@ -210,8 +210,9 @@ class AClubController extends Controller
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
-            DB::select("call delete_aclub(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
+            $aclub = AclubInformation::find($id);
+            $aclub->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
         return redirect("home");

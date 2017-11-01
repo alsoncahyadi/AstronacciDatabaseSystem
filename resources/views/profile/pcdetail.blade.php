@@ -71,6 +71,7 @@
                     else if ($route == "assigngreen") $userid = "green_assign_id";
                     else if ($route == "assigngrow") $userid = "grow_assign_id";
                     else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "detail") $userid = "master_id";
                 ?>
                 
     <div class="panel panel-default" style="margin:15px">
@@ -99,7 +100,6 @@
 			</div>
 			
 		</div>
-        {{$client->$userid}}
         @if($aclub)
             <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $aclub->master_id])}}" target="_blank"> AClub </a>
         @endif

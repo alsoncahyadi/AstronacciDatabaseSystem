@@ -49,7 +49,18 @@ class DetailController extends Controller
         $heads = $ins;
         $insreg = ["Cuki"];
         //dd($cat);   
-		return view('profile/pcdetail', ['route'=>'CAT', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
+		return view('profile/pcdetail', ['route'=>'detail', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
+    }
+
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $master = MasterClient::find($id);
+            $master->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
     }
 
 }

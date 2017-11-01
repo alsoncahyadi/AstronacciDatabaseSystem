@@ -9,6 +9,8 @@ class MasterClient extends Model
     //
     protected $table = 'master_clients';
 
+    protected $primaryKey = 'master_id';
+
     public function mrg() {
         return $this->hasOne('App\Mrg', 'master_id', 'master_id');
     }
