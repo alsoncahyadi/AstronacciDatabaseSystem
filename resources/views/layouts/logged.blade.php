@@ -165,7 +165,7 @@
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>
-                        <a href="dashboard" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                        <a href="trans" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
                     </li><!-- 
                     <ul class="nav nav-second-level">
 

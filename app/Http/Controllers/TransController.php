@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
 use App\AshopTransaction;
+use App\MasterClient;
 
 class TransController extends Controller
 {
@@ -23,9 +24,72 @@ class TransController extends Controller
     }
 
     public function getTable() {
+        $master = MasterClient::all();
 
-        $this->getTransactions(100039);
-        return view('content/table', ['route' => 'trans', 'prods' => $prods, 'clients' => $transactions, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        $heads= ["Master ID",
+                "Redclub User ID",
+                "Name",
+                "Telephone",
+                "Email",
+                "Birthdate",
+                "Address",
+                "City",
+                "Province",
+                "Gender",
+                "Status",
+                "Keterangan",
+                "Created At",
+                "Updated At",
+                "Created By",
+                "Updated By"];
+
+        $atts = ["master_id",
+                "redclub_user_id",
+                "name",
+                "telephone_number",
+                "email",
+                "birthdate",
+                "address",
+                "city",
+                "province",
+                "gender",
+                "status",
+                "keterangan",
+                "created_at",
+                "updated_at",
+                "created_by",
+                "updated_by"];
+
+        return view('content/table', ['route' => 'trans', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
+    }
+
+    public function clientDetail($id) {
+        $master = MasterClient::find($id);
+
+        //judul + sql
+        $ins= ["Master ID" => "master_id",
+                ];
+        $heads = $ins;
+
+        $clientsreg = $master->ashopTransactions()->get();
+
+        //form transaction
+        $insreg = ["Master ID",
+                    "Product Type",
+                    "Product Name",
+                    "Nominal"
+                    ];
+
+        //transaction
+        $headsreg = [ "Master ID",
+                "Product Type",
+                "Product Name",
+                "Nominal"
+                    ];
+
+        $attsreg = ["master_id", "product_type", "product_name", "nominal"];
+
+        return view('profile/profile', ['route'=>'trans', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
     }
 
     public function getTransactions($id) {

@@ -534,16 +534,40 @@ Route::post('/product/insert', [
     'roles' => ['0'],
     ]);
 
+Route::get('/trans/{id}', [
+    'uses' => 'TransController@clientDetail',
+    'as' => 'trans.detail',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
 Route::get('/trans', [
     'uses' => 'TransController@getTable',
     'as' => 'trans',
     'middleware' => ['auth', 'ashop'],
     ]);
 
-
 Route::post('/trans/insert', [
     'uses' => 'TransController@addClient',
     'as' => 'trans.insert',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::post('/trans/insert', [
+    'uses' => 'TransController@addClient',
+    'as' => 'trans.inserttrans',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+
+Route::get('/trans/deleteclient/{id}', [
+    'uses' => 'TransController@deleteClient',
+    'as' => 'trans.deleteclient',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/trans/edit', [
+    'uses' => 'TransController@editClient',
+    'as' => 'trans.edit',
     'middleware' => ['auth', 'ashop'],
     ]);
 
