@@ -74,7 +74,7 @@ class CATController extends Controller
                 'keterangan' => ''
             ]);
 
-        $cat = CAT::where('user_id',$request->user_id)->first();
+        $cat = Cat::where('user_id',$request->user_id)->first();
 
         $err =[];
 
