@@ -273,6 +273,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $clientsreg->links() }}
             @endif
     </div>
     @endif
