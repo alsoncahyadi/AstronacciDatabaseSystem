@@ -131,13 +131,13 @@ class MRGController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
+                'user_id' => '',
                 'sumber_data' => '',
                 'join_date' => 'date'
             ]);
         //Inisialisasi array error
         $err = [];
         try {
-            dd($request);
             $mrg = Mrg::where('master_id',$request->user_id)->first();
 
             $err =[];

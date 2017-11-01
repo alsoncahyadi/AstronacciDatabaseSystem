@@ -93,7 +93,7 @@
 				<?php
 					if($route == "CAT") $userid = "user_id";
 					else if ($route == "AClub") $userid = "user_id";
-					else if ($route == "MRG") $userid = "account";
+					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
 					else if ($route == "grow") $userid = "grow_id";
@@ -109,6 +109,13 @@
 
                 <div id="bod2" style="display:none">
                     <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        @if ($route == "CAT")
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                        @elseif ($route == "AClub")
+                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @endif
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
