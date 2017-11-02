@@ -101,6 +101,7 @@
 					else if ($route == "assigngreen") $userid = "green_assign_id";
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "trans") $userid = "transaction_id";
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
@@ -141,7 +142,7 @@
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "trans"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -184,7 +185,6 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel-body">
                         <form method="post" action="{{route($route . '.inserttrans')}}">
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                             @if ($route == "CAT")
                                 <input name="user_id" type="hidden" value="{{$client->user_id}}">
                             @else
@@ -226,6 +226,8 @@
                         @elseif ($route == "AClub")
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == 'trans')
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
                         @foreach ($insreg as $atr)
