@@ -109,6 +109,13 @@
 
                 <div id="bod2" style="display:none">
                     <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        @if ($route == "CAT")
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                        @elseif ($route == "AClub")
+                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @endif
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
@@ -239,8 +246,9 @@
                         <button type="reset" class="btn btn-default">Reset Form</button>
                     </form>
                 </div>
-            <br><br>
+            <br>
             </div>
+            <br><br>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
                     <tr>
@@ -257,9 +265,8 @@
 
                         @foreach ($attsreg as $attreg)
                         
-                       
-                        <td> {{$clientreg->$attreg}} </td>
-
+                        <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                    
                         @endforeach
 
                         <!-- @if ($route == 'CAT')
@@ -269,7 +276,6 @@
                         @endif -->
                         
                     </tr>
-                    
                     @endforeach
                 </tbody>
             </table>

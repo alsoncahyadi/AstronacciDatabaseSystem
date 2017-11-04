@@ -142,6 +142,12 @@ Route::get('/member/{id}', [
     'roles' => ['0', '1', '2', '3'],
     ]);
 
+Route::post('/member/edit', [
+    'uses' => 'DetailController@editClient',
+    'as' => 'detail.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
 Route::get('/member/deleteclient/{id}', [
     'uses' => 'DetailController@deleteClient',
     'as' => 'detail.deleteclient',
@@ -334,6 +340,13 @@ Route::get('/AClub/{id}', [
     'as' => 'AClub.detail',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClub/{id}/{package}', [
+    'uses' => 'AClubController@clientDetailPackage',
+    'as' => 'AClub.package',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
     ]);
 
 Route::post('/AClub/insert', [

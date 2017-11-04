@@ -95,7 +95,7 @@ class UOBController extends Controller
                 'keterangan' => ''
             ]);
 
-        $uob = UOB::where('client_id',$request->user_id)->first();
+        $uob = Uob::where('client_id',$request->user_id)->first();
 
         $err =[];
 
@@ -116,69 +116,69 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function deleteClient($id) {
-        //Menghapus client dengan ID tertentu
-        try {
-            $uob = Uob::find($id);
-            $uob->delete();
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            $err[] = $ex->getMessage();
-        }
-        return redirect("home");
-    }
-
-    //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'all_pc_id' => 'required',
-                'client_id' => 'required',
-                'fullname' => 'required',
-                'expired_date' => 'required',
-                'email' => 'email',
-                'no_hp' => 'required',
-                'address' => 'required',
+                'client_id' => '',
+                'master_id' => '',
+                'sales_name' => '',
+                'sumber_data' => '',
+                'join_date' => '',
+                'nomor_ktp' => '',
+                'tanggal_expired_ktp' => '',
+                'nomor_npwp' => '',
+                'alamat_surat' => '',
+                'saudara_tidak_serumah' => '',
+                'nama_ibu_kandung' => '',
+                'bank_pribadi' => '',
+                'nomor_rekening_pribadi' => '',
+                'tanggal_rdi_done' => '',
+                'rdi_bank' => '',
+                'nomor_rdi' => '',
+                'tanggal_top_up' => '',
+                'nominal' => '',
+                'tanggal_trading' => '',
+                'status' => '',
+                'trading_via' => '',
+                'keterangan' => ''
             ]);
+
         //Inisialisasi array error
-        DB::beginTransaction();
         $err = [];
         try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut master client
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut UOB
-            DB::select("call edit_uob(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->client_id, $this->nullify($request->class), $this->nullify($request->nomor), $this->nullify($request->expired_date), $this->nullify($request->kategori), $this->nullify($request->bulan), $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->RDI_niaga), $this->nullify($request->RDI_BCA), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales_username)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $uob = UOB::where('client_id',$request->client_id)->first();
+
+            $err =[];
+
+            $uob->client_id = $request->client_id;
+            $uob->master_id = $request->master_id;
+            $uob->sales_name = $request->sales_name;
+            $uob->sumber_data = $request->sumber_data;
+            $uob->join_date = $request->join_date;
+            $uob->nomor_ktp = $request->nomor_ktp;
+            $uob->tanggal_expired_ktp = $request->tanggal_expired_ktp;
+            $uob->nomor_npwp = $request->nomor_npwp;
+            $uob->alamat_surat = $request->alamat_surat;
+            $uob->saudara_tidak_serumah = $request->saudara_tidak_serumah;
+            $uob->nama_ibu_kandung = $request->nama_ibu_kandung;
+            $uob->bank_pribadi = $request->bank_pribadi;
+            $uob->nomor_rekening_pribadi = $request->nomor_rekening_pribadi;
+            $uob->tanggal_rdi_done = $request->tanggal_rdi_done;
+            $uob->rdi_bank = $request->rdi_bank;
+            $uob->nomor_rdi = $request->nomor_rdi;
+            $uob->tanggal_top_up = $request->tanggal_top_up;
+            $uob->nominal_top_up = $request->nominal;
+            $uob->tanggal_trading = $request->tanggal_trading;
+            $uob->status = $request->status;
+            $uob->trading_via = $request->trading_via;
+            $uob->keterangan = $request->keterangan;
+
+            $uob->update();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
         return redirect()->back()->withErrors($err);
     }
-
-  //   public function addClient(Request $request) {
-  //       //Validasi input
-  //       $this->validate($request, [
-  //               'client' => 'required',
-  //               'nama' => 'required',
-  //               'expired' => 'required',
-  //               'email' => 'email',
-  //               'telepon' => 'required',
-  //               'alamat' => 'required',
-  //           ]);
-  //       //Inisialisasi array error
-  //       $err = [];
-  //       DB::beginTransaction();
-		// try {
-  //           //Input data ke SQL
-		// 	DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
-		// }  catch(\Illuminate\Database\QueryException $ex){ 
-  //           DB::rollback();
-  //           $err[] = $ex->getMessage();
-  //       }
-  //       DB::commit();
-  //       return redirect()->back()->withErrors($err);
-  //   }
 
     public function importExcel() {
         $err = []; //Inisialisasi array error
