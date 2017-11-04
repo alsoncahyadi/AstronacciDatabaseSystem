@@ -164,8 +164,6 @@ class AClubController extends Controller
         dd($aclub_transaction);
     }
 
-
-
     public function clientDetail($id) {
         // detail master dengan master_id = $id
         $aclub_information = AclubInformation::where('master_id', $id)->first();
@@ -180,15 +178,11 @@ class AClubController extends Controller
         $heads = $ins;
 
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers();
+        $aclub_members = $aclub_master->aclubMembers()->get();
 
         $headsreg = ["User ID",
-                    "Payment Date", 
-                    "Sales",
-                    "Kode",
-                    "Nominal",
-                    "Start Date",
-                    "Keterangan"];
+                    "Sales Name",
+                    "Group"];
 
         $insreg = ["User ID",
                     "Payment Date",
@@ -198,13 +192,54 @@ class AClubController extends Controller
                     "Start Date",
                     "Keterangan"];
 
-        $attsreg = ["user_id", "payment_date", "sales_name", "kode", "nominal", "start_date", "keterangan"];
+        $attsreg = ["user_id", "sales_name", "group"];
 
 
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
         return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+    }
+
+
+    public function clientDetailPackage($id, $package) {
+
+        $aclub_member = AclubMember::where('user_id', $package)->first();
+
+        $aclub_transaction = $aclub_member->aclubTransactions;
+
+        $heads = ["Transaction ID",
+                    "User ID",
+                    "Payment Date",
+                    "Kode",
+                    "Status",
+                    "Nominal",
+                    "Start date",
+                    "Expired date",
+                    "Masa tenggang",
+                    "Yellow Zone",
+                    "Red Zone"];
+
+        $atts = ["transaction_id",
+                    "user_id",
+                    "payment_date",
+                    "kode",
+                    "status",
+                    "nominal",
+                    "start_date",
+                    "expired_date",
+                    "masa_tenggang",
+                    "yellow_zone",
+                    "red_zone"];
+
+        $insreg = ["Payment date", 
+                    "Kode", 
+                    "Nominal",
+                    "Start Date",
+                    "Keterangan"];
+//dd($aclub_transaction);
+
+        return view('profile/aclubpackage', ['route'=>'AClub', 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_member, 'insreg'=>$insreg, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function editClient(Request $request) {
