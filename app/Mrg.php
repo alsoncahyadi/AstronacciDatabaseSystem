@@ -9,6 +9,8 @@ class Mrg extends Model
     //
     protected $table = 'mrgs';
 
+    protected $primaryKey = 'master_id';
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }

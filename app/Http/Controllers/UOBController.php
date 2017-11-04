@@ -95,7 +95,7 @@ class UOBController extends Controller
                 'keterangan' => ''
             ]);
 
-        $uob = UOB::where('client_id',$request->user_id)->first();
+        $uob = Uob::where('client_id',$request->user_id)->first();
 
         $err =[];
 
