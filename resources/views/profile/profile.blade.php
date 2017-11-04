@@ -239,8 +239,9 @@
                         <button type="reset" class="btn btn-default">Reset Form</button>
                     </form>
                 </div>
-            <br><br>
+            <br>
             </div>
+            <br><br>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
                     <tr>
@@ -257,9 +258,8 @@
 
                         @foreach ($attsreg as $attreg)
                         
-                       
-                        <td> {{$clientreg->$attreg}} </td>
-
+                        <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                    
                         @endforeach
 
                         <!-- @if ($route == 'CAT')
@@ -269,7 +269,6 @@
                         @endif -->
                         
                     </tr>
-                    
                     @endforeach
                 </tbody>
             </table>

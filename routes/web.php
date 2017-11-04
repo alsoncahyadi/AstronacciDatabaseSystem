@@ -328,6 +328,13 @@ Route::get('/AClub/{id}', [
 	'roles' => ['0', '1'],
     ]);
 
+Route::get('/AClub/{id}/{package}', [
+    'uses' => 'AClubController@clientDetailPackage',
+    'as' => 'AClub.package',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::post('/AClub/insert', [
     'uses' => 'AClubController@addClient',
     'as' => 'AClub.insert',
