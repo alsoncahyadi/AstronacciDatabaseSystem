@@ -141,6 +141,20 @@ Route::get('/member/{id}', [
     'roles' => ['0', '1', '2', '3'],
     ]);
 
+Route::post('/member/edit', [
+    'uses' => 'DetailController@editClient',
+    'as' => 'detail.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
+
+Route::get('/member/deleteclient/{id}', [
+    'uses' => 'DetailController@deleteClient',
+    'as' => 'detail.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
+
 // CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
