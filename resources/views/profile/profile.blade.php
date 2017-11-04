@@ -109,6 +109,7 @@
 
                 <div id="bod2" style="display:none">
                     <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
                         @if ($route == "CAT")
                             <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                         @elseif ($route == "AClub")

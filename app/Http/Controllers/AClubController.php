@@ -245,27 +245,23 @@ class AClubController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'all_pc_id' => 'required',
-                'user_id' => 'required',
-                'fullname' => 'required',
-                'email' => 'email',
-                'no_hp' => 'required',
-                'address' => 'required',
+                'master_id' => '',
+                'sumber_data' => '',
+                'keterangan' => ''
             ]);
-        //Inisialisasi array error
-        DB::beginTransaction();
+
         $err = [];
         try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut master client
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut AClub
-            DB::select("call edit_aclub(?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->user_id, $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_future_broker), $this->nullify($request->annual_income), $this->nullify($request->security_question), $this->nullify($request->security_answer), $this->nullify($request->status), $this->nullify($request->keterangan), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->occupation)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $aclub = AclubInformation::find($request->user_id);
+
+            $aclub->master_id = $request->master_id;
+            $aclub->sumber_data = $request->sumber_data;
+            $aclub->keterangan = $request->keterangan;
+            
+            $aclub->update();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
