@@ -67,6 +67,11 @@ Route::get('/home', [
 	'as' => 'home',
 	]);
 
+Route::get('/ashop', [
+    'uses' => 'HomeController@indexAShop', 
+    'as' => 'ashop',
+    ]);
+
 Route::get('/dashboard', [
     'uses' => 'Auth\LoginController@index',
     'as' => 'dashboard',

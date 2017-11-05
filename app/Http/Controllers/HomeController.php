@@ -23,12 +23,12 @@ class HomeController extends Controller
         return view('dashboard/dashboard', ['clients' => $clients] );
     }
 
-    public function home()
+
+    public function indexAShop()
     {
         $clients = MasterClient::select('name','email','master_id')->get();
-        return view('content/home', ['clients' => $clients] );
+        return view('dashboard/ashop', ['clients' => $clients] );
     }
-
     /**
      * Show the application dashboard.
      *
