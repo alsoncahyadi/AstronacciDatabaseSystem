@@ -60,6 +60,9 @@
 				
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                	<p>Search</p>
+             		<input id="searchkey" type="text"/>                		
+             		<button type="button" onclick="load('{{route($route)}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
 					<div style="overflow-x:scroll">
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables" style="font-size:80%;">
                         <thead>
@@ -115,7 +118,7 @@
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
 					
-					{{ $clients->links() }}
+					{{ $clients->appends(request()->query())->links() }}
 					
                     <!-- /.table-responsive -->
 					</div>

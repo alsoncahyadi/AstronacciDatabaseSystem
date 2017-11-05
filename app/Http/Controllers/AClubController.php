@@ -23,9 +23,15 @@ class AClubController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
+    public function getTable(Request $request) {
         //Select seluruh tabel
-        $aclub_info = AclubInformation::paginate(15);
+        //$aclub_info = AclubInformation::paginate(15);
+
+        $keyword = $request['q'];
+
+        $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
+                ->orWhere('keterangan', 'like', "%{$keyword}%")
+                ->paginate(15);
 
         // $this->getAClubMember(100003);
 

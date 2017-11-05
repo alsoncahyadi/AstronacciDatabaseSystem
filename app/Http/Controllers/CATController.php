@@ -20,8 +20,17 @@ class CATController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
-        $cats = Cat::paginate(15);
+    public function getTable(Request $request) {
+        //$cats = Cat::paginate(15);
+
+        $keyword = $request['q'];
+
+        $cats = Cat::where('batch', 'like', "%{$keyword}%")
+                ->orWhere('sales_name', 'like', "%{$keyword}%")
+                ->orWhere('sumber_data', 'like', "%{$keyword}%")
+                ->orWhere('status', 'like', "%{$keyword}%")
+                ->orWhere('keterangan', 'like', "%{$keyword}%")
+                ->paginate(15);
 
         //judul kolom
         $heads = ["User Id", "No Induk", "Master Id", "Batch", "Sales", "Sumber Data", "Tanggal DP", "Nominal DP", "Tanggal Payment", "Nominal Payment", "Opening Class", "End Class", "Tanggal Ujian", "Status", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"];
