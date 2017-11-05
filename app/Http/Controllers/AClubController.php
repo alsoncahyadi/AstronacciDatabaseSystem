@@ -180,7 +180,7 @@ class AClubController extends Controller
         $heads = $ins;
 
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers();
+        $aclub_members = $aclub_master->aclubMembers()->paginate(1);
 
         $headsreg = ["User ID",
                     "Payment Date", 
