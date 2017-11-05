@@ -81,10 +81,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($clientsreg as $clientreg)
+                    @foreach ($trans as $trans)
                     <tr class="gradeA">
                         @foreach ($atts as $attreg)
-                        <td>x</td>
+                        <td> {{$trans->$attreg}}</td>
                         @endforeach
                     </tr>
                     @endforeach
