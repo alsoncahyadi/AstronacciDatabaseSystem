@@ -48,25 +48,17 @@ class UOBController extends Controller
                 "Alamat Surat" => "alamat_surat",
                 "Saudara Tidak Serumah" => "saudara_tidak_serumah",
                 "Nama Ibu Kandung" => "nama_ibu_kandung",
-                "Bank Pribadi" => "bank_pribadi",
-                "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
-                "Tanggal RDI Done" => "tanggal_rdi_done",
-                "RDI Bank" => "rdi_bank",
-                "Nomor RDI" => "nomor_rdi",
-                "Tanggal Top-up" => "tanggal_top_up",
-                "Nominal" => "nominal_top_up",
-                "Tanggal Trading" => "tanggal_trading",
-                "Status" => "status",
-                "Trading via" => "trading_via",
-                "Keterangan" => "keterangan"];
+            ];
 
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
+        $insreg = ["Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
 
         //judul + sql transaction
-        $headsreg = [  "Tanggal RDI Done" => 'tanggal_rdi_done',
+        $headsreg = [  "Bank Pribadi" => "bank_pribadi",
+                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                        "Tanggal RDI Done" => 'tanggal_rdi_done',
                         "RDI Bank" => "rdi_bank",
                         "Nomor RDI" => 'nomor_rdi',
                         "Tanggal Top Up" => 'tanggal_top_up',
@@ -74,7 +66,7 @@ class UOBController extends Controller
                         "Tanggal Trading" => 'tanggal_trading',
                         "Status" => 'status',
                         "Trading Via" => 'trading_via',
-                        "Keterangan" => 'keterangan'
+                        "Keterangan" => 'keterangan',
                     ];
 
         return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads' => $heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg]);

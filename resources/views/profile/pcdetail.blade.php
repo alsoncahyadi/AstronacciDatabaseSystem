@@ -129,7 +129,6 @@
             </div> 
 			
 		</div>
-        {{$client->$userid}}
         @if($aclub)
             <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $aclub->master_id])}}" target="_blank"> AClub </a>
         @endif

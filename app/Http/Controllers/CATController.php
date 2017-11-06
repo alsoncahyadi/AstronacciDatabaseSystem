@@ -53,7 +53,11 @@ class CATController extends Controller
                     ];
 
         //transaction
-        $headsreg = [ "Payment Date" => 'payment_date',
+        $headsreg = [   "Nomor Induk" => 'nomor_induk',
+                        "DP Date" => 'DP_date',
+                        "DP Nominal" => 'DP_nominal',
+                        "Payment Date" => 'payment_date',
+                        "Payment Nominal" => 'payment_nominal',
                         "Tanggal Opening Class" => "tanggal_opening_class",
                         "Tanggal End Class" => 'tanggal_end_class',
                         "Tanggal Ujian" => 'tanggal_ujian',

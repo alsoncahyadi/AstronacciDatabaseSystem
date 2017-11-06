@@ -21,7 +21,7 @@
 		<form method="post" action="{{route('insert')}}">
 			<div class="form-group" id="ads_nama">
 				<label>Nama</label>
-				<input id="input" class="form-control" type="text" autocomplete="off">
+				<input id="input" class="form-control" type="text" autocomplete="off" name="nama">
 				<ul class="list-group" style="position:absolute;">
 				    <div id="dropdown"></div>
 				</ul>
@@ -77,7 +77,7 @@
 					@foreach ($aclub as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales Name"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -89,7 +89,7 @@
 					@foreach ($mrg as $atr)
 					<div class="form-group">
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales Name"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -102,7 +102,7 @@
 					@foreach ($uob as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales Name"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -115,7 +115,7 @@
 					@foreach ($cat as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -124,19 +124,6 @@
 					@endforeach
 				</div>	
 				<p id="hahaha" style="display: none; padding-bottom: 50px"></p>
-				<div id="ashop" style="display: none;">
-					<input type="hidden" name="cat" value="1">
-					@foreach ($ashop as $atr)
-					<div class="form-group">				
-						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID"))
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
-						@else
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-						@endif
-					</div>
-					@endforeach
-				</div>
 				<br>
 				<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
 				<input type="hidden" id="flag" name="flag" value="" />
