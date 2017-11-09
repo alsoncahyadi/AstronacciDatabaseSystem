@@ -44,23 +44,27 @@ class CATController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Payment Date",
-                    "Payment Nominal",
-                    "Tanggal End Class",
-                    "Tanggal Ujian",
-                    "Status",
-                    "Keterangan"
+        $insreg = [ "Nomer Induk" => 'nomor_induk',
+                    "DP Date" => 'DP_date',
+                    "DP Nominal" => 'DP_nominal',
+                    "Payment Date" => 'payment_date',
+                    "Payment Nominal" => 'payment_nominal',
+                    "Opening Class" => "tanggal_opening_class",
+                    "End Class" => 'tanggal_end_class',
+                    "Ujian" => 'tanggal_ujian',
+                    "Status" => 'status',
+                    "Keterangan" => 'keterangan'
                     ];
 
         //transaction
-        $headsreg = [   "Nomor Induk" => 'nomor_induk',
+        $headsreg = [   "Nomer Induk" => 'nomor_induk',
                         "DP Date" => 'DP_date',
                         "DP Nominal" => 'DP_nominal',
                         "Payment Date" => 'payment_date',
                         "Payment Nominal" => 'payment_nominal',
-                        "Tanggal Opening Class" => "tanggal_opening_class",
-                        "Tanggal End Class" => 'tanggal_end_class',
-                        "Tanggal Ujian" => 'tanggal_ujian',
+                        "Opening Class" => "tanggal_opening_class",
+                        "End Class" => 'tanggal_end_class',
+                        "Ujian" => 'tanggal_ujian',
                         "Status" => 'status',
                         "Keterangan" => 'keterangan'
                     ];
@@ -82,10 +86,14 @@ class CATController extends Controller
 
         $err =[];
 
+        $cat->nomor_induk = $request->nomer_induk;
+        $cat->DP_date = $request->dp_date;
+        $cat->DP_nominal = $request->dp_nominal;
         $cat->payment_date = $request->payment_date;
-        $cat->payment_nominal = $request->nominal;
-        $cat->tanggal_end_class = $request->tanggal_end_class;
-        $cat->tanggal_ujian = $request->tanggal_ujian;
+        $cat->payment_nominal = $request->payment_nominal;
+        $cat->tanggal_opening_class = $request->opening_class;
+        $cat->tanggal_end_class = $request->end_class;
+        $cat->tanggal_ujian = $request->ujian;
         $cat->status = $request->status;
         $cat->keterangan = $request->keterangan;
 
