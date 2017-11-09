@@ -20,7 +20,7 @@ class MasterClientTableSeeder extends Seeder
         $magic_seed->master_id = 999999;
         $magic_seed->redclub_user_id = 999999;
         $magic_seed->redclub_password = 'password';
-        $magic_seed->name = 'SUPER_SEED';
+        $magic_seed->name = 'MAGIC_SEED';
         $magic_seed->telephone_number = 999999;
         $magic_seed->email = 'super@seed.com';
         $magic_seed->birthdate = new DateTime('1970-02-01');
