@@ -11,15 +11,30 @@ class MasterClientTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-        // $master = new \App\MasterClient;
-        // $master->redclub_user_id = '1';
-        // $master->redclub_password = '12345';
-        // $master->name = 'Jovian';
-        // $master->email = 'christiantojovian@gmail.com';
-        // $master->save();
-
+        $this->makeMagicSeedMasterClient();
 	    factory(App\MasterClient::class, 50)->create();
 	}
+
+    public function makeMagicSeedMasterClient() {
+        $magic_seed = new App\MasterClient;
+        $magic_seed->master_id = 999999;
+        $magic_seed->redclub_user_id = 999999;
+        $magic_seed->redclub_password = 'password';
+        $magic_seed->name = 'SUPER_SEED';
+        $magic_seed->telephone_number = 999999;
+        $magic_seed->email = 'super@seed.com';
+        $magic_seed->birthdate = new DateTime('1970-02-01');
+        $magic_seed->address = 'address999';
+        $magic_seed->city = 'city999';
+        $magic_seed->province = 'province999';
+        $magic_seed->gender = 'gender999';
+        $magic_seed->line_id = 'line_id999';
+        $magic_seed->bbm = 'bbm999';
+        $magic_seed->whatsapp = 'whatsapp999';
+        $magic_seed->facebook = 'facebook999';
+        $magic_seed->created_by = 999;
+        $magic_seed->updated_by = 999;
+        $magic_seed->save();         
+    }
 
 }

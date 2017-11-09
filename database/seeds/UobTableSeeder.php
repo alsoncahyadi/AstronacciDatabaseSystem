@@ -12,6 +12,6 @@ class UobTableSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\Uob::class, 1000)->create();
+        factory(App\Uob::class, 100)->create();
     }
 }
