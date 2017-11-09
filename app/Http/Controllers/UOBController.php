@@ -37,15 +37,15 @@ class UOBController extends Controller
 
         //judul + sql
         $ins= [
-                "Client ID" => "client_id",
+                "Kode Client" => "client_id",
                 "Master ID" => "master_id",
-                "Sales Name" => "sales_name",
+                "Sales" => "sales_name",
                 "Sumber Data" => "sumber_data",
-                "Join Date" => "join_date",
+                "Tanggal Join" => "join_date",
                 "Nomor KTP" => "nomor_ktp",
-                "Tanggal Expired KTP" => "tanggal_expired_ktp",
+                "Expired KTP" => "tanggal_expired_ktp",
                 "Nomor NPWP" => "nomor_npwp",
-                "Alamat Surat" => "alamat_surat",
+                "Alamat Surat Menyurat" => "alamat_surat",
                 "Saudara Tidak Serumah" => "saudara_tidak_serumah",
                 "Nama Ibu Kandung" => "nama_ibu_kandung",
             ];
@@ -53,7 +53,17 @@ class UOBController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan"];
+        $insreg = ["Bank Pribadi" => "bank_pribadi",
+                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                        "Tanggal RDI Done" => 'tanggal_rdi_done',
+                        "RDI Bank" => "rdi_bank",
+                        "Nomor RDI" => 'nomor_rdi',
+                        "Tanggal Top Up" => 'tanggal_top_up',
+                        "Nominal Top Up" => 'nominal_top_up',
+                        "Tanggal Trading" => 'tanggal_trading',
+                        "Status" => 'status',
+                        "Trading Via" => 'trading_via',
+                        "Keterangan" => 'keterangan'];
 
         //judul + sql transaction
         $headsreg = [  "Bank Pribadi" => "bank_pribadi",
@@ -111,28 +121,17 @@ class UOBController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'client_id' => '',
+                'kode_client' => '',
                 'master_id' => '',
-                'sales_name' => '',
+                'sales' => '',
                 'sumber_data' => '',
-                'join_date' => '',
+                'tanggal_join' => '',
                 'nomor_ktp' => '',
-                'tanggal_expired_ktp' => '',
+                'expired_ktp' => '',
                 'nomor_npwp' => '',
-                'alamat_surat' => '',
+                'alamat_surat_menyurat' => '',
                 'saudara_tidak_serumah' => '',
                 'nama_ibu_kandung' => '',
-                'bank_pribadi' => '',
-                'nomor_rekening_pribadi' => '',
-                'tanggal_rdi_done' => '',
-                'rdi_bank' => '',
-                'nomor_rdi' => '',
-                'tanggal_top_up' => '',
-                'nominal' => '',
-                'tanggal_trading' => '',
-                'status' => '',
-                'trading_via' => '',
-                'keterangan' => ''
             ]);
 
         //Inisialisasi array error
@@ -153,17 +152,6 @@ class UOBController extends Controller
             $uob->alamat_surat = $request->alamat_surat;
             $uob->saudara_tidak_serumah = $request->saudara_tidak_serumah;
             $uob->nama_ibu_kandung = $request->nama_ibu_kandung;
-            $uob->bank_pribadi = $request->bank_pribadi;
-            $uob->nomor_rekening_pribadi = $request->nomor_rekening_pribadi;
-            $uob->tanggal_rdi_done = $request->tanggal_rdi_done;
-            $uob->rdi_bank = $request->rdi_bank;
-            $uob->nomor_rdi = $request->nomor_rdi;
-            $uob->tanggal_top_up = $request->tanggal_top_up;
-            $uob->nominal_top_up = $request->nominal;
-            $uob->tanggal_trading = $request->tanggal_trading;
-            $uob->status = $request->status;
-            $uob->trading_via = $request->trading_via;
-            $uob->keterangan = $request->keterangan;
 
             $uob->update();
         } catch(\Illuminate\Database\QueryException $ex){
