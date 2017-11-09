@@ -266,8 +266,11 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        
-                        <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @if (route != 'AShop')
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @else
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @endif
                     
                         @endforeach
 
