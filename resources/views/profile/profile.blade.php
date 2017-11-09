@@ -104,6 +104,8 @@
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+
+                <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
                 
             </div>
 
