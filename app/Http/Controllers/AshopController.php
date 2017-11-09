@@ -9,7 +9,7 @@ use DB;
 use App\AshopTransaction;
 use App\MasterClient;
 
-class TransController extends Controller
+class AshopController extends Controller
 {
     //
     private function nullify($string)
@@ -60,7 +60,7 @@ class TransController extends Controller
                 "created_by",
                 "updated_by"];
 
-        return view('content/table', ['route' => 'trans', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -74,22 +74,20 @@ class TransController extends Controller
         $clientsreg = $master->ashopTransactions()->get();
 
         //form transaction
-        $insreg = ["Master ID",
-                    "Product Type",
+        $insreg = [ "Product Type",
                     "Product Name",
                     "Nominal"
                     ];
 
         //transaction
-        $headsreg = [ "Master ID",
-                "Product Type",
-                "Product Name",
-                "Nominal"
+        $headsreg = [ "Product Type",
+                    "Product Name",
+                    "Nominal"
                     ];
 
-        $attsreg = ["master_id", "product_type", "product_name", "nominal"];
+        $attsreg = ["product_type", "product_name", "nominal"];
 
-        return view('profile/profile', ['route'=>'trans', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+        return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
     }
 
     public function getTransactions($id) {

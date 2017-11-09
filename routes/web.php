@@ -534,40 +534,40 @@ Route::post('/product/insert', [
     'roles' => ['0'],
     ]);
 
-Route::get('/trans/{id}', [
-    'uses' => 'TransController@clientDetail',
-    'as' => 'trans.detail',
+Route::get('/AShop/{id}', [
+    'uses' => 'AshopController@clientDetail',
+    'as' => 'AShop.detail',
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/trans', [
-    'uses' => 'TransController@getTable',
-    'as' => 'trans',
+Route::get('/AShop', [
+    'uses' => 'AshopController@getTable',
+    'as' => 'ashop',
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::post('/trans/insert', [
-    'uses' => 'TransController@addClient',
-    'as' => 'trans.insert',
+Route::post('/AShop/insert', [
+    'uses' => 'AshopController@addClient',
+    'as' => 'AShop.insert',
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::post('/trans/insert', [
-    'uses' => 'TransController@addClient',
-    'as' => 'trans.inserttrans',
+Route::post('/AShop/insert', [
+    'uses' => 'AshopController@addClient',
+    'as' => 'AShop.inserttrans',
     'middleware' => ['auth', 'ashop'],
     ]);
 
 
-Route::get('/trans/deleteclient/{id}', [
-    'uses' => 'TransController@deleteClient',
-    'as' => 'trans.deleteclient',
+Route::get('/AShop/deleteclient/{id}', [
+    'uses' => 'AshopController@deleteClient',
+    'as' => 'AShop.deleteclient',
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/trans/edit', [
-    'uses' => 'TransController@editClient',
-    'as' => 'trans.edit',
+Route::get('/AShop/edit', [
+    'uses' => 'AshopController@editClient',
+    'as' => 'AShop.edit',
     'middleware' => ['auth', 'ashop'],
     ]);
 
