@@ -573,8 +573,8 @@ Route::post('/AShop/insert', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::post('/AShop/insert', [
-    'uses' => 'AshopController@addClient',
+Route::post('/AShop/inserttrans', [
+    'uses' => 'AshopController@addTrans',
     'as' => 'AShop.inserttrans',
     'middleware' => ['auth', 'ashop'],
     ]);

@@ -75,19 +75,40 @@ class AshopController extends Controller
 
         //form transaction
         $insreg = [ "Product Type",
-                    "Product Name",
+                    "Nama Product",
                     "Nominal"
                     ];
 
         //transaction
         $headsreg = [ "Product Type",
-                    "Product Name",
+                    "Nama Product",
                     "Nominal"
                     ];
 
         $attsreg = ["product_type", "product_name", "nominal"];
 
         return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+    }
+
+    public function addTrans(Request $request) {
+        $this->validate($request, [
+                'product_type' => '',
+                'nama_product' => '',
+                'nominal' => ''
+            ]);
+
+        $ashop = new \App\AshopTransaction();
+
+        $err = [];
+
+        $ashop->master_id = $request->user_id;
+        $ashop->product_type = $request->product_type;
+        $ashop->product_name = $request->nama_product;
+        $ashop->nominal = $request->nominal;
+
+        $ashop->save();
+        
+        return redirect()->back()->withErrors($err);
     }
 
     public function getTransactions($id) {
