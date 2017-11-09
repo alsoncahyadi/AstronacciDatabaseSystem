@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\GreenProspectClient;
+use App\GreenProspectProgress;
 use DB;
 
 class GreenController extends Controller
@@ -20,62 +22,60 @@ class GreenController extends Controller
     }
 
     public function getTable() {
-        //Select seluruh tabel
-        $greens = DB::select("SELECT * FROM green");
-		
-        //Daftar username sales
-		$salesusers = DB::select("SELECT sales_username FROM sales");
+        $clients = GreenProspectClient::paginate(15);
 
-        //Data untuk insert
-        $ins = ["Nama", "No HP", "Keterangan Perintah", "Sumber", "Progress", "Sales", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB"];
+        $heads = ["Green ID",
+                    "Name",
+                    "Date",
+                    "Phone",
+                    "Email",
+                    "Interest",
+                    "Pemberi",
+                    "Sumber Data",
+                    "Keterangan Perintah"];
 
-        //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Green ID", "Nama", "No HP", "Keterangan Perintah", "Sumber", "Sales", "Progress", "AClub Stock", "AClub Future", "CAT", "MRG", "UOB", "Red Club", "Share To AClub", "Share To CAT", "Share to MRG", "Share to UOB", "Tanggal Ditambahkan"];
 
-        //Nama attribute pada sql
-        $atts = ["green_id", "fullname", "no_hp", "keterangan_perintah", "sumber", "sales_username", "progress", "is_aclub_stock", "is_aclub_future", "is_cat", "is_mrg_premiere", "is_UOB", "is_red_club", "share_to_aclub", "share_to_cat", "share_to_mrg", "share_to_uob", "add_time"];
+        $atts = ["green_id",
+                    "name",
+                    "date",
+                    "phone",
+                    "email",
+                    "interest",
+                    "pemberi",
+                    "sumber_data",
+                    "keterangan_perintah"];
 
-        //Mengganti is_PC dari boolean menjadi yes atau no, mengganti null menjadi '-'
-        foreach ($greens as $green) {
-            $green->is_UOB = $green->is_UOB ? "Yes" : "No";
-            $green->is_cat = $green->is_cat ? "Yes" : "No";
-            $green->is_mrg_premiere = $green->is_mrg_premiere ? "Yes" : "No";
-            $green->is_aclub_stock = $green->is_aclub_stock ? "Yes" : "No";
-            $green->is_aclub_future = $green->is_aclub_future ? "Yes" : "No";
-            $green->is_red_club = $green->is_red_club ? "Yes" : "No";
-            $green->share_to_aclub = $green->share_to_aclub ? "Yes" : "No";
-            $green->share_to_cat = $green->share_to_cat ? "Yes" : "No";
-            $green->share_to_mrg = $green->share_to_mrg ? "Yes" : "No";
-            $green->share_to_uob = $green->share_to_uob ? "Yes" : "No";
-
-            foreach ($atts as $att) {
-                if (!$green->$att) $green->$att = "-";
-            }
-        }
-        //Return view table dengan parameter
-        return view('content/table', ['route' => 'green', 'clients' => $greens, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $green = DB::select("SELECT * FROM green WHERE green_id = ?", [$id]);
-        $green = $green[0];
-        $salesusers = DB::select("SELECT sales_username FROM sales");
-        //Mengganti is_PC dan share_to dari boolean menjadi yes atau no
-        $green->is_UOB = $green->is_UOB ? "Yes" : "No";
-        $green->is_cat = $green->is_cat ? "Yes" : "No";
-        $green->is_mrg_premiere = $green->is_mrg_premiere ? "Yes" : "No";
-        $green->is_aclub_stock = $green->is_aclub_stock ? "Yes" : "No";
-        $green->is_aclub_future = $green->is_aclub_future ? "Yes" : "No";
-        $green->is_red_club = $green->is_red_club ? "Yes" : "No";
-        $green->share_to_aclub = $green->share_to_aclub ? "Yes" : "No";
-        $green->share_to_cat = $green->share_to_cat ? "Yes" : "No";
-        $green->share_to_mrg = $green->share_to_mrg ? "Yes" : "No";
-        $green->share_to_uob = $green->share_to_uob ? "Yes" : "No";
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["Green ID" => "green_id", "Nama" => "fullname", "No HP" => "no_hp", "Keterangan Perintah" =>"keterangan_perintah", "Sumber" => "sumber", "Sales" => "sales_username", "Progress" => "progress", "AClub Stock" => "is_aclub_stock", "AClub Future" => "is_aclub_future", "CAT" => "is_cat", "MRG" => "is_mrg_premiere", "UOB" => "is_UOB", "Red Club" => "is_red_club", "Share To AClub" => "share_to_aclub", "Share To CAT" => "share_to_cat", "Share to MRG" => "share_to_mrg", "Share to UOB" => "share_to_uob", "Tanggal Ditambahkan" => "add_time"];
+        $green = GreenProspectClient::where('green_id', $id)->first();
+
+        $ins= ["Green ID" => "green_id",
+                "Date" => "date",
+                "Name" => "name",
+                "Phone" => "phone",
+                "Email" => "email",
+                "Interest" => "interest",
+                "Pemberi" => "pemberi",
+                "Sumber Data" => "sumber_data",
+                "Keterangan Perintah" => "keterangan_perintah"];
+
         $heads = $ins;
-        return view('profile/profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+
+        $clientsreg = $green->progresses()->get();
+
+        // form progress
+        $insreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
+        
+        // kolom account
+        $headsreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
+
+        //attribute sql account
+        $attsreg = ["date", "sales_name", "status", "nama_product", "nominal", "keterangan"];
+
+        return view('profile/profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
     public function editClient(Request $request) {
