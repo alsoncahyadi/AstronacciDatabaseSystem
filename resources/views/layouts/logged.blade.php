@@ -165,20 +165,8 @@
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>
-                        <a href="dashboard" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
-                    </li><!-- 
-                    <ul class="nav nav-second-level">
-
-                        @if(Route::currentRouteName() == 'home')
-                        <li>
-                            <a onclick="load('{{route('product')}}')" href="#" style="color:white;">Product</a>
-                        </li>
-
-                        <li>
-                            <a onclick="load('{{route('trans')}}')" href="#" style="color:white;">Transaction</a>
-                        </li>
-                        @endif
-                    </ul> -->
+                        <a href="AShop" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                    </li>
                     @endif
 
                     <li id="t3">
