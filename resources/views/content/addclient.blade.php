@@ -68,7 +68,6 @@
 						<option>MRG</option>
 						<option>UOB</option>
 						<option>CAT</option>
-						<option>A-Shop</option>
 					</select>
 				</div>
 				<br>
@@ -138,19 +137,19 @@
 
 <script type="text/javascript">
 	var fullnames = [
-		@foreach ($clients as $client)
-			'{{$client->name}}', 
-		@endforeach
+	@foreach ($clients as $client)
+	'{{$client->name}}', 
+	@endforeach
 	]
 	var emails = [
-		@foreach ($clients as $client)
-			'{{$client->email}}', 
-		@endforeach
+	@foreach ($clients as $client)
+	'{{$client->email}}', 
+	@endforeach
 	]
 	var ids = [
-		@foreach ($clients as $client)
-			'{{$client->master_id}}', 
-		@endforeach
+	@foreach ($clients as $client)
+	'{{$client->master_id}}', 
+	@endforeach
 	]
 	$('#input').on( 'input', function() {
 		var inputString = $('#input').val(); 	
@@ -161,10 +160,10 @@
 			var arrayLength = fullnames.length;
 			for (var i = 0; i < arrayLength; i++) {
 				if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
-				    joinName += ' <li class="list-group-item" onclick="exec(' + ids[i] + ', \'' + fullnames[i] + '\')" style="cursor:pointer;">' 
-				    			+ fullnames[i] + '<br><p style="font-style:italic; color:gray">'
-				    			+ emails[i] + '</p></li>';
-				    listlen++;
+					joinName += ' <li class="list-group-item" onclick="exec(' + ids[i] + ', \'' + fullnames[i] + '\')" style="cursor:pointer;">' 
+					+ fullnames[i] + '<br><p style="font-style:italic; color:gray">'
+					+ emails[i] + '</p></li>';
+					listlen++;
 				}
 				if (listlen > 5){
 					break;
@@ -173,12 +172,12 @@
 			console.log(joinName);
 		}
 		document.getElementById("dropdown").innerHTML = joinName;
- 	});
+	});
 	
 	$('body').click(function(evt){    
-       	if(evt.target.id == "input")
-        	return;
-        document.getElementById("dropdown").innerHTML = "";
+		if(evt.target.id == "input")
+			return;
+		document.getElementById("dropdown").innerHTML = "";
 	});
 
 	function exec(id, name) {
@@ -203,53 +202,81 @@
 		document.getElementById("mrg").style.display = "none";
 		document.getElementById("uob").style.display = "none";
 		document.getElementById("cat").style.display = "none";
-		document.getElementById("ashop").style.display = "none";
 		document.getElementById("hahaha").style.display = "none";
 		document.getElementById("flag").value = '-';
 		document.getElementById("insert_button").disabled = true;
 
-		$( "#pc" ).change(function() {
+		if (id == -1) {
+			document.getElementById("insert_button").disabled = false;
+		}
+
+	}
+
+$( "#pc" ).change(function() {
 			document.getElementById("aclub").style.display = "none";
 			document.getElementById("mrg").style.display = "none";
 			document.getElementById("uob").style.display = "none";
 			document.getElementById("cat").style.display = "none";
-			document.getElementById("ashop").style.display = "none";
 			document.getElementById("hahaha").style.display = "none";
 			document.getElementById("flag").value = '-';
 			document.getElementById("insert_button").disabled = true;
-
-			document.getElementById("hahaha").innerHTML = document.getElementById("ismrg").innerHTML;
-			if ($( "#pc option:checked" ).val() == "A-Club"){		
-				if (document.getElementById("isacl").innerHTML == 1) {
-					document.getElementById("hahaha").style.display = "inline";
-					document.getElementById("hahaha").innerHTML = "This user has been registered to A-Club profit center.";
+			console.log("change");
+			//document.getElementById("hahaha").innerHTML = document.getElementById("ismrg").innerHTML;
+			if ($( "#pc option:checked" ).val() == "A-Club"){
+				if (document.getElementById('isacl') !== null){
+					if (document.getElementById("isacl").innerHTML == 1) {
+						document.getElementById("hahaha").style.display = "inline";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to A-Club profit center.";
+					} else {		
+						document.getElementById("insert_button").disabled = false;
+						document.getElementById("aclub").style.display = "inline";
+						document.getElementById("flag").value = 'aclub';
+					}
 				} else {		
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("aclub").style.display = "inline";
 					document.getElementById("flag").value = 'aclub';
 				}
 			} else if ($( "#pc option:checked" ).val() == "UOB"){
-				if (document.getElementById("isuob").innerHTML == 1) {
-					document.getElementById("hahaha").style.display = "inline";
-					document.getElementById("hahaha").innerHTML = "This user has been registered to UOB profit center.";
+				if (document.getElementById('isuob') !== null){
+					if (document.getElementById("isuob").innerHTML == 1) {
+						document.getElementById("hahaha").style.display = "inline";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to UOB profit center.";
+					} else {
+						document.getElementById("insert_button").disabled = false;
+						document.getElementById("uob").style.display = "inline";
+						document.getElementById("flag").value = 'uob';
+					}
 				} else {
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("uob").style.display = "inline";
 					document.getElementById("flag").value = 'uob';
 				}
 			} else if ($( "#pc option:checked" ).val() == "MRG"){
-				if (document.getElementById("ismrg").innerHTML == 1) {
-					document.getElementById("hahaha").style.display = "inline";
-					document.getElementById("hahaha").innerHTML = "This user has been registered to MRG profit center.";
+				if (document.getElementById('ismrg') !== null){
+					if (document.getElementById("ismrg").innerHTML == 1) {
+						document.getElementById("hahaha").style.display = "inline";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to MRG profit center.";
+					} else {
+						document.getElementById("insert_button").disabled = false;
+						document.getElementById("mrg").style.display = "inline";
+						document.getElementById("flag").value = 'mrg';
+					}
 				} else {
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("mrg").style.display = "inline";
 					document.getElementById("flag").value = 'mrg';
 				}
 			} else if ($( "#pc option:checked" ).val() == "CAT"){
-				if (document.getElementById("iscat").innerHTML == 1) {
-					document.getElementById("hahaha").style.display = "inline";
-					document.getElementById("hahaha").innerHTML = "This user has been registered to CAT profit center.";
+				if (document.getElementById('iscat') !== null){
+					if (document.getElementById("iscat").innerHTML == 1) {
+						document.getElementById("hahaha").style.display = "inline";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to CAT profit center.";
+					} else {
+						document.getElementById("insert_button").disabled = false;
+						document.getElementById("cat").style.display = "inline";
+						document.getElementById("flag").value = 'cat';
+					}
 				} else {
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("cat").style.display = "inline";
@@ -263,11 +290,6 @@
 			
 		});
 
-		if (id == -1) {
-			document.getElementById("insert_button").disabled = false;
-		}
-
-	}
 	function reset(){
 		document.getElementById("next").style.display = "none";
 		document.getElementById("addcli").style.display = "none";
