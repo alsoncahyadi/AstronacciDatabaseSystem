@@ -134,22 +134,22 @@
         @if($aclub)
             <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $aclub->master_id])}}" target="_blank"> AClub </a>
         @else
-            <button type="button" class="btn btn-default" disabled> AClub </button>
+            <button type="button" class="btn btn-default" style="color:red;" disabled> AClub </button>
         @endif
         @if($mrg)
         <a class="btn btn-default" style="margin:10px;" href="{{route('MRG.detail', ['id' => $mrg->master_id])}}" target="_blank"> MRG </a>
         @else
-            <button type="button" class="btn btn-default" disabled> MRG </button>
+            <button type="button" class="btn btn-default" style="color:red;" disabled> MRG </button>
         @endif
         @if($cat)
         <a class="btn btn-default" style="margin:10px;" href="{{route('CAT.detail', ['id' => $cat->user_id])}}" target="_blank"> CAT </a>
         @else
-            <button type="button" class="btn btn-default" disabled> CAT </button>
+            <button type="button" class="btn btn-default" style="color:red;" disabled> CAT </button>
         @endif
         @if($uob)
         <a class="btn btn-default" style="margin:10px;" href="{{route('UOB.detail', ['id' => $uob->client_id])}}" target="_blank"> UOB </a>
         @else
-            <button type="button" class="btn btn-default" disabled> UOB </button>
+            <button type="button" class="btn btn-default" style="color:red;" disabled> UOB </button>
         @endif 
     </div>
 
