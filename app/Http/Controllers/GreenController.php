@@ -52,15 +52,15 @@ class GreenController extends Controller
         //Select seluruh data client $id yang ditampilkan di detail
         $green = GreenProspectClient::where('green_id', $id)->first();
 
-        $ins= ["Green ID" => "green_id",
-                "Date" => "date",
-                "Name" => "name",
-                "Phone" => "phone",
-                "Email" => "email",
-                "Interest" => "interest",
-                "Pemberi" => "pemberi",
-                "Sumber Data" => "sumber_data",
-                "Keterangan Perintah" => "keterangan_perintah"];
+        $ins= ["Green ID"               => "green_id",
+                "Date"                  => "date",
+                "Name"                  => "name",
+                "Phone"                 => "phone",
+                "Email"                 => "email",
+                "Interest"              => "interest",
+                "Pemberi"               => "pemberi",
+                "Sumber Data"           => "sumber_data",
+                "Keterangan Perintah"   => "keterangan_perintah"];
 
         $heads = $ins;
 
@@ -80,59 +80,59 @@ class GreenController extends Controller
 
     public function editClient(Request $request) {
         //Validasi input
+
         $this->validate($request, [
-                'green_id' => 'required',
-                'fullname' => 'required',
-                'no_hp' => 'required'
+                'green_id' => '',
+                'date' => 'date'
             ]);
         //Inisialisasi array error
-        DB::beginTransaction();
+
         $err = [];
-        //Mengubah jawaban yes atau no menjadi boolean
-        $isaclubstock = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
-        $isaclubfuture = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
-        $ismrg = strtolower($request->is_mrg_premiere) == "yes" ? 1 : 0;
-        $iscat = strtolower($request->is_cat) == "yes" ? 1 : 0;
-        $isuob = strtolower($request->is_UOB) == "yes" ? 1 : 0;
-        $isred = strtolower($request->is_red_club) == "yes" ? 1 : 0;
-        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
-        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
-        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
-        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut Green
-            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $this->nullify($request->keterangan_perintah), $this->nullify($request->sumber), $this->nullify($request->sales_username), $this->nullify($request->progress), $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $green = GreenProspectClient::where('green_id',$request->green_id)->first();
+
+            $err =[];
+            // dd($request);
+            $green->date = $request->date;
+            $green->name = $request->name;
+            $green->phone = $request->phone;
+            $green->email = $request->email;
+            $green->interest = $request->interest;
+            $green->pemberi = $request->pemberi;
+            $green->sumber_data = $request->sumber_data;
+            $green->keterangan_perintah = $request->keterangan_perintah;
+            // dd($green);
+            $green->update();
+
+
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
+        
         return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'nama' => 'required',
-                'no_hp' => 'required'
+                'user_id' => '',
+                'sumber_data' => '',
+                'join_date' => 'date'
             ]);
-
-        DB::beginTransaction();
-        //Mengubah jawaban yes atau no menjadi boolean
-        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
-        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
-        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
-        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
+        //Inisialisasi array error
         $err = [];
         try {
-            //Input data ke SQL
-            DB::select("call input_green(?,?,?,?,?,?,?,?,?,?)", [$request->nama, $request->no_hp, $request->keterangan_perintah, $request->sumber, $request->progress, $request->sales, $aclub, $mrg, $cat, $uob]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $mrg = Mrg::where('master_id',$request->user_id)->first();
+
+            $err =[];
+
+            $mrg->sumber_data = $request->sumber_data;
+            $mrg->join_date = $request->join_date;
+
+            $mrg->update();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
         return redirect()->back()->withErrors($err);
 
     }
