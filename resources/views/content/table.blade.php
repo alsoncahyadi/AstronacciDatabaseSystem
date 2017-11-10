@@ -18,8 +18,10 @@
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
 					<br>
 					<br>
-				@else
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a> -->
+				@else -->
+					@if ($route == 'green')
+						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+					@endif
 					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
 					<!-- <br>
 				@endif -->
