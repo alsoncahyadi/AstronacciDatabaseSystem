@@ -167,28 +167,6 @@ class AshopController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function addTrans(Request $request) {
-        $this->validate($request, [
-                'user_id' => '',
-                'product_type' => '',
-                'product_name' => '',
-                'nominal' => ''
-            ]);
-
-        $ashop = new \App\AshopTransaction();
-
-        $err = [];
-
-        $ashop->master_id = $request->user_id;
-        $ashop->product_type = $request->product_type;
-        $ashop->product_name = $request->product_name;
-        $ashop->nominal = $request->nominal;
-
-        $ashop->save();
-        
-        return redirect()->back()->withErrors($err);
-    }
-
     public function getTransactions($id) {
         $ashop_transactions = AshopTransaction::where('master_id', $id)->first();
         dd($ashop_transactions);
