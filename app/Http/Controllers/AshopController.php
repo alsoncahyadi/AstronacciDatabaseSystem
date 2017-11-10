@@ -9,7 +9,7 @@ use DB;
 use App\AshopTransaction;
 use App\MasterClient;
 
-class TransController extends Controller
+class AshopController extends Controller
 {
     //
     private function nullify($string)
@@ -60,7 +60,7 @@ class TransController extends Controller
                 "created_by",
                 "updated_by"];
 
-        return view('content/table', ['route' => 'trans', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id) {
@@ -74,22 +74,97 @@ class TransController extends Controller
         $clientsreg = $master->ashopTransactions()->get();
 
         //form transaction
-        $insreg = ["Master ID",
-                    "Product Type",
-                    "Product Name",
+        $insreg = [ "Product Type",
+                    "Nama Product",
                     "Nominal"
                     ];
 
         //transaction
-        $headsreg = [ "Master ID",
-                "Product Type",
-                "Product Name",
-                "Nominal"
+        $headsreg = [ "Product Type",
+                    "Nama Product",
+                    "Nominal"
                     ];
 
-        $attsreg = ["master_id", "product_type", "product_name", "nominal"];
+        $attsreg = ["product_type", "product_name", "nominal"];
 
-        return view('profile/profile', ['route'=>'trans', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+        return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+    }
+
+    public function clientDetailTrans($id, $trans) {
+
+        $ashop = AshopTransaction::where('transaction_id', $trans)->first();
+
+        $heads = ["Transaction ID" => "transaction_id",
+                    "Master ID" => "master_id",
+                    "Product" => "product_type",
+                    "Nama Product" => "product_name",
+                    "Nominal" => "nominal"];
+
+        $ins = ["Product" => "product_type",
+                "Nama Product" => "product_name",
+                "Nominal" => "nominal"];
+        //dd($aclub_transaction);
+
+        return view('profile/ashoptransaction', ['route'=>'AShop', 'client'=>$ashop, 'ins'=>$ins, 'heads'=>$heads]);
+    }
+
+    public function editTrans(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'transaction_id' => '',
+                'master_id' => '',
+                'product' => '',
+                'nama_product' => '',
+                'nominal' => ''
+            ]);
+        $ashop = AshopTransaction::where('transaction_id',$request->user_id)->first();
+        //Inisialisasi array error
+        $err = [];
+
+        try {
+            $ashop->transaction_id = $request->user_id;
+            $ashop->master_id = $request->master_id;
+            $ashop->product_type = $request->product;
+            $ashop->product_name = $request->nama_product;
+            $ashop->nominal = $request->nominal;
+
+            $ashop->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
+    }
+
+     public function deleteTrans($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $ashop = AshopTransaction::find($id);
+            $ashop->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
+    public function addTrans(Request $request) {
+        $this->validate($request, [
+                'product_type' => '',
+                'nama_product' => '',
+                'nominal' => ''
+            ]);
+
+        $ashop = new \App\AshopTransaction();
+
+        $err = [];
+
+        $ashop->master_id = $request->user_id;
+        $ashop->product_type = $request->product_type;
+        $ashop->product_name = $request->nama_product;
+        $ashop->nominal = $request->nominal;
+
+        $ashop->save();
+        
+        return redirect()->back()->withErrors($err);
     }
 
     public function addTrans(Request $request) {

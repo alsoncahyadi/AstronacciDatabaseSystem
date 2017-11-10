@@ -128,34 +128,31 @@ class MRGController extends Controller
         
         return redirect()->back()->withErrors($err);
     }
-
-    //VERSI LAMA
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-        		'all_pc_id' => 'required',
-                'account' => 'required',
-                'fullname' => 'required',
-                'address' => 'required',
-                'no_hp' => 'required',
-                'email' => 'email',
+                'user_id' => '',
+                'sumber_data' => '',
+                'join_date' => 'date'
             ]);
         //Inisialisasi array error
         $err = [];
-        DB::beginTransaction();
         try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut master client
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut MRG
-            DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $this->nullify($request->join_date), $this->nullify($request->type), $this->nullify($request->sales_username)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-        	DB::rollback();
+            $mrg = Mrg::where('master_id',$request->user_id)->first();
+
+            $err =[];
+
+            $mrg->sumber_data = $request->sumber_data;
+            $mrg->join_date = $request->join_date;
+
+            $mrg->update();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
         return redirect()->back()->withErrors($err);
     }
+
+    //VERSI LAMA
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu

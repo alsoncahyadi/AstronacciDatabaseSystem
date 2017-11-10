@@ -93,7 +93,7 @@
 				<?php
 					if($route == "CAT") $userid = "user_id";
 					else if ($route == "AClub") $userid = "user_id";
-					else if ($route == "MRG") $userid = "account";
+					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
 					else if ($route == "grow") $userid = "grow_id";
@@ -101,7 +101,7 @@
 					else if ($route == "assigngreen") $userid = "green_assign_id";
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
-                    else if ($route == "trans") $userid = "transaction_id";
+                    else if ($route == "AShop") $userid = "transaction_id";
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
@@ -110,6 +110,14 @@
 
                 <div id="bod2" style="display:none">
                     <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
+                        @if ($route == "CAT")
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                        @elseif ($route == "AClub")
+                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @endif
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
@@ -142,7 +150,7 @@
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "trans"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -227,7 +235,7 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @elseif ($route == 'trans')
+                        @elseif ($route == "AShop")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
                         @foreach ($insreg as $atr)
@@ -241,8 +249,9 @@
                         <button type="reset" class="btn btn-default">Reset Form</button>
                     </form>
                 </div>
-            <br><br>
+            <br>
             </div>
+            <br><br>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
                     <tr>
@@ -258,10 +267,12 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        
-                       
-                        <td> {{$clientreg->$attreg}} </td>
-
+                        @if ($route != 'AShop')
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @else
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @endif
+                    
                         @endforeach
 
                         <!-- @if ($route == 'CAT')
@@ -271,7 +282,6 @@
                         @endif -->
                         
                     </tr>
-                    
                     @endforeach
                 </tbody>
             </table>

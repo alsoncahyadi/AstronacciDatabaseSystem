@@ -71,6 +71,7 @@
                     else if ($route == "assigngreen") $userid = "green_assign_id";
                     else if ($route == "assigngrow") $userid = "grow_assign_id";
                     else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "detail") $userid = "master_id";
                 ?>
                 
     <div class="panel panel-default" style="margin:15px">
@@ -97,6 +98,35 @@
 				</div>
 
 			</div>
+
+             <div id="bod2" style="display:none">
+                <form role="form" method="post" action="{{route($route . '.edit')}}">
+                    <div class="form-group">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
+                        @foreach ($ins as $key => $value)
+                            <div style="height:60px">
+                                <label>{{$key}}</label>
+                                    <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                            </div>
+                        @endforeach
+                        
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="reset" class="btn btn-default">Reset</button>
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
+                        <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                    @elseif ($route == 'assigngrow')
+                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
+                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
+                    @elseif ($route == 'assigngreen')
+                        <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
+                        <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
+                    @elseif ($route == 'assignredclub')
+                        <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
+                    @endif
+                </form>
+            </div> 
 			
 		</div>
         {{$client->$userid}}
