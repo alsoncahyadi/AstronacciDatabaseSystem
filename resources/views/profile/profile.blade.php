@@ -101,7 +101,7 @@
 					else if ($route == "assigngreen") $userid = "green_assign_id";
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
-                    else if ($route == "AShop") $userid = "transaction_id";
+                    else if ($route == "AShop") $userid = "master_id";
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
