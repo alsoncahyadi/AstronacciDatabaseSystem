@@ -148,6 +148,32 @@ class GreenController extends Controller
         return redirect("green");
     }
 
+    public function addTrans(Request $request) {
+        $this->validate($request, [
+                'user_id' => '',
+                'date' => 'date',
+                'sales' => '',
+                'status' => '',
+                'nama_product' => '',
+                'nominal' => ''
+            ]);
+
+        $err = [];
+        $progress = new \App\GreenProspectProgress();
+
+        $progress->green_id = $request->user_id;
+        $progress->date = $request->date;
+        $progress->sales_name = $request->sales;
+        $progress->status = $request->status;
+        $progress->nama_product = $request->nama_product;
+        $progress->nominal = $request->nominal;
+        $progress->keterangan = $request->keterangan;
+
+        $progress->save();
+        
+        return redirect()->back()->withErrors($err);
+    }
+
     public function importExcel() {
         $err = []; //Inisialisasi array error
         if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan

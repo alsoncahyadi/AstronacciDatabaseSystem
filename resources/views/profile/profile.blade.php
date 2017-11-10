@@ -192,7 +192,6 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel-body">
                         <form method="post" action="{{route($route . '.inserttrans')}}">
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                             @if ($route == "CAT")
                                 <input name="user_id" type="hidden" value="{{$client->user_id}}">
                             @else
@@ -235,6 +234,8 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "green")
+                            <input name="user_id" type="hidden" value="{{$client->green_id}}">
                         @endif
                         @foreach ($insreg as $atr)
                         <div class="form-group">
