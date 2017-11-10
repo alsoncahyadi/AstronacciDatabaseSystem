@@ -236,6 +236,8 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "AShop")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
                         @foreach ($insreg as $atr)
                         <div class="form-group">

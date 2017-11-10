@@ -579,6 +579,12 @@ Route::get('/AShop/deletetrans/{id}', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
+Route::post('/AShop/inserttrans', [
+    'uses' => 'AshopController@addTrans',
+    'as' => 'AShop.inserttrans',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
 Route::get('/AShop/delete/{id}', [
     'uses' => 'AshopController@deleteTrans',
     'as' => 'AShop.deleteclient',
