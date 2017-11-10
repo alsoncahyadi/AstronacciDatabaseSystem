@@ -93,7 +93,7 @@
                 <?php
                     if($route == "CAT") $userid = "user_id";
                     else if ($route == "AClub") $userid = "user_id";
-                    else if ($route == "MRG") $userid = "master_id";
+                    else if ($route == "MRG") $userid = "accounts_number";
                     else if ($route == "UOB") $userid = "client_id";
                     else if ($route == "green") $userid = "green_id";
                     else if ($route == "grow") $userid = "grow_id";
