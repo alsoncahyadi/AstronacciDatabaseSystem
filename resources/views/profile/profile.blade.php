@@ -266,10 +266,10 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        @if (route != 'AShop')
+                        @if ($route != 'AShop')
                             <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
                         @else
-                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @endif
                     
                         @endforeach

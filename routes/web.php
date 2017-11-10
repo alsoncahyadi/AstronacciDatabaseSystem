@@ -586,9 +586,15 @@ Route::get('/AShop/deleteclient/{id}', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/AShop/edit', [
-    'uses' => 'AshopController@editClient',
-    'as' => 'AShop.edit',
+Route::post('/AShop/edittrans', [
+    'uses' => 'AshopController@editTrans',
+    'as' => 'AShop.edittrans',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShop/{id}/{package}', [
+    'uses' => 'AshopController@clientDetailTrans',
+    'as' => 'AShop.trans',
     'middleware' => ['auth', 'ashop'],
     ]);
 

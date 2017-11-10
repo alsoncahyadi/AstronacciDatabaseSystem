@@ -109,7 +109,7 @@
             </div>
 
                 <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.edit')}}">
+                    <form role="form" method="post" action="{{route($route . '.edittrans')}}">
                         <input name="user_id" type="hidden" value="{{$client->$userid}}">
                         @if ($route == "CAT")
                             <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
@@ -117,6 +117,9 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "AShop")
+                            <input name="user_id" type="hidden" value="{{$client->transaction_id}}">
+                            <input name="master_id" type="hidden" value="{{$client->master_id}}">
                         @endif
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
@@ -124,7 +127,7 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                <input class="form-control" value="{{$client->$value}}" name="{{strtolower(str_replace(' ', '_', $key))}}">
                                         </div>
                                     @endforeach
                             

@@ -90,6 +90,51 @@ class AshopController extends Controller
         return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
     }
 
+    public function clientDetailTrans($id, $trans) {
+
+        $ashop = AshopTransaction::where('transaction_id', $trans)->first();
+
+        $heads = ["Transaction ID" => "transaction_id",
+                    "Master ID" => "master_id",
+                    "Product" => "product_type",
+                    "Nama Product" => "product_name",
+                    "Nominal" => "nominal"];
+
+        $ins = ["Product" => "product_type",
+                "Nama Product" => "product_name",
+                "Nominal" => "nominal"];
+        //dd($aclub_transaction);
+
+        return view('profile/ashoptransaction', ['route'=>'AShop', 'client'=>$ashop, 'ins'=>$ins, 'heads'=>$heads]);
+    }
+
+    public function editTrans(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'transaction_id' => '',
+                'master_id' => '',
+                'product' => '',
+                'nama_product' => '',
+                'nominal' => ''
+            ]);
+        $ashop = AshopTransaction::where('transaction_id',$request->user_id)->first();
+        //Inisialisasi array error
+        $err = [];
+
+        try {
+            $ashop->transaction_id = $request->user_id;
+            $ashop->master_id = $request->master_id;
+            $ashop->product_type = $request->product;
+            $ashop->product_name = $request->nama_product;
+            $ashop->nominal = $request->nominal;
+
+            $ashop->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
+    }
+
     public function getTransactions($id) {
         $ashop_transactions = MasterClient::where('master_id', $id)->first()->TransController()->get();
         dd($ashop_transactions);
