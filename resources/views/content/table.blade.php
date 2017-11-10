@@ -20,7 +20,10 @@
 					<br>
 				@else
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a> -->
-					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
+                    @if ($route == 'AShop')
+                        <a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+                    @endif
+					   <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
 					<!-- <br>
 				@endif -->
 				<br>
