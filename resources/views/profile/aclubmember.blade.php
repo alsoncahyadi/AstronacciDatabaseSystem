@@ -25,10 +25,10 @@
     <!-- Custom Fonts -->
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 
-	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
-	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
-	    <!-- Scripts -->
-	<!-- jQuery -->
+    <link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
+        <!-- Scripts -->
+    <!-- jQuery -->
 
     <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>
 
@@ -44,9 +44,9 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
-	<script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
-	
-<!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
+    <script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
+    
+<!--    <script src="{{ URL::asset('js/loader.js') }}"></script>    -->
 
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
@@ -61,24 +61,24 @@
 <body style="overflow-x:hidden;  background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
     <div id="wrapper" style="margin:15px">
 
-	<div class="row">
-		<div class="col-lg-12">
-			<h1>{{$route}} Profile</h1>
-		</div>
-		<!-- /.col-lg-12 -->
-	</div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>{{$route}} Profile</h1>
+        </div>
+        <!-- /.col-lg-12 -->
     </div>
-	
+    </div>
+    
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
-			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
         </div>
-		
+        
         <div class="panel-body">
-			<div id="bod1">
-				<div class="form-group">
+            <div id="bod1">
+                <div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
                     
                         @foreach ($heads as $key => $value)
@@ -89,20 +89,20 @@
                                 : {{$client->$value}}<br>
                             </div>
                         @endforeach
-				</div>
-				<?php
-					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "user_id";
-					else if ($route == "MRG") $userid = "master_id";
-					else if ($route == "UOB") $userid = "client_id";
-					else if ($route == "green") $userid = "green_id";
-					else if ($route == "grow") $userid = "grow_id";
-					else if ($route == "RedClub") $userid = "username";
-					else if ($route == "assigngreen") $userid = "green_assign_id";
-					else if ($route == "assigngrow") $userid = "grow_assign_id";
-					else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                </div>
+                <?php
+                    if($route == "CAT") $userid = "user_id";
+                    else if ($route == "AClub") $userid = "transaction_id";
+                    else if ($route == "MRG") $userid = "master_id";
+                    else if ($route == "UOB") $userid = "client_id";
+                    else if ($route == "green") $userid = "green_id";
+                    else if ($route == "grow") $userid = "grow_id";
+                    else if ($route == "RedClub") $userid = "username";
+                    else if ($route == "assigngreen") $userid = "green_assign_id";
+                    else if ($route == "assigngrow") $userid = "grow_assign_id";
+                    else if ($route == "assignredclub") $userid = "redclub_assign_id";
                     else if ($route == "AShop") $userid = "master_id";
-				?>
+                ?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
                 
@@ -145,8 +145,8 @@
                         @endif
                     </form>
                 </div> 
-			
-		</div>
+            
+        </div>
 
      </div>
 
@@ -268,7 +268,7 @@
 
                         @foreach ($attsreg as $attreg)
                         @if ($route != 'AShop')
-                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @else
                             <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @endif
@@ -289,41 +289,41 @@
     </div>
     @endif
 
-	<br><br>
+    <br><br>
 
     @if(count($errors) > 0)
         @foreach($errors->all() as $error)
             <h4>{{$error}}</h4>
         @endforeach
     @endif
-	
+    
 </div>
 <script>
-	$(document).ready(function(){
-		$("#hide").click(function(){
-			$("#bod1").hide();
-			$("#bod2").show();
-			$("#hide").hide();
-			$("#show").show();
-			
-		});
-		$("#show").click(function(){
-			$("#bod2").hide();
-			$("#bod1").show();
-			$("#show").hide();
-			$("#hide").show();
-		});
-		$("delete").click(function(){
-			$("#delete").hide();
-			$("#condel").show();
-			
-		});
-	});
-	function del(){
-		if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-			window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
+    $(document).ready(function(){
+        $("#hide").click(function(){
+            $("#bod1").hide();
+            $("#bod2").show();
+            $("#hide").hide();
+            $("#show").show();
+            
+        });
+        $("#show").click(function(){
+            $("#bod2").hide();
+            $("#bod1").show();
+            $("#show").hide();
+            $("#hide").show();
+        });
+        $("delete").click(function(){
+            $("#delete").hide();
+            $("#condel").show();
+            
+        });
+    });
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
+            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
 
-	}
-	</script>
+    }
+    </script>
 </body>
 </html>

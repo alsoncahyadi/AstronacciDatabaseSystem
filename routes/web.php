@@ -342,7 +342,14 @@ Route::get('/AClub/{id}', [
 	'roles' => ['0', '1'],
     ]);
 
-Route::get('/AClub/{id}/{package}', [
+Route::get('/AClub/{id}/{member}', [
+    'uses' => 'AClubController@clientDetailMember',
+    'as' => 'AClub.member',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClub/{id}/{member}/{package}', [
     'uses' => 'AClubController@clientDetailPackage',
     'as' => 'AClub.package',
     'middleware' => ['auth', 'roles'],
