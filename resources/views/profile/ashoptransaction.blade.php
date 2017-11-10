@@ -104,7 +104,7 @@
                     else if ($route == "AShop") $userid = "transaction_id";
                 ?>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a>
                 
             </div>
 
@@ -185,7 +185,7 @@
     });
     function del(){
         if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
+            window.location.replace("{{route($route . '.deletetrans', ['id' => $client->$userid])}}");
 
     }
     </script>

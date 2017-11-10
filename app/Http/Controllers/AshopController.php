@@ -135,6 +135,17 @@ class AshopController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+     public function deleteTrans($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $ashop = AshopTransaction::find($id);
+            $ashop->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function getTransactions($id) {
         $ashop_transactions = MasterClient::where('master_id', $id)->first()->TransController()->get();
         dd($ashop_transactions);
