@@ -134,6 +134,7 @@ Route::post('/insertPassword', [
 	'middleware' => ['auth'],
 	]);
 
+// DETAIL PC ROUTES
 Route::get('/member/{id}', [
     'uses' => 'DetailController@clientDetail',
     'as' => 'detail',
@@ -147,7 +148,6 @@ Route::post('/member/edit', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
     ]);
-
 Route::get('/member/deleteclient/{id}', [
     'uses' => 'DetailController@deleteClient',
     'as' => 'detail.deleteclient',
