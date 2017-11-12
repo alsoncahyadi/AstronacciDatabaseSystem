@@ -204,9 +204,28 @@ class AClubController extends Controller
 
         $aclub_transaction = AclubTransaction::where('transaction_id', $package)->first();
 
-        $heads = ["Transaction ID" => 'transaction_id'];
+        $heads = ["Transaction ID" => 'transaction_id',
+                    "User ID" => 'user_id',
+                    "Payment Date" => 'payment_date',
+                    "Kode" => 'kode',
+                    "Status" => 'status',
+                    "Nominal" => 'nominal',
+                    "Start Date" => 'start_date',
+                    "Expired Date" => 'expired_date',
+                    "Masa Tenggang" => 'masa_tenggang',
+                    "Yellow Zone" => 'yellow_zone',
+                    "Red Zone" => 'red_zone'];
 
-        $atts = ["sales_name"];
+        $ins = [    "Payment Date" => 'payment_date',
+                    "Kode" => 'kode',
+                    "Status" => 'status',
+                    "Nominal" => 'nominal',
+                    "Start Date" => 'start_date',
+                    "Expired Date" => 'expired_date',
+                    "Masa Tenggang" => 'masa_tenggang',
+                    "Yellow Zone" => 'yellow_zone',
+                    "Red Zone" => 'red_zone'];
+
 
         $insreg = ["Payment date", 
                     "Kode", 
@@ -219,7 +238,7 @@ class AClubController extends Controller
                     "start_date"];
 //dd($aclub_transaction);
 
-        return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$heads, 'headsreg'=>$insreg, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function editClient(Request $request) {
