@@ -398,6 +398,13 @@ Route::get('/AClub/deleteclient/{id}', [
     'roles' => ['0', '1'],
     ]);
 
+Route::post('/AClub/editmember', [
+    'uses' => 'AClubController@editMember',
+    'as' => 'AClub.editmember',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //GREEN ROUTES
 Route::get('/green', [
     'uses' => 'GreenController@getTable',
