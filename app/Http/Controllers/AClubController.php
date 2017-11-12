@@ -130,6 +130,7 @@ class AClubController extends Controller
     }
 
     public function deleteClient($id) {
+        dd('masuk coy');
         //Menghapus client dengan ID tertentu
         try {
             $aclub = AclubInformation::find($id);
@@ -187,6 +188,18 @@ class AClubController extends Controller
             $err[] = $ex->getMessage();
         }
         return redirect()->back()->withErrors($err);
+    }
+
+    public function deleteMember($id) {
+        dd('masuk');
+        //Menghapus client dengan ID tertentu
+        try {
+            $aclub_member = AclubMember::find($id);
+            $aclub_member->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
     }
 
     public function clientDetailPackage($id, $member, $package) {

@@ -391,6 +391,13 @@ Route::get('/AClub/deletetrans/{id}', [
     'roles' => ['0', '1'],
     ]);
 
+Route::get('/AClub/deletemember/{id}', [
+    'uses' => 'AClubController@deleteClient',
+    'as' => 'AClub.memberdelete',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::get('/AClub/deleteclient/{id}', [
     'uses' => 'AClubController@deleteClient',
     'as' => 'AClub.deleteclient',

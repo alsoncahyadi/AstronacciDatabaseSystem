@@ -91,7 +91,7 @@
                         @endforeach
                 </div>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->user_id])}}"> Delete Client </a>
+                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.memberdelete', ['id' => $client->user_id])}}"> Delete Client </a>
                 
             </div>
 
@@ -288,8 +288,8 @@
         });
     });
     function del(){
-        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->user_id])}}");
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this member?'))
+            window.location.replace("{{route($route . '.memberdelete', ['id' => $client->user_id])}}");
 
     }
     </script>
