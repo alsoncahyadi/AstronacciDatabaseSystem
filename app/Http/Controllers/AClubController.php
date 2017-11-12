@@ -113,20 +113,36 @@ class AClubController extends Controller
                     "Group"];
 
         $insreg = ["User ID",
-                    "Payment Date",
-                    "Sales",
-                    "Kode",
-                    "Nominal",
-                    "Start Date",
-                    "Keterangan"];
+                    "Sales Name",
+                    "Group"];
 
         $attsreg = ["user_id", "sales_name", "group"];
-
-
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
         return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+    }
+
+    public function addMember(Request $request) {
+        $this->validate($request, [
+                'user_id' => '',
+                'master_id' => '',
+                'sales_name' => '',
+                'group' => ''
+            ]);
+
+        $aclub_member = new \App\AclubMember();
+
+        $err = [];
+
+        $aclub_member->user_id = $request->user_id;
+        $aclub_member->master_id = $request->master_id;
+        $aclub_member->sales_name = $request->sales_name;
+        $aclub_member->group = $request->group;
+
+        $aclub_member->save();
+        
+        return redirect()->back()->withErrors($err);
     }
 
     public function deleteClient($id) {

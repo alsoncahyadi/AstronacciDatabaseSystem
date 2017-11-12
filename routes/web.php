@@ -377,6 +377,13 @@ Route::post('/AClub/edit', [
 	'roles' => ['0', '1'],
     ]);
 
+Route::post('/AClub/insertmembers', [
+    'uses' => 'AClubController@addMember',
+    'as' => 'AClub.insertmembers',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::post('/AClub/inserttrans', [
     'uses' => 'AClubController@addTrans',
     'as' => 'AClub.inserttrans',
