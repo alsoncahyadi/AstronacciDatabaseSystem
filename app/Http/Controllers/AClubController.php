@@ -300,15 +300,13 @@ class AClubController extends Controller
     }
 
     public function deleteTrans($id){
-        echo ($id);
-        $err = [];
-        try{
-            DB::select("call delete_aclub_registration_alt(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        try {
+            $aclub_transaction = AclubTransaction::find($id);
+            $aclub_transaction->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        
-        return redirect()->back()->withErrors($err);
+        return redirect("home");
     }
 
     public function editTrans(Request $request) {
