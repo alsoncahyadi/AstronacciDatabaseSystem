@@ -261,46 +261,28 @@ class AClubController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    // public function addClient(Request $request) {
-    //     //Validasi input
-    //     $this->validate($request, [
-    //             'user_id' => 'required',
-    //             'nama' => 'required',
-    //             'email' => 'email',
-    //             'no_hp' => 'required',
-    //             'alamat' => 'required',
-    //         ]);
-
-    //     //Inisialisasi array error
-    //     DB::beginTransaction();
-    //     $err = [];
-    //     try {
-    //         //Input data ke SQL
-    //          DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->user_id, $request->nama, $request->no_hp, $this->nullify($request->no_telepon), $request->alamat, $this->nullify($request->kota), $this->nullify($request->provinsi), $request->email, $this->nullify($request->tanggal_lahir), $this->nullify($request->line_id), $this->nullify($request->pin_bb), $this->nullify($request->facebook), $this->nullify($request->twitter), $this->nullify($request->jenis_kelamin), $this->nullify($request->occupation), $this->nullify($request->website), $this->nullify($request->state), $this->nullify($request->interest_and_hobby), $this->nullify($request->trading_experience_year), $this->nullify($request->your_stock_and_future_broker), $this->nullify($request->annual_income), $this->nullify($request->status), $this->nullify($request->keterangan),$this->nullify($request->security_question), $this->nullify($request->security_answer)]);
-    //     } catch(\Illuminate\Database\QueryException $ex){ 
-    //         DB::rollback();
-    //         $err[] = $ex->getMessage();
-    //     }
-    //     DB::commit();
-    //     return redirect()->back()->withErrors($err);
-
-    // }
-
     public function addTrans(Request $request) {
+         $this->validate($request, [
+                'user_id' => '',
+                'payment_date' => '',
+                'kode' => '',
+                'nominal' => '',
+                'start_date' => '',
+                'keterangan' => ''
+            ]);
+
+        $err = [];
+
         $aclub_trans = new \App\AclubTransaction();
+
         $aclub_trans->user_id = $request->user_id;
         $aclub_trans->payment_date = $request->payment_date;
         $aclub_trans->kode = $request->kode;
-        $aclub_trans->status = $request->status;
         $aclub_trans->nominal = $request->nominal;
         $aclub_trans->start_date = $request->start_date;
-        $aclub_trans->expired_date = $request->expired_date;
-        $aclub_trans->masa_tenggang = $request->masa_tenggang;
-        $aclub_trans->yellow_zone = $request->yellow_zone;
-        $aclub_trans->red_zone = $request->red_zone;
-        $aclub_trans->sales_name = $request->sales_name;
 
         $aclub_trans->save();
+        
         return redirect()->back()->withErrors($err);
     }
 
