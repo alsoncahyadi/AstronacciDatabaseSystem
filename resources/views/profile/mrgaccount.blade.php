@@ -104,7 +104,13 @@
                     else if ($route == "AShop") $userid = "transaction_id";
                 ?>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a>
+                <form action="{{route($route . '.deletetrans', ['id' => $client->$userid])}}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <input type="submit" onclick="del()" value="Delete Client" >
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                </form>
+
+                <!-- <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a> -->
                 
             </div>
 
