@@ -146,7 +146,12 @@ class AClubController extends Controller
 
         $aclub_transaction = $aclub_member->aclubTransactions()->get();
 
-        $heads = ["Sales" => "sales_name",
+        $heads = [  "User ID" => "user_id",
+                    "Master ID" => "master_id",
+                    "Sales" => "sales_name",
+                    "Group" => "group"];
+
+        $ins = ["Sales" => "sales_name",
                     "Group" => "group"];
 
         $insreg = ["Payment date", 
@@ -161,7 +166,7 @@ class AClubController extends Controller
                     "start_date",
                     "keterangan"];
 
-        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$heads, 'headsreg'=>$insreg, 'heads'=>$heads]);
+        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
 
     public function editMember(Request $request) {
