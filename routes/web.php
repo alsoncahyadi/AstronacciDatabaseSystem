@@ -198,7 +198,7 @@ Route::post('/CAT/inserttrans', [
 	'roles' => ['0', '3'],
     ]);
 
-Route::get('/CAT/deleteclient/{id}', [
+Route::delete('/CAT/deleteclient/{id}', [
     'uses' => 'CATController@deleteClient',
     'as' => 'CAT.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -270,7 +270,7 @@ Route::get('/MRGexport', [
 	'roles' => ['0', '2'],
     ]);
 
-Route::get('/MRG/deleteclient/{id}', [
+Route::delete('/MRG/deleteclient/{id}', [
     'uses' => 'MRGController@deleteClient',
     'as' => 'MRG.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -313,7 +313,7 @@ Route::post('/UOB/edit', [
 	'roles' => ['0', '4'],
     ]);
 
-Route::get('/UOB/deleteclient/{id}', [
+Route::delete('/UOB/deleteclient/{id}', [
     'uses' => 'UOBController@deleteClient',
     'as' => 'UOB.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -391,14 +391,14 @@ Route::get('/AClub/deletetrans/{id}', [
     'roles' => ['0', '1'],
     ]);
 
-Route::get('/AClub/deletemember/{id}', [
-    'uses' => 'AClubController@deleteClient',
-    'as' => 'AClub.memberdelete',
+Route::delete('/AClub/deletemember/{id}', [
+    'uses' => 'AClubController@deleteMember',
+    'as' => 'AClub.deletemember',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
     ]);
 
-Route::get('/AClub/deleteclient/{id}', [
+Route::delete('/AClub/deleteclient/{id}', [
     'uses' => 'AClubController@deleteClient',
     'as' => 'AClub.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -448,7 +448,7 @@ Route::post('/green/edit', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
-Route::get('/green/deleteclient/{id}', [
+Route::delete('/green/deleteclient/{id}', [
     'uses' => 'GreenController@deleteClient',
     'as' => 'green.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -498,7 +498,7 @@ Route::post('/RedClub/edit', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
-Route::get('/RedClub/deleteclient/{id}', [
+Route::delete('/RedClub/deleteclient/{id}', [
     'uses' => 'RedClubController@deleteClient',
     'as' => 'RedClub.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -548,7 +548,7 @@ Route::post('/grow/edit', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
-Route::get('/grow/deleteclient/{id}', [
+Route::delete('/grow/deleteclient/{id}', [
     'uses' => 'GrowController@deleteClient',
     'as' => 'grow.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -606,7 +606,7 @@ Route::post('/AShop/inserttrans', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/AShop/delete/{id}', [
+Route::delete('/AShop/delete/{id}', [
     'uses' => 'AshopController@deleteClient',
     'as' => 'AShop.deleteclient',
     'middleware' => ['auth', 'ashop'],

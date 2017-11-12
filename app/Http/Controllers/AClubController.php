@@ -130,7 +130,6 @@ class AClubController extends Controller
     }
 
     public function deleteClient($id) {
-        dd('masuk coy');
         //Menghapus client dengan ID tertentu
         try {
             $aclub = AclubInformation::find($id);
@@ -191,7 +190,6 @@ class AClubController extends Controller
     }
 
     public function deleteMember($id) {
-        dd('masuk');
         //Menghapus client dengan ID tertentu
         try {
             $aclub_member = AclubMember::find($id);
