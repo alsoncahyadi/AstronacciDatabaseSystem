@@ -234,14 +234,8 @@ class AClubController extends Controller
 
         $ins = [    "Payment Date" => 'payment_date',
                     "Kode" => 'kode',
-                    "Status" => 'status',
                     "Nominal" => 'nominal',
-                    "Start Date" => 'start_date',
-                    "Expired Date" => 'expired_date',
-                    "Masa Tenggang" => 'masa_tenggang',
-                    "Yellow Zone" => 'yellow_zone',
-                    "Red Zone" => 'red_zone'];
-
+                    "Start Date" => 'start_date'];
 
         $insreg = ["Payment date", 
                     "Kode", 
@@ -254,7 +248,7 @@ class AClubController extends Controller
                     "start_date"];
 //dd($aclub_transaction);
 
-        return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
 
     public function editClient(Request $request) {
@@ -314,6 +308,32 @@ class AClubController extends Controller
             $err[] = $ex->getMessage();
         }
         
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function editTrans(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'user_id' => '',
+                'payment_date' => '',
+                'kode' => '',
+                'nominal' => '',
+                'start_date' => ''
+            ]);
+
+        $err = [];
+        try {
+            $aclub_transaction = AclubTransaction::find($request->user_id);
+
+            $aclub_transaction->payment_date = $request->payment_date;
+            $aclub_transaction->kode = $request->kode;
+            $aclub_transaction->nominal = $request->nominal;
+            $aclub_transaction->start_date = $request->start_date;
+            
+            $aclub_transaction->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
         return redirect()->back()->withErrors($err);
     }
 

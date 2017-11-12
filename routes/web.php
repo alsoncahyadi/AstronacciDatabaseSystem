@@ -419,6 +419,13 @@ Route::post('/AClub/editmember', [
     'roles' => ['0', '1'],
     ]);
 
+Route::post('/AClub/edittrans', [
+    'uses' => 'AClubController@editTrans',
+    'as' => 'AClub.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //GREEN ROUTES
 Route::get('/green', [
     'uses' => 'GreenController@getTable',
