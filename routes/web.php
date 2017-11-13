@@ -284,7 +284,7 @@ Route::get('/MRG/{id}/{account}', [
     'roles' => ['0', '1'],
     ]);
 
-Route::get('/MRG/deletetrans/{id}', [
+Route::delete('/MRG/deletetrans/{id}', [
     'uses' => 'MRGController@deleteTrans',
     'as' => 'MRG.deletetrans',
     'middleware' => ['auth', 'roles'],

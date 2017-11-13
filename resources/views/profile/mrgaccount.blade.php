@@ -93,7 +93,7 @@
                 <?php
                     if($route == "CAT") $userid = "user_id";
                     else if ($route == "AClub") $userid = "user_id";
-                    else if ($route == "MRG") $userid = "master_id";
+                    else if ($route == "MRG") $userid = "accounts_number";
                     else if ($route == "UOB") $userid = "client_id";
                     else if ($route == "green") $userid = "green_id";
                     else if ($route == "grow") $userid = "grow_id";
@@ -104,7 +104,13 @@
                     else if ($route == "AShop") $userid = "transaction_id";
                 ?>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a>
+                <form action="{{route($route . '.deletetrans', ['id' => $client->$userid])}}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <input type="submit" onclick="del()" value="Delete Client" >
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                </form>
+
+                <!-- <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a> -->
                 
             </div>
 

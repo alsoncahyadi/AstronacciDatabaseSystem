@@ -202,6 +202,16 @@ class MRGController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteTrans($id) {
+        try {
+            $mrg_account = MrgAccount::find($id);
+            $mrg_account->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function importExcel() {
         $err = []; //Inisialisasi array error
         if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
