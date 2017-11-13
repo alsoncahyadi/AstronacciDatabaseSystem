@@ -92,7 +92,7 @@
 				</div>
 				<?php
 					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "user_id";
+					else if ($route == "AClub") $userid = "master_id";
 					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
@@ -101,6 +101,7 @@
 					else if ($route == "assigngreen") $userid = "green_assign_id";
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "AShop") $userid = "master_id";
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
@@ -151,7 +152,7 @@
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -194,7 +195,6 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel-body">
                         <form method="post" action="{{route($route . '.inserttrans')}}">
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                             @if ($route == "CAT")
                                 <input name="user_id" type="hidden" value="{{$client->user_id}}">
                             @else
@@ -237,6 +237,8 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "AShop")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
                         @foreach ($insreg as $atr)
                         <div class="form-group">
@@ -267,8 +269,13 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        
-                        <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @if ($route == 'AClub')
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @elseif ($route == 'MRG')
+                            <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
+                        @else
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @endif
                     
                         @endforeach
 
