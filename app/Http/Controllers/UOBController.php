@@ -180,42 +180,6 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    //VERSI LAMA
-
-  //   public function addClient(Request $request) {
-  //       //Validasi input
-  //       $this->validate($request, [
-  //               'client' => 'required',
-  //               'nama' => 'required',
-  //               'expired' => 'required',
-  //               'email' => 'email',
-  //               'telepon' => 'required',
-  //               'alamat' => 'required',
-  //           ]);
-  //       //Inisialisasi array error
-  //       $err = [];
-  //       DB::beginTransaction();
-		// try {
-  //           //Input data ke SQL
-		// 	DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
-		// }  catch(\Illuminate\Database\QueryException $ex){ 
-  //           DB::rollback();
-  //           $err[] = $ex->getMessage();
-  //       }
-  //       DB::commit();
-  //       return redirect()->back()->withErrors($err);
-  //   }
-
-    public function deleteClient($id) {
-        //Menghapus client dengan ID tertentu
-        try {
-            DB::select("call delete_uob(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            $err[] = $ex->getMessage();
-        }
-        return redirect("home");
-    }
-
     public function importExcel() {
         $err = []; //Inisialisasi array error
         if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan

@@ -9,6 +9,8 @@ class AclubMember extends Model
     //
     protected $table = 'aclub_members';
 
+    protected $primaryKey = 'user_id';
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }
