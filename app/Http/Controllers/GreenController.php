@@ -226,7 +226,6 @@ class GreenController extends Controller
 
         $err = [];
         $progress = new \App\GreenProspectProgress();
-
         $progress->green_id = $request->user_id;
         $progress->date = $request->date;
         $progress->sales_name = $request->sales;
@@ -234,7 +233,6 @@ class GreenController extends Controller
         $progress->nama_product = $request->nama_product;
         $progress->nominal = $request->nominal;
         $progress->keterangan = $request->keterangan;
-
         $progress->save();
         
         return redirect()->back()->withErrors($err);
