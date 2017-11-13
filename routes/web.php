@@ -277,6 +277,27 @@ Route::get('/MRG/deleteclient/{id}', [
     'roles' => ['0', '2'],
     ]);
 
+Route::get('/MRG/{id}/{account}', [
+    'uses' => 'MRGController@clientDetailAccount',
+    'as' => 'MRG.account',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::get('/MRG/deletetrans/{id}', [
+    'uses' => 'MRGController@deleteTrans',
+    'as' => 'MRG.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
+Route::post('/MRG/edittrans', [
+    'uses' => 'MRGController@editTrans',
+    'as' => 'MRG.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
