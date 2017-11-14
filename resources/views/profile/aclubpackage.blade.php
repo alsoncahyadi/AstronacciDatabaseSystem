@@ -83,15 +83,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($trans as $trans)
+                    @foreach ($trans as $transes)
                     <tr class="gradeA">
                         @foreach ($atts as $attreg)
-                        <td> {{$trans->$attreg}}</td>
+                        <td> {{$transes->$attreg}}</td>
                         @endforeach
                     </tr>
                     @endforeach
                 </tbody>
             </table>
+            {{ $trans ->links() }}
         </div>
     </div>
     <!-- /.col-lg-12 -->
