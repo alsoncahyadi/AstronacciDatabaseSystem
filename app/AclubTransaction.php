@@ -9,7 +9,7 @@ class AclubTransaction extends Model
     //
     protected $table = 'aclub_transactions';
 
-     protected $primaryKey = 'transaction_id';
+    protected $primaryKey = 'transaction_id';
 
     public function aclubMember() {
         return $this->hasMany('App\AclubMember', 'user_id', 'user_id');

@@ -9,7 +9,7 @@ class AshopTransaction extends Model
     //
     protected $table = 'ashop_transactions';
 
-     protected $primaryKey = 'transaction_id';
+    protected $primaryKey = 'transaction_id';
 
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');

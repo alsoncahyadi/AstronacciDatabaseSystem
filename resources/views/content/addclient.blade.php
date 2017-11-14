@@ -130,6 +130,7 @@
 				<input type="hidden" id="master_id" name="master_id" value="" />
 				<input type="submit" id="insert_button" class="btn btn-default" value="Insert">
 				<span onclick="reset()"><button type="reset" class="btn btn-default">Reset Form</button></span>
+				<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 			</div>
 		</form>
 		
@@ -282,10 +283,6 @@ $( "#pc" ).change(function() {
 					document.getElementById("cat").style.display = "inline";
 					document.getElementById("flag").value = 'cat';
 				}
-			} else if ($( "#pc option:checked" ).val() == "A-Shop"){
-				document.getElementById("insert_button").disabled = false;
-				document.getElementById("ashop").style.display = "inline";
-				document.getElementById("flag").value = 'ashop';
 			}
 			
 		});

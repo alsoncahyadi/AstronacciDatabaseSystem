@@ -50,7 +50,18 @@ class DetailController extends Controller
         //dd($cat);   
 		return view('profile/pcdetail', ['route'=>'detail', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
     }
-
+  
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $master = MasterClient::find($id);
+            $master->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+  
     public function editClient(Request $request) {
          $this->validate($request, [
                 'master_id' => '',
@@ -90,7 +101,6 @@ class DetailController extends Controller
 
             $master->update();
         } catch(\Illuminate\Database\QueryException $ex){
-            dd('masuk2');
             $err[] = $ex->getMessage();
         }
         return redirect()->back()->withErrors($err);
