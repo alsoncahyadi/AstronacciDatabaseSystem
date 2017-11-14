@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Mrg;
+use App\MrgAccount;
 use DB;
 
 class MRGController extends Controller
@@ -162,6 +163,53 @@ class MRGController extends Controller
             $err[] = $ex->getMessage();
         }
         return redirect()->back()->withErrors($err);
+    }
+
+    public function clientDetailAccount($id, $account) {
+
+        $mrg_account = MrgAccount::where('accounts_number', $account)->first();
+
+        $heads = ["Master ID" => "master_id",
+                    "Nomor Account" => "accounts_number",
+                    "Type Account" => "account_type",
+                    "Sales" => "sales_name"];
+
+        $ins = ["Type Account" => "account_type",
+                "Sales" => "sales_name"];
+
+        return view('profile/mrgaccount', ['route'=>'MRG', 'client'=>$mrg_account, 'ins'=>$ins, 'heads'=>$heads]);
+    }
+
+     public function editTrans(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'nomor_account' => '',
+                'type_account' => '',
+                'sales' => ''
+            ]);
+        $mrg_account = MrgAccount::where('accounts_number',$request->user_id)->first();
+        //Inisialisasi array error
+        $err = [];
+
+        try {
+            $mrg_account->account_type = $request->type_account;
+            $mrg_account->sales_name = $request->sales;
+
+            $mrg_account->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function deleteTrans($id) {
+        try {
+            $mrg_account = MrgAccount::find($id);
+            $mrg_account->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
     }
 
     public function importExcel() {
