@@ -73,6 +73,9 @@
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
+            <p>Search</p>
+            <input id="searchkey" type="text"/>                     
+            <button type="button" onclick="location.href='{{route($route)}}/' + {{$id}} + '/' + {{$package}} + '/' + document.getElementById('searchkey').value" href="#">Search</button>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
                     <tr>

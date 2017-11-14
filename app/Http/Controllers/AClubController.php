@@ -202,12 +202,29 @@ class AClubController extends Controller
     }
 
 
-    public function clientDetailPackage($id, $package) {
+    public function clientDetailPackage($id, $package, $q=null) {
 
         $aclub_member = AclubMember::where('user_id', $package)->first();
         // dd($aclub_member);
 
-        $aclub_transaction = $aclub_member->aclubTransactions()->paginate(15);
+        $aclub_transaction = $aclub_member->aclubTransactions();
+        //dd($aclub_transaction);
+
+        $keyword = $q;
+
+        $aclub_transaction = $aclub_transaction->where('payment_date', 'like', "%{$keyword}%")
+                            ->orWhere('kode', 'like', "%{$keyword}%")
+                            ->orWhere('status', 'like', "%{$keyword}%")
+                            ->orWhere('nominal', 'like', "%{$keyword}%")
+                            ->orWhere('start_date', 'like', "%{$keyword}%")
+                            ->orWhere('expired_date', 'like', "%{$keyword}%")
+                            ->orWhere('masa_tenggang', 'like', "%{$keyword}%")
+                            ->orWhere('yellow_zone', 'like', "%{$keyword}%")
+                            ->orWhere('red_zone', 'like', "%{$keyword}%")
+                            ->orWhere('transaction_id', 'like', "%{$keyword}%")
+                            ->paginate(15);
+
+        //$aclub_transaction = $aclub_member->aclubTransactions()->paginate(15);
         //dd($aclub_transaction);
 
         $heads = ["Transaction ID",
@@ -241,7 +258,7 @@ class AClubController extends Controller
                     "Keterangan"];
 //dd($aclub_transaction);
 
-        return view('profile/aclubpackage', ['route'=>'AClub', 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_member, 'insreg'=>$insreg, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('profile/aclubpackage', ['route'=>'AClub', 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_member, 'insreg'=>$insreg, 'heads'=>$heads, 'atts'=>$atts, 'id'=>$id, 'package'=>$package]);
     }
 
     public function editClient(Request $request) {
