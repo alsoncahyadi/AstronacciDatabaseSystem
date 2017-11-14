@@ -176,13 +176,13 @@
                             @else
                                 <input name="user_id" type="hidden" value="{{$client->client_id}}">
                             @endif
-                            @foreach ($insreg as $atr)
-                            <?php $atr_sql = strtolower(str_replace(' ', '_', $atr));?>
-                            <div class="form-group">
-                                <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="{{$client->$atr_sql}}">
-                            </div>
+                            @foreach ($insreg as $key => $value)
+                                <div style="height:60px">
+                                    <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                </div>
                             @endforeach
+                          
                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                             <input type="submit" class="btn btn-default" value="Insert">
                             <button type="reset" class="btn btn-default">Reset Form</button>

@@ -130,7 +130,6 @@
             </div> 
 			
 		</div>
-    
         @if($aclub)
             <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}')" href="#"> AClub </a>
         @else
