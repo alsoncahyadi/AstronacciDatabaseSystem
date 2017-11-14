@@ -205,8 +205,10 @@ class AClubController extends Controller
     public function clientDetailPackage($id, $package) {
 
         $aclub_member = AclubMember::where('user_id', $package)->first();
+        // dd($aclub_member);
 
-        $aclub_transaction = $aclub_member->aclubTransactions;
+        $aclub_transaction = $aclub_member->aclubTransactions()->first();
+        // dd($aclub_transaction->sales_name);
 
         $heads = ["Transaction ID",
                     "User ID",

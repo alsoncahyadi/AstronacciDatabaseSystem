@@ -9,8 +9,12 @@ class AclubTransaction extends Model
     //
     protected $table = 'aclub_transactions';
 
+    protected $primaryKey = 'transaction_id';
+
+    protected $appends = ['master_id', 'sales_name', 'group'];
+
     public function aclubMember() {
-        return $this->hasMany('App\AclubMember', 'user_id', 'user_id');
+        return $this->belongsTo('App\AclubMember', 'user_id', 'user_id');
     }
 
     public function createdBy() {
@@ -19,5 +23,17 @@ class AclubTransaction extends Model
 
     public function updatedBy() {
         return $this->belongsTo('App\User', 'updated_by');
+    }
+
+    protected function getMasterIdAttribute() {
+        return $this->aclubMember->master_id;
+    }
+
+    protected function getSalesNameAttribute() {
+        return $this->aclubMember->sales_name;
+    }
+
+    protected function getGroupAttribute() {
+        return $this->aclubMember->group;
     }
 }
