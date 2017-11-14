@@ -9,6 +9,8 @@ class GreenProspectClient extends Model
     //
     protected $table = 'green_prospect_clients';
 
+    protected $primaryKey = 'green_id';
+
     public function progresses() {
         return $this->hasMany('App\GreenProspectProgress', 'green_id', 'green_id');
     }
