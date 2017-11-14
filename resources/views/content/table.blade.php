@@ -18,8 +18,10 @@
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
 					<br>
 					<br>
-				@else
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a> -->
+				@else -->
+					@if ($route == 'green')
+						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+					@endif
 					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
 					<!-- <br>
 				@endif -->
@@ -98,6 +100,8 @@
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif ($route == 'MRG')
                                 	<td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'green')
+								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif ($route == 'UOB')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->client_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif (($route != 'product') and ($route != 'AShop') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
@@ -121,7 +125,7 @@
 					</div>
 					{{ csrf_field() }}
 					
-					@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
+					@if($route == 'RedClub')||($route == 'grow'))
 					<input type="hidden" name="username" value={{ Auth::user()->username }}>
 					<div style="float:right">
 						&nbsp &nbsp Prospect to:
