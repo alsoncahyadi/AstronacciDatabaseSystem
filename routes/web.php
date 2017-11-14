@@ -1,4 +1,5 @@
-<?php
+'
+;'<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -432,6 +433,13 @@ Route::post('/green/insert', [
     'as' => 'green.insert',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::post('/green/inserttrans', [
+    'uses' => 'GreenController@addClient',
+    'as' => 'green.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/import', [
