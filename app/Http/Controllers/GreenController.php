@@ -134,20 +134,21 @@ class GreenController extends Controller
             ]);
         //Inisialisasi array error
         $err = [];
-        try {
-            $mrg = Mrg::where('master_id',$request->user_id)->first();
 
-            $err =[];
+        $err = [];
+        $green = new \App\GreenProspectClient();
 
-            $mrg->sumber_data = $request->sumber_data;
-            $mrg->join_date = $request->join_date;
+        $green->date = $request->date;
+        $green->name = $request->name;
+        $green->phone = $request->phone;
+        $green->email = $request->email;
+        $green->interest = $request->interest;
+        $green->pemberi = $request->pemberi;
+        $green->sumber_data = $request->sumber_data;
+        $green->keterangan_perintah = $request->keterangan_perintah;
 
-            $mrg->update();
-        } catch(\Illuminate\Database\QueryException $ex){
-            $err[] = $ex->getMessage();
-        }
+        $green->save();
         return redirect()->back()->withErrors($err);
-
     }
 
     public function deleteClient($id) {
