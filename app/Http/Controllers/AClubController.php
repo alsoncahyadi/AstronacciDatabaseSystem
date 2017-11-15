@@ -348,24 +348,16 @@ class AClubController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->user_id) === null) {
-                        $msg = "User ID empty on line ".$i;
+                    if (($value->master_id) === null) {
+                        $msg = "Master ID empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
+                    if (($value->sumber_data) === null) {
+                        $msg = "Sumber Data empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->no_hp) === null) {
-                        $msg = "No HP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
+                    if (($value->keterangan) === null) {
+                        $msg = "Keterangan empty on line ".$i;
                         $err[] = $msg;
                     }
                 } //end validasi
@@ -375,7 +367,13 @@ class AClubController extends Controller
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try { 
-                            DB::select("call inputaclub_member(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->user_id, $value->nama, $value->no_hp, $value->no_telepon, $value->alamat, $value->kota, $value->provinsi, $value->email, $this->nullify($value->tanggal_lahir), $value->line_id, $value->pin_bb, $value->facebook, $value->twitter, $value->jenis_kelamin, $value->occupation, $value->website, $value->state, $value->interest_and_hobby, $this->nullify($value->trading_experience_year), $value->your_stock_and_future_broker, $this->nullify($value->annual_income), $value->status, $value->keterangan, $value->security_question, $value->security_answer]);
+                            $aclubInfo = new \App\AclubInformation;
+
+                            $aclubInfo->master_id = $value->master_id;
+                            $aclubInfo->sumber_data = $value->sumber_data;
+                            $aclubInfo->keterangan = $value->keterangan;
+
+                            $aclubInfo->save();
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();
