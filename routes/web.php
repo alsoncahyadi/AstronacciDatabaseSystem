@@ -1,4 +1,5 @@
-<?php
+'
+;'<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -277,6 +278,27 @@ Route::get('/MRG/deleteclient/{id}', [
     'roles' => ['0', '2'],
     ]);
 
+Route::get('/MRG/{id}/{account}', [
+    'uses' => 'MRGController@clientDetailAccount',
+    'as' => 'MRG.account',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::delete('/MRG/deletetrans/{id}', [
+    'uses' => 'MRGController@deleteTrans',
+    'as' => 'MRG.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
+Route::post('/MRG/edittrans', [
+    'uses' => 'MRGController@editTrans',
+    'as' => 'MRG.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
@@ -411,6 +433,13 @@ Route::post('/green/insert', [
     'as' => 'green.insert',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::post('/green/inserttrans', [
+    'uses' => 'GreenController@addClient',
+    'as' => 'green.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/import', [

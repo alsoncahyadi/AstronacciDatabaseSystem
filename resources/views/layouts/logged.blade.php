@@ -170,7 +170,7 @@
                     @endif
 
                     <li id="t3">
-                        <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
+                        <a onclick="load('{{route('green')}}')" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>
                 </ul>
             </div>

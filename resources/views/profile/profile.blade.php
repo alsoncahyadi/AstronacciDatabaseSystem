@@ -105,6 +105,8 @@
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+
+                <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
                 
             </div>
 
@@ -150,7 +152,7 @@
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "AShop"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -174,13 +176,13 @@
                             @else
                                 <input name="user_id" type="hidden" value="{{$client->client_id}}">
                             @endif
-                            @foreach ($insreg as $atr)
-                            <?php $atr_sql = strtolower(str_replace(' ', '_', $atr));?>
-                            <div class="form-group">
-                                <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="{{$client->$atr_sql}}">
-                            </div>
+                            @foreach ($insreg as $key => $value)
+                                <div style="height:60px">
+                                    <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                </div>
                             @endforeach
+                          
                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                             <input type="submit" class="btn btn-default" value="Insert">
                             <button type="reset" class="btn btn-default">Reset Form</button>
@@ -267,8 +269,10 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        @if ($route != 'AShop')
+                        @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @elseif ($route == 'MRG')
+                            <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
                         @else
                             <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @endif

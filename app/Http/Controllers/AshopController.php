@@ -27,24 +27,24 @@ class AshopController extends Controller
         $master = MasterClient::all();
 
         $heads= ["Master ID",
-                "Redclub User ID",
-                "Name",
-                "Telephone",
+                "User ID Redclub",
+                "Password Redclub",
+                "Nama",
+                "Telepon",
                 "Email",
-                "Birthdate",
-                "Address",
-                "City",
-                "Province",
+                "Tanggal Lahir",
+                "Alamat",
+                "Kota",
+                "Provinsi",
                 "Gender",
-                "Status",
-                "Keterangan",
-                "Created At",
-                "Updated At",
-                "Created By",
-                "Updated By"];
+                "Line ID",
+                "BBM",
+                "WhatsApp",
+                "Facebook"];
 
         $atts = ["master_id",
                 "redclub_user_id",
+                "redclub_password",
                 "name",
                 "telephone_number",
                 "email",
@@ -53,14 +53,12 @@ class AshopController extends Controller
                 "city",
                 "province",
                 "gender",
-                "status",
-                "keterangan",
-                "created_at",
-                "updated_at",
-                "created_by",
-                "updated_by"];
+                "line_id",
+                "bbm",
+                "whatsapp",
+                "facebook"];
 
-        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$heads]);
     }
 
     public function clientDetail($id) {
@@ -214,23 +212,47 @@ class AshopController extends Controller
 
     public function addClient(Request $request) {
         $this->validate($request, [
-            'product_id' => 'required',
-            'total_pembayaran' => 'required',
+            'user_id_redclub' => '',
+            'password_redclub' => '',
+            'nama' => '',
+            'telepon' => '',
+            'email' => '',
+            'tanggal_lahir' => '',
+            'alamat' => '',
+            'kota' => '',
+            'provinsi' => '',
+            'gender' => '',
+            'line_id' => '',
+            'bbm' => '',
+            'whatsapp' => '',
+            'facebook' => '',
             ]);
 
-        DB::beginTransaction();
         $err = [];
-        $username = \Auth::user()->username;
+
         try {
-            DB::select("call input_product_sale(?,?,?,?,?,?,?,?)", [$request->product_id, $this->nullify($request->jumlah), $request->total_pembayaran, $this->nullify($request->nama_pembeli), $this->nullify($request->all_pc_id), $this->nullify($request->sales), $this->nullify($request->sale_date), $username]);
-            DB::select("call add_username_to_log(?)", [$username]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $master = new \App\MasterClient;
+
+            $master->redclub_user_id = $request->user_id_redclub;
+            $master->redclub_password = $request->password_redclub;
+            $master->name = $request->nama;
+            $master->telephone_number = $request->telepon;
+            $master->email = $request->email;
+            $master->birthdate = $request->tanggal_lahir;
+            $master->address = $request->alamat;
+            $master->city = $request->kota;
+            $master->province = $request->provinsi;
+            $master->gender = $request->gender;
+            $master->line_id = $request->line_id;
+            $master->bbm = $request->bbm;
+            $master->whatsapp = $request->whatsapp;
+            $master->facebook = $request->facebook;
+
+            $master->save();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
         return redirect()->back()->withErrors($err);
-
     }
 
 }
