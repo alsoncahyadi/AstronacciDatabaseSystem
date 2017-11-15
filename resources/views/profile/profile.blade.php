@@ -271,12 +271,7 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-
-                        @else
-                        <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
-                        @endif
-
-                        @if ($route == 'AClub')
+                       @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
                         @elseif ($route == 'green') 
                             <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a></td>
