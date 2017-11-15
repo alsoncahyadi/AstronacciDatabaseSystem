@@ -183,33 +183,55 @@ class UOBController extends Controller
             $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
+
+            
             if(!empty($data) && $data->count()){
                 $i = 1;
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->client) === null) {
-                        $msg = "Client empty on line ".$i;
+                    if (($value->kode_client) === null) {
+                        $msg = "Kode Client empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
+                    if (($value->master_id) === null) {
+                        $msg = "Master ID empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->expired) === null) {
-                        $msg = "Expired empty on line ".$i;
+                    if (($value->sales) === null) {
+                        $msg = "Sales empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
+                    if (($value->sumber_data) === null) {
+                        $msg = "Sumber Data empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->telepon) === null) {
-                        $msg = "Telepon empty on line ".$i;
+                    if (($value->tanggal_join) === null) {
+                        $msg = "Tanggal Join empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
+                    if (($value->nomer_ktp) === null) {
+                        $msg = "Nomer KTP empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->expired_ktp) === null) {
+                        $msg = "Expired KTP empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->nomer_npwp) === null) {
+                        $msg = "Nomer NPWP empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->alamat_surat) === null) {
+                        $msg = "Alamat Surat empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->saudara_tidak_serumah) === null) {
+                        $msg = "Saudara Tidak Serumah empty on line ".$i;
+                        $err[] = $msg;
+                    }
+                    if (($value->ibu_kandung) === null) {
+                        $msg = "Ibu Kandung empty on line ".$i;
                         $err[] = $msg;
                     }
                     
@@ -219,7 +241,21 @@ class UOBController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try { 
-                            DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->client,$value->nama,$value->class,$value->nomor,$value->expired,$value->alamat,$value->kota,$value->tanggal_lahir,$value->kategori, $value->bulan, $value->telepon, $value->email, $value->bank, $value->nomor_rekening, $value->jenis_kelamin, $value->rdi_niaga, $value->rdi_bca, $value->trading_via, $value->source, $value->sales]);
+                            $uob = new \App\Uob;
+
+                            $uob->client_id = $value->kode_client;
+                            $uob->master_id = $value->master_id;
+                            $uob->sales_name = $value->sales;
+                            $uob->sumber_data = $value->sumber_data;
+                            $uob->join_date = $value->tanggal_join;
+                            $uob->nomor_ktp = $value->nomer_ktp;
+                            $uob->tanggal_expired_ktp = $value->expired_ktp;
+                            $uob->nomor_npwp = $value->nomer_npwp;
+                            $uob->alamat_surat = $value->alamat_surat;
+                            $uob->saudara_tidak_serumah = $value->saudara_tidak_serumah;
+                            $uob->nama_ibu_kandung = $value->ibu_kandung;
+
+                            $uob->save();
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           $err[] = $ex->getMessage();
                         }
