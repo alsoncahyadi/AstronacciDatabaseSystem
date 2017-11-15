@@ -92,8 +92,8 @@
 				</div>
 				<?php
 					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "user_id";
-					else if ($route == "MRG") $userid = "account";
+					else if ($route == "AClub") $userid = "master_id";
+					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
 					else if ($route == "grow") $userid = "grow_id";
@@ -101,14 +101,25 @@
 					else if ($route == "assigngreen") $userid = "green_assign_id";
 					else if ($route == "assigngrow") $userid = "grow_assign_id";
 					else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "AShop") $userid = "master_id";
 				?>
 
                 <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+
+                <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
                 
             </div>
 
                 <div id="bod2" style="display:none">
                     <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
+                        @if ($route == "CAT")
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                        @elseif ($route == "AClub")
+                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @endif
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
@@ -141,7 +152,7 @@
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -165,13 +176,13 @@
                             @else
                                 <input name="user_id" type="hidden" value="{{$client->client_id}}">
                             @endif
-                            @foreach ($insreg as $atr)
-                            <?php $atr_sql = strtolower(str_replace(' ', '_', $atr));?>
-                            <div class="form-group">
-                                <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="{{$client->$atr_sql}}">
-                            </div>
+                            @foreach ($insreg as $key => $value)
+                                <div style="height:60px">
+                                    <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                </div>
                             @endforeach
+                          
                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                             <input type="submit" class="btn btn-default" value="Insert">
                             <button type="reset" class="btn btn-default">Reset Form</button>
@@ -184,7 +195,6 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel-body">
                         <form method="post" action="{{route($route . '.inserttrans')}}">
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
                             @if ($route == "CAT")
                                 <input name="user_id" type="hidden" value="{{$client->user_id}}">
                             @else
@@ -227,6 +237,8 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "AShop")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
                         @foreach ($insreg as $atr)
                         <div class="form-group">
@@ -239,8 +251,9 @@
                         <button type="reset" class="btn btn-default">Reset Form</button>
                     </form>
                 </div>
-            <br><br>
+            <br>
             </div>
+            <br><br>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
                     <tr>
@@ -256,10 +269,14 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        
-                       
-                        <td> {{$clientreg->$attreg}} </td>
-
+                        @if ($route == 'AClub')
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @elseif ($route == 'MRG')
+                            <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
+                        @else
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @endif
+                    
                         @endforeach
 
                         <!-- @if ($route == 'CAT')
@@ -269,7 +286,6 @@
                         @endif -->
                         
                     </tr>
-                    
                     @endforeach
                 </tbody>
             </table>

@@ -30,26 +30,80 @@ class DetailController extends Controller
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins= ["Master ID"=> "master_id",
-                "Redclub User ID" => "redclub_user_id",
-                "Name" => "name",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
                 "Telephone" => "telephone_number",
                 "Email" => "email",
-                "Birthdate" => "birthdate",
-                "Address" => "address",
-                "City" => "city",
-                "Province" => "province",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
                 "Gender" => "gender",
-                "Status" => "status",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at",
-                "Created By" => "created_by",
-                "Updated By" => "updated_by"];
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads = $ins;
         $insreg = ["Cuki"];
         //dd($cat);   
-		return view('profile/pcdetail', ['route'=>'CAT', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
+		return view('profile/pcdetail', ['route'=>'detail', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
+    }
+  
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $master = MasterClient::find($id);
+            $master->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+  
+    public function editClient(Request $request) {
+         $this->validate($request, [
+                'master_id' => '',
+                'redclub_user_id' => '',
+                'name' => '',
+                'telephone_number' => '',
+                'email' => '',
+                'birthdate' => '',
+                'address' => '',
+                'city' => '',
+                'province' => '',
+                'gender' => '',
+                'line_id' => '',
+                'bbm' => '',
+                'whatsapp' => '',
+                'facebook' => '',
+            ]);
+        $err = [];
+
+        try {
+            $master = MasterClient::find($request->user_id);
+
+            $master->master_id = $request->master_id;
+            $master->redclub_user_id = $request->redclub_user_id;
+            $master->name = $request->name;
+            $master->telephone_number = $request->telephone_number;
+            $master->email = $request->email;
+            $master->birthdate = $request->birthdate;
+            $master->address = $request->address;
+            $master->city = $request->city;
+            $master->province = $request->province;
+            $master->gender = $request->gender;
+            $master->line_id = $request->line_id;
+            $master->bbm = $request->bbm;
+            $master->whatsapp = $request->whatsapp;
+            $master->facebook = $request->facebook;
+
+            $master->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
 }

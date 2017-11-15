@@ -160,29 +160,17 @@
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111">
                       <ul class="nav">
                           <li>
-                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard <span class="fa arrow"></span></a>
+                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Client Member <span class="fa arrow"></span></a>
                          </li>
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>
-                        <a href="dashboard" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
-                    </li><!-- 
-                    <ul class="nav nav-second-level">
-
-                        @if(Route::currentRouteName() == 'home')
-                        <li>
-                            <a onclick="load('{{route('product')}}')" href="#" style="color:white;">Product</a>
-                        </li>
-
-                        <li>
-                            <a onclick="load('{{route('trans')}}')" href="#" style="color:white;">Transaction</a>
-                        </li>
-                        @endif
-                    </ul> -->
+                        <a onclick="load('{{route('ashop')}}')" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                    </li>
                     @endif
 
                     <li id="t3">
-                        <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
+                        <a onclick="load('{{route('green')}}')" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>
                 </ul>
             </div>

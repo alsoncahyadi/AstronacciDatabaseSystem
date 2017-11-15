@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Mrg;
+use App\MrgAccount;
 use DB;
 
 class MRGController extends Controller
@@ -129,39 +130,83 @@ class MRGController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    //VERSI LAMA
-    public function editClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-        		'all_pc_id' => 'required',
-                'account' => 'required',
-                'fullname' => 'required',
-                'address' => 'required',
-                'no_hp' => 'required',
-                'email' => 'email',
-            ]);
-        //Inisialisasi array error
-        $err = [];
-        DB::beginTransaction();
-        try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut master client
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut MRG
-            DB::select("call edit_mrg(?,?,?,?,?)", [$request->all_pc_id, $request->account, $this->nullify($request->join_date), $this->nullify($request->type), $this->nullify($request->sales_username)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-        	DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
-    }
-
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
-            DB::select("call delete_mrg(?)", [$id]);
+            $mrg = Mrg::find($id);
+            $mrg->delete();
         } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+  
+    public function editClient(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'user_id' => '',
+                'sumber_data' => '',
+                'join_date' => 'date'
+            ]);
+        //Inisialisasi array error
+        $err = [];
+        try {
+            $mrg = Mrg::where('master_id',$request->user_id)->first();
+
+            $err =[];
+
+            $mrg->sumber_data = $request->sumber_data;
+            $mrg->join_date = $request->join_date;
+
+            $mrg->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function clientDetailAccount($id, $account) {
+
+        $mrg_account = MrgAccount::where('accounts_number', $account)->first();
+
+        $heads = ["Master ID" => "master_id",
+                    "Nomor Account" => "accounts_number",
+                    "Type Account" => "account_type",
+                    "Sales" => "sales_name"];
+
+        $ins = ["Type Account" => "account_type",
+                "Sales" => "sales_name"];
+
+        return view('profile/mrgaccount', ['route'=>'MRG', 'client'=>$mrg_account, 'ins'=>$ins, 'heads'=>$heads]);
+    }
+
+     public function editTrans(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'nomor_account' => '',
+                'type_account' => '',
+                'sales' => ''
+            ]);
+        $mrg_account = MrgAccount::where('accounts_number',$request->user_id)->first();
+        //Inisialisasi array error
+        $err = [];
+
+        try {
+            $mrg_account->account_type = $request->type_account;
+            $mrg_account->sales_name = $request->sales;
+
+            $mrg_account->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function deleteTrans($id) {
+        try {
+            $mrg_account = MrgAccount::find($id);
+            $mrg_account->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
         return redirect("home");

@@ -44,19 +44,27 @@ class CATController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Payment Date",
-                    "Payment Nominal",
-                    "Tanggal End Class",
-                    "Tanggal Ujian",
-                    "Status",
-                    "Keterangan"
+        $insreg = [ "Nomer Induk" => 'nomor_induk',
+                    "DP Date" => 'DP_date',
+                    "DP Nominal" => 'DP_nominal',
+                    "Payment Date" => 'payment_date',
+                    "Payment Nominal" => 'payment_nominal',
+                    "Opening Class" => "tanggal_opening_class",
+                    "End Class" => 'tanggal_end_class',
+                    "Ujian" => 'tanggal_ujian',
+                    "Status" => 'status',
+                    "Keterangan" => 'keterangan'
                     ];
 
         //transaction
-        $headsreg = [ "Payment Date" => 'payment_date',
-                        "Tanggal Opening Class" => "tanggal_opening_class",
-                        "Tanggal End Class" => 'tanggal_end_class',
-                        "Tanggal Ujian" => 'tanggal_ujian',
+        $headsreg = [   "Nomer Induk" => 'nomor_induk',
+                        "DP Date" => 'DP_date',
+                        "DP Nominal" => 'DP_nominal',
+                        "Payment Date" => 'payment_date',
+                        "Payment Nominal" => 'payment_nominal',
+                        "Opening Class" => "tanggal_opening_class",
+                        "End Class" => 'tanggal_end_class',
+                        "Ujian" => 'tanggal_ujian',
                         "Status" => 'status',
                         "Keterangan" => 'keterangan'
                     ];
@@ -74,14 +82,18 @@ class CATController extends Controller
                 'keterangan' => ''
             ]);
 
-        $cat = CAT::where('user_id',$request->user_id)->first();
+        $cat = Cat::where('user_id',$request->user_id)->first();
 
         $err =[];
 
+        $cat->nomor_induk = $request->nomer_induk;
+        $cat->DP_date = $request->dp_date;
+        $cat->DP_nominal = $request->dp_nominal;
         $cat->payment_date = $request->payment_date;
-        $cat->payment_nominal = $request->nominal;
-        $cat->tanggal_end_class = $request->tanggal_end_class;
-        $cat->tanggal_ujian = $request->tanggal_ujian;
+        $cat->payment_nominal = $request->payment_nominal;
+        $cat->tanggal_opening_class = $request->opening_class;
+        $cat->tanggal_end_class = $request->end_class;
+        $cat->tanggal_ujian = $request->ujian;
         $cat->status = $request->status;
         $cat->keterangan = $request->keterangan;
 
@@ -90,50 +102,43 @@ class CATController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    //VERSI LAMA
-    public function editClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'email' => 'email',
-                'address' => 'required',
-                'no_hp' => 'required',
-                //'batch' => 'required',
-                'cat_user_id' => 'required',
-                //'cat_no_induk' => 'required',
-                'tanggal_pendaftaran' => 'required',
-                'tanggal_kelas_berakhir' => 'required',
-                'cat_username' => 'required',
-                'fullname' => 'required',
-                'all_pc_id' => 'required'
-            ]);
-        DB::beginTransaction();
-        //Inisialisasi array error
-        $err = [];
-        try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut master client
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $request->email, $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut CAT
-            DB::select("call edit_cat(?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->cat_user_id, $request->cat_no_induk, $request->cat_username, $this->nullify($request->password), $request->batch, $request->tanggal_pendaftaran, $request->tanggal_kelas_berakhir, $this->nullify($request->sales_username)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
-    }
-
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
-            DB::select("call delete_cat(?)", [$id]);
+            $cat = Cat::find($id);
+            $cat->delete();
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
         return redirect("home");
     }
 
-    
+    public function editClient(Request $request) {
+        //Validasi input
+        $this->validate($request, [
+                'user_id' => '',
+                'nomor_induk' => '',
+                'batch' => '',
+                'sales' => ''
+            ]);
+        $cat = Cat::where('user_id',$request->user_id)->first();
+        //Inisialisasi array error
+        $err = [];
+
+        try {
+            $cat->user_id = $request->user_id;
+            $cat->nomor_induk = $request->nomor_induk;
+            $cat->batch = $request->batch;
+            $cat->sales_name = $request->sales;
+
+            $cat->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
+    }
+  
+  //VERSI LAMA
 
     public function detailTrans($id){
         echo ($id);

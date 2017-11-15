@@ -71,6 +71,7 @@
                     else if ($route == "assigngreen") $userid = "green_assign_id";
                     else if ($route == "assigngrow") $userid = "grow_assign_id";
                     else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "detail") $userid = "master_id";
                 ?>
                 
     <div class="panel panel-default" style="margin:15px">
@@ -79,6 +80,7 @@
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
             <button class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </button>
+            <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
         </div>
 		
         <div class="panel-body">
@@ -97,22 +99,60 @@
 				</div>
 
 			</div>
+
+             <div id="bod2" style="display:none">
+                <form role="form" method="post" action="{{route($route . '.edit')}}">
+                    <div class="form-group">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
+                        @foreach ($ins as $key => $value)
+                            <div style="height:60px">
+                                <label>{{$key}}</label>
+                                    <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                            </div>
+                        @endforeach
+                        
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="reset" class="btn btn-default">Reset</button>
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
+                        <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                    @elseif ($route == 'assigngrow')
+                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
+                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
+                    @elseif ($route == 'assigngreen')
+                        <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
+                        <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
+                    @elseif ($route == 'assignredclub')
+                        <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
+                    @endif
+                </form>
+            </div> 
 			
 		</div>
-        {{$client->$userid}}
         @if($aclub)
-            <a class="btn btn-default" style="margin:10px;" href="{{route('AClub.detail', ['id' => $aclub->master_id])}}" target="_blank"> AClub </a>
+            <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}')" href="#"> AClub </a>
+        @else
+            <button type="button" class="btn btn-default" style="color:red;" disabled> AClub </button>
         @endif
         @if($mrg)
-        <a class="btn btn-default" style="margin:10px;" href="{{route('MRG.detail', ['id' => $mrg->master_id])}}" target="_blank"> MRG </a>
+        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}')" href="#"> MRG </a>
+        @else
+            <button type="button" class="btn btn-default" style="color:red;" disabled> MRG </button>
         @endif
         @if($cat)
-        <a class="btn btn-default" style="margin:10px;" href="{{route('CAT.detail', ['id' => $cat->user_id])}}" target="_blank"> CAT </a>
+        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('CAT.detail', ['id' => $cat->user_id])}}')" href="#"> CAT </a>
+        @else
+            <button type="button" class="btn btn-default" style="color:red;" disabled> CAT </button>
         @endif
         @if($uob)
-        <a class="btn btn-default" style="margin:10px;" href="{{route('UOB.detail', ['id' => $uob->client_id])}}" target="_blank"> UOB </a>
+        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('UOB.detail', ['id' => $uob->client_id])}}')" href="#"> UOB </a>
+        @else
+            <button type="button" class="btn btn-default" style="color:red;" disabled> UOB </button>
         @endif 
     </div>
+
+    <div id="tab"></div>
 
 	<br><br>
 

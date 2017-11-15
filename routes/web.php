@@ -1,4 +1,5 @@
-<?php
+'
+;'<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -134,9 +135,23 @@ Route::post('/insertPassword', [
 	'middleware' => ['auth'],
 	]);
 
+// DETAIL PC ROUTES
 Route::get('/member/{id}', [
     'uses' => 'DetailController@clientDetail',
     'as' => 'detail',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
+
+Route::post('/member/edit', [
+    'uses' => 'DetailController@editClient',
+    'as' => 'detail.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3'],
+    ]);
+Route::get('/member/deleteclient/{id}', [
+    'uses' => 'DetailController@deleteClient',
+    'as' => 'detail.deleteclient',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
     ]);
@@ -263,6 +278,27 @@ Route::get('/MRG/deleteclient/{id}', [
     'roles' => ['0', '2'],
     ]);
 
+Route::get('/MRG/{id}/{account}', [
+    'uses' => 'MRGController@clientDetailAccount',
+    'as' => 'MRG.account',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::delete('/MRG/deletetrans/{id}', [
+    'uses' => 'MRGController@deleteTrans',
+    'as' => 'MRG.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
+Route::post('/MRG/edittrans', [
+    'uses' => 'MRGController@editTrans',
+    'as' => 'MRG.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
@@ -328,6 +364,13 @@ Route::get('/AClub/{id}', [
 	'roles' => ['0', '1'],
     ]);
 
+Route::get('/AClub/{id}/{package}', [
+    'uses' => 'AClubController@clientDetailPackage',
+    'as' => 'AClub.package',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::post('/AClub/insert', [
     'uses' => 'AClubController@addClient',
     'as' => 'AClub.insert',
@@ -390,6 +433,13 @@ Route::post('/green/insert', [
     'as' => 'green.insert',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::post('/green/inserttrans', [
+    'uses' => 'GreenController@addClient',
+    'as' => 'green.inserttrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/import', [
@@ -534,16 +584,57 @@ Route::post('/product/insert', [
     'roles' => ['0'],
     ]);
 
-Route::get('/trans', [
-    'uses' => 'TransController@getTable',
-    'as' => 'trans',
+Route::get('/AShop/{id}', [
+    'uses' => 'AshopController@clientDetail',
+    'as' => 'AShop.detail',
     'middleware' => ['auth', 'ashop'],
     ]);
 
+Route::get('/AShop', [
+    'uses' => 'AshopController@getTable',
+    'as' => 'ashop',
+    'middleware' => ['auth', 'ashop'],
+    ]);
 
-Route::post('/trans/insert', [
-    'uses' => 'TransController@addClient',
-    'as' => 'trans.insert',
+Route::post('/AShop/insert', [
+    'uses' => 'AshopController@addClient',
+    'as' => 'AShop.insert',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShop/deletetrans/{id}', [
+    'uses' => 'AshopController@deleteTrans',
+    'as' => 'AShop.deletetrans',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::post('/AShop/inserttrans', [
+    'uses' => 'AshopController@addTrans',
+    'as' => 'AShop.inserttrans',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShop/delete/{id}', [
+    'uses' => 'AshopController@deleteClient',
+    'as' => 'AShop.deleteclient',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::post('/AShop/edit', [
+    'uses' => 'AshopController@editTrans',
+    'as' => 'AShop.edit',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::post('/AShop/edittrans', [
+    'uses' => 'AshopController@editTrans',
+    'as' => 'AShop.edittrans',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShop/{id}/{package}', [
+    'uses' => 'AshopController@clientDetailTrans',
+    'as' => 'AShop.trans',
     'middleware' => ['auth', 'ashop'],
     ]);
 
