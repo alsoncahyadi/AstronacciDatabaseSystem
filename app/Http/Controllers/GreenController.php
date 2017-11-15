@@ -45,7 +45,7 @@ class GreenController extends Controller
                     "sumber_data",
                     "keterangan_perintah"];
 
-        return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$heads]);
     }
 
     public function clientDetail($id) {
