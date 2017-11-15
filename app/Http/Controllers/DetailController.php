@@ -30,15 +30,15 @@ class DetailController extends Controller
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins= ["Master ID"=> "master_id",
-                "Redclub Password" => "redclub_password",
-                "Redclub User ID" => "redclub_user_id",
-                "Name" => "name",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
                 "Telephone" => "telephone_number",
                 "Email" => "email",
-                "Birthdate" => "birthdate",
-                "Address" => "address",
-                "City" => "city",
-                "Province" => "province",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
                 "Gender" => "gender",
                 "Line ID" => "line_id",
                 "BBM" => "bbm",
@@ -50,7 +50,18 @@ class DetailController extends Controller
         //dd($cat);   
 		return view('profile/pcdetail', ['route'=>'detail', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
     }
-
+  
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $master = MasterClient::find($id);
+            $master->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+  
     public function editClient(Request $request) {
          $this->validate($request, [
                 'master_id' => '',
@@ -90,7 +101,6 @@ class DetailController extends Controller
 
             $master->update();
         } catch(\Illuminate\Database\QueryException $ex){
-            dd('masuk2');
             $err[] = $ex->getMessage();
         }
         return redirect()->back()->withErrors($err);
