@@ -436,7 +436,7 @@ Route::post('/green/insert', [
     ]);
 
 Route::post('/green/inserttrans', [
-    'uses' => 'GreenController@addClient',
+    'uses' => 'GreenController@addTrans',
     'as' => 'green.inserttrans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
@@ -469,6 +469,14 @@ Route::post('/green/assign', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
+
+Route::post('/green/assign', [
+    'uses' => 'GreenController@assignClient',
+    'as' => 'green.assign',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 	
 //Red Club Route
 Route::get('/RedClub', [
