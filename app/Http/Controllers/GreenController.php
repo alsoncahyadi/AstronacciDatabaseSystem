@@ -34,6 +34,14 @@ class GreenController extends Controller
                     "Sumber Data",
                     "Keterangan Perintah"];
 
+        $ins = ["Name",
+                    "Date",
+                    "Phone",
+                    "Email",
+                    "Interest",
+                    "Pemberi",
+                    "Sumber Data",
+                    "Keterangan Perintah"];
 
         $atts = ["green_id",
                     "name",
@@ -45,7 +53,7 @@ class GreenController extends Controller
                     "sumber_data",
                     "keterangan_perintah"];
 
-        return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
     }
 
     public function clientDetail($id) {
@@ -115,9 +123,14 @@ class GreenController extends Controller
     public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => '',
+                'date' => 'date',
+                'name' => '',
+                'phone' => '',
+                'email' => '',
+                'interest' => '',
+                'pemberi' => '',
                 'sumber_data' => '',
-                'join_date' => 'date'
+                'keterangan_perintah' => ''
             ]);
         //Inisialisasi array error
         $err = [];

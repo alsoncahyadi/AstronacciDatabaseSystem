@@ -18,8 +18,8 @@
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
 					<br>
 					<br>
-				@else
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a> -->
+				@else -->
+					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
 					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
 					<!-- <br>
 				@endif -->
@@ -27,7 +27,7 @@
 			</div>
 		@endif
 		<div id="import" style="display:none">
-		@if(($route != 'product') and ($route != 'trans') and ($route != 'assign'))	
+		@if(($route != 'product') and ($route != 'AShop') and ($route != 'assign'))	
 		<div class="panel panel-default" style="padding:15px">
 			<div class="panel-body">
 				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
@@ -42,7 +42,45 @@
 		</div>
     </div>
 	
-	
+    			<div id="addcli" style="display:none">
+					<div class="panel panel-default" style="padding:15px" >
+						<form method="post" action="{{route($route . '.insert')}}">
+							@foreach ($ins as $atr)
+								<div class="form-group">
+									@if ($atr == 'Product ID')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($prods as $prod)
+										<option value = {{$prod->product_id}}>{{$prod->product_id}}</option>
+						               @endforeach
+										</select>
+									@elseif ($atr == 'PC ID')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($foreigns as $foreign)
+										<option value = {{$foreign->all_pc_id}}>{{$foreign->all_pc_id}}->{{$foreign->fullname}}</option>
+						               @endforeach
+										</select>
+									@elseif ($atr == 'Sales')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($sales as $sale)
+										<option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
+						               @endforeach
+										</select>
+									@else
+										<label>{{$atr}}</label>
+										<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+									@endif
+								</div>
+							@endforeach
+							<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+							<input type="submit" class="btn btn-default" value="Insert">
+							<button type="reset" class="btn btn-default">Reset Form</button>
+						</form>
+					</div>
+				</div>
+
 	<div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
@@ -102,8 +140,10 @@
 								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif ($route == 'UOB')
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->client_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
-                                @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
+                                @elseif (($route != 'product') and ($route != 'AShop') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
 								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->user_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'AShop')
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 								@else
 									<td>{{$client->$att}}</td>
                                 @endif
@@ -116,8 +156,6 @@
 						</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
-					
-					{{ $clients->links() }}
 					
                     <!-- /.table-responsive -->
 					</div>
