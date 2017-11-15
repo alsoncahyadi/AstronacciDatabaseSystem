@@ -171,44 +171,24 @@ class CATController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->batch) === null) {
-                        $msg = "Batch empty on line ".$i;
-                        $err[] = $msg;
-                    }
                     if (($value->user_id) === null) {
                         $msg = "User ID empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->no_induk) === null) {
-                        $msg = "No Induk empty on line ".$i;
+                    if (($value->master_id) === null) {
+                        $msg = "Master ID empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->pendaftaran) === null) {
-                        $msg = "Pendaftaran empty on line ".$i;
+                    if (($value->batch) === null) {
+                        $msg = "Batch empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->kelas_berakhir) === null) {
-                        $msg = "Kelas Berakhir empty on line ".$i;
+                    if (($value->sales) === null) {
+                        $msg = "Sales empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->telepon) === null) {
-                        $msg = "Telepon empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->username) === null) {
-                        $msg = "Username empty on line ".$i;
+                    if (($value->sumber_data) === null) {
+                        $msg = "Sumber Data empty on line ".$i;
                         $err[] = $msg;
                     }
                 } //end validasi
@@ -217,7 +197,15 @@ class CATController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try {
-                            DB::select("call inputCAT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->sales,$value->batch,$value->user_id,$value->no_induk,$value->pendaftaran,$value->kelas_berakhir,$value->username,$value->password,$value->nama,$value->jenis_kelamin,$value->email,$value->telepon,$value->alamat,$value->kota, $value->tanggal_lahir]);
+                            $cat = new \App\Cat;
+
+                            $cat->user_id = $value->user_id;
+                            $cat->master_id = $value->master_id;
+                            $cat->batch = $value->batch;
+                            $cat->sales_name = $value->sales;
+                            $cat->sumber_data = $value->sumber_data;
+
+                            $cat->save();
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();
