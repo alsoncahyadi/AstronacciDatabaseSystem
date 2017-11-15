@@ -60,7 +60,7 @@ class AshopController extends Controller
                 "created_by",
                 "updated_by"];
 
-        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$heads]);
     }
 
     public function clientDetail($id) {
