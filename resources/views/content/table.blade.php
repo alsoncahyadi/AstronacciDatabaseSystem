@@ -8,23 +8,8 @@
 	@if ($route != 'assign')
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
-				<!-- @if($route == 'product')
-					@if(Auth::user()->hasAnyRole(['0']))
-						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Product</a>
-						<br>
-						<br>
-					@endif
-				@elseif ($route == 'trans')
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
-					<br>
-					<br>
-				@else -->
-					@if ($route == 'green')
-						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
-					@endif
-					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
-					<!-- <br>
-				@endif -->
+					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
 				<br>
 			</div>
 		@endif
@@ -44,7 +29,45 @@
 		</div>
     </div>
 	
-	
+    			<div id="addcli" style="display:none">
+					<div class="panel panel-default" style="padding:15px" >
+						<form method="post" action="{{route($route . '.insert')}}">
+							@foreach ($ins as $atr)
+								<div class="form-group">
+									@if ($atr == 'Product ID')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($prods as $prod)
+										<option value = {{$prod->product_id}}>{{$prod->product_id}}</option>
+						               @endforeach
+										</select>
+									@elseif ($atr == 'PC ID')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($foreigns as $foreign)
+										<option value = {{$foreign->all_pc_id}}>{{$foreign->all_pc_id}}->{{$foreign->fullname}}</option>
+						               @endforeach
+										</select>
+									@elseif ($atr == 'Sales')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($sales as $sale)
+										<option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
+						               @endforeach
+										</select>
+									@else
+										<label>{{$atr}}</label>
+										<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+									@endif
+								</div>
+							@endforeach
+							<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+							<input type="submit" class="btn btn-default" value="Insert">
+							<button type="reset" class="btn btn-default">Reset Form</button>
+						</form>
+					</div>
+				</div>
+
 	<div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
