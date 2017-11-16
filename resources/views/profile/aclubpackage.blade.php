@@ -91,7 +91,11 @@
                         @endforeach
                 </div>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->transaction_id])}}"> Delete Client </a>         
+                <form action="{{route($route . '.deletetrans', ['id' => $client->transaction_id])}}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <input type="submit" onclick="del()" value="Delete Transaction" >
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                </form>
             </div>
 
                 <div id="bod2" style="display:none">
@@ -149,10 +153,8 @@
         });
     });
     function del(){
-        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->transaction_id])}}");
-
-
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?'))
+            window.location.replace("{{route($route . '.deletetrans', ['id' => $client->transaction_id])}}");
     }
     </script>
 </body>

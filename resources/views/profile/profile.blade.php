@@ -343,13 +343,6 @@
                         @endif
                     
                         @endforeach
-
-                        <!-- @if ($route == 'CAT')
-                        <td><a href="{{route('CAT/trans.deletetrans', ['id1' => $clientreg->cat_user_id, 'id2' => $clientreg->angsuran_ke])}}"> Delete </a></td>
-                        @elseif ($route == 'AClub')
-                        <td><a href="{{route('AClub/trans.deletetrans', ['id' => $clientreg->registration_id])}}"> Delete </a></td>
-                        @endif -->
-                        
                     </tr>
                     @endforeach
                 </tbody>
