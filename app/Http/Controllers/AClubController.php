@@ -157,7 +157,6 @@ class AClubController extends Controller
     }
 
     public function clientDetailMember($id, $member) {
-
         $aclub_member = AclubMember::where('user_id', $member)->first();
 
         $aclub_transaction = $aclub_member->aclubTransactions()->get();
@@ -247,7 +246,6 @@ class AClubController extends Controller
                     "nominal",
                     "start_date"];
 //dd($aclub_transaction);
-
         return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
 
