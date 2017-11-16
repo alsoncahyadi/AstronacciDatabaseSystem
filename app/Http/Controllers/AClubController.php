@@ -222,7 +222,7 @@ class AClubController extends Controller
                             ->orWhere('yellow_zone', 'like', "%{$keyword}%")
                             ->orWhere('red_zone', 'like', "%{$keyword}%")
                             ->orWhere('transaction_id', 'like', "%{$keyword}%")
-                            ->paginate(15);
+                            ->simplePaginate(15);
 
         //$aclub_transaction = $aclub_member->aclubTransactions()->paginate(15);
         //dd($aclub_transaction);
