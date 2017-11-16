@@ -68,7 +68,7 @@
 		<!-- /.col-lg-12 -->
 	</div>
     </div>
-	
+	<h3>This Page</h3>
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
@@ -250,6 +250,8 @@
             <br>
             </div>
             <br><br>
+            <input id="searchkey" type="text"/>                     
+            <button type="button" onclick="location.href='{{route($route)}}/' + {{$id}} + '?q=' + document.getElementById('searchkey').value" href="#">Search</button>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
                     <tr>
@@ -280,6 +282,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $clientsreg->links() }}
             @endif
     </div>
     @endif

@@ -164,7 +164,7 @@ class AClubController extends Controller
         dd($aclub_transaction);
     }
 
-    public function clientDetail($id) {
+    public function clientDetail(Request $request, $id) {
         // detail master dengan master_id = $id
         $aclub_information = AclubInformation::where('master_id', $id)->first();
 
@@ -177,8 +177,14 @@ class AClubController extends Controller
 
         $heads = $ins;
 
+        $keyword = $request["q"];        
+
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers()->get();
+        $aclub_members = $aclub_master->aclubMembers()
+                        ->where('user_id', 'like', "%{$keyword}%")
+                        ->orWhere('sales_name', 'like', "%{$keyword}%")
+                        ->orWhere('group', 'like', "%{$keyword}%")
+                        ->simplePaginate(15);
 
         $headsreg = ["User ID",
                     "Sales Name",
@@ -198,7 +204,7 @@ class AClubController extends Controller
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg, 'id'=>$id]);
     }
 
 
