@@ -27,7 +27,7 @@
 
     <link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
-    <!-- Scripts -->
+        <!-- Scripts -->
     <!-- jQuery -->
 
     <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>
@@ -45,8 +45,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
     <script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
-
-    <!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
+    
+<!--    <script src="{{ URL::asset('js/loader.js') }}"></script>    -->
 
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
@@ -63,38 +63,131 @@
 
     <div class="row">
         <div class="col-lg-12">
-           <h1>{{$route}} Profile</h1>
+            <h1>{{$route}} Profile</h1>
         </div>
-    <div>
+        <!-- /.col-lg-12 -->
+    </div>
+    </div>
+    
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-money fa-fw"></i> Transactions
+            <i class="fa fa-child fa-fw"></i> Basic Information 
+            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
         </div>
+        
         <div class="panel-body">
-            <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
-                <thead>
-                    <tr>
-                        @foreach ($heads as $headreg)
-                        <th> {{$headreg}} </th>
+            <div id="bod1">
+                <div class="form-group">
+                    <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
+                    
+                        @foreach ($heads as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client->$value}}<br>
+                            </div>
                         @endforeach
+                </div>
+                <?php
+                    if($route == "CAT") $userid = "user_id";
+                    else if ($route == "AClub") $userid = "user_id";
+                    else if ($route == "MRG") $userid = "master_id";
+                    else if ($route == "UOB") $userid = "client_id";
+                    else if ($route == "green") $userid = "green_id";
+                    else if ($route == "grow") $userid = "grow_id";
+                    else if ($route == "RedClub") $userid = "username";
+                    else if ($route == "assigngreen") $userid = "green_assign_id";
+                    else if ($route == "assigngrow") $userid = "grow_assign_id";
+                    else if ($route == "assignredclub") $userid = "redclub_assign_id";
+                    else if ($route == "AShop") $userid = "transaction_id";
+                ?>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($trans as $trans)
-                    <tr class="gradeA">
-                        @foreach ($atts as $attreg)
-                        <td> {{$trans->$attreg}}</td>
-                        @endforeach
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+                
+            </div>
+
+                <div id="bod2" style="display:none">
+                    <form role="form" method="post" action="{{route($route . '.edit')}}">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
+                        @if ($route == "CAT")
+                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
+                        @elseif ($route == "AClub")
+                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        @elseif ($route == "MRG")
+                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "AShop")
+                            <input name="user_id" type="hidden" value="{{$client->transaction_id}}">
+                            <input name="master_id" type="hidden" value="{{$client->master_id}}">
+                        @endif
+                        <div class="form-group">
+                            <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
+                            
+                                    @foreach ($ins as $key => $value)
+                                        <div style="height:60px">
+                                            <label>{{$key}}</label>
+                                                <input class="form-control" value="{{$client->$value}}" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                        </div>
+                                    @endforeach
+                            
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="reset" class="btn btn-default">Reset</button>
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
+                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
+                        @elseif ($route == 'assigngrow')
+                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
+                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
+                        @elseif ($route == 'assigngreen')
+                            <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
+                            <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
+                        @elseif ($route == 'assignredclub')
+                            <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
+                        @endif
+                    </form>
+                </div> 
+            
         </div>
-    </div>
-    <!-- /.col-lg-12 -->
-</div>
-</div>
 
+     </div>
+
+    <br><br>
+
+    @if(count($errors) > 0)
+        @foreach($errors->all() as $error)
+            <h4>{{$error}}</h4>
+        @endforeach
+    @endif
+    
+</div>
+<script>
+    $(document).ready(function(){
+        $("#hide").click(function(){
+            $("#bod1").hide();
+            $("#bod2").show();
+            $("#hide").hide();
+            $("#show").show();
+            
+        });
+        $("#show").click(function(){
+            $("#bod2").hide();
+            $("#bod1").show();
+            $("#show").hide();
+            $("#hide").show();
+        });
+        $("delete").click(function(){
+            $("#delete").hide();
+            $("#condel").show();
+            
+        });
+    });
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
+            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
+
+    }
+    </script>
 </body>
 </html>

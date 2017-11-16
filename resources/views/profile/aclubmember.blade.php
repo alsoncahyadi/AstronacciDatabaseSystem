@@ -25,10 +25,10 @@
     <!-- Custom Fonts -->
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 
-	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
-	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
-	    <!-- Scripts -->
-	<!-- jQuery -->
+    <link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
+        <!-- Scripts -->
+    <!-- jQuery -->
 
     <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>
 
@@ -44,9 +44,9 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
-	<script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
-	
-<!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
+    <script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
+    
+<!--    <script src="{{ URL::asset('js/loader.js') }}"></script>    -->
 
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
@@ -61,24 +61,24 @@
 <body style="overflow-x:hidden;  background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
     <div id="wrapper" style="margin:15px">
 
-	<div class="row">
-		<div class="col-lg-12">
-			<h1>{{$route}} Profile</h1>
-		</div>
-		<!-- /.col-lg-12 -->
-	</div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>{{$route}} Profile</h1>
+        </div>
+        <!-- /.col-lg-12 -->
     </div>
-	
+    </div>
+    
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
-			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
         </div>
-		
+        
         <div class="panel-body">
-			<div id="bod1">
-				<div class="form-group">
+            <div id="bod1">
+                <div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
                     
                         @foreach ($heads as $key => $value)
@@ -89,70 +89,36 @@
                                 : {{$client->$value}}<br>
                             </div>
                         @endforeach
-				</div>
-				<?php
-					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "user_id";
-					else if ($route == "MRG") $userid = "master_id";
-					else if ($route == "UOB") $userid = "client_id";
-					else if ($route == "green") $userid = "green_id";
-					else if ($route == "grow") $userid = "grow_id";
-					else if ($route == "RedClub") $userid = "username";
-					else if ($route == "assigngreen") $userid = "green_assign_id";
-					else if ($route == "assigngrow") $userid = "grow_assign_id";
-					else if ($route == "assignredclub") $userid = "redclub_assign_id";
-                    else if ($route == "AShop") $userid = "master_id";
-				?>
+                </div>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
-
-                <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
+                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->user_id])}}"> Delete Client </a>
                 
             </div>
 
                 <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.edit')}}">
-                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @elseif ($route == "MRG")
-                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @endif
+                    <form role="form" method="post" action="{{route($route . '.editmember')}}">
+                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                            
-                                    @foreach ($ins as $key => $value)
-                                        <div style="height:60px">
-                                            <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                        </div>
-                                    @endforeach
+                            @foreach ($ins as $key => $value)
+                                <div style="height:60px">
+                                    <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                </div>
+                            @endforeach
                             
                         </div>
                         <button type="submit" class="btn btn-default">Submit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
-                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
-                        @elseif ($route == 'assigngrow')
-                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
-                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
-                        @elseif ($route == 'assigngreen')
-                            <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
-                            <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
-                        @elseif ($route == 'assignredclub')
-                            <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
-                        @endif
                     </form>
                 </div> 
-			
-		</div>
+            
+        </div>
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -176,13 +142,13 @@
                             @else
                                 <input name="user_id" type="hidden" value="{{$client->client_id}}">
                             @endif
-                            @foreach ($insreg as $key => $value)
-                                <div style="height:60px">
-                                    <label>{{$key}}</label>
-                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                </div>
+                            @foreach ($insreg as $atr)
+                            <?php $atr_sql = strtolower(str_replace(' ', '_', $atr));?>
+                            <div class="form-group">
+                                <label>{{$atr}}</label>
+                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="{{$client->$atr_sql}}">
+                            </div>
                             @endforeach
-                          
                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                             <input type="submit" class="btn btn-default" value="Insert">
                             <button type="reset" class="btn btn-default">Reset Form</button>
@@ -269,11 +235,8 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        
-                        @if ($route == 'AClub')
-                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
-                        @elseif ($route == 'MRG')
-                            <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
+                        @if ($route != 'AShop')
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @else
                             <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @endif
@@ -294,41 +257,41 @@
     </div>
     @endif
 
-	<br><br>
+    <br><br>
 
     @if(count($errors) > 0)
         @foreach($errors->all() as $error)
             <h4>{{$error}}</h4>
         @endforeach
     @endif
-	
+    
 </div>
 <script>
-	$(document).ready(function(){
-		$("#hide").click(function(){
-			$("#bod1").hide();
-			$("#bod2").show();
-			$("#hide").hide();
-			$("#show").show();
-			
-		});
-		$("#show").click(function(){
-			$("#bod2").hide();
-			$("#bod1").show();
-			$("#show").hide();
-			$("#hide").show();
-		});
-		$("delete").click(function(){
-			$("#delete").hide();
-			$("#condel").show();
-			
-		});
-	});
-	function del(){
-		if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-			window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
+    $(document).ready(function(){
+        $("#hide").click(function(){
+            $("#bod1").hide();
+            $("#bod2").show();
+            $("#hide").hide();
+            $("#show").show();
+            
+        });
+        $("#show").click(function(){
+            $("#bod2").hide();
+            $("#bod1").show();
+            $("#show").hide();
+            $("#hide").show();
+        });
+        $("delete").click(function(){
+            $("#delete").hide();
+            $("#condel").show();
+            
+        });
+    });
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
+            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->user_id])}}");
 
-	}
-	</script>
+    }
+    </script>
 </body>
 </html>

@@ -364,7 +364,14 @@ Route::get('/AClub/{id}', [
 	'roles' => ['0', '1'],
     ]);
 
-Route::get('/AClub/{id}/{package}', [
+Route::get('/AClub/{id}/{member}', [
+    'uses' => 'AClubController@clientDetailMember',
+    'as' => 'AClub.member',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClub/{id}/{member}/{package}', [
     'uses' => 'AClubController@clientDetailPackage',
     'as' => 'AClub.package',
     'middleware' => ['auth', 'roles'],
@@ -409,6 +416,13 @@ Route::get('/AClub/deletetrans/{id}', [
 Route::get('/AClub/deleteclient/{id}', [
     'uses' => 'AClubController@deleteClient',
     'as' => 'AClub.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::post('/AClub/editmember', [
+    'uses' => 'AClubController@editMember',
+    'as' => 'AClub.editmember',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
     ]);
