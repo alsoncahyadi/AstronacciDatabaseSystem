@@ -168,7 +168,7 @@ class AClubController extends Controller
 
         $ins = ["Sales" => "sales_name",
                     "Group" => "group"];
-
+      
         $insreg = ["Payment date", 
                     "Kode", 
                     "Nominal",
@@ -240,7 +240,7 @@ class AClubController extends Controller
                     "Kode", 
                     "Nominal",
                     "Start Date"];
-
+      
         $attsreg = ["payment_date",
                     "kode",
                     "nominal",
