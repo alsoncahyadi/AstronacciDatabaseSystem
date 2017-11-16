@@ -115,12 +115,20 @@ class AClubController extends Controller
         $aclub_members = $aclub_master->aclubMembers()->get();
 
         $headsreg = ["User ID",
-                    "Sales Name",
                     "Group"];
 
         $insreg = ["User ID",
+                    "Group",
                     "Sales Name",
-                    "Group"];
+                    "Payment Date",
+                    "Kode",
+                    "Status",
+                    "Nominal",
+                    "Start Date",
+                    "Expired Date",
+                    "Masa Tenggang",
+                    "Red Zone",
+                    "Yellow Zone"];
 
         $attsreg = ["user_id", "sales_name", "group"];
 
@@ -146,7 +154,21 @@ class AClubController extends Controller
         $aclub_member->sales_name = $request->sales_name;
         $aclub_member->group = $request->group;
 
+        $aclub_trans = new \App\AclubTransaction;
+        $aclub_trans->user_id = $request->user_id;
+        $aclub_trans->payment_date = $request->payment_date;
+        $aclub_trans->sales_name = $request->sales_name;
+        $aclub_trans->kode = $request->kode;
+        $aclub_trans->status = $request->status_aclub;
+        $aclub_trans->nominal = $request->nominal;
+        $aclub_trans->start_date = $request->start_date;
+        $aclub_trans->expired_date = $request->expired_date;
+        $aclub_trans->masa_tenggang = $request->masa_tenggang;
+        $aclub_trans->red_zone = $request->red_zone;
+        $aclub_trans->yellow_zone = $request->yellow_zone;
+
         $aclub_member->save();
+        $aclub_trans->save();
         
         return redirect()->back()->withErrors($err);
     }
@@ -169,23 +191,32 @@ class AClubController extends Controller
 
         $heads = [  "User ID" => "user_id",
                     "Master ID" => "master_id",
-                    "Sales" => "sales_name",
                     "Group" => "group"];
 
-        $ins = ["Sales" => "sales_name",
+        $ins =  [   "Sales Name" => "sales_name",
                     "Group" => "group"];
       
-        $insreg = ["Payment date", 
+        $insreg = [ "Payment Date", 
                     "Kode", 
+                    "Status", 
                     "Nominal",
-                    "Start Date",
-                    "Keterangan"];
+                    "Sales Name", 
+                    "Start Date", 
+                    "Expired Date", 
+                    "Masa Tenggang", 
+                    "Yellow Zone", 
+                    "Red Zone"];
 
         $attsreg = ["payment_date",
                     "kode",
+                    "status",
                     "nominal",
+                    "sales_name",
                     "start_date",
-                    "keterangan"];
+                    "expired_date",
+                    "masa_tenggang",
+                    "yellow_zone",
+                    "red_zone"];
 
         return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
@@ -224,8 +255,9 @@ class AClubController extends Controller
     public function clientDetailPackage($id, $member, $package) {
 
         $aclub_transaction = AclubTransaction::where('transaction_id', $package)->first();
+        // dd($aclub_transaction);
 
-        $heads = ["Transaction ID" => 'transaction_id',
+        $heads = [  "Transaction ID" => 'transaction_id',
                     "User ID" => 'user_id',
                     "Payment Date" => 'payment_date',
                     "Kode" => 'kode',
@@ -237,20 +269,38 @@ class AClubController extends Controller
                     "Yellow Zone" => 'yellow_zone',
                     "Red Zone" => 'red_zone'];
 
-        $ins = [    "Payment Date" => 'payment_date',
-                    "Kode" => 'kode',
-                    "Nominal" => 'nominal',
-                    "Start Date" => 'start_date'];
+        $ins = [      "Payment Date" => "payment_date",
+                        "Kode" => "kode",
+                        "Status" => "status",
+                        "Nominal" => "nominal",
+                        "Sales Name" => "sales_name",
+                        "Start Date" => "start_date",
+                        "Expired Date" => "expired_date",
+                        "Masa Tenggang" => "masa_tenggang",
+                        "Yellow Zone" => "yellow_zone",
+                        "Red Zone" => "red_zone"];
 
-        $insreg = ["Payment date", 
-                    "Kode", 
-                    "Nominal",
-                    "Start Date"];
+        $insreg = [     "Payment Date",
+                        "Kode",
+                        "Status",
+                        "Nominal",
+                        "Sales Name",
+                        "Start Date",
+                        "Expired Date",
+                        "Masa Tenggang",
+                        "Yellow Zone",
+                        "Red Zone"];
       
         $attsreg = ["payment_date",
                     "kode",
+                    "status",
                     "nominal",
-                    "start_date"];
+                    "sales_name",
+                    "start_date",
+                    "expired_date",
+                    "masa_tenggang",
+                    "yellow_zone",
+                    "red_zone"];
 //dd($aclub_transaction);
         return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
@@ -280,13 +330,18 @@ class AClubController extends Controller
 
     public function addTrans(Request $request) {
          $this->validate($request, [
-                'user_id' => '',
-                'payment_date' => '',
+                'user_id',
+                'payment_date' => 'date',
                 'kode' => '',
+                'status' => '',
                 'nominal' => '',
-                'start_date' => '',
-                'keterangan' => ''
-            ]);
+                'sales_name' => '',
+                'start_date' => 'date',
+                'expired_date' => 'date',
+                'masa_tenggang' => 'date',
+                'yellow_zone' => 'date',
+                'red_zone' => 'date'
+                ]);
 
         $err = [];
 
@@ -295,8 +350,15 @@ class AClubController extends Controller
         $aclub_trans->user_id = $request->user_id;
         $aclub_trans->payment_date = $request->payment_date;
         $aclub_trans->kode = $request->kode;
+        $aclub_trans->status = $request->status;
         $aclub_trans->nominal = $request->nominal;
+        $aclub_trans->sales_name = $request->sales_name;
         $aclub_trans->start_date = $request->start_date;
+        $aclub_trans->expired_date = $request->expired_date;
+        $aclub_trans->masa_tenggang = $request->masa_tenggang;
+        $aclub_trans->yellow_zone = $request->yellow_zone;
+        $aclub_trans->red_zone = $request->red_zone;
+
 
         $aclub_trans->save();
         
@@ -316,23 +378,34 @@ class AClubController extends Controller
     public function editTrans(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => '',
-                'payment_date' => '',
+                'payment_date' => 'date',
                 'kode' => '',
+                'status' => '',
                 'nominal' => '',
-                'start_date' => ''
+                'sales_name' => '',
+                'start_date' => 'date',
+                'expired_date' => 'date',
+                'masa_tenggang' => 'date',
+                'yellow_zone' => 'date',
+                'red_zone' => 'date'
             ]);
 
         $err = [];
         try {
-            $aclub_transaction = AclubTransaction::find($request->user_id);
+            $aclub_trans = AclubTransaction::find($request->user_id);
 
-            $aclub_transaction->payment_date = $request->payment_date;
-            $aclub_transaction->kode = $request->kode;
-            $aclub_transaction->nominal = $request->nominal;
-            $aclub_transaction->start_date = $request->start_date;
+            $aclub_trans->payment_date = $request->payment_date;
+            $aclub_trans->kode = $request->kode;
+            $aclub_trans->status = $request->status;
+            $aclub_trans->nominal = $request->nominal;
+            $aclub_trans->sales_name = $request->sales_name;
+            $aclub_trans->start_date = $request->start_date;
+            $aclub_trans->expired_date = $request->expired_date;
+            $aclub_trans->masa_tenggang = $request->masa_tenggang;
+            $aclub_trans->yellow_zone = $request->yellow_zone;
+            $aclub_trans->red_zone = $request->red_zone;
             
-            $aclub_transaction->update();
+            $aclub_trans->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
