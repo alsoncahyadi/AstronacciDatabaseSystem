@@ -1,5 +1,4 @@
-'
-;'<?php
+<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -475,6 +474,13 @@ Route::get('/green/{id}', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::get('/green/{id}/{progress}', [
+    'uses' => 'GreenController@clientTrans',
+    'as' => 'green.trans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 Route::post('/green/insert', [
     'uses' => 'GreenController@addClient',
     'as' => 'green.insert',
@@ -483,7 +489,7 @@ Route::post('/green/insert', [
     ]);
 
 Route::post('/green/inserttrans', [
-    'uses' => 'GreenController@addClient',
+    'uses' => 'GreenController@addTrans',
     'as' => 'green.inserttrans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
@@ -503,6 +509,20 @@ Route::post('/green/edit', [
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::delete('/green/deletetrans/{id}', [
+    'uses' => 'GreenController@deleteTrans',
+    'as' => 'green.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::post('/green/edittrans', [
+    'uses' => 'GreenController@editTrans',
+    'as' => 'green.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 Route::delete('/green/deleteclient/{id}', [
     'uses' => 'GreenController@deleteClient',
     'as' => 'green.deleteclient',
@@ -516,6 +536,14 @@ Route::post('/green/assign', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
+
+Route::post('/green/assign', [
+    'uses' => 'GreenController@assignClient',
+    'as' => 'green.assign',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 	
 //Red Club Route
 Route::get('/RedClub', [
@@ -639,7 +667,7 @@ Route::get('/AShop/{id}', [
 
 Route::get('/AShop', [
     'uses' => 'AshopController@getTable',
-    'as' => 'ashop',
+    'as' => 'AShop',
     'middleware' => ['auth', 'ashop'],
     ]);
 

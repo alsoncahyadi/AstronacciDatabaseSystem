@@ -8,7 +8,10 @@
             //Konten yang diperoleh dari ajax dimasukkan ke dalam div tab
             document.getElementById("tab").innerHTML = this.responseText;
             $('#dataTables').DataTable({
-                responsive: true
+                responsive: true,
+                bInfo: false,
+                paging: false,
+                searching: false
             });
         }
     };

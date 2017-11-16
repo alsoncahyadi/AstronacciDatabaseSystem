@@ -157,7 +157,7 @@
      </div>
 
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
@@ -242,6 +242,8 @@
                             <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @elseif ($route == "MRG")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
+                        @elseif ($route == "green")
+                            <input name="user_id" type="hidden" value="{{$client->green_id}}">
                         @elseif ($route == "AShop")
                             <input name="user_id" type="hidden" value="{{$client->master_id}}">
                         @endif
@@ -274,22 +276,17 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-
-                        @if ($route == 'AClub')
+                       @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @elseif ($route == 'green') 
+                            <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a></td>
                         @elseif ($route == 'MRG')
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
                         @else
                             <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
                         @endif
-                    
-                        @endforeach
 
-                        <!-- @if ($route == 'CAT')
-                        <td><a href="{{route('CAT/trans.deletetrans', ['id1' => $clientreg->cat_user_id, 'id2' => $clientreg->angsuran_ke])}}"> Delete </a></td>
-                        @elseif ($route == 'AClub')
-                        <td><a href="{{route('AClub/trans.deletetrans', ['id' => $clientreg->registration_id])}}"> Delete </a></td>
-                        @endif -->
+                        @endforeach
                         
                     </tr>
                     @endforeach

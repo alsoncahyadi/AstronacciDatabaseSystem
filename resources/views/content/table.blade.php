@@ -8,43 +8,72 @@
 	@if ($route != 'assign')
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
-				<!-- @if($route == 'product')
-					@if(Auth::user()->hasAnyRole(['0']))
-						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Product</a>
-						<br>
-						<br>
-					@endif
-				@elseif ($route == 'trans')
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
-					<br>
-					<br>
-				@else -->
-					@if ($route == 'green')
-						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
-					@endif
-					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
-					<!-- <br>
-				@endif -->
+                @if (($route == 'AShop') || ($route == 'green'))
+					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+                @else
+					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
+                @endif
 				<br>
 			</div>
-		@endif
-		<div id="import" style="display:none">
-		@if(($route != 'product') and ($route != 'AShop') and ($route != 'assign'))	
-		<div class="panel panel-default" style="padding:15px">
-			<div class="panel-body">
-				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-					<input type="file" name="import_file" />
-					<br>
-					<button class="btn btn-primary">Import .xls File</button>
-				</form>
-			</div>
-		</div>
 	@endif
-		</div>
-    </div>
+
+    @if(($route != 'AShop') and ($route != 'green'))
+    		<div id="import" style="display:none">	
+        		<div class="panel panel-default" style="padding:15px">
+        			<div class="panel-body">
+        				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+        					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+        					<input type="file" name="import_file" />
+        					<br>
+        					<button class="btn btn-primary">Import .xls File</button>
+        				</form>
+        			</div>
+        		</div>
+    		</div>
+    @endif
+        </div>
 	
-	
+            @if (($route == 'AShop') || ($route == 'green'))
+    			<div id="addcli" style="display:none">
+					<div class="panel panel-default" style="padding:15px" >
+						<form method="post" action="{{route($route . '.insert')}}">
+							@foreach ($ins as $atr)
+								<div class="form-group">
+									@if ($atr == 'Product ID')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($prods as $prod)
+										<option value = {{$prod->product_id}}>{{$prod->product_id}}</option>
+						               @endforeach
+										</select>
+									@elseif ($atr == 'PC ID')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($foreigns as $foreign)
+										<option value = {{$foreign->all_pc_id}}>{{$foreign->all_pc_id}}->{{$foreign->fullname}}</option>
+						               @endforeach
+										</select>
+									@elseif ($atr == 'Sales')
+										<label>{{$atr}}</label><br>
+										<select id = "myList" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+										@foreach($sales as $sale)
+										<option value = {{$sale->sales_username}}>{{$sale->sales_username}}</option>
+						               @endforeach
+										</select>
+									@else
+										<label>{{$atr}}</label>
+										<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+									@endif
+								</div>
+							@endforeach
+							<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+							<input type="submit" class="btn btn-default" value="Insert">
+							<button type="reset" class="btn btn-default">Reset Form</button>
+						</form>
+					</div>
+				</div>
+            @endif
+
 	<div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
@@ -62,6 +91,9 @@
 				
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                	<p>Search</p>
+             		<input id="searchkey" type="text"/>                		
+             		<button type="button" onclick="load('{{route($route)}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
 					<div style="overflow-x:scroll">
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables" style="font-size:80%;">
                         <thead>
