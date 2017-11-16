@@ -92,7 +92,7 @@
 				</div>
 				<?php
 					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "master_id";
+					else if ($route == "AClub") $userid = "user_id";
 					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
@@ -155,6 +155,7 @@
 		</div>
 
      </div>
+
 
     @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
@@ -342,7 +343,6 @@
                         @endif
                     
                         @endforeach
-                        
                     </tr>
                     @endforeach
                 </tbody>

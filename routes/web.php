@@ -68,6 +68,11 @@ Route::get('/home', [
 	'as' => 'home',
 	]);
 
+Route::post('/master/import', [
+    'uses' => 'HomeController@importExcel', 
+    'as' => 'master.import',
+    ]);
+
 Route::get('/dashboard', [
     'uses' => 'Auth\LoginController@index',
     'as' => 'dashboard',
@@ -416,6 +421,13 @@ Route::post('/AClub/inserttrans', [
 Route::delete('/AClub/deletetrans/{id}', [
     'uses' => 'AClubController@deleteTrans',
     'as' => 'AClub.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::delete('/AClub/deletemember/{id}', [
+    'uses' => 'AClubController@deleteMember',
+    'as' => 'AClub.deletemember',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
     ]);

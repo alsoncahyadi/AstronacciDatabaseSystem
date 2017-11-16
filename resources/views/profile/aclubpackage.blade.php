@@ -96,7 +96,6 @@
                     <input type="submit" onclick="del()" value="Delete Transaction" >
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
-                
             </div>
 
                 <div id="bod2" style="display:none">
@@ -156,7 +155,6 @@
     function del(){
         if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?'))
             window.location.replace("{{route($route . '.deletetrans', ['id' => $client->transaction_id])}}");
-
     }
     </script>
 </body>
