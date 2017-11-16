@@ -89,7 +89,7 @@
 								<option>RD</option>
 							</select>
 						@elseif ($atr == "Status")
-							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
 								<option selected="selected">Baru</option>
 								<option>Perpanjang</option>
 								<option>Tidak Aktif</option>
