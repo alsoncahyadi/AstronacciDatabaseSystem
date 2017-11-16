@@ -60,9 +60,6 @@
 </head>
 <body style="overflow-x:hidden;  background-image: url('{{ URL::asset('images/swirl_pattern1.png') }}') ;">
     <div id="wrapper" style="margin:15px">
-
-    <h3>This is the file</h3>
-
     <div class="row">
         <div class="col-lg-12">
            <h1>{{$route}} Profile</h1>
