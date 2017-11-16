@@ -8,27 +8,32 @@
 	@if ($route != 'assign')
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
+                @if (($route == 'AShop') || ($route == 'green'))
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
+                @else
 					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
+                @endif
 				<br>
 			</div>
-		@endif
-		<div id="import" style="display:none">
-		@if(($route != 'product') and ($route != 'AShop') and ($route != 'assign'))	
-		<div class="panel panel-default" style="padding:15px">
-			<div class="panel-body">
-				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-					<input type="file" name="import_file" />
-					<br>
-					<button class="btn btn-primary">Import .xls File</button>
-				</form>
-			</div>
-		</div>
 	@endif
-		</div>
-    </div>
+
+    @if(($route != 'AShop') and ($route != 'green'))
+    		<div id="import" style="display:none">	
+        		<div class="panel panel-default" style="padding:15px">
+        			<div class="panel-body">
+        				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+        					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+        					<input type="file" name="import_file" />
+        					<br>
+        					<button class="btn btn-primary">Import .xls File</button>
+        				</form>
+        			</div>
+        		</div>
+    		</div>
+    @endif
+        </div>
 	
+            @if (($route == 'AShop') || ($route == 'green'))
     			<div id="addcli" style="display:none">
 					<div class="panel panel-default" style="padding:15px" >
 						<form method="post" action="{{route($route . '.insert')}}">
@@ -67,6 +72,7 @@
 						</form>
 					</div>
 				</div>
+            @endif
 
 	<div class="row">
         <div class="col-lg-12">
