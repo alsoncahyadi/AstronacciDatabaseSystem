@@ -11,7 +11,6 @@ class GreenProspectProgress extends Model
 
     protected $primaryKey = 'progress_id';
 
-
     public function client() {
         return $this->belongsTo('App\GreenProspectClient', 'green_id', 'green_id');
     }

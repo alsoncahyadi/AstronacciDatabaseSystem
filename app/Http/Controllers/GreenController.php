@@ -140,11 +140,12 @@ class GreenController extends Controller
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
-            DB::select("call delete_green(?)", [$id]);
+            $green = GreenProspectClient::where('green_id',$id)->first();
+            $green->delete();
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return redirect("green");
     }
 
     public function importExcel() {
