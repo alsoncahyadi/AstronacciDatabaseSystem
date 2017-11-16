@@ -189,6 +189,17 @@ class AClubController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteMember($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $aclub_member = AclubMember::find($id);
+            $aclub_member->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function clientDetailPackage($id, $member, $package) {
 
         $aclub_transaction = AclubTransaction::where('transaction_id', $package)->first();

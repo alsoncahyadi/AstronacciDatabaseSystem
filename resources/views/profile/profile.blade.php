@@ -104,7 +104,11 @@
                     else if ($route == "AShop") $userid = "master_id";
 				?>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+                <form action="{{route($route . '.deleteclient', ['id' => $client->$userid])}}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <input type="submit" onclick="del()" value="Delete Client" >
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                </form>
 
                 <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
                 
@@ -269,7 +273,6 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-                        
                         @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
                         @elseif ($route == 'MRG')
