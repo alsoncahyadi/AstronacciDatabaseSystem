@@ -90,62 +90,27 @@
                             </div>
                         @endforeach
                 </div>
-                <?php
-                    if($route == "CAT") $userid = "user_id";
-                    else if ($route == "AClub") $userid = "user_id";
-                    else if ($route == "MRG") $userid = "master_id";
-                    else if ($route == "UOB") $userid = "client_id";
-                    else if ($route == "green") $userid = "green_id";
-                    else if ($route == "grow") $userid = "grow_id";
-                    else if ($route == "RedClub") $userid = "username";
-                    else if ($route == "assigngreen") $userid = "green_assign_id";
-                    else if ($route == "assigngrow") $userid = "grow_assign_id";
-                    else if ($route == "assignredclub") $userid = "redclub_assign_id";
-                    else if ($route == "AShop") $userid = "transaction_id";
-                ?>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
-                
+                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->transaction_id])}}"> Delete Client </a>         
             </div>
 
                 <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.edit')}}">
-                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @elseif ($route == "MRG")
-                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @elseif ($route == "AShop")
-                            <input name="user_id" type="hidden" value="{{$client->transaction_id}}">
-                            <input name="master_id" type="hidden" value="{{$client->master_id}}">
-                        @endif
+                    <form role="form" method="post" action="{{route($route . '.edittrans')}}">
+                        <input name="user_id" type="hidden" value="{{$client->transaction_id}}">
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
-                                    @foreach ($ins as $key => $value)
-                                        <div style="height:60px">
-                                            <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{strtolower(str_replace(' ', '_', $key))}}">
-                                        </div>
-                                    @endforeach
+                            @foreach ($ins as $key => $value)
+                                <div style="height:60px">
+                                    <label>{{$key}}</label>
+                                        <input class="form-control" value="{{$client->$value}}" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                </div>
+                            @endforeach
                             
                         </div>
                         <button type="submit" class="btn btn-default">Submit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
-                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
-                        @elseif ($route == 'assigngrow')
-                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
-                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
-                        @elseif ($route == 'assigngreen')
-                            <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
-                            <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
-                        @elseif ($route == 'assignredclub')
-                            <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
-                        @endif
                     </form>
                 </div> 
             
@@ -185,7 +150,8 @@
     });
     function del(){
         if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
+            window.location.replace("{{route($route . '.deleteclient', ['id' => $client->transaction_id])}}");
+
 
     }
     </script>
