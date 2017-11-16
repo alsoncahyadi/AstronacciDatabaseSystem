@@ -91,23 +91,23 @@
                         @endforeach
                 </div>
 
-                <form action="{{route($route . '.deletetrans', ['id' => $client->transaction_id])}}" method="post">
+                <form action="{{route($route . '.deletemember', ['id' => $client->user_id])}}" method="post">
                     <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" onclick="del()" value="Delete Transaction" >
+                    <input type="submit" onclick="del()" value="Delete Member" >
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
+                
             </div>
 
                 <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.edittrans')}}">
-                        <input name="user_id" type="hidden" value="{{$client->transaction_id}}">
+                    <form role="form" method="post" action="{{route($route . '.editmember')}}">
+                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                            
                             @foreach ($ins as $key => $value)
                                 <div style="height:60px">
                                     <label>{{$key}}</label>
-                                        <input class="form-control" value="{{$client->$value}}" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
                                 </div>
                             @endforeach
                             
@@ -121,6 +121,58 @@
         </div>
 
      </div>
+
+    <div class="panel panel-default" style="margin:15px">
+        <div class="panel-heading">
+            <i class="fa fa-money fa-fw"></i> Transactions
+        </div>
+        <div class="panel-body">
+            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+            <div id="addcli" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form method="post" action="{{route($route . '.inserttrans')}}">
+                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
+                        @foreach ($insreg as $atr)
+                        <div class="form-group">
+                            <label>{{$atr}}</label>
+                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                        </div>
+                        @endforeach
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        <input type="submit" class="btn btn-default" value="Insert">
+                        <button type="reset" class="btn btn-default">Reset Form</button>
+                    </form>
+                </div>
+            <br>
+            </div>
+            <br><br>
+            <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
+                <thead>
+                    <tr>
+                        @foreach ($headsreg as $headreg)
+                        <th> {{$headreg}} </th>
+                        @endforeach
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clientsreg as $clientreg)
+                    
+                    <tr class="gradeA">
+
+                        @foreach ($attsreg as $attreg)
+                        @if ($route != 'AShop')
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @else
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @endif
+                    
+                        @endforeach
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+    </div>
 
     <br><br>
 
@@ -153,8 +205,8 @@
         });
     });
     function del(){
-        if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?'))
-            window.location.replace("{{route($route . '.deletetrans', ['id' => $client->transaction_id])}}");
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this member?'))
+            window.location.replace("{{route($route . '.deletemember', ['id' => $client->user_id])}}");
     }
     </script>
 </body>

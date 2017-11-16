@@ -160,6 +160,17 @@ class UOBController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function deleteClient($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $cat = Uob::find($id);
+            $cat->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return redirect("home");
+    }
+
     public function importExcel() {
         $err = []; //Inisialisasi array error
         if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan

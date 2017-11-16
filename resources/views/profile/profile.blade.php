@@ -92,7 +92,7 @@
 				</div>
 				<?php
 					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "master_id";
+					else if ($route == "AClub") $userid = "user_id";
 					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
@@ -104,7 +104,11 @@
                     else if ($route == "AShop") $userid = "master_id";
 				?>
 
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </a>
+                <form action="{{route($route . '.deleteclient', ['id' => $client->$userid])}}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <input type="submit" onclick="del()" value="Delete Client" >
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                </form>
 
                 <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
                 
@@ -151,6 +155,7 @@
 		</div>
 
      </div>
+
 
     @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
@@ -269,8 +274,9 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
+
                         @if ($route == 'AClub')
-                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
                         @elseif ($route == 'MRG')
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
                         @else
@@ -290,6 +296,57 @@
                 </tbody>
             </table>
             @endif
+    @elseif ($route == 'AClub')
+    <div class="panel panel-default" style="margin:15px">
+        <div class="panel-heading">
+            <i class="fa fa-money fa-fw"></i> Members
+        </div>
+        <div class="panel-body">
+            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Member</a>
+            <div id="addcli" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form method="post" action="{{route($route . '.insertmembers')}}">
+                        <input name="master_id" type="hidden" value="{{$client->master_id}}">
+                        @foreach ($insreg as $atr)
+                        <div class="form-group">
+                            <label>{{$atr}}</label>
+                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                        </div>
+                        @endforeach
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        <input type="submit" class="btn btn-default" value="Insert">
+                        <button type="reset" class="btn btn-default">Reset Form</button>
+                    </form>
+                </div>
+                <br><br>
+            </div>
+            <br><br>
+            <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
+                <thead>
+                    <tr>
+                        @foreach ($headsreg as $headreg)
+                        <th> {{$headreg}} </th>
+                        @endforeach
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clientsreg as $clientreg)
+                    
+                    <tr class="gradeA">
+
+                        @foreach ($attsreg as $attreg)
+                        @if ($route != 'AShop')
+                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @else
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @endif
+                    
+                        @endforeach
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
     </div>
     @endif
 
