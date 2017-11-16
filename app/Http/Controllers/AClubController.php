@@ -115,12 +115,20 @@ class AClubController extends Controller
         $aclub_members = $aclub_master->aclubMembers()->get();
 
         $headsreg = ["User ID",
-                    "Sales Name",
                     "Group"];
 
         $insreg = ["User ID",
+                    "Group",
                     "Sales Name",
-                    "Group"];
+                    "Payment Date",
+                    "Kode",
+                    "Status",
+                    "Nominal",
+                    "Start Date",
+                    "Expired Date",
+                    "Masa Tenggang",
+                    "Red Zone",
+                    "Yellow Zone"];
 
         $attsreg = ["user_id", "sales_name", "group"];
 
@@ -146,7 +154,21 @@ class AClubController extends Controller
         $aclub_member->sales_name = $request->sales_name;
         $aclub_member->group = $request->group;
 
+        $aclub_trans = new \App\AclubTransaction;
+        $aclub_trans->user_id = $request->user_id;
+        $aclub_trans->payment_date = $request->payment_date;
+        $aclub_trans->sales_name = $request->sales_name;
+        $aclub_trans->kode = $request->kode;
+        $aclub_trans->status = $request->status_aclub;
+        $aclub_trans->nominal = $request->nominal;
+        $aclub_trans->start_date = $request->start_date;
+        $aclub_trans->expired_date = $request->expired_date;
+        $aclub_trans->masa_tenggang = $request->masa_tenggang;
+        $aclub_trans->red_zone = $request->red_zone;
+        $aclub_trans->yellow_zone = $request->yellow_zone;
+
         $aclub_member->save();
+        $aclub_trans->save();
         
         return redirect()->back()->withErrors($err);
     }
