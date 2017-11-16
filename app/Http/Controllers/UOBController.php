@@ -21,7 +21,24 @@ class UOBController extends Controller
     }
 
     public function getTable(Request $request) {
-        $uobs = Uob::paginate(15);
+        //$uobs = Uob::paginate(15);
+
+        $keyword = $request['q'];
+
+        $uobs = Uob::where('sales_name', 'like', "%{$keyword}%")
+                ->orWhere('sumber_data', 'like', "%{$keyword}%")
+                ->orWhere('nomor_ktp', 'like', "%{$keyword}%")
+                ->orWhere('nomor_npwp', 'like', "%{$keyword}%")
+                ->orWhere('alamat_surat', 'like', "%{$keyword}%")
+                ->orWhere('saudara_tidak_serumah', 'like', "%{$keyword}%")
+                ->orWhere('nama_ibu_kandung', 'like', "%{$keyword}%")
+                ->orWhere('bank_pribadi', 'like', "%{$keyword}%")
+                ->orWhere('rdi_bank', 'like', "%{$keyword}%")
+                ->orWhere('nomor_rdi', 'like', "%{$keyword}%")
+                ->orWhere('status', 'like', "%{$keyword}%")
+                ->orWhere('trading_via', 'like', "%{$keyword}%")
+                ->orWhere('keterangan', 'like', "%{$keyword}%")
+                ->paginate(15);
 
         //judul kolom
         $heads = ["Client ID", "Master ID", "Sales", "Sumber Data", "Join Date", "Nomor KTP", "Tanggal Expired KTP", "Nomor NPWP", "Alamat Surat", "Saudara Tidak Serumah", "Nama Ibu Kandung", "Bank Pribadi", "Nomor Rekening Pribadi", "Tanggal RDI Done", "RDI Bank", "Nomor RDI", "Tanggal Top Up", "Nominal Top Up", "Tanggal Trading", "Status", "Trading Via", "Keterangan", "Created At", "Updated At", "Created By", "Updated By"];

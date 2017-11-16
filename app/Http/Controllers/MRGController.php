@@ -21,9 +21,13 @@ class MRGController extends Controller
         return $newstring;
     }
     
-    public function getTable() {
-        $mrgs = Mrg::paginate(15);
+    public function getTable(Request $request) {
+        //$mrgs = Mrg::paginate(15);
 
+        $keyword = $request['q'];
+
+        $mrgs = Mrg::where('sumber_data', 'like', "%{$keyword}%")
+                ->paginate(15);
         //ambil data master
         foreach ($mrgs as $mrg_master) {
             $master = $mrg_master->master;
@@ -42,6 +46,8 @@ class MRGController extends Controller
             $mrg_master->whatsapp = $master->whatsapp;
             $mrg_master->facebook = $master->facebook;
         }
+
+        //$mrgs = $mrgs->paginate(15);
 
         //judul kolom
         $heads = ["Master ID",
