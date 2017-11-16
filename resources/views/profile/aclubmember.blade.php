@@ -168,7 +168,6 @@
                         @endif
                     
                         @endforeach
-                        
                     </tr>
                     @endforeach
                 </tbody>
@@ -208,7 +207,6 @@
     function del(){
         if (confirm('Data will be lost permanently. Are you sure you want to delete this member?'))
             window.location.replace("{{route($route . '.deletemember', ['id' => $client->user_id])}}");
-
     }
     </script>
 </body>
