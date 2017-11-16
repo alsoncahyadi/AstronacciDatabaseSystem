@@ -162,6 +162,50 @@
                           <li>
                              <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Client Member <span class="fa arrow"></span></a>
                          </li>
+                        <ul class="nav nav-second-level">
+                        @if(Route::currentRouteName() == 'home')
+                            @if (Auth::user()->hasAnyRole(['0', '1']))
+                                <li>
+                                    <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['0', '2']))
+                                <li>
+                                    <a onclick="load('{{route('MRG')}}')" href="#" style="color:white;">Admin MRG</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['0', '4']))
+                                <li>
+                                    <a onclick="load('{{route('UOB')}}')" href="#" style="color:white;">Admin UOB</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['0', '3']))
+                                <li>
+                                    <a onclick="load('{{route('CAT')}}')" href="#" style="color:white;">Admin CAT</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
+                                <li>
+                                    <a onclick="load('{{route('green')}}')" href="#" style="color:white;">Green</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
+                                <li>
+                                    <a onclick="load('{{route('grow')}}')" href="#" style="color:white;">Grow</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
+                                <li>
+                                    <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
+                                </li>
+                            @endif
+                            @if (Auth::user()->hasAnyRole(['5']))
+                                <li>
+                                    <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
+                                </li>
+                            @endif  
+                        @endif
+                        </ul> 
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>

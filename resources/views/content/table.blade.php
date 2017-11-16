@@ -8,21 +8,8 @@
 	@if ($route != 'assign')
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
-				<!-- @if($route == 'product')
-					@if(Auth::user()->hasAnyRole(['0']))
-						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Product</a>
-						<br>
-						<br>
-					@endif
-				@elseif ($route == 'trans')
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
-					<br>
-					<br>
-				@else -->
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
-					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
-					<!-- <br>
-				@endif -->
+					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
 				<br>
 			</div>
 		@endif
@@ -98,6 +85,9 @@
 				
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                	<p>Search</p>
+             		<input id="searchkey" type="text"/>                		
+             		<button type="button" onclick="load('{{route($route)}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
 					<div style="overflow-x:scroll">
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables" style="font-size:80%;">
                         <thead>

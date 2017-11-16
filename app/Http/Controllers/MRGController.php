@@ -21,9 +21,13 @@ class MRGController extends Controller
         return $newstring;
     }
     
-    public function getTable() {
-        $mrgs = Mrg::paginate(15);
+    public function getTable(Request $request) {
+        //$mrgs = Mrg::paginate(15);
 
+        $keyword = $request['q'];
+
+        $mrgs = Mrg::where('sumber_data', 'like', "%{$keyword}%")
+                ->paginate(15);
         //ambil data master
         foreach ($mrgs as $mrg_master) {
             $master = $mrg_master->master;
@@ -42,6 +46,8 @@ class MRGController extends Controller
             $mrg_master->whatsapp = $master->whatsapp;
             $mrg_master->facebook = $master->facebook;
         }
+
+        //$mrgs = $mrgs->paginate(15);
 
         //judul kolom
         $heads = ["Master ID",
@@ -220,52 +226,35 @@ class MRGController extends Controller
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
+                
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->account) === null) {
-                        $msg = "Account empty on line ".$i;
+                    if (($value->master_id) === null) {
+                        $msg = "Master ID empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
+                    if (($value->sumber_data) === null) {
+                        $msg = "Sumber Data empty on line ".$i;
                         $err[] = $msg;
                     }
                     if (($value->tanggal_join) === null) {
                         $msg = "Tanggal Join empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->kota) === null) {
-                        $msg = "Kota empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->telepon) === null) {
-                        $msg = "Telepon empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->type) === null) {
-                        $msg = "Type empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sales) === null) {
-                        $msg = "Sales empty on line ".$i;
-                        //$err[] = $msg;
-                    }
                 } //end validasi
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
-                        try { 
-                          DB::select("call inputMRG(?,?,?,?,?,?,?,?,?)", [$value->account, $value->nama,$value->tanggal_join,$value->alamat,$value->kota,$value->telepon,$value->email,$value->type,$value->sales]);
+                        try {
+                            $mrg = new \App\Mrg;
+
+                            $mrg->master_id = $value->master_id;
+                            $mrg->sumber_data = $value->sumber_data;
+                            $mrg->join_date = $value->tanggal_join;
+
+                            $mrg->save();
                         } catch(\Illuminate\Database\QueryException $ex){ 
                           echo ($ex->getMessage()); 
                           $err[] = $ex->getMessage();
