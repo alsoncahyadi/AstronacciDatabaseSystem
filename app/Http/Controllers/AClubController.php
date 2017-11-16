@@ -339,32 +339,6 @@ class AClubController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
-    public function editTrans(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'user_id' => '',
-                'payment_date' => '',
-                'kode' => '',
-                'nominal' => '',
-                'start_date' => ''
-            ]);
-
-        $err = [];
-        try {
-            $aclub_transaction = AclubTransaction::find($request->user_id);
-
-            $aclub_transaction->payment_date = $request->payment_date;
-            $aclub_transaction->kode = $request->kode;
-            $aclub_transaction->nominal = $request->nominal;
-            $aclub_transaction->start_date = $request->start_date;
-            
-            $aclub_transaction->update();
-        } catch(\Illuminate\Database\QueryException $ex){
-            $err[] = $ex->getMessage();
-        }
-        return redirect()->back()->withErrors($err);
-    }
-
     public function importExcel() {
         //Inisialisasi array error
         $err = [];
