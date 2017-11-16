@@ -122,94 +122,16 @@
 
      </div>
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "AClub") || ($route == "UOB") || ($route == "AShop"))
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
-            @if (($route == "CAT") || ($route == "UOB"))
-                <?php $had_trans = false; ?>
-                @foreach ($insreg as $atr)
-                    <?php $atr2 = strtolower(str_replace(' ', '_',$atr)); ?>
-                    @if ($client->$atr2 != NULL)
-                        <?php $had_trans = true; ?>
-                    @endif
-                @endforeach
-                @if ($had_trans)
-                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Update Transaction</a>
-                <div id="addcli" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <form method="post" action="{{route($route . '.inserttrans')}}">
-                            @if ($route == "CAT")
-                                <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                            @else
-                                <input name="user_id" type="hidden" value="{{$client->client_id}}">
-                            @endif
-                            @foreach ($insreg as $atr)
-                            <?php $atr_sql = strtolower(str_replace(' ', '_', $atr));?>
-                            <div class="form-group">
-                                <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="{{$client->$atr_sql}}">
-                            </div>
-                            @endforeach
-                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                            <input type="submit" class="btn btn-default" value="Insert">
-                            <button type="reset" class="btn btn-default">Reset Form</button>
-                        </form>
-                    </div>
-                    <br><br>
-                </div>
-                @else
-                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
-                <div id="addcli" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <form method="post" action="{{route($route . '.inserttrans')}}">
-                            @if ($route == "CAT")
-                                <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                            @else
-                                <input name="user_id" type="hidden" value="{{$client->client_id}}">
-                            @endif
-                            @foreach ($insreg as $atr)
-                            <div class="form-group">
-                                <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-                            </div>
-                            @endforeach
-                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                            <input type="submit" class="btn btn-default" value="Insert">
-                            <button type="reset" class="btn btn-default">Reset Form</button>
-                        </form>
-                    </div>
-                    <br><br>
-                </div>
-                @endif
-                <div class="form-group">
-                    <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
-                    
-                        @foreach ($headsreg as $key => $value)
-                            <div class="col-lg-2" style="height:30px">
-                                <label>{{$key}}</label>
-                            </div>
-                            <div class="col-lg-10" style="height:30px">
-                                : {{$client->$value}}<br>
-                            </div>
-                        @endforeach
-                </div>
-            @else
             <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
             <div id="addcli" class="panel-collapse collapse">
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @elseif ($route == "MRG")
-                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @elseif ($route == "AShop")
-                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @endif
+                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
                         @foreach ($insreg as $atr)
                         <div class="form-group">
                             <label>{{$atr}}</label>
@@ -257,9 +179,7 @@
                     @endforeach
                 </tbody>
             </table>
-            @endif
     </div>
-    @endif
 
     <br><br>
 
