@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- pc detail -->
+
 <head>
 
     <meta charset="utf-8">

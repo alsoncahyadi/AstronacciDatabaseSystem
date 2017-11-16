@@ -100,6 +100,8 @@ class AClubController extends Controller
 
     public function clientDetail($id) {
         // detail master dengan master_id = $id
+        // dd(1);
+        
         $aclub_information = AclubInformation::find($id);
 
         // aclub_master adalah aclub_master nya
@@ -130,7 +132,7 @@ class AClubController extends Controller
                     "Red Zone",
                     "Yellow Zone"];
 
-        $attsreg = ["user_id", "sales_name", "group"];
+        $attsreg = ["user_id", "group"];
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
@@ -217,6 +219,7 @@ class AClubController extends Controller
                     "masa_tenggang",
                     "yellow_zone",
                     "red_zone"];
+
 
         return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
