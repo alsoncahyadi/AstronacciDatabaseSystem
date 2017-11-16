@@ -37,6 +37,18 @@
                 <!--BOTTLENECK-->
             </div>
         </div>
+        <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
+        <div id="import" style="display:none"> 
+        <div class="panel panel-default" style="padding:15px">
+            <div class="panel-body">
+                <form method="post" action="{{route('master.import')}}" enctype="multipart/form-data">
+                    <input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+                    <input type="file" name="import_file" />
+                    <br>
+                    <button class="btn btn-primary">Import .xls File</button>
+                </form>
+            </div>
+        </div>
     </div>
     @if(count($errors) > 0)
         @foreach($errors->all() as $error)

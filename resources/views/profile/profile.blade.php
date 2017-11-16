@@ -92,7 +92,7 @@
 				</div>
 				<?php
 					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "master_id";
+					else if ($route == "AClub") $userid = "user_id";
 					else if ($route == "MRG") $userid = "master_id";
 					else if ($route == "UOB") $userid = "client_id";
 					else if ($route == "green") $userid = "green_id";
@@ -273,7 +273,6 @@
                     <tr class="gradeA">
 
                         @foreach ($attsreg as $attreg)
-
                         @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
                         @elseif ($route == 'MRG')
