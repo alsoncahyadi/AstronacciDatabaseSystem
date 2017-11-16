@@ -157,7 +157,6 @@ class AClubController extends Controller
     }
 
     public function clientDetailMember($id, $member) {
-
         $aclub_member = AclubMember::where('user_id', $member)->first();
 
         $aclub_transaction = $aclub_member->aclubTransactions()->get();

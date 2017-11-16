@@ -68,6 +68,11 @@ Route::get('/home', [
 	'as' => 'home',
 	]);
 
+Route::post('/master/import', [
+    'uses' => 'HomeController@importExcel', 
+    'as' => 'master.import',
+    ]);
+
 Route::get('/dashboard', [
     'uses' => 'Auth\LoginController@index',
     'as' => 'dashboard',
