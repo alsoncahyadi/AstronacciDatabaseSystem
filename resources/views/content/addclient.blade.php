@@ -76,14 +76,43 @@
 					@foreach ($aclub as $atr)
 					<div class="form-group">				
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
+						@if (($atr == "Keterangan") || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
+						@elseif ($atr == "Kode")
+							<select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+								<option selected="selected">SS</option>
+								<option>FS</option>
+								<option>SG</option>
+								<option>FG</option>
+								<option>SP</option> 
+								<option>FP</option>
+								<option>RD</option>
+							</select>
+						@elseif ($atr == "Status")
+							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+								<option selected="selected">Baru</option>
+								<option>Perpanjang</option>
+								<option>Tidak Aktif</option>
+							</select>
+						@elseif ($atr == "Start Date")
+							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@elseif ($atr == "Expired Date")
+							<input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $atr))}}" disabled>
+						@elseif ($atr == "Masa Tenggang")
+							<input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@elseif ($atr == "Yellow Zone")
+							<input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" disabled>
+						@elseif ($atr == "Red Zone")
+							<input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" disabled>
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 						@endif
 					</div>
 					@endforeach
 				</div>
+				<script type="text/javascript">
+					
+				</script>
 				<div id="mrg" style="display: none;">
 					@foreach ($mrg as $atr)
 					<div class="form-group">
@@ -135,23 +164,26 @@
 		</form>
 		
 	</div>
-
-<script type="text/javascript">
+<script>
 	var fullnames = [
 	@foreach ($clients as $client)
-	'{{$client->name}}', 
+		'{{$client->name}}', 
 	@endforeach
 	]
 	var emails = [
 	@foreach ($clients as $client)
-	'{{$client->email}}', 
+		'{{$client->email}}', 
 	@endforeach
 	]
 	var ids = [
 	@foreach ($clients as $client)
-	'{{$client->master_id}}', 
+		'{{$client->master_id}}', 
 	@endforeach
 	]
+	// ==================================
+	// RUMUS 
+	// ==================================
+		
 	$('#input').on( 'input', function() {
 		var inputString = $('#input').val(); 	
 		var joinName = '<li class="list-group-item" style="cursor:pointer;" onclick="exec(-1)">Tambahkan Client Baru + </li>';
@@ -174,7 +206,7 @@
 		}
 		document.getElementById("dropdown").innerHTML = joinName;
 	});
-	
+
 	$('body').click(function(evt){    
 		if(evt.target.id == "input")
 			return;
@@ -213,7 +245,7 @@
 
 	}
 
-$( "#pc" ).change(function() {
+		$( "#pc" ).change(function() {
 			document.getElementById("aclub").style.display = "none";
 			document.getElementById("mrg").style.display = "none";
 			document.getElementById("uob").style.display = "none";
@@ -287,11 +319,51 @@ $( "#pc" ).change(function() {
 			
 		});
 
+
 	function reset(){
 		document.getElementById("next").style.display = "none";
 		document.getElementById("addcli").style.display = "none";
 		document.getElementById("addcli2").style.display = "none";
 	}
+		
+	$( "#startdate" ).change(function() {
+		document.getElementById("expireddate").value = document.getElementById("startdate").value;
+		if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+			document.getElementById("expireddate").stepUp(30);
+		} else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+			document.getElementById("expireddate").stepUp(180);
+		} else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+			document.getElementById("expireddate").stepUp(365);
+		} 
+		document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+		document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+		document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+		document.getElementById("yellowzone").stepDown(3);
+		document.getElementById("redzone").stepUp(3);
+	});
+
+	$( "#kode" ).change(function() {
+		document.getElementById("expireddate").value = document.getElementById("startdate").value;
+		if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+			document.getElementById("expireddate").stepUp(30);
+		} else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+			document.getElementById("expireddate").stepUp(180);
+		} else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+			document.getElementById("expireddate").stepUp(365);
+		} 
+		document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+		document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+		document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+		document.getElementById("yellowzone").stepDown(3);
+		document.getElementById("redzone").stepUp(3);
+	});
+
+	$( "#masatenggang" ).change(function() {
+		document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+		document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+		document.getElementById("yellowzone").stepDown(3);
+		document.getElementById("redzone").stepUp(3);
+	});
 </script>
 
 @endsection
