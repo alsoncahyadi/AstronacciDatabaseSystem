@@ -116,7 +116,7 @@ class CATController extends Controller
         try {
             $cat = Cat::find($id);
             $cat->delete();
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
         return redirect("home");
@@ -146,7 +146,7 @@ class CATController extends Controller
         }
         return redirect()->back()->withErrors($err);
     }
-  
+
   //VERSI LAMA
 
     public function detailTrans($id){
@@ -164,10 +164,10 @@ class CATController extends Controller
         $err = [];
         try{
             DB::select("call delete_laporan_pembayaran_cat(?,?)", [$id1, $id2]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -217,8 +217,8 @@ class CATController extends Controller
                             $cat->sumber_data = $value->sumber_data;
 
                             $cat->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -234,5 +234,27 @@ class CATController extends Controller
         }
 
         return redirect()->back()->withErrors([$err]);
+    }
+
+    public function exportExcel() {
+        $data = Cat::all();
+        $array = [];
+        $heads = ["User ID" => "user_id", "Nomor Induk" => "nomor_induk", "Master ID" => "master_id", "Batch" => "batch", "Sales" => "sales", "Sumber Data" => "sumber_data", "DP Date" => "DP_date", "DP Nominal" => "DP_nominal", "Payment Date" => "payment_date", "Payment Nominal" => "payment_nominal", "Tanggal Opening Class" => "tanggal_opening_class", "Tanggal End Class" => "tanggal_end_class", "Tanggal Ujian" => "tanggal_ujian", "Status" => "status", "Keterangan" => "keterangan"];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedCAT', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

@@ -11,7 +11,7 @@ use DB;
 
 class MRGController extends Controller
 {
-   
+
     private function nullify($string)
     {
         $newstring = trim($string);
@@ -20,7 +20,7 @@ class MRGController extends Controller
         }
         return $newstring;
     }
-    
+
     public function getTable(Request $request) {
         //$mrgs = Mrg::paginate(15);
 
@@ -104,7 +104,7 @@ class MRGController extends Controller
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
         $clientsreg = $mrg->accounts()->get();
-        
+
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
 
@@ -132,7 +132,7 @@ class MRGController extends Controller
         $mrg_account->sales_name = $request->sales_name;
 
         $mrg_account->save();
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -141,12 +141,12 @@ class MRGController extends Controller
         try {
             $mrg = Mrg::find($id);
             $mrg->delete();
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
         return redirect("home");
     }
-  
+
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
@@ -226,7 +226,7 @@ class MRGController extends Controller
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
-                
+
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
@@ -255,8 +255,8 @@ class MRGController extends Controller
                             $mrg->join_date = $value->tanggal_join;
 
                             $mrg->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -275,9 +275,9 @@ class MRGController extends Controller
     }
 
     public function exportExcel() {
-        $data = DB::select("call select_mrg()");
+        $data = Mrg::all();
         $array = [];
-        $heads = ["PC ID" => "all_pc_id", "Account" => "account", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
+        $heads = ["Master ID" => "master_id", "Sumber Data" => "sumber_data", "Join Date" => "join_date"];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
@@ -288,7 +288,7 @@ class MRGController extends Controller
         }
         //print_r($array);
         //$array = ['a' => 'b'];
-        return Excel::create('testexportmrg', function($excel) use ($array) {
+        return Excel::create('ExportedMRG', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);
