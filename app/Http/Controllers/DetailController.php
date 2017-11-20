@@ -7,6 +7,10 @@ use DB;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\MasterClient;
+use App\Cat;
+use App\Mrg;
+use App\AclubInformation;
+use App\Uob;
 
 class DetailController extends Controller
 {
@@ -108,6 +112,31 @@ class DetailController extends Controller
 
     public function allPCDetail($id)
     {
+        //Master
+        $client_master = MasterClient::where('master_id', $id)->first();
+        $aclub = $client_master->aclubInformation;
+        $mrg = $client_master->mrg;
+        $uob = $client_master->uob;
+        $cat = $client_master->cat;
+
+        //Nama atribut form yang ditampilkan dan nama pada SQL
+        $ins_master = ["Master ID"=> "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook"];
+        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
+        $heads_master = $ins_master;
 
         //CAT
         $client_cat = Cat::where('user_id', $id)->first();
@@ -212,7 +241,7 @@ class DetailController extends Controller
 
         $insreg_mrg = ["Account Number", "Account Type", "Sales Name"];
 
-        $clientsreg_mrg = $mrg->accounts()->get();
+        $clientsreg_mrg = $client_mrg->accounts()->get();
         
         $headsreg_mrg = ["Account Number", "Account Type", "Sales Name"];
 
@@ -225,7 +254,7 @@ class DetailController extends Controller
             $client_aclub = AclubInformation::first();
         }
 
-        $aclub_master = $aclub_information->master;
+        $aclub_master = $client_aclub->master;
 
         $ins_aclub = ["Master_id" => "master_id", 
                 "Sumber Data" => "sumber_data", 
@@ -246,7 +275,12 @@ class DetailController extends Controller
         $attsreg_aclub = ["user_id", "sales_name", "group"];
 
 
-        return view('profile/profile', ['client_cat'=>$client_cat, 'heads_cat'=>$heads_cat, 'ins_cat'=>$ins_cat, 'insreg_cat'=>$insreg_cat, 'headsreg_cat'=>$headsreg_cat, 'client_uob'=>$client_uob, 'heads_uob'=>$heads_uob, 'ins_uob'=>$ins_uob, 'insreg_uob'=>$insreg_uob, 'headsreg_uob'=>$headsreg_uob, 'client_mrg'=>$client_mrg, 'heads_mrg'=>$heads_mrg, 'ins_mrg'=>$ins_mrg, 'insreg_mrg'=>$insreg_mrg, 'headsreg_mrg'=>$headsreg_mrg, 'attsreg_mrg'=>$attsreg_mrg, 'clientsreg_mrg'=>$clientsreg_mrg, 'client_aclub'=>$client_aclub, 'heads_aclub'=>$heads_aclub, 'ins_aclub'=>$ins_aclub, 'insreg_aclub'=>$insreg_aclub, 'headsreg_aclub'=>$headsreg_aclub, 'attsreg_aclub'=>$attsreg_aclub, 'clientsreg_aclub'=>$clientsreg_aclub]);
+        return view('profile/pcdetail', [
+            'client_master'=>$client_master, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob, 'heads_master'=>$heads_master, 'ins_master'=>$ins_master,
+            'client_cat'=>$client_cat, 'heads_cat'=>$heads_cat, 'ins_cat'=>$ins_cat, 'insreg_cat'=>$insreg_cat, 'headsreg_cat'=>$headsreg_cat,
+            'client_uob'=>$client_uob, 'heads_uob'=>$heads_uob, 'ins_uob'=>$ins_uob, 'insreg_uob'=>$insreg_uob, 'headsreg_uob'=>$headsreg_uob,
+            'client_mrg'=>$client_mrg, 'heads_mrg'=>$heads_mrg, 'ins_mrg'=>$ins_mrg, 'insreg_mrg'=>$insreg_mrg, 'headsreg_mrg'=>$headsreg_mrg, 'attsreg_mrg'=>$attsreg_mrg, 'clientsreg_mrg'=>$clientsreg_mrg, 
+            'client_aclub'=>$client_aclub, 'heads_aclub'=>$heads_aclub, 'ins_aclub'=>$ins_aclub, 'insreg_aclub'=>$insreg_aclub, 'headsreg_aclub'=>$headsreg_aclub, 'attsreg_aclub'=>$attsreg_aclub, 'clientsreg_aclub'=>$clientsreg_aclub]);
     }
 
 }

@@ -141,7 +141,7 @@ Route::post('/insertPassword', [
 
 // DETAIL PC ROUTES
 Route::get('/member/{id}', [
-    'uses' => 'DetailController@clientDetail',
+    'uses' => 'DetailController@allPCDetail',
     'as' => 'detail',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
