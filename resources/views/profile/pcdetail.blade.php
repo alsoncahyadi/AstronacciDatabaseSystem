@@ -104,28 +104,131 @@
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
             </div> 
-			
 		</div>
-        @if($aclub)
-            <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}')" href="#"> AClub </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> AClub </button>
-        @endif
-        @if($mrg)
-        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}')" href="#"> MRG </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> MRG </button>
-        @endif
-        @if($cat)
-        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('CAT.detail', ['id' => $cat->user_id])}}')" href="#"> CAT </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> CAT </button>
-        @endif
-        @if($uob)
-        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('UOB.detail', ['id' => $uob->client_id])}}')" href="#"> UOB </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> UOB </button>
-        @endif 
+    </div>
+
+    <div class="panel panel-default" style="margin:15px">
+        <div class="panel-heading">
+            Profit Center
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-pills">
+                @if($aclub)
+                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab">AClub</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>AClub</a>
+                    </li>
+                @endif
+                @if($mrg)
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab">MRG</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
+                    </li>
+                @endif
+                @if($cat)
+                    <li><a href="#cat-pills" class="btn btn-default" data-toggle="tab">CAT</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>CAT</a>
+                    </li>
+                @endif
+                @if($uob)
+                    <li><a href="#uob-pills" class="btn btn-default" data-toggle="tab">UOB</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>UOB</a>
+                    </li>
+                @endif
+            </ul>
+            <br>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade" id="aclub-pills">
+                    <h3>A Club</h3>
+                    <div>
+                        @foreach ($heads_aclub as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_aclub->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div id="tab">
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="mrg-pills">
+                    <h3>MRG</h3>
+                    <div>
+                        @foreach ($heads_mrg as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_mrg->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div id="tab">
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="cat-pills">
+                    <div>
+                        <h3>CAT</h3>
+                        @foreach ($heads_cat as $key => $value)
+                        <div class="col-lg-2" style="height:30px">
+                            <label>{{$key}}</label>
+                        </div>
+                        <div class="col-lg-10" style="height:30px">
+                            : {{$client_cat->$value}}<br>
+                        </div>
+                        @endforeach
+                    </div>
+                    <h4>Transaksi</h4>
+                    <div>
+                        @foreach ($headsreg_cat as $key => $value)
+                        <div class="col-lg-2" style="height:30px">
+                            <label>{{$key}}</label>
+                        </div>
+                        <div class="col-lg-10" style="height:30px">
+                            : {{$client_cat->$value}}<br>
+                        </div>
+                        @endforeach
+                        <br>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="uob-pills">
+                    <h3>UOB</h3>
+                    <div>
+                        @foreach ($heads_uob as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_uob->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div>
+                    <h4>Transaksi</h4>
+                    <div>
+                        @foreach ($headsreg_uob as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_uob->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-body -->
     </div>
 
     <div id="tab"></div>
