@@ -13,7 +13,7 @@ use App\MasterClient;
 
 class AClubController extends Controller
 {
-    
+
     private function nullify($string)
     {
         $newstring = trim($string);
@@ -105,8 +105,8 @@ class AClubController extends Controller
         // aclub_master adalah aclub_master nya
         $aclub_master = $aclub_information->master;
 
-        $ins = ["Master_id" => "master_id", 
-                "Sumber Data" => "sumber_data", 
+        $ins = ["Master_id" => "master_id",
+                "Sumber Data" => "sumber_data",
                 "Keterangan" => "keterangan"];
 
         $heads = $ins;
@@ -169,7 +169,7 @@ class AClubController extends Controller
 
         $aclub_member->save();
         $aclub_trans->save();
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -196,9 +196,9 @@ class AClubController extends Controller
 
         $ins = ["Sales" => "sales_name",
                     "Group" => "group"];
-      
-        $insreg = ["Payment date", 
-                    "Kode", 
+
+        $insreg = ["Payment date",
+                    "Kode",
                     "Nominal",
                     "Start Date",
                     "Keterangan"];
@@ -224,7 +224,7 @@ class AClubController extends Controller
 
             $aclub_member->sales_name = $request->sales_name;
             $aclub_member->group = $request->group;
-            
+
             $aclub_member->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -264,11 +264,11 @@ class AClubController extends Controller
                     "Nominal" => 'nominal',
                     "Start Date" => 'start_date'];
 
-        $insreg = ["Payment date", 
-                    "Kode", 
+        $insreg = ["Payment date",
+                    "Kode",
                     "Nominal",
                     "Start Date"];
-      
+
         $attsreg = ["payment_date",
                     "kode",
                     "nominal",
@@ -292,7 +292,7 @@ class AClubController extends Controller
             $aclub->master_id = $request->master_id;
             $aclub->sumber_data = $request->sumber_data;
             $aclub->keterangan = $request->keterangan;
-            
+
             $aclub->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -321,7 +321,7 @@ class AClubController extends Controller
         $aclub_trans->start_date = $request->start_date;
 
         $aclub_trans->save();
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -353,7 +353,7 @@ class AClubController extends Controller
             $aclub_transaction->kode = $request->kode;
             $aclub_transaction->nominal = $request->nominal;
             $aclub_transaction->start_date = $request->start_date;
-            
+
             $aclub_transaction->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -391,7 +391,7 @@ class AClubController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
-                        try { 
+                        try {
                             $aclubInfo = new \App\AclubInformation;
 
                             $aclubInfo->master_id = $value->master_id;
@@ -399,8 +399,8 @@ class AClubController extends Controller
                             $aclubInfo->keterangan = $value->keterangan;
 
                             $aclubInfo->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -415,5 +415,27 @@ class AClubController extends Controller
             $err[] = $msg;
         }
         return redirect()->back()->withErrors([$err]);
+    }
+
+    public function exportExcel() {
+        $data = AclubInformation::all();
+        $array = [];
+        $heads = ["Master ID" => "master_id", "Sumber Data" => "sumber_data", "Keterangan" => "keterangan"];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedAClub', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

@@ -10,7 +10,7 @@ use App\Uob;
 
 class UOBController extends Controller
 {
-    
+
     private function nullify($string)
     {
         $newstring = trim($string);
@@ -182,7 +182,7 @@ class UOBController extends Controller
         try {
             $cat = Uob::find($id);
             $cat->delete();
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
         return redirect("home");
@@ -195,7 +195,7 @@ class UOBController extends Controller
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
 
-            
+
             if(!empty($data) && $data->count()){
                 $i = 1;
                 //Cek apakah ada error
@@ -245,13 +245,13 @@ class UOBController extends Controller
                         $msg = "Ibu Kandung empty on line ".$i;
                         $err[] = $msg;
                     }
-                    
+
                 } //end validasi
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
-                        try { 
+                        try {
                             $uob = new \App\Uob;
 
                             $uob->client_id = $value->kode_client;
@@ -267,7 +267,7 @@ class UOBController extends Controller
                             $uob->nama_ibu_kandung = $value->ibu_kandung;
 
                             $uob->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
+                        } catch(\Illuminate\Database\QueryException $ex){
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -282,5 +282,50 @@ class UOBController extends Controller
             $err[] = $msg;
         }
         return redirect()->back()->withErrors([$err]);
+    }
+
+    public function exportExcel() {
+        $data = UOB::all();
+        $array = [];
+        $heads = [
+          "Kode Client" => "client_id",
+          "Master ID" => "master_id",
+          "Sales" => "sales_name",
+          "Sumber Data" => "sumber_data",
+          "Tanggal Join" => "join_date",
+          "Nomor KTP" => "nomor_ktp",
+          "Expired KTP" => "tanggal_expired_ktp",
+          "Nomor NPWP" => "nomor_npwp",
+          "Alamat Surat Menyurat" => "alamat_surat",
+          "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+          "Nama Ibu Kandung" => "nama_ibu_kandung",
+          "Bank Pribadi" => "bank_pribadi",
+          "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+          "Tanggal RDI Done" => 'tanggal_rdi_done',
+          "RDI Bank" => "rdi_bank",
+          "Nomor RDI" => 'nomor_rdi',
+          "Tanggal Top Up" => 'tanggal_top_up',
+          "Nominal Top Up" => 'nominal_top_up',
+          "Tanggal Trading" => 'tanggal_trading',
+          "Status" => 'status',
+          "Trading Via" => 'trading_via',
+          "Keterangan" => 'keterangan'
+        ];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedUOB', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }
