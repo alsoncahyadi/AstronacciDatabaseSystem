@@ -282,5 +282,4 @@ class DetailController extends Controller
             'client_mrg'=>$client_mrg, 'heads_mrg'=>$heads_mrg, 'ins_mrg'=>$ins_mrg, 'insreg_mrg'=>$insreg_mrg, 'headsreg_mrg'=>$headsreg_mrg, 'attsreg_mrg'=>$attsreg_mrg, 'clientsreg_mrg'=>$clientsreg_mrg, 
             'client_aclub'=>$client_aclub, 'heads_aclub'=>$heads_aclub, 'ins_aclub'=>$ins_aclub, 'insreg_aclub'=>$insreg_aclub, 'headsreg_aclub'=>$headsreg_aclub, 'attsreg_aclub'=>$attsreg_aclub, 'clientsreg_aclub'=>$clientsreg_aclub]);
     }
-
 }

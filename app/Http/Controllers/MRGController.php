@@ -111,7 +111,7 @@ class MRGController extends Controller
         //attribute sql account
         $attsreg = ["accounts_number", "account_type", "sales_name"];
 
-        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
      public function addTrans(Request $request) {
