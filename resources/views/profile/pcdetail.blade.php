@@ -116,14 +116,14 @@
             <!-- Nav tabs -->
             <ul class="nav nav-pills">
                 @if($aclub)
-                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab">AClub</a>
+                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}')">AClub</a>
                     </li>
                 @else
                     <li><a type="button" class="btn btn-default" style="color:red;" disabled>AClub</a>
                     </li>
                 @endif
                 @if($mrg)
-                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab">MRG</a>
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}')">MRG</a>
                     </li>
                 @else
                     <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
