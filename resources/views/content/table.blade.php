@@ -152,7 +152,7 @@
 						</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
-					
+					{{$clients -> links()}}
                     <!-- /.table-responsive -->
 					</div>
 					{{ csrf_field() }}

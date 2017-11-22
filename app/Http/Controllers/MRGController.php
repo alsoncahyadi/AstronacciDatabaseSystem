@@ -103,7 +103,7 @@ class MRGController extends Controller
         // form transaction
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
-        $clientsreg = $mrg->accounts()->get();
+        $clientsreg = $mrg->accounts()->paginate(15);
         
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
