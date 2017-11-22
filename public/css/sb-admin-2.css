@@ -175,6 +175,26 @@ body {
   }
 }
 
+.hvr-btn {
+  display: inline-block;
+  float: right;
+  width: 80px;
+  height: 30px;
+  padding-top: 3px;
+  margin-top: -25px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+
+table.table-hover tr.gradeA td div.btn-hvr-container {
+  visibility: hidden;
+}
+
+table.table-hover tr.gradeA:hover td div.btn-hvr-container {
+  visibility: visible;
+}
+
+
 /*
 .btn-outline {
   color: inherit;
