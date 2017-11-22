@@ -123,7 +123,7 @@
                     </li>
                 @endif
                 @if($mrg)
-                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load2('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2')">MRG</a>
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2')">MRG</a>
                     </li>
                 @else
                     <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
@@ -159,6 +159,11 @@
                             </div>
                         @endforeach
                     </div><br><br><br><br><br>
+                    <div>
+                        <p>Search</p>
+                        <input id="searchkey" type="text"/>    
+                        <button type="button" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
+                    </div>
                     <div id="tab"></div>
                 </div>
                 <div class="tab-pane fade" id="mrg-pills">
@@ -173,6 +178,11 @@
                             </div>
                         @endforeach
                     </div><br><br><br><br><br>
+                    <div>
+                    <p>Search</p>
+                        <input id="searchkey2" type="text"/>    
+                        <button type="button" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
+                    </div>
                     <div id="tab2"></div>
                 </div>
                 <div class="tab-pane fade" id="cat-pills">

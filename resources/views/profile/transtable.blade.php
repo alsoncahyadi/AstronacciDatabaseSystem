@@ -1,7 +1,7 @@
 
 <body>	   
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))    
     <div class="panel panel-default" style="margin:15px">        
             @if (($route == "CAT") || ($route == "UOB"))
                 <?php $had_trans = false; ?>
@@ -69,7 +69,7 @@
             </table>
             {{ $clientsreg -> links() }}
             @endif
-    @elseif ($route == 'AClub')
+    @elseif ($route == 'AClub')    
     <div class="panel panel-default" style="margin:15px">                
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>

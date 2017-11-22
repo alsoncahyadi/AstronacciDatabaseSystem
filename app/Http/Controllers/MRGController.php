@@ -91,7 +91,7 @@ class MRGController extends Controller
         return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         $mrg = MRG::where('master_id', $id)->first();
 
         $ins= ["Sumber Data (MRG)" => "sumber_data",
@@ -103,7 +103,13 @@ class MRGController extends Controller
         // form transaction
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
-        $clientsreg = $mrg->accounts()->paginate(15);
+        $keyword = $request['q'];
+
+        $clientsreg = $mrg->accounts()
+                    ->where('accounts_number', 'like', "%{$keyword}%")
+                    ->orWhere('account_type', 'like', "%{$keyword}%")
+                    ->orWhere('sales_name', 'like', "%{$keyword}%")
+                    ->paginate(15);
         
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
