@@ -123,7 +123,7 @@
                     </li>
                 @endif
                 @if($mrg)
-                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}')">MRG</a>
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2')">MRG</a>
                     </li>
                 @else
                     <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
@@ -158,9 +158,8 @@
                                 : {{$client_aclub->$value}}<br>
                             </div>
                         @endforeach
-                    </div>
-                    <div id="tab">
-                    </div>
+                    </div><br><br><br><br><br>
+                    <div id="tab"></div>
                 </div>
                 <div class="tab-pane fade" id="mrg-pills">
                     <h3>MRG</h3>
@@ -173,9 +172,8 @@
                                 : {{$client_mrg->$value}}<br>
                             </div>
                         @endforeach
-                    </div>
-                    <div id="tab">
-                    </div>
+                    </div><br><br><br><br><br>
+                    <div id="tab2"></div>
                 </div>
                 <div class="tab-pane fade" id="cat-pills">
                     <div>

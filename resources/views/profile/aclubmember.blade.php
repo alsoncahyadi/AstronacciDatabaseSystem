@@ -156,10 +156,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $count_temp = 1 ; ?>
+                    
                     @foreach ($clientsreg as $clientreg)
                     
                     <tr class="gradeA">
+                        <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
                         @if ($route != 'AShop')
                             <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
