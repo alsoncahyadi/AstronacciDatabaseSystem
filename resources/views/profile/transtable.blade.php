@@ -1,7 +1,7 @@
 
 <body>	   
 
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))    
+    @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop") || ($route == "AClub"))    
     <div class="panel panel-default" style="margin:15px">        
             @if (($route == "CAT") || ($route == "UOB"))
                 <?php $had_trans = false; ?>
@@ -30,7 +30,15 @@
                        @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
-                                    <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                    <div class="btn-hvr-container">
+                                        <button class="btn btn-primary hvr-btn">edit</button>
+                                        <form action="{{route('AClub.deletemember', ['id' => $clientreg->user_id])}}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE" >
+                                            <input class="btn btn-primary hvr-btn" type="submit" onclick="del()" value="delete" >
+                                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                        </form>
+                                    </div>
+                                </td>
                                     <?php $count_temp++ ; ?>
                                 @else
                                     </td>
@@ -38,7 +46,11 @@
                         @elseif ($route == 'green') 
                             <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
-                                    <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                    <div class="btn-hvr-container">
+                                        <button class="btn btn-primary hvr-btn">edit</button>
+                                        <button class="btn btn-primary hvr-btn">delete</button>
+                                    </div>
+                                </td>
                                     <?php $count_temp++ ; ?>
                                 @else
                                     </td>
@@ -46,7 +58,15 @@
                         @elseif ($route == 'MRG')
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
-                                    <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                    <div class="btn-hvr-container">
+                                        <button class="btn btn-primary hvr-btn">edit</button>
+                                        <form action="{{route('MRG.deletetrans', ['id' => $clientreg->accounts_number])}}" method="post">
+                                            <input type="hidden" name="_method" value="DELETE" >
+                                            <input class="btn btn-primary hvr-btn" type="submit" onclick="del()" value="delete" >
+                                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                        </form>
+                                    </div>
+                                </td>
                                     <?php $count_temp++ ; ?>
                                 @else
                                     </td>
@@ -54,7 +74,11 @@
                         @else
                             <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
-                                    <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                    <div class="btn-hvr-container">
+                                        <button class="btn btn-primary hvr-btn">edit</button>
+                                        <button class="btn btn-primary hvr-btn">delete</button>
+                                    </div>
+                                </td>
                                     <?php $count_temp++ ; ?>
                                 @else
                                     </td>

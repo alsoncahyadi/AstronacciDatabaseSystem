@@ -162,7 +162,7 @@
                     <div>
                         <p>Search</p>
                         <input id="searchkey" type="text"/>    
-                        <button type="button" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
+                        <button type="button" onclick="load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
                     </div>
                     <div id="tab"></div>
                 </div>
@@ -181,7 +181,7 @@
                     <div>
                     <p>Search</p>
                         <input id="searchkey2" type="text"/>    
-                        <button type="button" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
+                        <button type="button" onclick="load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
                     </div>
                     <div id="tab2"></div>
                 </div>

@@ -150,7 +150,7 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function editClient(Request $request) {
@@ -221,7 +221,7 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function importExcel() {
