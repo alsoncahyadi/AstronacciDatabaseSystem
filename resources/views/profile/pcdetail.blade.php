@@ -60,26 +60,13 @@
     		<!-- /.col-lg-12 -->
     	</div>
     </div>
-	               <?php
-                    if($route == "CAT") $userid = "cat_user_id";
-                    else if ($route == "AClub") $userid = "user_id";
-                    else if ($route == "MRG") $userid = "account";
-                    else if ($route == "UOB") $userid = "client_id";
-                    else if ($route == "green") $userid = "green_id";
-                    else if ($route == "grow") $userid = "grow_id";
-                    else if ($route == "RedClub") $userid = "username";
-                    else if ($route == "assigngreen") $userid = "green_assign_id";
-                    else if ($route == "assigngrow") $userid = "grow_assign_id";
-                    else if ($route == "assignredclub") $userid = "redclub_assign_id";
-                    else if ($route == "detail") $userid = "master_id";
-                ?>
                 
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deleteclient', ['id' => $client->$userid])}}"> Delete Client </button>
+            <button class="btn btn-default" onclick="del()" style="margin:10px;" href=""> Delete Client </button>
             <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
         </div>
 		
@@ -88,12 +75,12 @@
 				<div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
                     
-                        @foreach ($heads as $key => $value)
+                        @foreach ($heads_master as $key => $value)
                             <div class="col-lg-2" style="height:30px">
                                 <label>{{$key}}</label>
                             </div>
                             <div class="col-lg-10" style="height:30px">
-                                : {{$client->$value}}<br>
+                                : {{$client_master->$value}}<br>
                             </div>
                         @endforeach
 				</div>
@@ -101,13 +88,13 @@
 			</div>
 
              <div id="bod2" style="display:none">
-                <form role="form" method="post" action="{{route($route . '.edit')}}">
+                <form role="form" method="post" action="">
                     <div class="form-group">
-                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
-                        @foreach ($ins as $key => $value)
+                        <input name="user_id" type="hidden" value="{{$client_master->master_id}}">
+                        @foreach ($ins_master as $key => $value)
                             <div style="height:60px">
                                 <label>{{$key}}</label>
-                                    <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}">
                             </div>
                         @endforeach
                         
@@ -115,44 +102,142 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                     <button type="reset" class="btn btn-default">Reset</button>
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
-                        <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
-                    @elseif ($route == 'assigngrow')
-                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
-                        <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
-                    @elseif ($route == 'assigngreen')
-                        <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
-                        <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
-                    @elseif ($route == 'assignredclub')
-                        <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
-                    @endif
                 </form>
             </div> 
-			
 		</div>
-        @if($aclub)
-            <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}')" href="#"> AClub </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> AClub </button>
-        @endif
-        @if($mrg)
-        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}')" href="#"> MRG </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> MRG </button>
-        @endif
-        @if($cat)
-        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('CAT.detail', ['id' => $cat->user_id])}}')" href="#"> CAT </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> CAT </button>
-        @endif
-        @if($uob)
-        <a class="btn btn-default" style="margin:10px;" onclick="load('{{route('UOB.detail', ['id' => $uob->client_id])}}')" href="#"> UOB </a>
-        @else
-            <button type="button" class="btn btn-default" style="color:red;" disabled> UOB </button>
-        @endif 
     </div>
 
-    <div id="tab"></div>
+    <div class="panel panel-default" style="margin:15px">
+        <div class="panel-heading">
+            Profit Center
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-pills">
+                @if($aclub)
+                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">AClub</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>AClub</a>
+                    </li>
+                @endif
+                @if($mrg)
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2')">MRG</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
+                    </li>
+                @endif
+                @if($cat)
+                    <li><a href="#cat-pills" class="btn btn-default" data-toggle="tab">CAT</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>CAT</a>
+                    </li>
+                @endif
+                @if($uob)
+                    <li><a href="#uob-pills" class="btn btn-default" data-toggle="tab">UOB</a>
+                    </li>
+                @else
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>UOB</a>
+                    </li>
+                @endif
+            </ul>
+            <br>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade" id="aclub-pills">
+                    <h3>A Club</h3>
+                    <div>
+                        @foreach ($heads_aclub as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_aclub->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div><br><br><br><br><br>
+                    <div>
+                        <p>Search</p>
+                        <input id="searchkey" type="text"/>    
+                        <button type="button" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
+                    </div>
+                    <div id="tab"></div>
+                </div>
+                <div class="tab-pane fade" id="mrg-pills">
+                    <h3>MRG</h3>
+                    <div>
+                        @foreach ($heads_mrg as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_mrg->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div><br><br><br><br><br>
+                    <div>
+                    <p>Search</p>
+                        <input id="searchkey2" type="text"/>    
+                        <button type="button" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
+                    </div>
+                    <div id="tab2"></div>
+                </div>
+                <div class="tab-pane fade" id="cat-pills">
+                    <div>
+                        <h3>CAT</h3>
+                        @foreach ($heads_cat as $key => $value)
+                        <div class="col-lg-2" style="height:30px">
+                            <label>{{$key}}</label>
+                        </div>
+                        <div class="col-lg-10" style="height:30px">
+                            : {{$client_cat->$value}}<br>
+                        </div>
+                        @endforeach
+                    </div>
+                    <h4>Transaksi</h4>
+                    <div>
+                        @foreach ($headsreg_cat as $key => $value)
+                        <div class="col-lg-2" style="height:30px">
+                            <label>{{$key}}</label>
+                        </div>
+                        <div class="col-lg-10" style="height:30px">
+                            : {{$client_cat->$value}}<br>
+                        </div>
+                        @endforeach
+                        <br>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="uob-pills">
+                    <h3>UOB</h3>
+                    <div>
+                        @foreach ($heads_uob as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_uob->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div>
+                    <h4>Transaksi</h4>
+                    <div>
+                        @foreach ($headsreg_uob as $key => $value)
+                            <div class="col-lg-2" style="height:30px">
+                                <label>{{$key}}</label>
+                            </div>
+                            <div class="col-lg-10" style="height:30px">
+                                : {{$client_uob->$value}}<br>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-body -->
+    </div>    
 
 	<br><br>
 
@@ -184,11 +269,6 @@
 			
 		});
 	});
-	function del(){
-		if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-			window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
-
-	}
 	</script>
 </body>
 </html>

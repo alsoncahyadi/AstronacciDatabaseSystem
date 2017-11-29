@@ -156,15 +156,28 @@
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @foreach ($clientsreg as $clientreg)
                     
                     <tr class="gradeA">
-
+                        <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
                         @if ($route != 'AShop')
-                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
+                            @if ($count_temp == 1)
+                                <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                <?php $count_temp++ ; ?>
+                            @else
+                                </td>
+                            @endif
                         @else
-                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
+                            @if ($count_temp == 1)
+                                <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                <?php $count_temp++ ; ?>
+                            @else
+                                </td>
+                            @endif
                         @endif
                     
                         @endforeach

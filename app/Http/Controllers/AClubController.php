@@ -98,7 +98,7 @@ class AClubController extends Controller
         return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         // detail master dengan master_id = $id
         $aclub_information = AclubInformation::find($id);
 
@@ -111,8 +111,14 @@ class AClubController extends Controller
 
         $heads = $ins;
 
+        $keyword = $request['q'];
+
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers()->get();
+        $aclub_members = $aclub_master->aclubMembers()
+                        ->where('user_id', 'like', "%{$keyword}%")
+                        ->orWhere('sales_name', 'like', "%{$keyword}%")
+                        ->orWhere('group', 'like', "%{$keyword}%")
+                        ->paginate(15);
 
         $headsreg = ["User ID",
                     "Group"];
@@ -134,7 +140,7 @@ class AClubController extends Controller
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
     public function addMember(Request $request) {
