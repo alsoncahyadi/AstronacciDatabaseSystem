@@ -153,7 +153,7 @@ Route::post('/member/edit', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
     ]);
-Route::get('/member/deleteclient/{id}', [
+Route::delete('/member/deleteclient/{id}', [
     'uses' => 'DetailController@deleteClient',
     'as' => 'detail.deleteclient',
     'middleware' => ['auth', 'roles'],

@@ -71,9 +71,7 @@
     
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Basic Information 
-            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <i class="fa fa-child fa-fw"></i> Member Information 
         </div>
         
         <div class="panel-body">
@@ -90,33 +88,8 @@
                             </div>
                         @endforeach
                 </div>
-
-                <!-- <form action="{{route($route . '.deletemember', ['id' => $client->user_id])}}" method="post">
-                    <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" onclick="del()" value="Delete Member" >
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                </form> -->
                 
             </div>
-
-                <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.editmember')}}">
-                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        <div class="form-group">
-                            <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                            @foreach ($ins as $key => $value)
-                                <div style="height:60px">
-                                    <label>{{$key}}</label>
-                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                </div>
-                            @endforeach
-                            
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    </form>
-                </div> 
             
         </div>
 

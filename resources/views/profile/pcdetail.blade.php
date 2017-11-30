@@ -66,7 +66,11 @@
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-default" onclick="del()" style="margin:10px;" href=""> Delete Client </button>
+            <form action="{{route('detail.deleteclient', ['id' => $client_master->master_id])}}" method="post" onsubmit="return del()">
+                <input type="hidden" name="_method" value="DELETE" >
+                <input class="btn btn-default" type="submit" value="Delete Client" >
+                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+            </form>
             <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
         </div>
 		

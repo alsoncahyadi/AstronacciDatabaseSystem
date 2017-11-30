@@ -71,9 +71,7 @@
     
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Basic Information 
-            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <i class="fa fa-child fa-fw"></i> Account Information 
         </div>
         
         <div class="panel-body">
@@ -103,58 +101,8 @@
                     else if ($route == "assignredclub") $userid = "redclub_assign_id";
                     else if ($route == "AShop") $userid = "transaction_id";
                 ?>
-
-                <form action="{{route($route . '.deletetrans', ['id' => $client->$userid])}}" method="post">
-                    <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" onclick="del()" value="Delete Client" >
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                </form>
-
-                <!-- <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a> -->
                 
             </div>
-
-                <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.edittrans')}}">
-                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @elseif ($route == "MRG")
-                            <input name="user_id" type="hidden" value="{{$client->accounts_number}}">
-                            <input name="master_id" type="hidden" value="{{$client->master_id}}">
-                        @elseif ($route == "AShop")
-                            <input name="user_id" type="hidden" value="{{$client->transaction_id}}">
-                            <input name="master_id" type="hidden" value="{{$client->master_id}}">
-                        @endif
-                        <div class="form-group">
-                            <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                            
-                                    @foreach ($ins as $key => $value)
-                                        <div style="height:60px">
-                                            <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{strtolower(str_replace(' ', '_', $key))}}">
-                                        </div>
-                                    @endforeach
-                            
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
-                            <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
-                        @elseif ($route == 'assigngrow')
-                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
-                            <input type="hidden" name="grow_assign_id" value="{{$client->grow_id}}">
-                        @elseif ($route == 'assigngreen')
-                            <input type="hidden" name="green_assign_id" value="{{$client->green_assign_id}}">
-                            <input type="hidden" name="green_assign_id" value="{{$client->green_id}}">
-                        @elseif ($route == 'assignredclub')
-                            <input type="hidden" name="redclub_assign_id" value="{{$client->redclub_assign_id}}">
-                        @endif
-                    </form>
-                </div> 
             
         </div>
 
@@ -190,11 +138,6 @@
             
         });
     });
-    function del(){
-        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-            window.location.replace("{{route($route . '.deletetrans', ['id' => $client->$userid])}}");
-
-    }
     </script>
 </body>
 </html>
