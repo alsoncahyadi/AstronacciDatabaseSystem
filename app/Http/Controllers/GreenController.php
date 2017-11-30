@@ -226,7 +226,7 @@ class GreenController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function addTrans(Request $request) {
