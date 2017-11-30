@@ -670,7 +670,7 @@ Route::post('/AShop/insert', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/AShop/deletetrans/{id}', [
+Route::delete('/AShop/deletetrans/{id}', [
     'uses' => 'AshopController@deleteTrans',
     'as' => 'AShop.deletetrans',
     'middleware' => ['auth', 'ashop'],

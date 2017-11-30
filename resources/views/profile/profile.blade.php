@@ -274,16 +274,45 @@
                     @foreach ($clientsreg as $clientreg)
                     
                     <tr class="gradeA">
-
+                        <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
                        @if ($route == 'AClub')
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
-                        @elseif ($route == 'green') 
-                            <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @elseif ($route == 'green')
+                            <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
+                            @if ($count_temp == 1)
+                                <div class="btn-hvr-container">
+                                    <button class="btn btn-primary hvr-btn">edit</button>
+                                    <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return del()">
+                                        <input type="hidden" name="_method" value="DELETE" >
+                                        <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
+                                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                    </form>
+                                </div>
+                            </td>
+                                <?php $count_temp++ ; ?>
+                            @else
+                                </td>
+                            @endif
                         @elseif ($route == 'MRG')
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
                         @else
-                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
+                            @if ($count_temp == 1)
+                                <div class="btn-hvr-container">
+                                    <button class="btn btn-primary hvr-btn">edit</button>
+                                    <form action="{{route('AShop.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return del()">
+                                        <input type="hidden" name="_method" value="DELETE" >
+                                        <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
+                                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                    </form>
+                                </div>
+                            </td>
+                                <?php $count_temp++ ; ?>
+                            @else
+                                </td>
+                            @endif
+                            </td>
                         @endif
 
                         @endforeach
@@ -378,9 +407,11 @@
 		});
 	});
 	function del(){
-		if (confirm('Data will be lost permanently. Are you sure you want to delete this client?'))
-			window.location.replace("{{route($route . '.deleteclient', ['id' => $client->$userid])}}");
-
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?')) {
+            return true;
+        } else {
+            return false;
+        }
 	}
 	</script>
 </body>
