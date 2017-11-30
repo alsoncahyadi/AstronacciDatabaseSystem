@@ -121,6 +121,7 @@ class AClubController extends Controller
                         ->paginate(15);
 
         $headsreg = ["User ID",
+                    "Sales Name",
                     "Group"];
 
         $insreg = ["User ID",
@@ -220,7 +221,7 @@ class AClubController extends Controller
 
     public function editMember(Request $request) {
         $this->validate($request, [
-                'sales' => '',
+                'sales_name' => '',
                 'group' => ''
             ]);
 
@@ -235,7 +236,12 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('detail', ['id' => $aclub_member->master_id]);
+        }
     }
 
     public function deleteMember($id) {
@@ -364,7 +370,11 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('AClub.member', ['id' => $aclub_transaction->aclubmember->first()->master_id, 'member' => $aclub_transaction->user_id]);
+        }
     }
 
     public function importExcel() {
@@ -443,5 +453,25 @@ class AClubController extends Controller
                 $sheet->fromArray($array);
             });
         })->export('xls');
+    }
+
+    public function updateMember($id) {
+        $aclub_member = AclubMember::where('user_id', $id)->first();
+
+        $ins = ["Sales" => "sales_name",
+                    "Group" => "group"];
+
+        return view('content/aclubmembereditform', ['route'=>'AClub', 'client'=>$aclub_member, 'ins'=>$ins]);
+    }
+
+    public function updateTrans($id) {
+        $aclub_transaction = AclubTransaction::where('transaction_id', $id)->first();
+
+        $ins = [    "Payment Date" => 'payment_date',
+                    "Kode" => 'kode',
+                    "Nominal" => 'nominal',
+                    "Start Date" => 'start_date'];
+
+        return view('content/aclubtranseditform', ['route'=>'AClub', 'client'=>$aclub_transaction, 'ins'=>$ins]);
     }
 }

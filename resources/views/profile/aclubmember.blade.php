@@ -166,7 +166,7 @@
                             <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
                             @if ($count_temp == 1)
                                 <div class="btn-hvr-container">
-                                    <button class="btn btn-primary hvr-btn">edit</button>
+                                     <a href="{{route('AClubtrans.edit', ['id' => $clientreg->transaction_id])}}" class="btn btn-primary hvr-btn">edit</a>
                                     <form action="{{route('AClub.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return del()">
                                         <input type="hidden" name="_method" value="DELETE" >
                                         <input type="hidden" name="clientdel" id="clientdel" value="{{$clientreg->transaction_id}}" >

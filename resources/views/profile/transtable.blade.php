@@ -31,7 +31,7 @@
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">
-                                        <button class="btn btn-primary hvr-btn">edit</button>
+                                        <a href="{{route('AClubmember.edit', ['id' => $clientreg->user_id])}}" class="btn btn-primary hvr-btn">edit</a>
                                         <form action="{{route('AClub.deletemember', ['id' => $clientreg->user_id])}}" method="post">
                                             <input type="hidden" name="_method" value="DELETE" >
                                             <input class="btn btn-primary hvr-btn" type="submit" onclick="del()" value="delete" >
@@ -59,7 +59,7 @@
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">
-                                        <button class="btn btn-primary hvr-btn">edit</button>
+                                        <a href="{{route('MRGtrans.edit', ['id' => $clientreg->accounts_number])}}" class="btn btn-primary hvr-btn">edit</a>
                                         <form action="{{route('MRG.deletetrans', ['id' => $clientreg->accounts_number])}}" method="post">
                                             <input type="hidden" name="_method" value="DELETE" >
                                             <input class="btn btn-primary hvr-btn" type="submit" onclick="del()" value="delete" >

@@ -195,23 +195,29 @@ class MRGController extends Controller
      public function editTrans(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'nomor_account' => '',
-                'type_account' => '',
-                'sales' => ''
+                'accounts_number' => '',
+                'account_type' => '',
+                'sales_name' => ''
             ]);
         $mrg_account = MrgAccount::where('accounts_number',$request->user_id)->first();
         //Inisialisasi array error
         $err = [];
 
         try {
-            $mrg_account->account_type = $request->type_account;
-            $mrg_account->sales_name = $request->sales;
+            $mrg_account->account_type = $request->account_type;
+            $mrg_account->sales_name = $request->sales_name;
 
             $mrg_account->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('detail', ['id' => $mrg_account->master_id]);
+        }
+        
     }
 
     public function deleteTrans($id) {
@@ -300,5 +306,14 @@ class MRGController extends Controller
                 $sheet->fromArray($array);
             });
         })->export('xls');
+    }
+
+    public function updateTrans($account) {
+        $mrg_account = MrgAccount::where('accounts_number', $account)->first();
+
+        $ins = ["Type Account" => "account_type",
+                "Sales" => "sales_name"];
+
+        return view('content/mrgeditform', ['route'=>'MRG', 'client'=>$mrg_account, 'ins'=>$ins]);
     }
 }
