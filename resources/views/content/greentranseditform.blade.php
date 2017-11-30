@@ -54,7 +54,7 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			<h1>AClub Transaction</h1>
+			<h1>Green Progress</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -62,7 +62,7 @@
 
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Edit Transaction 
+            <i class="fa fa-child fa-fw"></i> Edit Progress
         </div>
         <div class="panel-body">
            
@@ -82,7 +82,7 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="hidden" name="user_id" value="{{$client->transaction_id}}">
+                        <input type="hidden" name="user_id" value="{{$client->progress_id}}">
                     </form>
             </div>
 

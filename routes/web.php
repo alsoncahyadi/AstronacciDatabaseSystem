@@ -530,6 +530,13 @@ Route::delete('/green/deletetrans/{id}', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::get('/greentrans/edit/{id}', [
+    'uses' => 'GreenController@updateTrans',
+    'as' => 'greentrans.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 Route::post('/green/edittrans', [
     'uses' => 'GreenController@editTrans',
     'as' => 'green.edittrans',
@@ -712,6 +719,12 @@ Route::delete('/AShop/delete/{id}', [
 Route::post('/AShop/edit', [
     'uses' => 'AshopController@editTrans',
     'as' => 'AShop.edit',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShoptrans/edit/{id}', [
+    'uses' => 'AshopController@updateTrans',
+    'as' => 'AShoptrans.edit',
     'middleware' => ['auth', 'ashop'],
     ]);
 

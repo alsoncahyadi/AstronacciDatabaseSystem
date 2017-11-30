@@ -173,8 +173,6 @@ class GreenController extends Controller
         //Validasi input
 
         $this->validate($request, [
-            "progress_id" => '', 
-            "green_id" => '', 
             "date" => 'date', 
             "sales_name" => '', 
             "status" => '', 
@@ -184,12 +182,11 @@ class GreenController extends Controller
             ]);
         //Inisialisasi array error
 
+
+        $progress = GreenProspectProgress::where('progress_id',$request->user_id)->first();
         $err = [];
         try {
-            $progress = GreenProspectProgress::where('progress_id',$request->progress_id)->first();
-            $err =[];
             // dd($request);
-            $progress->green_id = $request->green_id;
             $progress->date = $request->date;
             $progress->sales_name = $request->sales_name;
             $progress->status = $request->interest;
@@ -204,7 +201,11 @@ class GreenController extends Controller
             $err[] = $ex->getMessage();
         }
         
-        return redirect()->back()->withErrors($err);
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('green.detail', ['id' => $progress->green_id]);
+        }
     }
 
     public function deleteClient($id) {
@@ -320,4 +321,18 @@ class GreenController extends Controller
 			return redirect()->back()->withErrors([$err]);
 		}
 	}
+
+    public function updateTrans($id)
+    {
+        $progress = GreenProspectProgress::where('progress_id', $id)->first();
+
+        $ins= [     "Date" => "date",
+                    "Sales Name" => "sales_name",
+                    "Status" => "status",
+                    "Nama Product" => "nama_product",
+                    "Nominal" => "nominal",
+                    "Keterangan" => "keterangan",];
+
+        return view('content/greentranseditform', ['route'=>'green', 'client'=>$progress, 'ins'=>$ins]);
+    }
 }

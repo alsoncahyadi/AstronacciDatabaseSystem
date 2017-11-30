@@ -54,7 +54,7 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			<h1>AClub Transaction</h1>
+			<h1>AShop Transaction</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
@@ -62,7 +62,7 @@
 
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Edit Transaction 
+            <i class="fa fa-child fa-fw"></i> Edit Transaction
         </div>
         <div class="panel-body">
            

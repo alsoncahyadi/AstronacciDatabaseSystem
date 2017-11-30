@@ -54,13 +54,16 @@
 
 	<div class="row">
 		<div class="col-lg-12">
-			<h1>Edit Member AClub</h1>
+			<h1>AClub Member</h1>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
     </div>
 
     <div class="panel panel-default" style="margin:15px">
+         <div class="panel-heading">
+            <i class="fa fa-child fa-fw"></i> Edit Member 
+        </div>
         <div class="panel-body">
            
             <div class="panel-body">
