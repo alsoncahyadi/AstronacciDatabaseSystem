@@ -104,9 +104,9 @@
                     else if ($route == "AShop") $userid = "master_id";
 				?>
 
-                <form action="{{route($route . '.deleteclient', ['id' => $client->$userid])}}" method="post">
+                <form action="{{route($route . '.deleteclient', ['id' => $client->$userid])}}" method="post" onsubmit="return del()">
                     <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" onclick="del()" value="Delete Client" >
+                    <input type="submit" value="Delete Client" >
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
 
@@ -283,7 +283,7 @@
                             @if ($count_temp == 1)
                                 <div class="btn-hvr-container">
                                     <button class="btn btn-primary hvr-btn">edit</button>
-                                    <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return del()">
+                                    <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return delTrans()">
                                         <input type="hidden" name="_method" value="DELETE" >
                                         <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
                                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -301,7 +301,7 @@
                             @if ($count_temp == 1)
                                 <div class="btn-hvr-container">
                                     <button class="btn btn-primary hvr-btn">edit</button>
-                                    <form action="{{route('AShop.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return del()">
+                                    <form action="{{route('AShop.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return delTrans()">
                                         <input type="hidden" name="_method" value="DELETE" >
                                         <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
                                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -406,7 +406,14 @@
 			
 		});
 	});
-	function del(){
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this client?')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+	function delTrans(){
         if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?')) {
             return true;
         } else {
