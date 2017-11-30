@@ -91,11 +91,11 @@
                         @endforeach
                 </div>
 
-                <form action="{{route($route . '.deletemember', ['id' => $client->user_id])}}" method="post">
+                <!-- <form action="{{route($route . '.deletemember', ['id' => $client->user_id])}}" method="post">
                     <input type="hidden" name="_method" value="DELETE" >
                     <input type="submit" onclick="del()" value="Delete Member" >
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                </form>
+                </form> -->
                 
             </div>
 
@@ -165,7 +165,16 @@
                         @if ($route != 'AShop')
                             <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
                             @if ($count_temp == 1)
-                                <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                <div class="btn-hvr-container">
+                                    <button class="btn btn-primary hvr-btn">edit</button>
+                                    <form action="{{route('AClub.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return del()">
+                                        <input type="hidden" name="_method" value="DELETE" >
+                                        <input type="hidden" name="clientdel" id="clientdel" value="{{$clientreg->transaction_id}}" >
+                                        <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
+                                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                    </form>
+                                </div>
+                            </td>
                                 <?php $count_temp++ ; ?>
                             @else
                                 </td>
@@ -218,8 +227,11 @@
         });
     });
     function del(){
-        if (confirm('Data will be lost permanently. Are you sure you want to delete this member?'))
-            window.location.replace("{{route($route . '.deletemember', ['id' => $client->user_id])}}");
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?')) {
+            return true;
+        } else {
+            return false;
+        }
     }
     </script>
 </body>

@@ -431,13 +431,6 @@ Route::delete('/AClub/deletemember/{id}', [
     'roles' => ['0', '1'],
     ]);
 
-Route::delete('/AClub/deletemember/{id}', [
-    'uses' => 'AClubController@deleteMember',
-    'as' => 'AClub.deletemember',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
-    ]);
-
 Route::delete('/AClub/deleteclient/{id}', [
     'uses' => 'AClubController@deleteClient',
     'as' => 'AClub.deleteclient',
