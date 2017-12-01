@@ -282,7 +282,7 @@
                             <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
                             @if ($count_temp == 1)
                                 <div class="btn-hvr-container">
-                                    <button class="btn btn-primary hvr-btn">edit</button>
+                                    <a href="{{route('greentrans.edit', ['id' => $clientreg->progress_id])}}" class="btn btn-primary hvr-btn">edit</a>
                                     <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return delTrans()">
                                         <input type="hidden" name="_method" value="DELETE" >
                                         <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
@@ -300,7 +300,7 @@
                             <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
                             @if ($count_temp == 1)
                                 <div class="btn-hvr-container">
-                                    <button class="btn btn-primary hvr-btn">edit</button>
+                                    <a href="{{route('AShoptrans.edit', ['id' => $clientreg->transaction_id])}}" class="btn btn-primary hvr-btn">edit</a>
                                     <form action="{{route('AShop.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return delTrans()">
                                         <input type="hidden" name="_method" value="DELETE" >
                                         <input class="btn btn-primary hvr-btn" type="submit" value="delete" >

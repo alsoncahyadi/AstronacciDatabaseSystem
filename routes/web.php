@@ -254,6 +254,13 @@ Route::post('/MRG/import', [
 	'roles' => ['0', '2'],
     ]);
 
+Route::get('/MRGtrans/edit/{id}', [
+    'uses' => 'MRGController@updateTrans',
+    'as' => 'MRGtrans.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
 Route::post('/MRG/edit', [
     'uses' => 'MRGController@editClient',
     'as' => 'MRG.edit',
@@ -445,9 +452,23 @@ Route::post('/AClub/editmember', [
     'roles' => ['0', '1'],
     ]);
 
+Route::get('/AClubmember/edit/{id}', [
+    'uses' => 'AClubController@updateMember',
+    'as' => 'AClubmember.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::post('/AClub/edittrans', [
     'uses' => 'AClubController@editTrans',
     'as' => 'AClub.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClubtrans/edit/{id}', [
+    'uses' => 'AClubController@updateTrans',
+    'as' => 'AClubtrans.edit',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
     ]);
@@ -505,6 +526,13 @@ Route::post('/green/edit', [
 Route::delete('/green/deletetrans/{id}', [
     'uses' => 'GreenController@deleteTrans',
     'as' => 'green.deletetrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/greentrans/edit/{id}', [
+    'uses' => 'GreenController@updateTrans',
+    'as' => 'greentrans.edit',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
@@ -691,6 +719,12 @@ Route::delete('/AShop/delete/{id}', [
 Route::post('/AShop/edit', [
     'uses' => 'AshopController@editTrans',
     'as' => 'AShop.edit',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShoptrans/edit/{id}', [
+    'uses' => 'AshopController@updateTrans',
+    'as' => 'AShoptrans.edit',
     'middleware' => ['auth', 'ashop'],
     ]);
 
