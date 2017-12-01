@@ -141,7 +141,7 @@ Route::post('/insertPassword', [
 
 // DETAIL PC ROUTES
 Route::get('/member/{id}', [
-    'uses' => 'DetailController@clientDetail',
+    'uses' => 'DetailController@allPCDetail',
     'as' => 'detail',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
@@ -153,7 +153,7 @@ Route::post('/member/edit', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
     ]);
-Route::get('/member/deleteclient/{id}', [
+Route::delete('/member/deleteclient/{id}', [
     'uses' => 'DetailController@deleteClient',
     'as' => 'detail.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -431,13 +431,6 @@ Route::delete('/AClub/deletemember/{id}', [
     'roles' => ['0', '1'],
     ]);
 
-Route::delete('/AClub/deletemember/{id}', [
-    'uses' => 'AClubController@deleteMember',
-    'as' => 'AClub.deletemember',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
-    ]);
-
 Route::delete('/AClub/deleteclient/{id}', [
     'uses' => 'AClubController@deleteClient',
     'as' => 'AClub.deleteclient',
@@ -677,7 +670,7 @@ Route::post('/AShop/insert', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/AShop/deletetrans/{id}', [
+Route::delete('/AShop/deletetrans/{id}', [
     'uses' => 'AshopController@deleteTrans',
     'as' => 'AShop.deletetrans',
     'middleware' => ['auth', 'ashop'],

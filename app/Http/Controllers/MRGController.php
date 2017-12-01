@@ -91,7 +91,7 @@ class MRGController extends Controller
         return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         $mrg = MRG::where('master_id', $id)->first();
 
         $ins= ["Sumber Data (MRG)" => "sumber_data",
@@ -103,7 +103,13 @@ class MRGController extends Controller
         // form transaction
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
-        $clientsreg = $mrg->accounts()->get();
+        $keyword = $request['q'];
+
+        $clientsreg = $mrg->accounts()
+                    ->where('accounts_number', 'like', "%{$keyword}%")
+                    ->orWhere('account_type', 'like', "%{$keyword}%")
+                    ->orWhere('sales_name', 'like', "%{$keyword}%")
+                    ->paginate(15);
 
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
@@ -111,7 +117,7 @@ class MRGController extends Controller
         //attribute sql account
         $attsreg = ["accounts_number", "account_type", "sales_name"];
 
-        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
      public function addTrans(Request $request) {
@@ -144,7 +150,7 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function editClient(Request $request) {
@@ -215,7 +221,7 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function importExcel() {
