@@ -39,7 +39,7 @@ class HomeController extends Controller
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
-            
+
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
@@ -123,8 +123,8 @@ class HomeController extends Controller
                             $master->facebook = $value->facebook;
 
                             $master->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -142,6 +142,44 @@ class HomeController extends Controller
         return redirect()->back()->withErrors([$err]);
     }
 
+    public function exportExcel() {
+        $data = MasterClient::all();
+        $array = [];
+        $heads = [
+          "Master ID" => "master_id",
+          "Red Club User ID" => "redclub_user_id",
+          "Red Club Password" => "redclub_password",
+          "Nama" => "name",
+          "Telephone" => "telephone_number",
+          "Email" => "email",
+          "Tanggal Lahir" =>"birthdate",
+          "Alamat" => "address",
+          "Kota" => "city",
+          "Provinsi" => "provinsi",
+          "Jenis Kelamin" => "gender",
+          "Line ID" => "line_id",
+          "BBM" => "bbm",
+          "WhatsApp" => "whatsapp",
+          "Facebook" => "facebook"
+        ];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedMaster', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
     /**
      * Show the application dashboard.
      *
@@ -149,4 +187,3 @@ class HomeController extends Controller
      */
 
 }
-

@@ -152,7 +152,6 @@
 						</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 					</table>
-					
                     <!-- /.table-responsive -->
 					</div>
 					{{ csrf_field() }}

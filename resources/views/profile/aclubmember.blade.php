@@ -71,9 +71,7 @@
     
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Basic Information 
-            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <i class="fa fa-child fa-fw"></i> Member Information 
         </div>
         
         <div class="panel-body">
@@ -90,33 +88,8 @@
                             </div>
                         @endforeach
                 </div>
-
-                <form action="{{route($route . '.deletemember', ['id' => $client->user_id])}}" method="post">
-                    <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" onclick="del()" value="Delete Member" >
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                </form>
                 
             </div>
-
-                <div id="bod2" style="display:none">
-                    <form role="form" method="post" action="{{route($route . '.editmember')}}">
-                        <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        <div class="form-group">
-                            <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                            @foreach ($ins as $key => $value)
-                                <div style="height:60px">
-                                    <label>{{$key}}</label>
-                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                </div>
-                            @endforeach
-                            
-                        </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
-                        <button type="reset" class="btn btn-default">Reset</button>
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    </form>
-                </div> 
             
         </div>
 
@@ -156,15 +129,37 @@
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @foreach ($clientsreg as $clientreg)
                     
                     <tr class="gradeA">
-
+                        <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
                         @if ($route != 'AShop')
-                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
+                            @if ($count_temp == 1)
+                                <div class="btn-hvr-container">
+                                     <a href="{{route('AClubtrans.edit', ['id' => $clientreg->transaction_id])}}" class="btn btn-primary hvr-btn">edit</a>
+                                    <form action="{{route('AClub.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return del()">
+                                        <input type="hidden" name="_method" value="DELETE" >
+                                        <input type="hidden" name="clientdel" id="clientdel" value="{{$clientreg->transaction_id}}" >
+                                        <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
+                                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                    </form>
+                                </div>
+                            </td>
+                                <?php $count_temp++ ; ?>
+                            @else
+                                </td>
+                            @endif
                         @else
-                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
+                            <td style="padding-bottom: 0px !important;"> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
+                            @if ($count_temp == 1)
+                                <div class="btn-hvr-container"><button class="btn btn-primary hvr-btn">edit</button><button class="btn btn-primary hvr-btn">delete</button></div></td>
+                                <?php $count_temp++ ; ?>
+                            @else
+                                </td>
+                            @endif
                         @endif
                     
                         @endforeach
@@ -205,8 +200,11 @@
         });
     });
     function del(){
-        if (confirm('Data will be lost permanently. Are you sure you want to delete this member?'))
-            window.location.replace("{{route($route . '.deletemember', ['id' => $client->user_id])}}");
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this transaction?')) {
+            return true;
+        } else {
+            return false;
+        }
     }
     </script>
 </body>

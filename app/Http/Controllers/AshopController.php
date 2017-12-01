@@ -109,10 +109,8 @@ class AshopController extends Controller
     public function editTrans(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'transaction_id' => '',
-                'master_id' => '',
-                'product' => '',
-                'nama_product' => '',
+                'product_type' => '',
+                'product_name' => '',
                 'nominal' => ''
             ]);
         $ashop = AshopTransaction::where('transaction_id',$request->user_id)->first();
@@ -120,17 +118,20 @@ class AshopController extends Controller
         $err = [];
 
         try {
-            $ashop->transaction_id = $request->user_id;
-            $ashop->master_id = $request->master_id;
-            $ashop->product_type = $request->product;
-            $ashop->product_name = $request->nama_product;
+            $ashop->product_type = $request->product_type;
+            $ashop->product_name = $request->product_name;
             $ashop->nominal = $request->nominal;
 
             $ashop->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('AShop.detail', ['id' => $ashop->master_id]);
+        }
     }
 
      public function deleteTrans($id) {
@@ -141,7 +142,7 @@ class AshopController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function addTrans(Request $request) {
@@ -253,6 +254,18 @@ class AshopController extends Controller
             $err[] = $ex->getMessage();
         }
         return redirect()->back()->withErrors($err);
+    }
+
+    public function updateTrans($id)
+    {
+        $ashop = AshopTransaction::where('transaction_id', $id)->first();
+
+        $ins = ["Product" => "product_type",
+                "Nama Product" => "product_name",
+                "Nominal" => "nominal"];
+        //dd($aclub_transaction);
+
+        return view('content/ashoptranseditform', ['route'=>'AShop', 'client'=>$ashop, 'ins'=>$ins]);
     }
 
 }

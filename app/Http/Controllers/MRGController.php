@@ -11,7 +11,7 @@ use DB;
 
 class MRGController extends Controller
 {
-   
+
     private function nullify($string)
     {
         $newstring = trim($string);
@@ -20,7 +20,7 @@ class MRGController extends Controller
         }
         return $newstring;
     }
-    
+
     public function getTable(Request $request) {
         //$mrgs = Mrg::paginate(15);
 
@@ -91,7 +91,7 @@ class MRGController extends Controller
         return view('content/table', ['route' => 'MRG', 'clients' => $mrgs, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         $mrg = MRG::where('master_id', $id)->first();
 
         $ins= ["Sumber Data (MRG)" => "sumber_data",
@@ -103,15 +103,21 @@ class MRGController extends Controller
         // form transaction
         $insreg = ["Account Number", "Account Type", "Sales Name"];
 
-        $clientsreg = $mrg->accounts()->get();
-        
+        $keyword = $request['q'];
+
+        $clientsreg = $mrg->accounts()
+                    ->where('accounts_number', 'like', "%{$keyword}%")
+                    ->orWhere('account_type', 'like', "%{$keyword}%")
+                    ->orWhere('sales_name', 'like', "%{$keyword}%")
+                    ->paginate(15);
+
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
 
         //attribute sql account
         $attsreg = ["accounts_number", "account_type", "sales_name"];
 
-        return view('profile/profile', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
      public function addTrans(Request $request) {
@@ -132,7 +138,7 @@ class MRGController extends Controller
         $mrg_account->sales_name = $request->sales_name;
 
         $mrg_account->save();
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -141,12 +147,12 @@ class MRGController extends Controller
         try {
             $mrg = Mrg::find($id);
             $mrg->delete();
-        } catch(\Illuminate\Database\QueryException $ex){ 
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
-  
+
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
@@ -189,23 +195,29 @@ class MRGController extends Controller
      public function editTrans(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'nomor_account' => '',
-                'type_account' => '',
-                'sales' => ''
+                'accounts_number' => '',
+                'account_type' => '',
+                'sales_name' => ''
             ]);
         $mrg_account = MrgAccount::where('accounts_number',$request->user_id)->first();
         //Inisialisasi array error
         $err = [];
 
         try {
-            $mrg_account->account_type = $request->type_account;
-            $mrg_account->sales_name = $request->sales;
+            $mrg_account->account_type = $request->account_type;
+            $mrg_account->sales_name = $request->sales_name;
 
             $mrg_account->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('detail', ['id' => $mrg_account->master_id]);
+        }
+        
     }
 
     public function deleteTrans($id) {
@@ -215,7 +227,7 @@ class MRGController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function importExcel() {
@@ -226,7 +238,7 @@ class MRGController extends Controller
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
-                
+
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
@@ -255,8 +267,8 @@ class MRGController extends Controller
                             $mrg->join_date = $value->tanggal_join;
 
                             $mrg->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -275,9 +287,9 @@ class MRGController extends Controller
     }
 
     public function exportExcel() {
-        $data = DB::select("call select_mrg()");
+        $data = Mrg::all();
         $array = [];
-        $heads = ["PC ID" => "all_pc_id", "Account" => "account", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Tanggal Join" => "join_date", "Type" => "type", "Sales" => "sales_username"];
+        $heads = ["Master ID" => "master_id", "Sumber Data" => "sumber_data", "Join Date" => "join_date"];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
@@ -288,11 +300,20 @@ class MRGController extends Controller
         }
         //print_r($array);
         //$array = ['a' => 'b'];
-        return Excel::create('testexportmrg', function($excel) use ($array) {
+        return Excel::create('ExportedMRG', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);
             });
         })->export('xls');
+    }
+
+    public function updateTrans($account) {
+        $mrg_account = MrgAccount::where('accounts_number', $account)->first();
+
+        $ins = ["Type Account" => "account_type",
+                "Sales" => "sales_name"];
+
+        return view('content/mrgeditform', ['route'=>'MRG', 'client'=>$mrg_account, 'ins'=>$ins]);
     }
 }

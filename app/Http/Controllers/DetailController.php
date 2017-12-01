@@ -7,6 +7,10 @@ use DB;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\MasterClient;
+use App\Cat;
+use App\Mrg;
+use App\AclubInformation;
+use App\Uob;
 
 class DetailController extends Controller
 {
@@ -106,4 +110,176 @@ class DetailController extends Controller
         return redirect()->back()->withErrors($err);
     }
 
+    public function allPCDetail($id)
+    {
+        //Master
+        $client_master = MasterClient::where('master_id', $id)->first();
+        $aclub = $client_master->aclubInformation;
+        $mrg = $client_master->mrg;
+        $uob = $client_master->uob;
+        $cat = $client_master->cat;
+
+        //Nama atribut form yang ditampilkan dan nama pada SQL
+        $ins_master = ["Master ID"=> "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook"];
+        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
+        $heads_master = $ins_master;
+
+        //CAT
+        $client_cat = Cat::where('user_id', $id)->first();
+
+        if ($client_cat == null) {
+            $client_cat = Cat::first();
+        }
+
+        $ins_cat = ["User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Batch" => "batch",
+                "Sales" => "sales_name",
+                ];
+
+        $heads_cat = $ins_cat;
+
+        $insreg_cat = [ "Nomer Induk" => 'nomor_induk',
+                    "DP Date" => 'DP_date',
+                    "DP Nominal" => 'DP_nominal',
+                    "Payment Date" => 'payment_date',
+                    "Payment Nominal" => 'payment_nominal',
+                    "Opening Class" => "tanggal_opening_class",
+                    "End Class" => 'tanggal_end_class',
+                    "Ujian" => 'tanggal_ujian',
+                    "Status" => 'status',
+                    "Keterangan" => 'keterangan'
+                    ];
+
+        $headsreg_cat = [   "Nomer Induk" => 'nomor_induk',
+                        "DP Date" => 'DP_date',
+                        "DP Nominal" => 'DP_nominal',
+                        "Payment Date" => 'payment_date',
+                        "Payment Nominal" => 'payment_nominal',
+                        "Opening Class" => "tanggal_opening_class",
+                        "End Class" => 'tanggal_end_class',
+                        "Ujian" => 'tanggal_ujian',
+                        "Status" => 'status',
+                        "Keterangan" => 'keterangan'
+                    ];
+
+
+        //UOB
+        $client_uob = Uob::where('client_id', $id)->first();
+
+        if ($client_uob == null) {
+            $client_uob = Uob::first();
+        }
+
+        $ins_uob = [
+                "Kode Client" => "client_id",
+                "Master ID" => "master_id",
+                "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data",
+                "Tanggal Join" => "join_date",
+                "Nomor KTP" => "nomor_ktp",
+                "Expired KTP" => "tanggal_expired_ktp",
+                "Nomor NPWP" => "nomor_npwp",
+                "Alamat Surat Menyurat" => "alamat_surat",
+                "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+                "Nama Ibu Kandung" => "nama_ibu_kandung",
+            ];
+
+        $heads_uob = $ins_uob;
+
+        $insreg_uob = ["Bank Pribadi" => "bank_pribadi",
+                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                        "Tanggal RDI Done" => 'tanggal_rdi_done',
+                        "RDI Bank" => "rdi_bank",
+                        "Nomor RDI" => 'nomor_rdi',
+                        "Tanggal Top Up" => 'tanggal_top_up',
+                        "Nominal Top Up" => 'nominal_top_up',
+                        "Tanggal Trading" => 'tanggal_trading',
+                        "Status" => 'status',
+                        "Trading Via" => 'trading_via',
+                        "Keterangan" => 'keterangan'];
+
+        $headsreg_uob = [  "Bank Pribadi" => "bank_pribadi",
+                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                        "Tanggal RDI Done" => 'tanggal_rdi_done',
+                        "RDI Bank" => "rdi_bank",
+                        "Nomor RDI" => 'nomor_rdi',
+                        "Tanggal Top Up" => 'tanggal_top_up',
+                        "Nominal Top Up" => 'nominal_top_up',
+                        "Tanggal Trading" => 'tanggal_trading',
+                        "Status" => 'status',
+                        "Trading Via" => 'trading_via',
+                        "Keterangan" => 'keterangan',
+                    ];
+
+        //MRG
+        $client_mrg = Mrg::where('master_id', $id)->first();
+
+        if ($client_mrg == null) {
+            $client_mrg = Mrg::first();
+        }
+
+        $ins_mrg = ["Sumber Data (MRG)" => "sumber_data",
+                "Join Date (MRG)" => "join_date",
+                "Sales" => "sales_name"];
+
+        $heads_mrg = $ins_mrg;
+
+        $insreg_mrg = ["Account Number", "Account Type", "Sales Name"];
+
+        $clientsreg_mrg = $client_mrg->accounts()->get();
+        
+        $headsreg_mrg = ["Account Number", "Account Type", "Sales Name"];
+
+        $attsreg_mrg = ["accounts_number", "account_type", "sales_name"];
+
+        //ACLUB
+        $client_aclub = AclubInformation::find($id);
+
+        if ($client_aclub == null) {
+            $client_aclub = AclubInformation::first();
+        }
+
+        $aclub_master = $client_aclub->master;
+
+        $ins_aclub = ["Master_id" => "master_id", 
+                "Sumber Data" => "sumber_data", 
+                "Keterangan" => "keterangan"];
+
+        $heads_aclub = $ins_aclub;
+
+        $clientsreg_aclub= $aclub_master->aclubMembers()->get();
+
+        $headsreg_aclub = ["User ID",
+                    "Sales Name",
+                    "Group"];
+
+        $insreg_aclub = ["User ID",
+                    "Sales Name",
+                    "Group"];
+
+        $attsreg_aclub = ["user_id", "sales_name", "group"];
+
+
+        return view('profile/pcdetail', [
+            'client_master'=>$client_master, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob, 'heads_master'=>$heads_master, 'ins_master'=>$ins_master,
+            'client_cat'=>$client_cat, 'heads_cat'=>$heads_cat, 'ins_cat'=>$ins_cat, 'insreg_cat'=>$insreg_cat, 'headsreg_cat'=>$headsreg_cat,
+            'client_uob'=>$client_uob, 'heads_uob'=>$heads_uob, 'ins_uob'=>$ins_uob, 'insreg_uob'=>$insreg_uob, 'headsreg_uob'=>$headsreg_uob,
+            'client_mrg'=>$client_mrg, 'heads_mrg'=>$heads_mrg, 'ins_mrg'=>$ins_mrg, 'insreg_mrg'=>$insreg_mrg, 'headsreg_mrg'=>$headsreg_mrg, 'attsreg_mrg'=>$attsreg_mrg, 'clientsreg_mrg'=>$clientsreg_mrg, 
+            'client_aclub'=>$client_aclub, 'heads_aclub'=>$heads_aclub, 'ins_aclub'=>$ins_aclub, 'insreg_aclub'=>$insreg_aclub, 'headsreg_aclub'=>$headsreg_aclub, 'attsreg_aclub'=>$attsreg_aclub, 'clientsreg_aclub'=>$clientsreg_aclub]);
+    }
 }

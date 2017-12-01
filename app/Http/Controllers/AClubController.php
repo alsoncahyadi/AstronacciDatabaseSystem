@@ -13,7 +13,7 @@ use App\MasterClient;
 
 class AClubController extends Controller
 {
-    
+
     private function nullify($string)
     {
         $newstring = trim($string);
@@ -98,23 +98,30 @@ class AClubController extends Controller
         return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         // detail master dengan master_id = $id
         $aclub_information = AclubInformation::find($id);
 
         // aclub_master adalah aclub_master nya
         $aclub_master = $aclub_information->master;
 
-        $ins = ["Master_id" => "master_id", 
-                "Sumber Data" => "sumber_data", 
+        $ins = ["Master_id" => "master_id",
+                "Sumber Data" => "sumber_data",
                 "Keterangan" => "keterangan"];
 
         $heads = $ins;
 
+        $keyword = $request['q'];
+
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers()->get();
+        $aclub_members = $aclub_master->aclubMembers()
+                        ->where('user_id', 'like', "%{$keyword}%")
+                        ->orWhere('sales_name', 'like', "%{$keyword}%")
+                        ->orWhere('group', 'like', "%{$keyword}%")
+                        ->paginate(15);
 
         $headsreg = ["User ID",
+                    "Sales Name",
                     "Group"];
 
         $insreg = ["User ID",
@@ -134,7 +141,7 @@ class AClubController extends Controller
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
-        return view('profile/profile', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
     public function addMember(Request $request) {
@@ -169,7 +176,7 @@ class AClubController extends Controller
 
         $aclub_member->save();
         $aclub_trans->save();
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -223,7 +230,7 @@ class AClubController extends Controller
 
     public function editMember(Request $request) {
         $this->validate($request, [
-                'sales' => '',
+                'sales_name' => '',
                 'group' => ''
             ]);
 
@@ -233,12 +240,17 @@ class AClubController extends Controller
 
             $aclub_member->sales_name = $request->sales_name;
             $aclub_member->group = $request->group;
-            
+
             $aclub_member->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('detail', ['id' => $aclub_member->master_id]);
+        }
     }
 
     public function deleteMember($id) {
@@ -249,7 +261,7 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function clientDetailPackage($id, $member, $package) {
@@ -268,7 +280,6 @@ class AClubController extends Controller
                     "Masa Tenggang" => 'masa_tenggang',
                     "Yellow Zone" => 'yellow_zone',
                     "Red Zone" => 'red_zone'];
-
         $ins = [      "Payment Date" => "payment_date",
                         "Kode" => "kode",
                         "Status" => "status",
@@ -320,7 +331,7 @@ class AClubController extends Controller
             $aclub->master_id = $request->master_id;
             $aclub->sumber_data = $request->sumber_data;
             $aclub->keterangan = $request->keterangan;
-            
+
             $aclub->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -361,7 +372,7 @@ class AClubController extends Controller
 
 
         $aclub_trans->save();
-        
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -372,7 +383,7 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function editTrans(Request $request) {
@@ -409,7 +420,11 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect()->back()->withErrors($err);
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('AClub.member', ['id' => $aclub_transaction->aclubmember->first()->master_id, 'member' => $aclub_transaction->user_id]);
+        }
     }
 
     public function importExcel() {
@@ -442,7 +457,7 @@ class AClubController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
-                        try { 
+                        try {
                             $aclubInfo = new \App\AclubInformation;
 
                             $aclubInfo->master_id = $value->master_id;
@@ -450,8 +465,8 @@ class AClubController extends Controller
                             $aclubInfo->keterangan = $value->keterangan;
 
                             $aclubInfo->save();
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
                         }
                     }
@@ -466,5 +481,47 @@ class AClubController extends Controller
             $err[] = $msg;
         }
         return redirect()->back()->withErrors([$err]);
+    }
+
+    public function exportExcel() {
+        $data = AclubInformation::all();
+        $array = [];
+        $heads = ["Master ID" => "master_id", "Sumber Data" => "sumber_data", "Keterangan" => "keterangan"];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedAClub', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function updateMember($id) {
+        $aclub_member = AclubMember::where('user_id', $id)->first();
+
+        $ins = ["Sales" => "sales_name",
+                    "Group" => "group"];
+
+        return view('content/aclubmembereditform', ['route'=>'AClub', 'client'=>$aclub_member, 'ins'=>$ins]);
+    }
+
+    public function updateTrans($id) {
+        $aclub_transaction = AclubTransaction::where('transaction_id', $id)->first();
+
+        $ins = [    "Payment Date" => 'payment_date',
+                    "Kode" => 'kode',
+                    "Nominal" => 'nominal',
+                    "Start Date" => 'start_date'];
+
+        return view('content/aclubtranseditform', ['route'=>'AClub', 'client'=>$aclub_transaction, 'ins'=>$ins]);
     }
 }

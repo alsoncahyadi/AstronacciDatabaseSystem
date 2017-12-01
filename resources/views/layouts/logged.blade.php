@@ -31,6 +31,7 @@
     <link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
     <!-- Scripts -->
+    <script src="{{ URL::asset('js/laravel.js') }}"></script>
     <!-- jQuery -->
 
     <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>

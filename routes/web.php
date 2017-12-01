@@ -25,7 +25,7 @@ Route::get('/', 'Auth\LoginController@index')->middleware('auth');
 Auth::routes();
 
 Route::get('/newMember', [
-    'uses' => 'MockupController@index', 
+    'uses' => 'MockupController@index',
     'as' => 'mockup',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0'],
@@ -42,7 +42,7 @@ Route::get('/adduser', [
 	'as' => 'adduser',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0'],
-	function(){ 
+	function(){
 		return view('auth/register');
 	},
 	]);
@@ -63,12 +63,12 @@ Route::get('/register',
 */
 
 Route::get('/home', [
-	'uses' => 'HomeController@index', 
+	'uses' => 'HomeController@index',
 	'as' => 'home',
 	]);
 
 Route::post('/master/import', [
-    'uses' => 'HomeController@importExcel', 
+    'uses' => 'HomeController@importExcel',
     'as' => 'master.import',
     ]);
 
@@ -77,62 +77,62 @@ Route::get('/dashboard', [
     'as' => 'dashboard',
 	'middleware' => 'auth'
     ]);
-		
+
 Route::get('list', [
 	'uses' => 'RolelistController@index',
 	'as' => 'rolelist',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0'],
 	]);
-	
+
 Route::post('roleAssign', [
 	'uses' => 'RolelistController@postAssignRoles',
 	'as' => 'admin.assign',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0'],
 	]);
-	
+
 Route::get('/sales', [
 	'uses' => 'SalesController@getTable',
 	'as' => 'sales',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['5'],
 	]);
-	
+
 Route::get('/report/{type}/{id}', [
     'uses' => 'SalesController@reportDetail',
     'as' => 'report.detail',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['5'],
     ]);
-	
+
 Route::post('/report/green', [
     'uses' => 'SalesController@addGreenReport',
     'as' => 'report.green',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['5'],
     ]);
-	
+
 Route::post('/report/grow', [
     'uses' => 'SalesController@addGrowReport',
     'as' => 'report.grow',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['5'],
     ]);
-	
+
 Route::post('/report/redclub', [
     'uses' => 'SalesController@addRedclubReport',
     'as' => 'report.redclub',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['5'],
     ]);
-	
+
 Route::get('/updatePassword', [
 	'uses' => 'PassController@getForm',
 	'as' => 'updatepass',
 	'middleware' => ['auth'],
 	]);
-	
+
 Route::post('/insertPassword', [
 	'uses' => 'PassController@updatePass',
 	'as' => 'insertpass',
@@ -141,7 +141,7 @@ Route::post('/insertPassword', [
 
 // DETAIL PC ROUTES
 Route::get('/member/{id}', [
-    'uses' => 'DetailController@clientDetail',
+    'uses' => 'DetailController@allPCDetail',
     'as' => 'detail',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
@@ -153,7 +153,7 @@ Route::post('/member/edit', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3'],
     ]);
-Route::get('/member/deleteclient/{id}', [
+Route::delete('/member/deleteclient/{id}', [
     'uses' => 'DetailController@deleteClient',
     'as' => 'detail.deleteclient',
     'middleware' => ['auth', 'roles'],
@@ -254,6 +254,13 @@ Route::post('/MRG/import', [
 	'roles' => ['0', '2'],
     ]);
 
+Route::get('/MRGtrans/edit/{id}', [
+    'uses' => 'MRGController@updateTrans',
+    'as' => 'MRGtrans.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
 Route::post('/MRG/edit', [
     'uses' => 'MRGController@editClient',
     'as' => 'MRG.edit',
@@ -330,7 +337,7 @@ Route::post('/UOB/import', [
     'as' => 'UOB.import',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '4'],
-    ]);	
+    ]);
 
 Route::post('/UOB/edit', [
     'uses' => 'UOBController@editClient',
@@ -431,13 +438,6 @@ Route::delete('/AClub/deletemember/{id}', [
     'roles' => ['0', '1'],
     ]);
 
-Route::delete('/AClub/deletemember/{id}', [
-    'uses' => 'AClubController@deleteMember',
-    'as' => 'AClub.deletemember',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
-    ]);
-
 Route::delete('/AClub/deleteclient/{id}', [
     'uses' => 'AClubController@deleteClient',
     'as' => 'AClub.deleteclient',
@@ -452,9 +452,23 @@ Route::post('/AClub/editmember', [
     'roles' => ['0', '1'],
     ]);
 
+Route::get('/AClubmember/edit/{id}', [
+    'uses' => 'AClubController@updateMember',
+    'as' => 'AClubmember.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::post('/AClub/edittrans', [
     'uses' => 'AClubController@editTrans',
     'as' => 'AClub.edittrans',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+Route::get('/AClubtrans/edit/{id}', [
+    'uses' => 'AClubController@updateTrans',
+    'as' => 'AClubtrans.edit',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
     ]);
@@ -516,6 +530,13 @@ Route::delete('/green/deletetrans/{id}', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::get('/greentrans/edit/{id}', [
+    'uses' => 'GreenController@updateTrans',
+    'as' => 'greentrans.edit',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 Route::post('/green/edittrans', [
     'uses' => 'GreenController@editTrans',
     'as' => 'green.edittrans',
@@ -544,7 +565,7 @@ Route::post('/green/assign', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
-	
+
 //Red Club Route
 Route::get('/RedClub', [
     'uses' => 'RedClubController@getTable',
@@ -594,7 +615,7 @@ Route::post('/RedClub/assign', [
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
-	
+
 //Grow Route
 Route::get('/grow', [
     'uses' => 'GrowController@getTable',
@@ -637,7 +658,7 @@ Route::delete('/grow/deleteclient/{id}', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
-	
+
 Route::post('/grow/assign', [
     'uses' => 'GrowController@assignClient',
     'as' => 'grow.assign',
@@ -677,7 +698,7 @@ Route::post('/AShop/insert', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/AShop/deletetrans/{id}', [
+Route::delete('/AShop/deletetrans/{id}', [
     'uses' => 'AshopController@deleteTrans',
     'as' => 'AShop.deletetrans',
     'middleware' => ['auth', 'ashop'],
@@ -698,6 +719,12 @@ Route::delete('/AShop/delete/{id}', [
 Route::post('/AShop/edit', [
     'uses' => 'AshopController@editTrans',
     'as' => 'AShop.edit',
+    'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::get('/AShoptrans/edit/{id}', [
+    'uses' => 'AshopController@updateTrans',
+    'as' => 'AShoptrans.edit',
     'middleware' => ['auth', 'ashop'],
     ]);
 
@@ -780,6 +807,41 @@ Route::get('/assign/grow/deleteclient/{id}', [
 Route::get('/assign/redclub/deleteclient/{id}', [
     'uses' => 'AssignmentController@deleteClientRedClub',
     'as' => 'assignredclub.deleteclient',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/export/mrg', [
+    'uses' => 'MRGController@exportExcel',
+    'as' => 'mrgexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/export/cat', [
+    'uses' => 'CATController@exportExcel',
+    'as' => 'catexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/export/aclub', [
+    'uses' => 'AClubController@exportExcel',
+    'as' => 'aclubexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/export/uob', [
+    'uses' => 'UOBController@exportExcel',
+    'as' => 'uobexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/export/master', [
+    'uses' => 'HomeController@exportExcel',
+    'as' => 'masterexport',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
