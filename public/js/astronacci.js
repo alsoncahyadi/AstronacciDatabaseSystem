@@ -58,4 +58,3 @@ function importex(){
 		$("#import").hide();
 	}
 }
-

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+<!-- profile -->
 <head>
 
     <meta charset="utf-8">
@@ -336,7 +338,6 @@
                         @foreach ($insreg as $atr)
                         <div class="form-group">
                             <label>{{$atr}}</label>
-                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                         </div>
                         @endforeach
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -420,6 +421,9 @@
             return false;
         }
 	}
-	</script>
+</script>
+
+
+
 </body>
 </html>
