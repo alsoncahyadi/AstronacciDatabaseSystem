@@ -163,7 +163,7 @@
 						<label>{{$atr}}</label>
 						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
-						@elseif ($atr == "DP Date")
+						@elseif (($atr == "DP Date") || ($atr == "Opening Class"))
 							<input class="form-control no-spin" type="date" id="dpdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">	
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">

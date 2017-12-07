@@ -100,12 +100,21 @@
                         @foreach ($ins_master as $key => $value)
                             <div style="height:60px">
                                 <label>{{$key}}</label>
+                                @if ($key == "Tanggal Lahir")
+                                    <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_master->$value}}"> 
+                                @elseif ($key == "Gender")
+                                    <select class="form-control" name="{{$value}}" value="{{$client_master->$value}}">
+                                        <option>M</option>
+                                        <option>F</option>
+                                    </select>
+                                @else
                                     <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}">
+                                @endif
                             </div>
                         @endforeach
                         
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="reset" class="btn btn-default">Reset</button>
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
@@ -195,8 +204,9 @@
                                     <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                 </div>
                                 @endforeach
+                                <br>
                                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                <input type="submit" class="btn btn-default" value="Insert">
+                                <input type="submit" class="btn btn-primary" value="Insert">
                                 <button type="reset" class="btn btn-default">Reset Form</button>
                             </form>
                         </div>
@@ -231,12 +241,16 @@
                                 @foreach ($insreg_cat as $key => $value)
                                     <div style="height:60px">
                                         <label>{{$key}}</label>
-                                            <input class="form-control" value="{{$client_cat->$value}}" name="{{$value}}">
+                                            @if (($key == "DP Date") || ($key == "Payment Date") || ($key == "Opening Class")|| ($key == "End Class")|| ($key == "Ujian"))
+                                                <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_cat->$value}}"> 
+                                            @else
+                                                <input class="form-control" value="{{$client_cat->$value}}" name="{{$value}}">
+                                            @endif
                                     </div>
                                 @endforeach
-                              
+                                <br>
                                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                <input type="submit" class="btn btn-default" value="Insert">
+                                <input type="submit" class="btn btn-primary" value="Insert">
                                 <button type="reset" class="btn btn-default">Reset Form</button>
                             </form>
                         </div>
@@ -276,12 +290,16 @@
                                 @foreach ($insreg_uob as $key => $value)
                                     <div style="height:60px">
                                         <label>{{$key}}</label>
+                                            @if (($key == "Tanggal RDI Done") || ($key == "Tanggal Top Up") || ($key == "Tanggal Trading"))
+                                                <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_uob->$value}}">
+                                            @else   
                                             <input class="form-control" value="{{$client_uob->$value}}" name="{{$value}}">
+                                            @endif
                                     </div>
                                 @endforeach
-                              
+                                <br>
                                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                <input type="submit" class="btn btn-default" value="Insert">
+                                <input type="submit" class="btn btn-primary" value="Insert">
                                 <button type="reset" class="btn btn-default">Reset Form</button>
                             </form>
                         </div>
