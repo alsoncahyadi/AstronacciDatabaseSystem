@@ -204,6 +204,26 @@
                         @endforeach
                     </div>
                     <h4>Transaksi</h4>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcat">Update Transaction</a>
+                    <div id="addcat" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('CAT.edit')}}">
+                                <input name="user_id" type="hidden" value="{{$client_cat->user_id}}">
+                                @foreach ($insreg_cat as $key => $value)
+                                    <div style="height:60px">
+                                        <label>{{$key}}</label>
+                                            <input class="form-control" value="{{$client_cat->$value}}" name="{{$value}}">
+                                    </div>
+                                @endforeach
+                              
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-default" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
                     <div>
                         @foreach ($headsreg_cat as $key => $value)
                         <div class="col-lg-2" style="height:30px">
@@ -229,6 +249,25 @@
                         @endforeach
                     </div>
                     <h4>Transaksi</h4>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#adduob">Update Transaction</a>
+                    <div id="adduob" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('UOB.edit')}}">
+                                <input name="user_id" type="hidden" value="{{$client_uob->user_id}}">
+                                @foreach ($insreg_uob as $key => $value)
+                                    <div style="height:60px">
+                                        <label>{{$key}}</label>
+                                            <input class="form-control" value="{{$client_uob->$value}}" name="{{$value}}">
+                                    </div>
+                                @endforeach
+                              
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-default" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
                     <div>
                         @foreach ($headsreg_uob as $key => $value)
                             <div class="col-lg-2" style="height:30px">

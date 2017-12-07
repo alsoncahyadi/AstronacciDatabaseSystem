@@ -36,12 +36,10 @@
 				?>
 				<div class="form-group" id="{{$str_id}}">				
 					<label>{{$atr}}</label>
-					<?php if ($str_id == 'JenisKelamin') : ?>
+					<?php if ($str_id == 'Gender') : ?>
 							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-								<option>Pria</option>
-								<option>Wanita</option>
-								<option>Hermaphrodite</option>
-								<option>Null</option>
+								<option>M</option>
+								<option>F</option>
 							</select>
 					<?php elseif ($str_id == 'TanggalLahir') : ?>
 							<input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -123,8 +121,18 @@
 					@foreach ($mrg as $atr)
 					<div class="form-group">
 						<label>{{$atr}}</label>
-						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
+						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
+
+						@elseif ($atr == "Tanggal Join")
+							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
+						@elseif ($atr == "Account Type")
+							<select class="form-control" id="accounttype" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+								<option selected="selected">Recreation</option>
+								<option>Basic</option>
+								<option>Syariah</option>
+								<option>Signature</option>
+							</select>
 						@else
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 						@endif
