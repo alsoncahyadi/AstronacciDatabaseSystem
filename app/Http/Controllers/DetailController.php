@@ -139,7 +139,7 @@ class DetailController extends Controller
         $heads_master = $ins_master;
 
         //CAT
-        $client_cat = Cat::where('user_id', $id)->first();
+        $client_cat = Cat::where('master_id', $id)->first();
 
         if ($client_cat == null) {
             $client_cat = Cat::first();
@@ -179,7 +179,7 @@ class DetailController extends Controller
 
 
         //UOB
-        $client_uob = Uob::where('client_id', $id)->first();
+        $client_uob = Uob::where('master_id', $id)->first();
 
         if ($client_uob == null) {
             $client_uob = Uob::first();
