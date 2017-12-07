@@ -68,7 +68,7 @@
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <form action="{{route('detail.deleteclient', ['id' => $client_master->master_id])}}" method="post" onsubmit="return del()">
+            <form action="{{route('detail.deleteclient', ['id' => $client_master->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
                 <input type="hidden" name="_method" value="DELETE" >
                 <input class="btn btn-default" type="submit" value="Delete Client" >
                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -183,7 +183,26 @@
                                 : {{$client_mrg->$value}}<br>
                             </div>
                         @endforeach
-                    </div><br><br><br><br><br>
+                    </div>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addmrgtrans">Add New Transaction</a>
+                    <div id="addmrgtrans" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('MRG.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_mrg->client_id}}">
+                                @foreach ($insreg_mrg as $atr)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                </div>
+                                @endforeach
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-default" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
                     <div>
                     <p>Search</p>
                         <input id="searchkey2" type="text"/>    
@@ -268,6 +287,7 @@
                         </div>
                         <br>
                     </div>
+                    <br><br>
                     <div>
                         @foreach ($headsreg_uob as $key => $value)
                             <div class="col-lg-2" style="height:30px">
