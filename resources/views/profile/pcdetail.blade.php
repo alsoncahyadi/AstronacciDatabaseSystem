@@ -201,7 +201,16 @@
                                 @foreach ($insreg_mrg as $atr)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @if ($atr == "Account Type")
+                                        <select class="form-control" id="accounttype" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option selected="selected">Recreation</option>
+                                            <option>Basic</option>
+                                            <option>Syariah</option>
+                                            <option>Signature</option>
+                                        </select>
+                                    @else
+                                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @endif
                                 </div>
                                 @endforeach
                                 <br>

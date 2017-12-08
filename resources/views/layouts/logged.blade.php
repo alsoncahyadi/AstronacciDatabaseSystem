@@ -163,7 +163,7 @@
                           <li>
                              <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Client Member <span class="fa arrow"></span></a>
                          </li>
-                        <ul class="nav nav-second-level">
+                        <!-- <ul class="nav nav-second-level">
                         @if(Route::currentRouteName() == 'home')
                             @if (Auth::user()->hasAnyRole(['0', '1']))
                                 <li>
@@ -206,16 +206,16 @@
                                 </li>
                             @endif  
                         @endif
-                        </ul> 
+                        </ul>  -->
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>
-                        <a onclick="load('{{route('AShop')}}')" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                        <a href="AShop" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
                     </li>
                     @endif
 
                     <li id="t3">
-                        <a onclick="load('{{route('green')}}')" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
+                        <a href="Green" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>
                 </ul>
             </div>

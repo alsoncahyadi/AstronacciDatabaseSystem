@@ -78,6 +78,18 @@ Route::get('/dashboard', [
 	'middleware' => 'auth'
     ]);
 
+Route::get('/AShop', [
+    'uses' => 'HomeController@indexAShop',
+    'as' => 'ashop',
+    'middleware' => 'auth'
+    ]);
+
+Route::get('/Green', [
+    'uses' => 'HomeController@indexGreen',
+    'as' => 'green',
+    'middleware' => 'auth'
+    ]);
+
 Route::get('list', [
 	'uses' => 'RolelistController@index',
 	'as' => 'rolelist',
@@ -474,12 +486,12 @@ Route::get('/AClubtrans/edit/{id}', [
     ]);
 
 //GREEN ROUTES
-Route::get('/green', [
+/*Route::get('/green', [
     'uses' => 'GreenController@getTable',
     'as' => 'green',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
-    ]);
+    ]);*/
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
@@ -685,12 +697,12 @@ Route::get('/AShop/{id}', [
     'as' => 'AShop.detail',
     'middleware' => ['auth', 'ashop'],
     ]);
-
+/*
 Route::get('/AShop', [
     'uses' => 'AshopController@getTable',
     'as' => 'AShop',
     'middleware' => ['auth', 'ashop'],
-    ]);
+    ]);*/
 
 Route::post('/AShop/insert', [
     'uses' => 'AshopController@addClient',

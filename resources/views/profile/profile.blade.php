@@ -70,12 +70,33 @@
 		<!-- /.col-lg-12 -->
 	</div>
     </div>
-	
+    <?php
+    if($route == "CAT") $userid = "user_id";
+    else if ($route == "AClub") $userid = "master_id";
+    else if ($route == "MRG") $userid = "master_id";
+    else if ($route == "UOB") $userid = "client_id";
+    else if ($route == "green") $userid = "green_id";
+    else if ($route == "grow") $userid = "grow_id";
+    else if ($route == "RedClub") $userid = "username";
+    else if ($route == "assigngreen") $userid = "green_assign_id";
+    else if ($route == "assigngrow") $userid = "grow_assign_id";
+    else if ($route == "assignredclub") $userid = "redclub_assign_id";
+    else if ($route == "AShop") $userid = "master_id";
+    ?>
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+
+                <form action="{{route($route . '.deleteclient', ['id' => $client->$userid])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                    <input type="hidden" name="_method" value="DELETE" >
+                    <input class="btn btn-default" type="submit" value="Delete Client" >
+                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                </form>
+
+                <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
+                
         </div>
 		
         <div class="panel-body">
@@ -92,28 +113,7 @@
                             </div>
                         @endforeach
 				</div>
-				<?php
-					if($route == "CAT") $userid = "user_id";
-					else if ($route == "AClub") $userid = "master_id";
-					else if ($route == "MRG") $userid = "master_id";
-					else if ($route == "UOB") $userid = "client_id";
-					else if ($route == "green") $userid = "green_id";
-					else if ($route == "grow") $userid = "grow_id";
-					else if ($route == "RedClub") $userid = "username";
-					else if ($route == "assigngreen") $userid = "green_assign_id";
-					else if ($route == "assigngrow") $userid = "grow_assign_id";
-					else if ($route == "assignredclub") $userid = "redclub_assign_id";
-                    else if ($route == "AShop") $userid = "master_id";
-				?>
 
-                <form action="{{route($route . '.deleteclient', ['id' => $client->$userid])}}" method="post" onsubmit="return del()">
-                    <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" value="Delete Client" >
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                </form>
-
-                <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back to Home</button></a>
-                
             </div>
 
                 <div id="bod2" style="display:none">
@@ -158,109 +158,54 @@
 
      </div>
 
-
-    @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop"))
-    <div class="panel panel-default" style="margin:15px">
+     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
         <div class="panel-body">
-            @if (($route == "CAT") || ($route == "UOB"))
-                <?php $had_trans = false; ?>
-                @foreach ($insreg as $atr)
-                    <?php $atr2 = strtolower(str_replace(' ', '_',$atr)); ?>
-                    @if ($client->$atr2 != NULL)
-                        <?php $had_trans = true; ?>
-                    @endif
-                @endforeach
-                @if ($had_trans)
-                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Update Transaction</a>
-                <div id="addcli" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <form method="post" action="{{route($route . '.inserttrans')}}">
-                            @if ($route == "CAT")
-                                <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                            @else
-                                <input name="user_id" type="hidden" value="{{$client->client_id}}">
-                            @endif
-                            @foreach ($insreg as $key => $value)
-                                <div style="height:60px">
-                                    <label>{{$key}}</label>
-                                        <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
-                                </div>
-                            @endforeach
-                          
-                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                            <input type="submit" class="btn btn-default" value="Insert">
-                            <button type="reset" class="btn btn-default">Reset Form</button>
-                        </form>
-                    </div>
-                    <br><br>
-                </div>
-                @else
-                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
-                <div id="addcli" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <form method="post" action="{{route($route . '.inserttrans')}}">
-                            @if ($route == "CAT")
-                                <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                            @else
-                                <input name="user_id" type="hidden" value="{{$client->client_id}}">
-                            @endif
-                            @foreach ($insreg as $atr)
-                            <div class="form-group">
-                                <label>{{$atr}}</label>
-                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-                            </div>
-                            @endforeach
-                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                            <input type="submit" class="btn btn-default" value="Insert">
-                            <button type="reset" class="btn btn-default">Reset Form</button>
-                        </form>
-                    </div>
-                    <br><br>
-                </div>
-                @endif
-                <div class="form-group">
-                    <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
-                    
-                        @foreach ($headsreg as $key => $value)
-                            <div class="col-lg-2" style="height:30px">
-                                <label>{{$key}}</label>
-                            </div>
-                            <div class="col-lg-10" style="height:30px">
-                                : {{$client->$value}}<br>
-                            </div>
-                        @endforeach
-                </div>
-            @else
             <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
             <div id="addcli" class="panel-collapse collapse">
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">
-                        @if ($route == "CAT")
-                            <input name="user_id" type="hidden" value="{{$client->cat_user_id}}">
-                        @elseif ($route == "AClub")
-                            <input name="user_id" type="hidden" value="{{$client->user_id}}">
-                        @elseif ($route == "MRG")
-                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @elseif ($route == "green")
-                            <input name="user_id" type="hidden" value="{{$client->green_id}}">
-                        @elseif ($route == "AShop")
-                            <input name="user_id" type="hidden" value="{{$client->master_id}}">
-                        @endif
                         @foreach ($insreg as $atr)
                         <div class="form-group">
                             <label>{{$atr}}</label>
-                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                            @if ($atr == "Product Type")
+                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                <option>Video</option>
+                                <option>E-Book</option>
+                                <option>Seasonal Report</option>
+                                <option>Event</option>
+                                <option>Other</option>
+                            </select>
+                            @elseif ($atr == "Status")
+                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                <option>GOAL - BUY</option>
+                                <option>GOAL - JOIN</option>
+                                <option>NO ANSWER</option>
+                                <option>TIDAK GOAL</option>
+                                <option>DALAM PROSES</option>
+                            </select>
+                            @elseif ($atr == "Nama Product")
+                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                <option>A-Club</option>
+                                <option>UOB</option>
+                                <option>MRG</option>
+                                <option>CAT</option>
+                            </select>
+                            @elseif ($atr == "Date")
+                                <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                            @else
+                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                            @endif
                         </div>
                         @endforeach
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="submit" class="btn btn-default" value="Insert">
+                        <input type="submit" class="btn btn-primary" value="Insert">
                         <button type="reset" class="btn btn-default">Reset Form</button>
                     </form>
                 </div>
-            <br>
+                <br>
             </div>
             <br><br>
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
@@ -278,106 +223,53 @@
                     <tr class="gradeA">
                         <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
-                       @if ($route == 'AClub')
-                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
+                        @if ($route == 'AClub')
+                        <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
                         @elseif ($route == 'green')
-                            <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
+                        <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
                             @if ($count_temp == 1)
-                                <div class="btn-hvr-container">
-                                    <a href="{{route('greentrans.edit', ['id' => $clientreg->progress_id])}}" class="btn btn-primary hvr-btn">edit</a>
-                                    <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return delTrans()">
-                                        <input type="hidden" name="_method" value="DELETE" >
-                                        <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
-                                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                    </form>
-                                </div>
-                            </td>
-                                <?php $count_temp++ ; ?>
-                            @else
-                                </td>
-                            @endif
-                        @elseif ($route == 'MRG')
-                            <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
+                            <div class="btn-hvr-container">
+                                <a href="{{route('greentrans.edit', ['id' => $clientreg->progress_id])}}" class="btn btn-primary hvr-btn">edit</a>
+                                <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return delTrans()">
+                                    <input type="hidden" name="_method" value="DELETE" >
+                                    <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
+                                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                </form>
+                            </div>
+                        </td>
+                        <?php $count_temp++ ; ?>
                         @else
-                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
-                            @if ($count_temp == 1)
-                                <div class="btn-hvr-container">
-                                    <a href="{{route('AShoptrans.edit', ['id' => $clientreg->transaction_id])}}" class="btn btn-primary hvr-btn">edit</a>
-                                    <form action="{{route('AShop.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return delTrans()">
-                                        <input type="hidden" name="_method" value="DELETE" >
-                                        <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
-                                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                    </form>
-                                </div>
-                            </td>
-                                <?php $count_temp++ ; ?>
-                            @else
-                                </td>
-                            @endif
-                            </td>
-                        @endif
-
-                        @endforeach
-                        
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @endif
-    @elseif ($route == 'AClub')
-    <div class="panel panel-default" style="margin:15px">
-        <div class="panel-heading">
-            <i class="fa fa-money fa-fw"></i> Members
-        </div>
-        <div class="panel-body">
-            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Member</a>
-            <div id="addcli" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <form method="post" action="{{route($route . '.insertmembers')}}">
-                        <input name="master_id" type="hidden" value="{{$client->master_id}}">
-                        @foreach ($insreg as $atr)
-                        <div class="form-group">
-                            <label>{{$atr}}</label>
+                    </td>
+                    @endif
+                    @elseif ($route == 'MRG')
+                    <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a></td>
+                    @else
+                    <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
+                        @if ($count_temp == 1)
+                        <div class="btn-hvr-container">
+                            <a href="{{route('AShoptrans.edit', ['id' => $clientreg->transaction_id])}}" class="btn btn-primary hvr-btn">edit</a>
+                            <form action="{{route('AShop.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return delTrans()">
+                                <input type="hidden" name="_method" value="DELETE" >
+                                <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                            </form>
                         </div>
-                        @endforeach
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="submit" class="btn btn-default" value="Insert">
-                        <button type="reset" class="btn btn-default">Reset Form</button>
-                    </form>
-                </div>
-                <br><br>
-            </div>
-            <br><br>
-            <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
-                <thead>
-                    <tr>
-                        @foreach ($headsreg as $headreg)
-                        <th> {{$headreg}} </th>
-                        @endforeach
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($clientsreg as $clientreg)
-                    
-                    <tr class="gradeA">
+                    </td>
+                    <?php $count_temp++ ; ?>
+                    @else
+                </td>
+                @endif
+            </td>
+            @endif
 
-                        @foreach ($attsreg as $attreg)
-                        @if ($route != 'AShop')
-                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
-                        @else
-                            <td> <a target="_blank" href="{{route('AShop.trans',['id' => $client->master_id, 'transaction' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a></td>
-                        @endif
-                    
-                        @endforeach
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-    </div>
-    @endif
+            @endforeach
 
-	<br><br>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
+<br><br>
 
     @if(count($errors) > 0)
         @foreach($errors->all() as $error)
