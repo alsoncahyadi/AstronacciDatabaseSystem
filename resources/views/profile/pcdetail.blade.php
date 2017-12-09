@@ -197,19 +197,19 @@
                     <div id="addmrgtrans" class="panel-collapse collapse">
                         <div class="panel-body">
                             <form method="post" action="{{route('MRG.inserttrans')}}">
-                                <input name="user_id" type="hidden" value="{{$client_mrg->client_id}}">
-                                @foreach ($insreg_mrg as $atr)
+                                <input name="user_id" type="hidden" value="{{$client_mrg->master_id}}">
+                                @foreach ($insreg_mrg as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
                                     @if ($atr == "Account Type")
-                                        <select class="form-control" id="accounttype" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                        <select class="form-control" id="accounttype" name="{{$value}}">
                                             <option selected="selected">Recreation</option>
                                             <option>Basic</option>
                                             <option>Syariah</option>
                                             <option>Signature</option>
                                         </select>
                                     @else
-                                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                        <input class="form-control" type="text" name="{{$value}}">
                                     @endif
                                 </div>
                                 @endforeach
@@ -245,7 +245,7 @@
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcat">Update Transaction</a>
                     <div id="addcat" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('CAT.edit')}}">
+                            <form method="post" action="{{route('CAT.inserttrans')}}">
                                 <input name="user_id" type="hidden" value="{{$client_cat->user_id}}">
                                 @foreach ($insreg_cat as $key => $value)
                                     <div style="height:60px">
@@ -294,8 +294,8 @@
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#adduob">Update Transaction</a>
                     <div id="adduob" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('UOB.edit')}}">
-                                <input name="user_id" type="hidden" value="{{$client_uob->user_id}}">
+                            <form method="post" action="{{route('UOB.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_uob->client_id}}">
                                 @foreach ($insreg_uob as $key => $value)
                                     <div style="height:60px">
                                         <label>{{$key}}</label>

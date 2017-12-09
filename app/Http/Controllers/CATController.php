@@ -95,14 +95,14 @@ class CATController extends Controller
 
         $err =[];
 
-        $cat->nomor_induk = $request->nomer_induk;
-        $cat->DP_date = $request->dp_date;
-        $cat->DP_nominal = $request->dp_nominal;
+        $cat->nomor_induk = $request->nomor_induk;
+        $cat->DP_date = $request->DP_date;
+        $cat->DP_nominal = $request->DP_nominal;
         $cat->payment_date = $request->payment_date;
         $cat->payment_nominal = $request->payment_nominal;
-        $cat->tanggal_opening_class = $request->opening_class;
-        $cat->tanggal_end_class = $request->end_class;
-        $cat->tanggal_ujian = $request->ujian;
+        $cat->tanggal_opening_class = $request->tanggal_opening_class;
+        $cat->tanggal_end_class = $request->tanggal_end_class;
+        $cat->tanggal_ujian = $request->tanggal_ujian;
         $cat->status = $request->status;
         $cat->keterangan = $request->keterangan;
 

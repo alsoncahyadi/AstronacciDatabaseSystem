@@ -139,7 +139,7 @@ class AClubController extends Controller
                     "Red Zone",
                     "Yellow Zone"];
 
-        $attsreg = ["user_id", "group"];
+        $attsreg = ["user_id", "sales_name", "group"];
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 

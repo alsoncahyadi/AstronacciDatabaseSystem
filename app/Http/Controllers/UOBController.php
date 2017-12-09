@@ -154,7 +154,7 @@ class UOBController extends Controller
         //Inisialisasi array error
         $err = [];
         try {
-            $uob = UOB::where('client_id',$request->client_id)->first();
+            $uob = UOB::where('client_id',$request->user_id)->first();
 
             $err =[];
 

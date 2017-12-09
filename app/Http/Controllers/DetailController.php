@@ -239,13 +239,15 @@ class DetailController extends Controller
 
         $heads_mrg = $ins_mrg;
 
-        $insreg_mrg = ["Account Number", "Account Type", "Sales Name"];
+        $insreg_mrg = ["Account Number" => "accounts_number",
+                        "Account Type" => "account_type",
+                        "Sales Name" => "sales_name"];
 
         $clientsreg_mrg = $client_mrg->accounts()->get();
         
-        $headsreg_mrg = ["Account Number", "Account Type", "Sales Name"];
-
-        $attsreg_mrg = ["accounts_number", "account_type", "sales_name"];
+        $headsreg_mrg = ["Account Number" => "accounts_number",
+                        "Account Type" => "account_type",
+                        "Sales Name" => "sales_name"];
 
         //ACLUB
         $client_aclub = AclubInformation::find($id);
@@ -279,7 +281,7 @@ class DetailController extends Controller
             'client_master'=>$client_master, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob, 'heads_master'=>$heads_master, 'ins_master'=>$ins_master,
             'client_cat'=>$client_cat, 'heads_cat'=>$heads_cat, 'ins_cat'=>$ins_cat, 'insreg_cat'=>$insreg_cat, 'headsreg_cat'=>$headsreg_cat,
             'client_uob'=>$client_uob, 'heads_uob'=>$heads_uob, 'ins_uob'=>$ins_uob, 'insreg_uob'=>$insreg_uob, 'headsreg_uob'=>$headsreg_uob,
-            'client_mrg'=>$client_mrg, 'heads_mrg'=>$heads_mrg, 'ins_mrg'=>$ins_mrg, 'insreg_mrg'=>$insreg_mrg, 'headsreg_mrg'=>$headsreg_mrg, 'attsreg_mrg'=>$attsreg_mrg, 'clientsreg_mrg'=>$clientsreg_mrg, 
+            'client_mrg'=>$client_mrg, 'heads_mrg'=>$heads_mrg, 'ins_mrg'=>$ins_mrg, 'insreg_mrg'=>$insreg_mrg, 'headsreg_mrg'=>$headsreg_mrg, 'clientsreg_mrg'=>$clientsreg_mrg, 
             'client_aclub'=>$client_aclub, 'heads_aclub'=>$heads_aclub, 'ins_aclub'=>$ins_aclub, 'insreg_aclub'=>$insreg_aclub, 'headsreg_aclub'=>$headsreg_aclub, 'attsreg_aclub'=>$attsreg_aclub, 'clientsreg_aclub'=>$clientsreg_aclub]);
     }
 }
