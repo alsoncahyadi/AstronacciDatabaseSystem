@@ -267,14 +267,22 @@ class DetailController extends Controller
         $clientsreg_aclub= $aclub_master->aclubMembers()->get();
 
         $headsreg_aclub = ["User ID",
-                    "Sales Name",
                     "Group"];
 
-        $insreg_aclub = ["User ID" => "user_id",
-                    "Sales Name" => "sales_name",
-                    "Group" => "group"];
+        $attsreg_aclub = ["user_id", "group"];
 
-        $attsreg_aclub = ["user_id", "sales_name", "group"];
+        $insreg_aclub = ["User ID" => "user_id",
+                    "Group" => "group",
+                    "Sales Name" => "sales_name",
+                    "Payment Date" => "payment_date",
+                    "Kode" => "kode",
+                    "Status" => "status",
+                    "Nominal" => "nominal",
+                    "Start Date" => "start_date",
+                    "Expired Date" => "expired_date",
+                    "Masa Tenggang" => "masa_tenggang",
+                    "Red Zone" => "red_zone",
+                    "Yellow Zone" => "yellow_zone"];
 
 
         return view('profile/pcdetail', [

@@ -148,7 +148,6 @@ class AClubController extends Controller
         $this->validate($request, [
                 'user_id' => '',
                 'master_id' => '',
-                'sales_name' => '',
                 'group' => ''
             ]);
 
@@ -158,8 +157,9 @@ class AClubController extends Controller
 
         $aclub_member->user_id = $request->user_id;
         $aclub_member->master_id = $request->master_id;
-        $aclub_member->sales_name = $request->sales_name;
         $aclub_member->group = $request->group;
+
+        $aclub_member->save();
 
         $aclub_trans = new \App\AclubTransaction;
         $aclub_trans->user_id = $request->user_id;
@@ -174,7 +174,7 @@ class AClubController extends Controller
         $aclub_trans->red_zone = $request->red_zone;
         $aclub_trans->yellow_zone = $request->yellow_zone;
 
-        $aclub_member->save();
+        
         $aclub_trans->save();
 
         return redirect()->back()->withErrors($err);
