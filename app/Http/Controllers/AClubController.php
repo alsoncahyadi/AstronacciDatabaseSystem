@@ -118,12 +118,10 @@ class AClubController extends Controller
         // aclub_members adalah list member dari master_id = $id
         $aclub_members = $aclub_master->aclubMembers()
                         ->where('user_id', 'like', "%{$keyword}%")
-                        ->orWhere('sales_name', 'like', "%{$keyword}%")
                         ->orWhere('group', 'like', "%{$keyword}%")
                         ->paginate(15);
 
         $headsreg = ["User ID",
-                    "Sales Name",
                     "Group"];
 
         $insreg = ["User ID",
@@ -139,7 +137,7 @@ class AClubController extends Controller
                     "Red Zone",
                     "Yellow Zone"];
 
-        $attsreg = ["user_id", "sales_name", "group"];
+        $attsreg = ["user_id", "group"];
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
