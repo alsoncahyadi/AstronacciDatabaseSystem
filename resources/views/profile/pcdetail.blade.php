@@ -131,10 +131,10 @@
             <!-- Nav tabs -->
             <ul class="nav nav-pills">
                 @if($aclub)
-                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">AClub</a>
+                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">A-CLUB</a>
                     </li>
                 @else
-                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>AClub</a>
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>A-CLUB</a>
                     </li>
                 @endif
                 @if($mrg)
@@ -163,7 +163,7 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade" id="aclub-pills">
-                    <h3>A Club</h3>
+                    <h3>A-CLUB</h3>
                     <div>
                         @foreach ($heads_aclub as $key => $value)
                             <div class="col-lg-2" style="height:30px">
@@ -173,7 +173,7 @@
                                 : {{$client_aclub->$value}}<br>
                             </div>
                         @endforeach
-                    </div><br><br><br><br><br>
+                    </div><br>
                     <div>
                         <p>Search</p>
                         <input id="searchkey" type="text"/>    
