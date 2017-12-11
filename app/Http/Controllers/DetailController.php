@@ -270,9 +270,9 @@ class DetailController extends Controller
                     "Sales Name",
                     "Group"];
 
-        $insreg_aclub = ["User ID",
-                    "Sales Name",
-                    "Group"];
+        $insreg_aclub = ["User ID" => "user_id",
+                    "Sales Name" => "sales_name",
+                    "Group" => "group"];
 
         $attsreg_aclub = ["user_id", "sales_name", "group"];
 

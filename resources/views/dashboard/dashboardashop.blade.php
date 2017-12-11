@@ -101,7 +101,7 @@
             var arrayLength = fullnames.length;
             for (var i = 0; i < arrayLength; i++) {
                 if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
-                    joinName += ' <a href="{{route("detail", ["id" => ""])}}/'+ ids[i] +' "><li class="list-group-item" style="cursor:pointer;">' 
+                    joinName += ' <a href="{{route("AShop.detail", ["id" => ""])}}/'+ ids[i] +' "><li class="list-group-item" style="cursor:pointer;">' 
                                 + fullnames[i] + '<br><p style="font-style:italic; color:gray">'
                                 + emails[i] + '</p></li></a>';
                     listlen++;

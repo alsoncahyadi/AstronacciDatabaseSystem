@@ -174,6 +174,37 @@
                             </div>
                         @endforeach
                     </div><br>
+
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Transaction</a>
+                    <div id="addaclubtrans" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('AClub.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                @foreach ($insreg_aclub as $atr => $value)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    @if ($atr == "Account Type")
+                                        <select class="form-control" id="accounttype" name="{{$value}}">
+                                            <option selected="selected">Recreation</option>
+                                            <option>Basic</option>
+                                            <option>Syariah</option>
+                                            <option>Signature</option>
+                                        </select>
+                                    @else
+                                        <input class="form-control" type="text" name="{{$value}}">
+                                    @endif
+                                </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
+
                     <div>
                         <p>Search</p>
                         <input id="searchkey" type="text"/>    
