@@ -116,14 +116,14 @@ class AClubController extends Controller
         $keyword = $request['q'];
 
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers()
-                        ->where('user_id', 'like', "%{$keyword}%")
-                        ->orWhere('sales_name', 'like', "%{$keyword}%")
-                        ->orWhere('group', 'like', "%{$keyword}%")
-                        ->paginate(15);
+        // $aclub_members = $aclub_master->aclubMembers();
+        //                 ->where('user_id', 'like', "%{$keyword}%")
+        //                 ->orWhere('group', 'like', "%{$keyword}%")
+        //                 ->paginate(15);
+        $aclub_members = $aclub_master->aclubMembers()->get();
+        // dd($aclub_members);
 
         $headsreg = ["User ID",
-                    "Sales Name",
                     "Group"];
 
         $insreg = ["User ID",
@@ -150,7 +150,6 @@ class AClubController extends Controller
         $this->validate($request, [
                 'user_id' => '',
                 'master_id' => '',
-                'sales_name' => '',
                 'group' => ''
             ]);
 
@@ -160,8 +159,9 @@ class AClubController extends Controller
 
         $aclub_member->user_id = $request->user_id;
         $aclub_member->master_id = $request->master_id;
-        $aclub_member->sales_name = $request->sales_name;
         $aclub_member->group = $request->group;
+
+        $aclub_member->save();
 
         $aclub_trans = new \App\AclubTransaction;
         $aclub_trans->user_id = $request->user_id;
@@ -176,7 +176,7 @@ class AClubController extends Controller
         $aclub_trans->red_zone = $request->red_zone;
         $aclub_trans->yellow_zone = $request->yellow_zone;
 
-        $aclub_member->save();
+        
         $aclub_trans->save();
 
         return redirect()->back()->withErrors($err);
@@ -204,6 +204,14 @@ class AClubController extends Controller
 
         $ins =  [   "Sales Name" => "sales_name",
                     "Group" => "group"];
+
+        $headsreg = [ "Payment Date", 
+                    "Kode", 
+                    "Status", 
+                    "Nominal",
+                    "Sales Name", 
+                    "Start Date" 
+                    ];
       
         $insreg = [ "Payment Date", 
                     "Kode", 
@@ -222,18 +230,14 @@ class AClubController extends Controller
                     "nominal",
                     "sales_name",
                     "start_date",
-                    "expired_date",
-                    "masa_tenggang",
-                    "yellow_zone",
-                    "red_zone"];
+                    ];
 
 
-        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
+        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 'heads'=>$heads]);
     }
 
     public function editMember(Request $request) {
         $this->validate($request, [
-                'sales_name' => '',
                 'group' => ''
             ]);
 
@@ -241,7 +245,6 @@ class AClubController extends Controller
         try {
             $aclub_member = AclubMember::find($request->user_id);
 
-            $aclub_member->sales_name = $request->sales_name;
             $aclub_member->group = $request->group;
 
             $aclub_member->update();
@@ -426,7 +429,7 @@ class AClubController extends Controller
         if(!empty($err)) {
             return redirect()->back()->withErrors($err);
         } else {
-            return redirect()->route('AClub.member', ['id' => $aclub_transaction->aclubmember->first()->master_id, 'member' => $aclub_transaction->user_id]);
+            return redirect()->route('AClub.member', ['id' => $aclub_trans->aclubmember->first()->master_id, 'member' => $aclub_trans->user_id]);
         }
     }
 
@@ -511,8 +514,7 @@ class AClubController extends Controller
     public function updateMember($id) {
         $aclub_member = AclubMember::where('user_id', $id)->first();
 
-        $ins = ["Sales" => "sales_name",
-                    "Group" => "group"];
+        $ins = [ "Group" => "group"];
 
         return view('content/aclubmembereditform', ['route'=>'AClub', 'client'=>$aclub_member, 'ins'=>$ins]);
     }
@@ -523,7 +525,12 @@ class AClubController extends Controller
         $ins = [    "Payment Date" => 'payment_date',
                     "Kode" => 'kode',
                     "Nominal" => 'nominal',
-                    "Start Date" => 'start_date'];
+                    "Sales" => "sales_name",
+                    "Start Date" => 'start_date',
+                    "Expired Date" => 'expired_date',
+                    "Masa Tenggang" => 'masa_tenggang',
+                    "Yellow Zone" => 'yellow_zone',
+                    "Red Zone"=> 'red_zone'];
 
         return view('content/aclubtranseditform', ['route'=>'AClub', 'client'=>$aclub_transaction, 'ins'=>$ins]);
     }

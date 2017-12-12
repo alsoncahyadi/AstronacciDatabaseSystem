@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\MasterClient;
+use App\AShopTransaction;
+use App\GreenProspectClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
@@ -23,6 +25,89 @@ class HomeController extends Controller
     {
         $clients = MasterClient::select('name','email','master_id')->get();
         return view('dashboard/dashboard', ['clients' => $clients] );
+    }
+
+    public function indexAShop() //JOVIAN
+    {
+        $clients = AShopTransaction::orderBy('master_id','asc')->groupBy('master_id')->get();
+
+        $heads= ["Master ID",
+                "User ID Redclub",
+                "Password Redclub",
+                "Nama",
+                "Telepon",
+                "Email",
+                "Tanggal Lahir",
+                "Alamat",
+                "Kota",
+                "Provinsi",
+                "Gender",
+                "Line ID",
+                "BBM",
+                "WhatsApp",
+                "Facebook",
+                "Transaction ID",
+                "Product Type",
+                "Product Name",
+                "Nominal"];
+
+        $atts = ["master_id",
+                "redclub_user_id",
+                "redclub_password",
+                "name",
+                "telephone_number",
+                "email",
+                "birthdate",
+                "address",
+                "city",
+                "province",
+                "gender",
+                "line_id",
+                "bbm",
+                "whatsapp",
+                "facebook",
+                "trasaction_id",
+                "product_type",
+                "product_name",
+                "nominal"];
+
+        return view('dashboard/dashboardashop', ['clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$heads] );
+    }
+
+    public function indexGreen() //JOVIAN
+    {
+        $clients = GreenProspectClient::select('name', 'email', 'green_id')->get();
+
+        $heads = ["Green ID",
+                    "Name",
+                    "Date",
+                    "Phone",
+                    "Email",
+                    "Interest",
+                    "Pemberi",
+                    "Sumber Data",
+                    "Keterangan Perintah"];
+
+        $ins = ["Name",
+                    "Date",
+                    "Phone",
+                    "Email",
+                    "Interest",
+                    "Pemberi",
+                    "Sumber Data",
+                    "Keterangan Perintah"];
+
+        $atts = ["green_id",
+                    "name",
+                    "date",
+                    "phone",
+                    "email",
+                    "interest",
+                    "pemberi",
+                    "sumber_data",
+                    "keterangan_perintah"];
+
+        return view('dashboard/dashboardgreen', ['clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins] );
     }
 
     public function home()
@@ -155,7 +240,7 @@ class HomeController extends Controller
           "Tanggal Lahir" =>"birthdate",
           "Alamat" => "address",
           "Kota" => "city",
-          "Provinsi" => "provinsi",
+          "Provinsi" => "province",
           "Jenis Kelamin" => "gender",
           "Line ID" => "line_id",
           "BBM" => "bbm",

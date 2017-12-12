@@ -68,7 +68,7 @@
             <i class="fa fa-child fa-fw"></i> Basic Information 
 			<button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
 			<button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <form action="{{route('detail.deleteclient', ['id' => $client_master->master_id])}}" method="post" onsubmit="return del()">
+            <form action="{{route('detail.deleteclient', ['id' => $client_master->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
                 <input type="hidden" name="_method" value="DELETE" >
                 <input class="btn btn-default" type="submit" value="Delete Client" >
                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -94,18 +94,27 @@
 			</div>
 
              <div id="bod2" style="display:none">
-                <form role="form" method="post" action="">
+                <form role="form" method="post" action="{{route('detail.edit')}}">
                     <div class="form-group">
                         <input name="user_id" type="hidden" value="{{$client_master->master_id}}">
                         @foreach ($ins_master as $key => $value)
                             <div style="height:60px">
                                 <label>{{$key}}</label>
+                                @if ($key == "Tanggal Lahir")
+                                    <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_master->$value}}"> 
+                                @elseif ($key == "Gender")
+                                    <select class="form-control" name="{{$value}}" value="{{$client_master->$value}}">
+                                        <option>M</option>
+                                        <option>F</option>
+                                    </select>
+                                @else
                                     <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}">
+                                @endif
                             </div>
                         @endforeach
                         
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="reset" class="btn btn-default">Reset</button>
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
@@ -122,10 +131,10 @@
             <!-- Nav tabs -->
             <ul class="nav nav-pills">
                 @if($aclub)
-                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">AClub</a>
+                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">A-CLUB</a>
                     </li>
                 @else
-                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>AClub</a>
+                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>A-CLUB</a>
                     </li>
                 @endif
                 @if($mrg)
@@ -154,7 +163,7 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade" id="aclub-pills">
-                    <h3>A Club</h3>
+                    <h3>A-CLUB</h3>
                     <div>
                         @foreach ($heads_aclub as $key => $value)
                             <div class="col-lg-2" style="height:30px">
@@ -164,7 +173,70 @@
                                 : {{$client_aclub->$value}}<br>
                             </div>
                         @endforeach
-                    </div><br><br><br><br><br>
+                    </div><br>
+
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Member</a>
+                    <div id="addaclubtrans" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('AClub.insertmembers')}}">
+                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                @foreach ($insreg_aclub as $atr => $value)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    @if ($atr == "Account Type")
+                                        <select class="form-control" id="accounttype" name="{{$value}}" >
+                                            <option selected="selected">Recreation</option>
+                                            <option>Basic</option>
+                                            <option>Syariah</option>
+                                            <option>Signature</option>
+                                        </select>
+                                    @elseif ($atr == "Group")
+                                        <input class="form-control no-spin" type="text" id="group" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="Stock"readonly>
+
+
+                                    @elseif ($atr == "Kode")
+                                        <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option selected="selected">SS</option>
+                                            <option>FS</option>
+                                            <option>SG</option>
+                                            <option>FG</option>
+                                            <option>SP</option> 
+                                            <option>FP</option>
+                                            <option>RD</option>
+                                        </select>
+                                    @elseif ($atr == "Status")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
+                                            <option selected="selected">Baru</option>
+                                            <option>Perpanjang</option>
+                                            <option>Tidak Aktif</option>
+                                        </select>
+                                    @elseif ($atr == "Payment Date")
+                                        <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">    
+                                    @elseif ($atr == "Start Date")
+                                        <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @elseif ($atr == "Expired Date")
+                                        <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
+                                    @elseif ($atr == "Masa Tenggang")
+                                        <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @elseif ($atr == "Yellow Zone")
+                                        <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
+                                    @elseif ($atr == "Red Zone")
+                                        <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>                                      
+                                    @else
+                                        <input class="form-control" type="text" name="{{$value}}">
+                                    @endif
+                                </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
+
                     <div>
                         <p>Search</p>
                         <input id="searchkey" type="text"/>    
@@ -183,7 +255,36 @@
                                 : {{$client_mrg->$value}}<br>
                             </div>
                         @endforeach
-                    </div><br><br><br><br><br>
+                    </div>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addmrgtrans">Add New Transaction</a>
+                    <div id="addmrgtrans" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('MRG.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_mrg->master_id}}">
+                                @foreach ($insreg_mrg as $atr => $value)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    @if ($atr == "Account Type")
+                                        <select class="form-control" id="accounttype" name="{{$value}}">
+                                            <option selected="selected">Recreation</option>
+                                            <option>Basic</option>
+                                            <option>Syariah</option>
+                                            <option>Signature</option>
+                                        </select>
+                                    @else
+                                        <input class="form-control" type="text" name="{{$value}}">
+                                    @endif
+                                </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
                     <div>
                     <p>Search</p>
                         <input id="searchkey2" type="text"/>    
@@ -204,6 +305,30 @@
                         @endforeach
                     </div>
                     <h4>Transaksi</h4>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcat">Update Transaction</a>
+                    <div id="addcat" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('CAT.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_cat->user_id}}">
+                                @foreach ($insreg_cat as $key => $value)
+                                    <div style="height:60px">
+                                        <label>{{$key}}</label>
+                                            @if (($key == "DP Date") || ($key == "Payment Date") || ($key == "Opening Class")|| ($key == "End Class")|| ($key == "Ujian"))
+                                                <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_cat->$value}}"> 
+                                            @else
+                                                <input class="form-control" value="{{$client_cat->$value}}" name="{{$value}}">
+                                            @endif
+                                    </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
                     <div>
                         @foreach ($headsreg_cat as $key => $value)
                         <div class="col-lg-2" style="height:30px">
@@ -229,6 +354,30 @@
                         @endforeach
                     </div>
                     <h4>Transaksi</h4>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#adduob">Update Transaction</a>
+                    <div id="adduob" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('UOB.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_uob->client_id}}">
+                                @foreach ($insreg_uob as $key => $value)
+                                    <div style="height:60px">
+                                        <label>{{$key}}</label>
+                                            @if (($key == "Tanggal RDI Done") || ($key == "Tanggal Top Up") || ($key == "Tanggal Trading"))
+                                                <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_uob->$value}}">
+                                            @else   
+                                            <input class="form-control" value="{{$client_uob->$value}}" name="{{$value}}">
+                                            @endif
+                                    </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+                    <br><br>
                     <div>
                         @foreach ($headsreg_uob as $key => $value)
                             <div class="col-lg-2" style="height:30px">
@@ -275,6 +424,72 @@
 			
 		});
 	});
+
+    // ======================================================================================================
+    // RUMUS ACLUB
+    $( "#startdate" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+
+    $( "#startdate" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+
+    $( "#kode" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "SP") {
+            document.getElementById("group").value = "Stock";
+        } else if (document.getElementById("kode").value == "FS" || document.getElementById("kode").value == "FG" || document.getElementById("kode").value == "FP") {
+            document.getElementById("group").value = "Future";
+        } else if (document.getElementById("kode").value == "RD") {
+            document.getElementById("group").value = "RD";
+        }       
+    });
+
+    $( "#masatenggang" ).change(function() {
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+    // ======================================================================================================    
 	</script>
 </body>
 </html>

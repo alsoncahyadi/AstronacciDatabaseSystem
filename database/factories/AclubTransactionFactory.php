@@ -2,7 +2,8 @@
 
 $factory->define(App\AclubTransaction::class, function (Faker\Generator $faker) {
     $date = new Carbon\Carbon();
-    $kode = $faker->randomElement(['SS','SG','SP','FS','FG','FP', 'RD']);
+    // $kode = $faker->randomElement(['SS','SG','SP','FS','FG','FP', 'RD']);
+    $kode = $faker->randomElement(['SS','SG','SP']);
     if ($kode[1] = 'S') {
         $days = 30;
     } else if ($kode[1] = 'G') {

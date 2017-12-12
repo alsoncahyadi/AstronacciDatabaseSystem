@@ -65,9 +65,38 @@ class AshopController extends Controller
         $master = MasterClient::find($id);
 
         //judul + sql
-        $ins= ["Master ID" => "master_id",
+        $ins= ["Red Club User ID" => "redclub_user_id",
+          "Red Club Password" => "redclub_password",
+          "Nama" => "name",
+          "Telephone" => "telephone_number",
+          "Email" => "email",
+          "Tanggal Lahir" =>"birthdate",
+          "Alamat" => "address",
+          "Kota" => "city",
+          "Provinsi" => "province",
+          "Jenis Kelamin" => "gender",
+          "Line ID" => "line_id",
+          "BBM" => "bbm",
+          "WhatsApp" => "whatsapp",
+          "Facebook" => "facebook"
                 ];
-        $heads = $ins;
+
+        $heads = ["Master ID" => "master_id",
+          "Red Club User ID" => "redclub_user_id",
+          "Red Club Password" => "redclub_password",
+          "Nama" => "name",
+          "Telephone" => "telephone_number",
+          "Email" => "email",
+          "Tanggal Lahir" =>"birthdate",
+          "Alamat" => "address",
+          "Kota" => "city",
+          "Provinsi" => "province",
+          "Jenis Kelamin" => "gender",
+          "Line ID" => "line_id",
+          "BBM" => "bbm",
+          "WhatsApp" => "whatsapp",
+          "Facebook" => "facebook"
+                ];
 
         $clientsreg = $master->ashopTransactions()->get();
 
@@ -86,6 +115,50 @@ class AshopController extends Controller
         $attsreg = ["product_type", "product_name", "nominal"];
 
         return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+    }
+
+     public function editClient(Request $request) {
+         $this->validate($request, [
+                'master_id' => '',
+                'redclub_user_id' => '',
+                'name' => '',
+                'telephone_number' => '',
+                'email' => '',
+                'birthdate' => '',
+                'address' => '',
+                'city' => '',
+                'province' => '',
+                'gender' => '',
+                'line_id' => '',
+                'bbm' => '',
+                'whatsapp' => '',
+                'facebook' => '',
+            ]);
+
+        $err = [];
+
+        try {
+            $master = MasterClient::find($request->user_id);
+
+            $master->redclub_user_id = $request->redclub_user_id;
+            $master->name = $request->name;
+            $master->telephone_number = $request->telephone_number;
+            $master->email = $request->email;
+            $master->birthdate = $request->birthdate;
+            $master->address = $request->address;
+            $master->city = $request->city;
+            $master->province = $request->province;
+            $master->gender = $request->gender;
+            $master->line_id = $request->line_id;
+            $master->bbm = $request->bbm;
+            $master->whatsapp = $request->whatsapp;
+            $master->facebook = $request->facebook;
+
+            $master->update();
+        } catch(\Illuminate\Database\QueryException $ex){
+            $err[] = $ex->getMessage();
+        }
+        return redirect()->back()->withErrors($err);
     }
 
     public function clientDetailTrans($id, $trans) {
@@ -227,6 +300,10 @@ class AshopController extends Controller
             'bbm' => '',
             'whatsapp' => '',
             'facebook' => '',
+            'trasaction_id' => '',
+            'product_type' => '',
+            'product_name' => '',
+            'nominal' => ''
             ]);
 
         $err = [];
@@ -234,6 +311,7 @@ class AshopController extends Controller
         try {
             $master = new \App\MasterClient;
 
+            $master->master_id =  $request->master_id;
             $master->redclub_user_id = $request->user_id_redclub;
             $master->redclub_password = $request->password_redclub;
             $master->name = $request->nama;
@@ -250,6 +328,16 @@ class AshopController extends Controller
             $master->facebook = $request->facebook;
 
             $master->save();
+            
+            $trans = new \App\AshopTransaction;
+
+            $trans->transaction_id = $request->transaction_id;
+            $trans->master_id =  $request->master_id;
+            $trans->product_type = $request->product_type;
+            $trans->product_name = $request->product_name;
+            $trans->nominal = $request->nominal;
+
+            $trans->save();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }

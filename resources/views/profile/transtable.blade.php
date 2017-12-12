@@ -91,7 +91,6 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $clientsreg -> links() }}
             @endif
     @elseif ($route == 'AClub')    
     <div class="panel panel-default" style="margin:15px">                

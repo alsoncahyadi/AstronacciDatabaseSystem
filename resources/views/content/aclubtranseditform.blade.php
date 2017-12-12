@@ -70,11 +70,58 @@
                 <form role="form" method="post" action="{{route($route . '.edittrans')}}">
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
-                            
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                            @if (($key == "Keterangan") || ($key == "Sumber Data") || ($key == "User ID") || ($key == "Sales"))
+                                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}" value="{{$client->$value}}">
+                                            @elseif ($key == "Payment Date")
+                                                <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                            @elseif ($key == "Kode")
+                                                <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                                    @if ($client->group == 'F' | $client->group == 'Future')
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>FS</option>
+                                                        <option>FG</option>
+                                                        <option>FP</option>                                    
+                                                    @elseif ($client->group == 'S' | $client->group == 'Stock')
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>SS</option>
+                                                        <option>SG</option>
+                                                        <option>SP</option> 
+                                                    @elseif ($client->group == 'RD')
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>RD</option>
+                                                    @else
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>SS</option>
+                                                        <option>FS</option>
+                                                        <option>SG</option>
+                                                        <option>FG</option>
+                                                        <option>SP</option> 
+                                                        <option>FP</option>
+                                                        <option>RD</option>
+                                                    @endif
+                                                </select>
+                                            @elseif ($key == "Status")
+                                                <select class="form-control" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}">
+                                                    <option selected="selected">Baru</option>
+                                                    <option>Perpanjang</option>
+                                                    <option>Tidak Aktif</option>
+                                                </select>
+                                            @elseif ($key == "Start Date")
+                                                <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                            @elseif ($key == "Expired Date")
+                                                <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}"readonly>
+                                            @elseif ($key == "Masa Tenggang")
+                                                <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                            @elseif ($key == "Yellow Zone")
+                                                <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value}}">
+                                            @elseif ($key == "Red Zone")
+                                                <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value}}">
+                                            @else
+                                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                            @endif
                                         </div>
                                     @endforeach
                             
@@ -121,6 +168,71 @@
 			
 		});
 	});
+    // ======================================================================================================
+    // RUMUS ACLUB
+    $( "#startdate" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+
+    $( "#startdate" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+
+    $( "#kode" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "SP") {
+            document.getElementById("group").value = "Stock";
+        } else if (document.getElementById("kode").value == "FS" || document.getElementById("kode").value == "FG" || document.getElementById("kode").value == "FP") {
+            document.getElementById("group").value = "Future";
+        } else if (document.getElementById("kode").value == "RD") {
+            document.getElementById("group").value = "RD";
+        }       
+    });
+
+    $( "#masatenggang" ).change(function() {
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+    // ======================================================================================================
 	</script>
 </body>
 </html>

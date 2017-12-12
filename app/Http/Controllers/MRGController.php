@@ -133,7 +133,7 @@ class MRGController extends Controller
         $err = [];
 
         $mrg_account->master_id = $request->user_id;
-        $mrg_account->accounts_number = $request->account_number;
+        $mrg_account->accounts_number = $request->accounts_number;
         $mrg_account->account_type = $request->account_type;
         $mrg_account->sales_name = $request->sales_name;
 

@@ -104,6 +104,8 @@ class MockupController extends Controller
         } else if ($request->flag == 'aclub') {
             $this->addAclub($request);
         }
+
+        return redirect("home");
     }
 
     
@@ -175,7 +177,7 @@ class MockupController extends Controller
         $master->save();
 
         if ($request->master == 0) {
-            $this->id = $master->id;
+            $this->id = $master->master_id;
         }
     }
 
