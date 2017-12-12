@@ -40,6 +40,14 @@
                                             <option>M</option>
                                             <option>F</option>
                                         </select>
+                                    @elseif ($atr == "Product Type")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>Video</option>
+                                            <option>E-Book</option>
+                                            <option>Seasonal Report</option>
+                                            <option>Event</option>
+                                            <option>Other</option>
+                                        </select>
                                     @else
                                         <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                     @endif
