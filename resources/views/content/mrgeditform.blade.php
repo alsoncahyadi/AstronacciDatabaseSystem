@@ -74,7 +74,16 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                @if ($key == "Type Account")
+                                                    <select class="form-control" id="accounttype" name="{{$value}}">
+                                                        <option selected="selected">Recreation</option>
+                                                        <option>Basic</option>
+                                                        <option>Syariah</option>
+                                                        <option>Signature</option>
+                                                    </select>
+                                                @else
+                                                    <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                @endif
                                         </div>
                                     @endforeach
                             

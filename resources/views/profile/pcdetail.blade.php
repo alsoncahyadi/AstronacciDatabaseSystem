@@ -210,6 +210,8 @@
                                             <option>Perpanjang</option>
                                             <option>Tidak Aktif</option>
                                         </select>
+                                    @elseif ($atr == "Payment Date")
+                                        <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">    
                                     @elseif ($atr == "Start Date")
                                         <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                     @elseif ($atr == "Expired Date")
