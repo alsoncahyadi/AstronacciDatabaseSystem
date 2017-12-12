@@ -45,7 +45,11 @@ class HomeController extends Controller
                 "Line ID",
                 "BBM",
                 "WhatsApp",
-                "Facebook"];
+                "Facebook",
+                "Transaction ID",
+                "Product Type",
+                "Product Name",
+                "Nominal"];
 
         $atts = ["master_id",
                 "redclub_user_id",
@@ -61,7 +65,11 @@ class HomeController extends Controller
                 "line_id",
                 "bbm",
                 "whatsapp",
-                "facebook"];
+                "facebook",
+                "trasaction_id",
+                "product_type",
+                "product_name",
+                "nominal"];
 
         return view('dashboard/dashboardashop', ['clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$heads] );
     }
@@ -232,7 +240,7 @@ class HomeController extends Controller
           "Tanggal Lahir" =>"birthdate",
           "Alamat" => "address",
           "Kota" => "city",
-          "Provinsi" => "provinsi",
+          "Provinsi" => "province",
           "Jenis Kelamin" => "gender",
           "Line ID" => "line_id",
           "BBM" => "bbm",

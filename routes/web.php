@@ -729,7 +729,7 @@ Route::delete('/AShop/delete/{id}', [
     ]);
 
 Route::post('/AShop/edit', [
-    'uses' => 'AshopController@editTrans',
+    'uses' => 'AshopController@editClient',
     'as' => 'AShop.edit',
     'middleware' => ['auth', 'ashop'],
     ]);
