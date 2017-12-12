@@ -122,10 +122,10 @@ class MRGController extends Controller
 
      public function addTrans(Request $request) {
         $this->validate($request, [
-                'user_id' => '',
-                'account_number' => '',
-                'account_type' => '',
-                'sales_name' => ''
+                'master_id' => 'required',
+                "account_number" => 'required|unique:mrg_accounts|string:20', 
+                "account_type" => 'string:20', 
+                "sales_name" => ''
             ]);
 
         $mrg_account = new \App\MrgAccount();
@@ -156,7 +156,7 @@ class MRGController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => '',
+                'user_id' => 'required|unique:mrgs',
                 'sumber_data' => '',
                 'join_date' => 'date'
             ]);
@@ -195,9 +195,9 @@ class MRGController extends Controller
      public function editTrans(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'accounts_number' => '',
-                'account_type' => '',
-                'sales_name' => ''
+                "account_number" => 'required|unique:mrg_accounts|string:20', 
+                "account_type" => 'string:20', 
+                "sales_name" => ''
             ]);
         $mrg_account = MrgAccount::where('accounts_number',$request->user_id)->first();
         //Inisialisasi array error

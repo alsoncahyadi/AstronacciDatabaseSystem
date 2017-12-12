@@ -148,9 +148,9 @@ class AClubController extends Controller
 
     public function addMember(Request $request) {
         $this->validate($request, [
-                'user_id' => '',
-                'master_id' => '',
-                'group' => ''
+                'user_id' => 'required|unique:aclub_members',
+                'master_id' => 'required',
+                'group' => 'required'
             ]);
 
         $aclub_member = new \App\AclubMember();
@@ -238,7 +238,7 @@ class AClubController extends Controller
 
     public function editMember(Request $request) {
         $this->validate($request, [
-                'group' => ''
+                'group' => 'required'
             ]);
 
         $err = [];
@@ -325,7 +325,7 @@ class AClubController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'master_id' => '',
+                'master_id' => 'required|unique:aclub_informations',
                 'sumber_data' => '',
                 'keterangan' => ''
             ]);
@@ -347,11 +347,11 @@ class AClubController extends Controller
 
     public function addTrans(Request $request) {
          $this->validate($request, [
-                'user_id',
+                'user_id' => 'required|integer',
                 'payment_date' => 'date',
                 'kode' => '',
                 'status' => '',
-                'nominal' => '',
+                'nominal' => 'integer',
                 'sales_name' => '',
                 'start_date' => 'date',
                 'expired_date' => 'date',
@@ -398,7 +398,7 @@ class AClubController extends Controller
                 'payment_date' => 'date',
                 'kode' => '',
                 'status' => '',
-                'nominal' => '',
+                'nominal' => 'integer',
                 'sales_name' => '',
                 'start_date' => 'date',
                 'expired_date' => 'date',

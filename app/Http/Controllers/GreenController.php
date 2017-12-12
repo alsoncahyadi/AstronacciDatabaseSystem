@@ -108,7 +108,7 @@ class GreenController extends Controller
         //Validasi input
 
         $this->validate($request, [
-                'green_id' => '',
+                'green_id' => 'required|unique:green_prospect_clients',
                 'date' => 'date'
             ]);
         //Inisialisasi array error
@@ -144,7 +144,7 @@ class GreenController extends Controller
                 'date' => 'date',
                 'name' => '',
                 'phone' => '',
-                'email' => '',
+                'email' => 'required|email',
                 'interest' => '',
                 'pemberi' => '',
                 'sumber_data' => '',
@@ -177,7 +177,7 @@ class GreenController extends Controller
             "sales_name" => '', 
             "status" => '', 
             "nama_product" => '', 
-            "nominal" => '', 
+            "nominal" => 'integer', 
             "keterangan" => '', 
             ]);
         //Inisialisasi array error
@@ -232,12 +232,13 @@ class GreenController extends Controller
 
     public function addTrans(Request $request) {
         $this->validate($request, [
-                'user_id' => '',
-                'date' => 'date',
-                'sales' => '',
-                'status' => '',
-                'nama_product' => '',
-                'nominal' => ''
+                "user_id" => 'required',
+                "date" => 'date', 
+                "sales_name" => '', 
+                "status" => '', 
+                "nama_product" => '', 
+                "nominal" => 'integer', 
+                "keterangan" => ''
             ]);
 
         $err = [];

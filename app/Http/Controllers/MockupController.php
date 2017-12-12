@@ -141,20 +141,19 @@ class MockupController extends Controller
 
     public function addMaster(Request $request) {
         $this->validate($request, [
-            'user_id_redclub' => 'string:100',
-            'password_redclub' => '',
-            'nama' => 'string:100',
-            'telepon' => 'string:50',
-            'email' => 'required|string:255',
-            'tanggal_lahir' => 'date',
-            'alamat' => 'string:100',
-            'kota' => 'string:100',
-            'provinsi' => 'string:100',
+           'redclub_user_id' => '',
+            'name' => '',
+            'telephone_number' => '',
+            'email' => 'required|email',
+            'birthdate' => 'date',
+            'address' => '',
+            'city' => '',
+            'province' => '',
             'gender' => '',
-            'line_id' => 'string:20',
-            'bbm' => 'string:20',
-            'whatsapp' => 'string:20',
-            'facebook' => 'string:20',
+            'line_id' => '',
+            'bbm' => '',
+            'whatsapp' => '',
+            'facebook' => '',
         ]);
 
         $master = new \App\MasterClient;
@@ -187,16 +186,16 @@ class MockupController extends Controller
 
     public function addCAT(Request $request) {
         $this->validate($request, [
-            'master_id' => '',
-            'user_id_cat' => 'required|string:50',
-            'nomer_induk' => 'required|string:50',
-            'batch' => 'string:20',
-            'sales_cat' => 'string:100',
-            'sumber_data_cat' => 'string:20',
+            'master_id' => 'required',
+            'user_id_cat' => 'required|unique:cats',
+            'nomer_induk' => 'required|unique:cats',
+            'batch' => '',
+            'sales_cat' => '',
+            'sumber_data_cat' => '',
             'dp_date' => 'date',
             'dp_nominal' => 'integer',
             'opening_class' => 'date',
-            'status_cat' => 'string:20',
+            'status_cat' => '',
             'keterangan_cat' => ''
         ]);
 
@@ -225,20 +224,20 @@ class MockupController extends Controller
 
     public function addUOB(Request $request) {
         $this->validate($request, [
-            'master_id' => '',
-            'kode_client' => 'required|string:50',
-            'sales_uob' => 'required',
-            'sumber_data_uob' => 'required',
-            'tanggal_join_uob' => 'required|date',
-            'nomer_ktp' => 'required|string:20',
-            'expired_ktp' => 'required|date',
-            'nomer_npwp' => 'required|string:40',
-            'alamat_surat' => 'required',
-            'saudara_tidak_serumah' => 'required',
-            'ibu_kandung' => 'required',
-            'bank_pribadi' => 'required',
-            'nomer_rekening_pribadi' => 'required|string:50',
-            'keterangan_uob' => 'required'
+            'master_id' => 'required',
+            'kode_client' => 'required|unique:uobs',
+            'sales_uob' => '',
+            'sumber_data_uob' => '',
+            'tanggal_join_uob' => 'date',
+            'nomer_ktp' => 'string:20',
+            'expired_ktp' => 'date',
+            'nomer_npwp' => 'string:40',
+            'alamat_surat' => '',
+            'saudara_tidak_serumah' => '',
+            'ibu_kandung' => '',
+            'bank_pribadi' => '',
+            'nomer_rekening_pribadi' => 'string:50',
+            'keterangan_uob' => ''
         ]);
 
         $uob = new \App\Uob;
@@ -270,12 +269,12 @@ class MockupController extends Controller
 
     public function addMRG(Request $request) {
         $this->validate($request, [
-            'master_id' => '',
+            'master_id' => 'required',
             'sumber_data_mrg' => '',
             'tanggal_join_mrg' => 'date',
-            "account_number" => 'required|string:20', 
-            "account_type" => 'required|string:20', 
-            "sales_mrg" => 'required|string:255'
+            "account_number" => 'required|unique:mrg_accounts|string:20', 
+            "account_type" => 'string:20', 
+            "sales_mrg" => ''
         ]);
 
         $mrgforms = ["Sales",
@@ -314,7 +313,7 @@ class MockupController extends Controller
 
     public function addAClub(Request $request) {
         $this->validate($request, [
-            'user_id_aclub' => 'required|string:50',
+            'user_id_aclub' => 'required|unique:aclub_members|string:50',
             'payment_date' => 'date',
             'sales_aclub' => '',
             'kode' => '',
