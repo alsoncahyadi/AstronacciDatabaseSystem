@@ -175,7 +175,7 @@
                         @endforeach
                     </div><br>
 
-                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Transaction</a>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Member</a>
                     <div id="addaclubtrans" class="panel-collapse collapse">
                         <div class="panel-body">
                             <form method="post" action="{{route('AClub.insertmembers')}}">
