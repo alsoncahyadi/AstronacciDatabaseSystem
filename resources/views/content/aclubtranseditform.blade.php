@@ -74,22 +74,26 @@
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
                                             @if (($key == "Keterangan") || ($key == "Sumber Data") || ($key == "User ID") || ($key == "Sales"))
-                                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}">
+                                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}" value="{{$client->$value}}">
 
                                             @elseif ($key == "Kode")
                                                 <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $key))}}">
                                                     @if ($client->group == 'F' | $client->group == 'Future')
-                                                        <option selected="selected">FS</option>
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>FS</option>
                                                         <option>FG</option>
                                                         <option>FP</option>                                    
                                                     @elseif ($client->group == 'S' | $client->group == 'Stock')
-                                                        <option selected="selected">SS</option>
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>SS</option>
                                                         <option>SG</option>
                                                         <option>SP</option> 
                                                     @elseif ($client->group == 'RD')
-                                                        <option selected="selected">RD</option>
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>RD</option>
                                                     @else
-                                                        <option selected="selected">SS</option>
+                                                        <option selected="selected">{{$client->$value}}</option>
+                                                        <option>SS</option>
                                                         <option>FS</option>
                                                         <option>SG</option>
                                                         <option>FG</option>
@@ -105,17 +109,17 @@
                                                     <option>Tidak Aktif</option>
                                                 </select>
                                             @elseif ($key == "Start Date")
-                                                <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                                <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
                                             @elseif ($key == "Expired Date")
-                                                <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly>
+                                                <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}"readonly>
                                             @elseif ($key == "Masa Tenggang")
-                                                <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                                <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
                                             @elseif ($key == "Yellow Zone")
-                                                <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly>
+                                                <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value}}">
                                             @elseif ($key == "Red Zone")
-                                                <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly>
+                                                <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value}}">
                                             @else
-                                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key))}}">
+                                                <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
                                             @endif
                                         </div>
                                     @endforeach
