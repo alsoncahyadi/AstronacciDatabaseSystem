@@ -94,7 +94,7 @@
 			</div>
 
              <div id="bod2" style="display:none">
-                <form role="form" method="post" action="">
+                <form role="form" method="post" action="{{route('detail.edit')}}">
                     <div class="form-group">
                         <input name="user_id" type="hidden" value="{{$client_master->master_id}}">
                         @foreach ($ins_master as $key => $value)

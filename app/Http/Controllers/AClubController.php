@@ -202,6 +202,14 @@ class AClubController extends Controller
 
         $ins =  [   "Sales Name" => "sales_name",
                     "Group" => "group"];
+
+        $headsreg = [ "Payment Date", 
+                    "Kode", 
+                    "Status", 
+                    "Nominal",
+                    "Sales Name", 
+                    "Start Date" 
+                    ];
       
         $insreg = [ "Payment Date", 
                     "Kode", 
@@ -220,18 +228,14 @@ class AClubController extends Controller
                     "nominal",
                     "sales_name",
                     "start_date",
-                    "expired_date",
-                    "masa_tenggang",
-                    "yellow_zone",
-                    "red_zone"];
+                    ];
 
 
-        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
+        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 'heads'=>$heads]);
     }
 
     public function editMember(Request $request) {
         $this->validate($request, [
-                'sales_name' => '',
                 'group' => ''
             ]);
 
@@ -239,7 +243,6 @@ class AClubController extends Controller
         try {
             $aclub_member = AclubMember::find($request->user_id);
 
-            $aclub_member->sales_name = $request->sales_name;
             $aclub_member->group = $request->group;
 
             $aclub_member->update();
@@ -424,7 +427,7 @@ class AClubController extends Controller
         if(!empty($err)) {
             return redirect()->back()->withErrors($err);
         } else {
-            return redirect()->route('AClub.member', ['id' => $aclub_transaction->aclubmember->first()->master_id, 'member' => $aclub_transaction->user_id]);
+            return redirect()->route('AClub.member', ['id' => $aclub_trans->aclubmember->first()->master_id, 'member' => $aclub_trans->user_id]);
         }
     }
 
@@ -509,8 +512,7 @@ class AClubController extends Controller
     public function updateMember($id) {
         $aclub_member = AclubMember::where('user_id', $id)->first();
 
-        $ins = ["Sales" => "sales_name",
-                    "Group" => "group"];
+        $ins = [ "Group" => "group"];
 
         return view('content/aclubmembereditform', ['route'=>'AClub', 'client'=>$aclub_member, 'ins'=>$ins]);
     }
