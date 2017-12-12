@@ -12,17 +12,21 @@ class AclubInformationTableSeeder extends Seeder
     public function run()
     {
         //
-        $this->makeMagicSeedAclubInformation();
+
         factory(App\AclubInformation::class, 10)->create();
+        $this->makeMagicSeedAclubInformation();        
     }
 
     public function makeMagicSeedAclubInformation() {
-        $magic_seed = new App\AclubInformation;
-        $magic_seed->master_id = 999999;
-        $magic_seed->sumber_data = '-';
-        $magic_seed->keterangan = '-';
-        $magic_seed->created_by = 999;
-        $magic_seed->updated_by = 999;
-        $magic_seed->save();         
+        $candidate = App\AclubInformation::find(999999);
+        if ($candidate == null) {
+            $magic_seed = new App\AclubInformation;
+            $magic_seed->master_id = 999999;
+            $magic_seed->sumber_data = '-';
+            $magic_seed->keterangan = '-';
+            $magic_seed->created_by = 999;
+            $magic_seed->updated_by = 999;
+            $magic_seed->save();         
+        }
     }    
 }

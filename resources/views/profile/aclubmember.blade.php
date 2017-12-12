@@ -78,7 +78,6 @@
             <div id="bod1">
                 <div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
-                    
                         @foreach ($heads as $key => $value)
                             <div class="col-lg-2" style="height:30px">
                                 <label>{{$key}}</label>
@@ -105,10 +104,56 @@
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">
                         <input name="user_id" type="hidden" value="{{$client->user_id}}">
+
+
                         @foreach ($insreg as $atr)
+                        <label>{{$atr}}</label>
                         <div class="form-group">
-                            <label>{{$atr}}</label>
+                        @if (($atr == "Keterangan") || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
+                            <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
+
+                        @elseif ($atr == "Kode")
+                            <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                @if ($client->group == 'F' | $client->group == 'Future')
+                                    <option selected="selected">FS</option>
+                                    <option>FG</option>
+                                    <option>FP</option>                                    
+                                @elseif ($client->group == 'S' | $client->group == 'Stock')
+                                    <option selected="selected">SS</option>
+                                    <option>SG</option>
+                                    <option>SP</option> 
+                                @elseif ($client->group == 'RD')
+                                    <option selected="selected">RD</option>
+                                @else
+                                    <option selected="selected">SS</option>
+                                    <option>FS</option>
+                                    <option>SG</option>
+                                    <option>FG</option>
+                                    <option>SP</option> 
+                                    <option>FP</option>
+                                    <option>RD</option>
+                                @endif
+                            </select>
+                        @elseif ($atr == "Status")
+                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
+                                <option selected="selected">Baru</option>
+                                <option>Perpanjang</option>
+                                <option>Tidak Aktif</option>
+                            </select>
+                        @elseif ($atr == "Start Date")
+                            <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                        @elseif ($atr == "Expired Date")
+                            <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
+                        @elseif ($atr == "Masa Tenggang")
+                            <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                        @elseif ($atr == "Yellow Zone")
+                            <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
+                        @elseif ($atr == "Red Zone")
+                            <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
+                        @else
                             <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                        @endif
+
                         </div>
                         @endforeach
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
@@ -206,6 +251,74 @@
             return false;
         }
     }
+        
+    // ======================================================================================================
+    // RUMUS ACLUB
+    $( "#startdate" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+
+    $( "#startdate" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+
+    $( "#kode" ).change(function() {
+        document.getElementById("expireddate").value = document.getElementById("startdate").value;
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "FS") {
+            document.getElementById("expireddate").stepUp(30);
+        } else if (document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "FG"){
+            document.getElementById("expireddate").stepUp(180);
+        } else if (document.getElementById("kode").value == "SP" || document.getElementById("kode").value == "FP" || document.getElementById("kode").value == "RD"){
+            document.getElementById("expireddate").stepUp(365);
+        } 
+        document.getElementById("masatenggang").value = document.getElementById("expireddate").value;
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+
+        if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "SP") {
+            document.getElementById("group").value = "Stock";
+        } else if (document.getElementById("kode").value == "FS" || document.getElementById("kode").value == "FG" || document.getElementById("kode").value == "FP") {
+            document.getElementById("group").value = "Future";
+        } else if (document.getElementById("kode").value == "RD") {
+            document.getElementById("group").value = "RD";
+        }       
+    });
+
+    $( "#masatenggang" ).change(function() {
+        document.getElementById("yellowzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("redzone").value = document.getElementById("masatenggang").value;
+        document.getElementById("yellowzone").stepDown(3);
+        document.getElementById("redzone").stepUp(3);
+    });
+    // ======================================================================================================
+    
+
     </script>
 </body>
 </html>

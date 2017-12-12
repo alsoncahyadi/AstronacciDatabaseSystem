@@ -523,7 +523,12 @@ class AClubController extends Controller
         $ins = [    "Payment Date" => 'payment_date',
                     "Kode" => 'kode',
                     "Nominal" => 'nominal',
-                    "Start Date" => 'start_date'];
+                    "Sales" => "sales_name",
+                    "Start Date" => 'start_date',
+                    "Expired Date" => 'expired_date',
+                    "Masa Tenggang" => 'masa_tenggang',
+                    "Yellow Zone" => 'yellow_zone',
+                    "Red Zone"=> 'red_zone'];
 
         return view('content/aclubtranseditform', ['route'=>'AClub', 'client'=>$aclub_transaction, 'ins'=>$ins]);
     }

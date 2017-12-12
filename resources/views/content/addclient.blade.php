@@ -6,6 +6,7 @@
 		<!-- /.col-lg-12 -->
 	</div>
 </div>
+
 	<div class="panel panel-default" style="padding:15px 280px;" >
 
 		@if ($errors->any())
