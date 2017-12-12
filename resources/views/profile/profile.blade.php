@@ -167,6 +167,7 @@
             <div id="addcli" class="panel-collapse collapse">
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">
+                        <input name="user_id" type="hidden" value="{{$client->$userid}}">
                         @foreach ($insreg as $atr)
                         <div class="form-group">
                             <label>{{$atr}}</label>

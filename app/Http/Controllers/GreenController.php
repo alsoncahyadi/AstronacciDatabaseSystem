@@ -216,7 +216,7 @@ class GreenController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect("green");
+        return redirect("Green");
     }
     
     public function deleteTrans($id) {
