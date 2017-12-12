@@ -112,6 +112,8 @@
                         @if (($atr == "Keterangan") || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
                             <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
 
+                        @elseif ($atr == "Payment Date")
+                            <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                         @elseif ($atr == "Kode")
                             <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                 @if ($client->group == 'F' | $client->group == 'Future')
