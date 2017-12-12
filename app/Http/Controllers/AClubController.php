@@ -116,10 +116,12 @@ class AClubController extends Controller
         $keyword = $request['q'];
 
         // aclub_members adalah list member dari master_id = $id
-        $aclub_members = $aclub_master->aclubMembers()
-                        ->where('user_id', 'like', "%{$keyword}%")
-                        ->orWhere('group', 'like', "%{$keyword}%")
-                        ->paginate(15);
+        // $aclub_members = $aclub_master->aclubMembers();
+        //                 ->where('user_id', 'like', "%{$keyword}%")
+        //                 ->orWhere('group', 'like', "%{$keyword}%")
+        //                 ->paginate(15);
+        $aclub_members = $aclub_master->aclubMembers()->get();
+        // dd($aclub_members);
 
         $headsreg = ["User ID",
                     "Group"];
