@@ -148,7 +148,7 @@
 						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
 							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
 						@elseif ($atr == "Tanggal Join")
-							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
+							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
 						@elseif ($atr == "Expired KTP")
 							<input class="form-control no-spin" type="date" id="expiredktp" name="{{strtolower(str_replace(' ', '_', $atr))}}">	
 						@else
