@@ -84,7 +84,7 @@ class CATController extends Controller
     public function addTrans(Request $request) {
         $this->validate($request, [
                 'payment_date' => 'date',
-                'nominal' => '',
+                'nominal' => 'integer',
                 'tanggal_end_class' => 'date',
                 'tanggal_ujian' => 'date',
                 'status' => '',
@@ -125,8 +125,8 @@ class CATController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => '',
-                'nomor_induk' => '',
+                'user_id' => 'required|unique:cats',
+                'nomor_induk' => 'required|unique:cats',
                 'batch' => '',
                 'sales' => ''
             ]);

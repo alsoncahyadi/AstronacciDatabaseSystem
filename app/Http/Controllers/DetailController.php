@@ -68,12 +68,12 @@ class DetailController extends Controller
   
     public function editClient(Request $request) {
          $this->validate($request, [
-                'master_id' => '',
+                'master_id' => 'required|unique:master_clients',
                 'redclub_user_id' => '',
                 'name' => '',
                 'telephone_number' => '',
-                'email' => '',
-                'birthdate' => '',
+                'email' => 'required|email',
+                'birthdate' => 'date',
                 'address' => '',
                 'city' => '',
                 'province' => '',

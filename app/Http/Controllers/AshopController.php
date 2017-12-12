@@ -119,12 +119,12 @@ class AshopController extends Controller
 
      public function editClient(Request $request) {
          $this->validate($request, [
-                'master_id' => '',
+                'master_id' => 'required|unique:master_clients',
                 'redclub_user_id' => '',
                 'name' => '',
                 'telephone_number' => '',
-                'email' => '',
-                'birthdate' => '',
+                'email' => 'required|email',
+                'birthdate' => 'date',
                 'address' => '',
                 'city' => '',
                 'province' => '',
@@ -184,7 +184,7 @@ class AshopController extends Controller
         $this->validate($request, [
                 'product_type' => '',
                 'product_name' => '',
-                'nominal' => ''
+                'nominal' => 'integer'
             ]);
         $ashop = AshopTransaction::where('transaction_id',$request->user_id)->first();
         //Inisialisasi array error
@@ -222,7 +222,7 @@ class AshopController extends Controller
         $this->validate($request, [
                 'product_type' => '',
                 'nama_product' => '',
-                'nominal' => ''
+                'nominal' => 'integer'
             ]);
 
         $ashop = new \App\AshopTransaction();
@@ -286,24 +286,23 @@ class AshopController extends Controller
 
     public function addClient(Request $request) {
         $this->validate($request, [
-            'user_id_redclub' => '',
-            'password_redclub' => '',
-            'nama' => '',
-            'telepon' => '',
-            'email' => '',
-            'tanggal_lahir' => '',
-            'alamat' => '',
-            'kota' => '',
-            'provinsi' => '',
+            'redclub_user_id' => '',
+            'name' => '',
+            'telephone_number' => '',
+            'email' => 'required|email',
+            'birthdate' => 'date',
+            'address' => '',
+            'city' => '',
+            'province' => '',
             'gender' => '',
             'line_id' => '',
             'bbm' => '',
             'whatsapp' => '',
             'facebook' => '',
-            'trasaction_id' => '',
+            'trasaction_id' => 'required|unique:ashop_transactions',
             'product_type' => '',
             'product_name' => '',
-            'nominal' => ''
+            'nominal' => 'integer'
             ]);
 
         $err = [];

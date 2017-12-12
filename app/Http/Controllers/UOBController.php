@@ -102,13 +102,13 @@ class UOBController extends Controller
     public function addTrans(Request $request) {
         $this->validate($request, [
                 'bank_pribadi' => '',
-                'nomor_rekening_pribadi' => '',
+                'nomor_rekening_pribadi' => 'string:50',
                 'tanggal_rdi_done' => 'date',
-                'rdi_bank' => '',
+                'rdi_bank' => 'string:20',
                 'nomor_rdi' => '',
                 'tanggal_top_up' => 'date',
-                'nominal_top_up' => '',
-                'tanggal_trading' => '',
+                'nominal_top_up' => 'integer',
+                'tanggal_trading' => 'date',
                 'status' => '',
                 'trading_via' => '',
                 'keterangan' => ''
@@ -138,17 +138,17 @@ class UOBController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'kode_client' => '',
-                'master_id' => '',
-                'sales' => '',
-                'sumber_data' => '',
-                'tanggal_join' => '',
-                'nomor_ktp' => '',
-                'expired_ktp' => '',
-                'nomor_npwp' => '',
-                'alamat_surat_menyurat' => '',
+                'master_id' => 'required',
+                'kode_client' => 'required|unique:uobs',
+                'sales_uob' => '',
+                'sumber_data_uob' => '',
+                'tanggal_join_uob' => 'date',
+                'nomer_ktp' => 'string:20',
+                'expired_ktp' => 'date',
+                'nomer_npwp' => 'string:40',
+                'alamat_surat' => '',
                 'saudara_tidak_serumah' => '',
-                'nama_ibu_kandung' => '',
+                'ibu_kandung' => '',
             ]);
 
         //Inisialisasi array error
