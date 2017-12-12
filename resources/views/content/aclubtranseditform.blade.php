@@ -75,7 +75,8 @@
                                             <label>{{$key}}</label>
                                             @if (($key == "Keterangan") || ($key == "Sumber Data") || ($key == "User ID") || ($key == "Sales"))
                                                 <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}" value="{{$client->$value}}">
-
+                                            @elseif ($key == "Payment Date")
+                                                <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
                                             @elseif ($key == "Kode")
                                                 <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $key))}}">
                                                     @if ($client->group == 'F' | $client->group == 'Future')
