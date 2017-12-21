@@ -63,7 +63,7 @@
 					<label>Profit Center</label>
 					<select id="pc" class="form-control">
 						<option>-</option>
-						<option>A-Club</option>
+						<option>A-CLUB</option>
 						<option>MRG</option>
 						<option>UOB</option>
 						<option>CAT</option>
@@ -99,8 +99,8 @@
 								<option>Perpanjang</option>
 								<option>Tidak Aktif</option>
 							</select>
-						@elseif ($atr == "Start Date")
-							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@elseif (($atr == "Start Date") || ($atr == "Payment Date"))
+							<input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 						@elseif ($atr == "Expired Date")
 							<input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
 						@elseif ($atr == "Masa Tenggang")
@@ -276,11 +276,11 @@
 			document.getElementById("insert_button").disabled = true;
 			console.log("change");
 			//document.getElementById("hahaha").innerHTML = document.getElementById("ismrg").innerHTML;
-			if ($( "#pc option:checked" ).val() == "A-Club"){
+			if ($( "#pc option:checked" ).val() == "A-CLUB"){
 				if (document.getElementById('isacl') !== null){
 					if (document.getElementById("isacl").innerHTML == 1) {
 						document.getElementById("hahaha").style.display = "inline";
-						document.getElementById("hahaha").innerHTML = "This user has been registered to A-Club profit center.";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to A-CLUB profit center.";
 					} else {		
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("aclub").style.display = "inline";
