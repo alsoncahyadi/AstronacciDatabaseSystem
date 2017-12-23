@@ -33,8 +33,10 @@
                 View Profit Center
             </div>
             <div class="panel-body">
-                Waiting
-                <!--BOTTLENECK-->
+                <a href="{{route('AClub')}}" class="btn btn-primary">A-CLUB</a>
+                <a href="{{route('MRG')}}" class="btn btn-primary">MRG</a>
+                <a href="{{route('CAT')}}" class="btn btn-primary">CAT</a>
+                <a href="{{route('UOB')}}" class="btn btn-primary">UOB</a>
             </div>
         </div>
         <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>

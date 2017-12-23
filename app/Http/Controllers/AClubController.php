@@ -95,7 +95,7 @@ class AClubController extends Controller
                 "keterangan"];
 
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('vpc/aclubview', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
     }
 
     public function clientDetail($id, Request $request) {
