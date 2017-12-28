@@ -46,9 +46,12 @@
 			line-height: 32px;
 		}
 		.custtable {
-			float: left !important; max-width: 500px
-		} th{ 
+			float: left !important;
+		} th { 
 			width: 100px;
+			max-height: 40px;
+		} td {
+			overflow: hidden;
 		}
 		.filter {
 			height: 210px;
@@ -88,7 +91,7 @@
 			<div class="row">
 				<div class="col-md-4">
 					<i class="fa fa-child fa-fw"></i> Members 
-					<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download Semua History </a></button>
+					<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
 					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 				</div>
 				<div class="col-md-2">
@@ -129,11 +132,11 @@
 
 		<div class="panel-body">
 			<div id="bod1">
-				<div class="col-md-4" style="margin:0px;padding: 0px">
+				<div class="col-xs-5" style="margin:0px;padding: 0px;">
 				<table id="tablebase" class="table table-condensed table-striped table-bordered table-hover custtable">
 					<thead>
 						<tr>
-							<th> Select </th>
+							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							<th> la <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd1">
@@ -204,7 +207,7 @@
 						<?php $idx = 0 ?>							
 						<tr>
 							<td style="text-align:center; padding-bottom: 0px">
-								<input id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+								<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 								<input type="hidden" name="id{{ $idx }}" value="">
 							<td style="white-space: nowrap;"> cuk</td>
 							<td style="white-space: nowrap;"> cuk</td>							
@@ -214,7 +217,7 @@
 						</tr>
 						<tr>
 							<td style="text-align:center; padding-bottom: 0px">
-								<input id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+								<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 								<input type="hidden" name="id{{ $idx }}" value="">
 							<td style="white-space: nowrap;"> cuk</td>
 							<td style="white-space: nowrap;"> cuk</td>
@@ -224,7 +227,7 @@
 						</tr>
 						<tr>
 							<td style="text-align:center; padding-bottom: 0px">
-								<input id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+								<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 								<input type="hidden" name="id{{ $idx }}" value="">
 							<td style="white-space: nowrap;"> cuk</td>
 							<td style="white-space: nowrap;"> cuk</td>
@@ -235,7 +238,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-md-8" style="margin:0px;padding: 0px;overflow-x: scroll;">
+			<div class="col-xs-7" style="margin:0px;padding: 0px;overflow-x: scroll;">
 				<table id="tablebase2" class="table table-condensed table-striped table-bordered table-hover custtable">
 
 					<thead>
@@ -299,3 +302,9 @@
 </div>
 </body>
 </html>
+<script type="text/javascript">
+	$( "#selectAll" ).change(function() {
+		console.log("fuc");
+		$(".selectable").prop( "checked", $( "#selectAll" ).is(":checked"));
+	});
+</script>
