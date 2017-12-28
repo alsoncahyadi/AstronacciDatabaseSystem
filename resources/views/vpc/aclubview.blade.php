@@ -85,31 +85,44 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
-			<i class="fa fa-child fa-fw"></i> Members 
-			<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download Semua History </a></button>
-			<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
-			<div class="row sort">
-				<div class="col-md-1"></div>
-				<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
-				<!--SORT PARAMS -->
-				<div class="col-md-3">
-					<select class="form-control no-spin" name="sort1">
-						<option selected="selected">SS</option>
-						<option>SS</option>
-					</select>
+			<div class="row">
+				<div class="col-md-4">
+					<i class="fa fa-child fa-fw"></i> Members 
+					<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download Semua History </a></button>
+					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 				</div>
-				<div class="col-md-3">
-					<select class="form-control no-spin" name="sort2">
-						<option selected="selected">SS2</option>
-					</select>
+				<div class="col-md-2">
+					<div class="form-group input-group" style="margin-bottom: 0px">
+						<input type="number" class="form-control" placeholder="Add Bonus Days">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button"> <i class="fa fa-plus"></i>
+							</button>
+						</span>
+					</div>
 				</div>
-				<div class="col-md-3">
-					<select class="form-control no-spin" name="sort3">
-						<option selected="selected">SS3</option>
-					</select>
-				</div>
-				<div class="col-md-1">
-					<button class="btn btn-default">Sort</button>
+				<div class="col-md-6 row">
+					<div class="col-md-1"></div>
+					<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
+					<!--SORT PARAMS -->
+					<div class="col-md-3">
+						<select class="form-control no-spin" name="sort1">
+							<option selected="selected">SS</option>
+							<option>SS</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<select class="form-control no-spin" name="sort2">
+							<option selected="selected">SS2</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<select class="form-control no-spin" name="sort3">
+							<option selected="selected">SS3</option>
+						</select>
+					</div>
+					<div class="col-md-1">
+						<button class="btn btn-default">Sort</button>
+					</div>
 				</div>
 			</div>
 		</div>
