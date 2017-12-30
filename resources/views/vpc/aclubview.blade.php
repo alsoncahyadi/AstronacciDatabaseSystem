@@ -138,7 +138,8 @@
 						<tr>
 							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
-							<th> la <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
+							@foreach ($headsMaster as $headMaster)
+							<th> {{ $headMaster }} <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd1">
 									<form>
 										<label>Filter</label>
@@ -168,73 +169,21 @@
 									</form>
 								</div>
 							</th>
-							<th> dlsadsa <button class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd2"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd2">
-									<form>
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">sdsdasd a1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">geqewqe 1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">xvccxvxcv 1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">zcxzcz 1
-												</label>
-											</div>
-										</div>
-										<button class="btn btn-default btn-xs">Filter</button>
-									</form>
-								</div>
-							</th>
-							<th> afafad </th>
-							<th> dsadsa </th>
-							<th> dsadasd </th>
+							@endforeach
 						</tr>
 					</thead>
 					<tbody>			
-						<?php $idx = 0 ?>							
-						<tr>
-							<td style="text-align:center; padding-bottom: 0px">
-								<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-								<input type="hidden" name="id{{ $idx }}" value="">
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>							
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-						</tr>
-						<tr>
-							<td style="text-align:center; padding-bottom: 0px">
-								<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-								<input type="hidden" name="id{{ $idx }}" value="">
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-						</tr>
-						<tr>
-							<td style="text-align:center; padding-bottom: 0px">
-								<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-								<input type="hidden" name="id{{ $idx }}" value="">
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-							<td style="white-space: nowrap;"> cuk</td>
-						</tr>
+						<?php $idx = 0 ?>
+						@foreach ($clients as $client)							
+							<tr>
+								<td style="text-align:center; padding-bottom: 0px">
+									<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+									<input type="hidden" name="id{{ $idx }}" value="">
+								@foreach ($attsMaster as $attMaster)
+									<td style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
+								@endforeach
+							</tr>
+						@endforeach
 					</tbody>
 				</table>
 			</div>

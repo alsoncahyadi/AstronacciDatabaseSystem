@@ -55,47 +55,53 @@ class AClubController extends Controller
             $aclub_master->facebook = $master->facebook;
         }
 
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
+                    "Email",
+                    "Telepon",
+                    "Tanggal Lahir"
+                ];
+
+        $attsMaster = [
+                        "master_id",
+                        "name",
+                        "email",
+                        "telephone_number",
+                        "birthdate"
+                    ];
+
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Master ID",
-                "RedClub User ID",
-                "RedClub Password",
-                "Nama",
-                "Nomor Telepon",
-                "Email",
-                "Tanggal Lahir",
+        $heads = [
                 "Alamat",
                 "Kota",
-                "Provinsi",
                 "Gender",
                 "Line ID",
-                "BBM",
                 "WhatsApp",
-                "Facebook",
-                "Sumber Data (A-Club)",
-                "Keterangan (A-Club)"];
+                "Sumber"
+                ];
 
 
         //Nama attribute pada sql
-        $atts = ["master_id",
-                "redclub_user_id",
-                "redclub_password",
-                "name",
-                "telephone_number",
-                "email",
-                "birthdate",
+        $atts = [
                 "address",
                 "city",
                 "province",
                 "gender",
                 "line_id",
-                "bbm",
                 "whatsapp",
-                "facebook",
-                "sumber_data",
-                "keterangan"];
+                "sumber_data"
+                ];
 
         //Return view table dengan parameter
-        return view('vpc/aclubview', ['route' => 'AClub', 'clients' => $aclub_info, 'heads'=>$heads, 'atts'=>$atts]);
+        return view('vpc/aclubview', 
+                    [
+                        'route' => 'AClub', 
+                        'clients' => $aclub_info, 
+                        'heads'=>$heads, 'atts'=>$atts, 
+                        'headsMaster' => $headsMaster, 
+                        'attsMaster' => $attsMaster
+                    ]);
     }
 
     public function clientDetail($id, Request $request) {
