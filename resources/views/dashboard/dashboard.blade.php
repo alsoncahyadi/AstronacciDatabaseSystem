@@ -39,7 +39,7 @@
                 <a href="{{route('UOB')}}" class="btn btn-primary">UOB</a>
             </div>
         </div>
-        <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
+        <!-- <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
         <div id="import" style="display:none"> 
         <div class="panel panel-default" style="padding:15px">
             <div class="panel-body">
@@ -50,7 +50,7 @@
                     <button class="btn btn-primary">Import .xls File</button>
                 </form>
             </div>
-        </div>
+        </div> -->
     </div>
     @if(count($errors) > 0)
         @foreach($errors->all() as $error)

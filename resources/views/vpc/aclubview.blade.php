@@ -36,22 +36,16 @@
 	<script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
 	<script src="{{ URL::asset('js/astronacci.js') }}"></script>
 	<style type="text/css">
-		.sort{
-			float: right; min-width: 700px; max-height:45px; margin-right: 15px; 
-		}
-		.sort .col-md-3{
-			padding-right: 0px;
-		}
 		.vpchead{
 			line-height: 32px;
 		}
 		.custtable {
 			float: left !important;
 		} th { 
-			width: 100px;
 			max-height: 40px;
 		} td {
 			overflow: hidden;
+			max-width: 150px;
 		}
 		.filter {
 			height: 210px;
@@ -132,15 +126,16 @@
 
 		<div class="panel-body">
 			<div id="bod1">
-				<div class="col-xs-5" style="margin:0px;padding: 0px;">
+				<div class="col-xs-6" style="margin:0px;padding: 0px;">
 				<table id="tablebase" class="table table-condensed table-striped table-bordered table-hover custtable">
 					<thead>
 						<tr>
+							<?php $idx = 1 ?>
 							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							@foreach ($headsMaster as $headMaster)
-							<th> {{ $headMaster }} <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd1">
+							<th> {{ $headMaster }} <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 									<form>
 										<label>Filter</label>
 										<div class="panel panel-default filter-selection">
@@ -169,10 +164,11 @@
 									</form>
 								</div>
 							</th>
+							<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tr>
 					</thead>
-					<tbody>			
+					<tbody>	
 						<?php $idx = 0 ?>
 						@foreach ($clients as $client)							
 							<tr>
@@ -183,17 +179,18 @@
 									<td style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
 								@endforeach
 							</tr>
+						<?php $idx = $idx + 1; ?>
 						@endforeach
 					</tbody>
 				</table>
 			</div>
-			<div class="col-xs-7" style="margin:0px;padding: 0px;overflow-x: scroll;">
+			<div class="col-xs-6" style="margin:0px;padding: 0px;overflow-x: scroll;">
 				<table id="tablebase2" class="table table-condensed table-striped table-bordered table-hover custtable">
 
 					<thead>
 						<tr>
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
-							<?php $idx = 4; ?>
+							<?php $idx = 6; ?>
 							@foreach ($heads as $head)
 							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div> <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">

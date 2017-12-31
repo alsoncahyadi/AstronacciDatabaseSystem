@@ -75,6 +75,7 @@ class AClubController extends Controller
         $heads = [
                 "Alamat",
                 "Kota",
+                "Provinsi",
                 "Gender",
                 "Line ID",
                 "WhatsApp",
