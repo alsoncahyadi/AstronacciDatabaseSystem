@@ -135,34 +135,23 @@
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							@foreach ($headsMaster as $headMaster)
 							<th> {{ $headMaster }} <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-									<form>
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">sdsdasd a1
-												</label>
+								@if ($headMaster == 'Tanggal Lahir')
+									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+										<form>
+											<label>Filter</label>
+											@foreach($filter_birthdates as $filter_birthdate)
+											<div class="panel panel-default filter-selection">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" value=""> {{ $filter_birthdate }}
+													</label>
+												</div>
 											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">geqewqe 1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">xvccxvxcv 1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">zcxzcz 1
-												</label>
-											</div>
-										</div>
-										<button class="btn btn-default btn-xs">Filter</button>
-									</form>
-								</div>
+											@endforeach
+											<button class="btn btn-default btn-xs">Filter</button>
+										</form>
+									</div>
+								@endif
 							</th>
 							<?php $idx = $idx + 1; ?>
 							@endforeach
@@ -193,34 +182,24 @@
 							<?php $idx = 6; ?>
 							@foreach ($heads as $head)
 							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div> <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+							@if ($head == 'Kota')
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 									<form>
 										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">sdsdasd a1
-												</label>
+										@foreach ($filter_cities as $filter_city)
+											<div class="panel panel-default filter-selection">
+												<div class="checkbox">
+													<label>
+														<input type="checkbox" value="">{{ $filter_city->city }}
+													</label>
+												</div>
 											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">geqewqe 1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">xvccxvxcv 1
-												</label>
-											</div>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" value="">zcxzcz 1
-												</label>
-											</div>
-										</div>
+										@endforeach
 										<button class="btn btn-default btn-xs">Filter</button>
 									</form>
-								</div></th>
+								</div>
+								@endif
+								</th>
 								<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tr>

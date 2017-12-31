@@ -10,6 +10,7 @@ use App\AclubInformation;
 use App\AclubMember;
 use App\AclubTransaction;
 use App\MasterClient;
+use Carbon\Carbon;
 
 class AClubController extends Controller
 {
@@ -94,6 +95,21 @@ class AClubController extends Controller
                 "sumber_data"
                 ];
 
+        //Filter
+        $master_clients = MasterClient::all();
+        $array_month = array();
+        foreach ($master_clients as $master_client) {
+            array_push($array_month, date('m', strtotime($master_client->birthdate)));
+        }
+        $filter_birthdates = array_unique($array_month);
+        sort($filter_birthdates);
+        foreach ($filter_birthdates as $key => $filter_birthdate) {
+            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
+            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
+        }
+
+        $filter_cities = MasterClient::select('city')->distinct()->get();
+
         //Return view table dengan parameter
         return view('vpc/aclubview', 
                     [
@@ -101,7 +117,9 @@ class AClubController extends Controller
                         'clients' => $aclub_info, 
                         'heads'=>$heads, 'atts'=>$atts, 
                         'headsMaster' => $headsMaster, 
-                        'attsMaster' => $attsMaster
+                        'attsMaster' => $attsMaster,
+                        'filter_birthdates' => $filter_birthdates,
+                        'filter_cities' => $filter_cities
                     ]);
     }
 

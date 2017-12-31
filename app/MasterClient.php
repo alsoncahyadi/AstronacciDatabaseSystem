@@ -11,6 +11,8 @@ class MasterClient extends Model
 
     protected $primaryKey = 'master_id';
 
+    protected $appends = ['month_birthdate'];
+
     public function mrg() {
         return $this->hasOne('App\Mrg', 'master_id', 'master_id');
     }
@@ -41,5 +43,10 @@ class MasterClient extends Model
 
     public function updatedBy() {
         return $this->belongsTo('App\User', 'updated_by');
+    }
+
+    public function getMonthBirthdateAttribute()
+    {
+        return date('F', strtotime($this->birthdate));
     }
 }
