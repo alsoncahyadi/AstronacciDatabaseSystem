@@ -109,7 +109,7 @@ class AClubController extends Controller
         }
 
         $filter_cities = MasterClient::select('city')->distinct()->get();
-
+        $this->getFilteredAndSortedTableList('test');
         //Return view table dengan parameter
         return view('vpc/aclubview', 
                     [
@@ -122,6 +122,83 @@ class AClubController extends Controller
                         'filter_cities' => $filter_cities
                     ]);
     }
+
+
+    // DEPRECATED! DONT USE THIS! -Ramos-
+    public function getFilteredTable($data, $json_filter) {
+        $filter = json_decode($json_filter);
+        $filtered_data = [];
+
+        foreach ($data as $datum) {
+            $valid = true;
+            foreach ($filter as $key_filter => $values_filter) {
+                if ($key_filter == 'birthdate') {
+                    // made later
+                } else {
+                    if (!in_array($datum[$key_filter], $values_filter)) {
+                        $valid = false;
+                        break;
+                    }
+                }
+            }
+            if ($valid) {
+                array_push($filtered_data, $datum);
+            }
+        }
+        $filtered_data = collect($filtered_data);
+        return $filtered_data;
+    }
+
+    // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
+    public function getFilteredAndSortedTableList($request) {
+        $example_filter = array('gender'=>['g'], 'name'=>['MAGIC_SEED']);
+
+        $table_name = "master_clients inner join aclub_members on master_clients.master_id = aclub_members.master_id";
+        $json_filter = json_encode($example_filter);
+        dd($json_filter);
+        $query = $this->getFilteredTableQuery($table_name, $json_filter);
+        $list = DB::select($query);
+        dd($list);
+    }
+ 
+    // RETURN : STRING QUERY FOR FILTER IN SQL 
+    public function getFilteredTableQuery($table_name, $json_filter) {
+        $filter = json_decode($json_filter);
+
+        // add 'select' of query
+        $query = 'SELECT * FROM '.$table_name;
+        // add 'where' of query
+        $query = $query.' WHERE ';        
+        $is_first = true;
+        foreach ($filter as $key_filter => $values_filter) {
+            if (!$is_first) {
+                $query = $query." and ";
+            }
+            $idx_filter = 0;
+            $query = $query.'(';
+
+            if ($key_filter == 'birthdate') {
+                // made later
+            } else {
+                $idx_value = 0;
+                foreach ($values_filter as $value_filter) {
+                    $query = $query.$key_filter." = '".$value_filter."'";
+                    $idx_value += 1;
+                    if ($idx_value != count($values_filter)) {
+                        $query = $query." or ";
+                    }
+                 }
+            }
+            $query = $query.')';
+            $is_first = false;
+        }   
+        // add semicolon
+        $query = $query.";";
+
+        // get result
+        return $query;
+    }
+
 
     public function clientDetail($id, Request $request) {
         // detail master dengan master_id = $id
@@ -200,7 +277,6 @@ class AClubController extends Controller
         $aclub_trans->masa_tenggang = $request->masa_tenggang;
         $aclub_trans->red_zone = $request->red_zone;
         $aclub_trans->yellow_zone = $request->yellow_zone;
-
         
         $aclub_trans->save();
 
