@@ -57,6 +57,7 @@ class AClubController extends Controller
             $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
 
             $aclub_info = $aclub_member->aclubInformation;
+            dd($aclub_info);
             $aclub_member->sumber_data = $aclub_info->sumber_data;
 
             $last_kode = substr($aclub_member->kode,-1);
@@ -124,8 +125,12 @@ class AClubController extends Controller
                 "Payment Date",
                 "Kode",
                 "Status",
+                "Aktif",
+                "Bulan Member",
+                "Bonus Member",
                 "Start Date",
                 "Expire Date",
+                "Masa Tenggang",
                 "Yellow Zone",
                 "Red Zone"
                 ];
@@ -143,8 +148,12 @@ class AClubController extends Controller
                 "payment_date",
                 "kode",
                 "status",
+                "aktif",
+                "bulan_member",
+                "bonus",
                 "start_date",
                 "expired_date",
+                "masa_tenggang",
                 "yellow_zone",
                 "red_zone"
                 ];
@@ -160,7 +169,7 @@ class AClubController extends Controller
         foreach ($filter_birthdates as $key => $filter_birthdate) {
             // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
             $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }      
+        }     
 
         $joined = DB::table('master_clients')
                     ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
