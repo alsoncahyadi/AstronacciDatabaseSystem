@@ -56,8 +56,7 @@ class AClubController extends Controller
             $aclub_member->red_zone = $last_transaction->red_zone;
             $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
 
-            $aclub_info = $aclub_member->aclubInformation;
-            dd($aclub_info);
+            $aclub_info = $aclub_member->aclubInformation;            
             $aclub_member->sumber_data = $aclub_info->sumber_data;
 
             $last_kode = substr($aclub_member->kode,-1);

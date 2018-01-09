@@ -318,6 +318,23 @@
 										<button class="btn btn-default btn-xs">Filter</button>
 									</form>
 								</div>
+							@elseif ($head == 'Masa Tenggang')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+									<form>
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+										@foreach ($filter_date as $filter_dat)
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_dat }}
+												</label>
+											</div>
+										@endforeach
+										</div>
+										<button class="btn btn-default btn-xs">Filter</button>
+									</form>
+								</div>
 							@endif
 							</th>
 							<?php $idx = $idx + 1; ?>
