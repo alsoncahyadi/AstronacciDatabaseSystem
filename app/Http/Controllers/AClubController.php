@@ -111,12 +111,12 @@ class AClubController extends Controller
         $filter_cities = MasterClient::select('city')->distinct()->get();
 
         //Return view table dengan parameter
-        return view('vpc/aclubview', 
+        return view('vpc/aclubview',
                     [
-                        'route' => 'AClub', 
-                        'clients' => $aclub_info, 
-                        'heads'=>$heads, 'atts'=>$atts, 
-                        'headsMaster' => $headsMaster, 
+                        'route' => 'AClub',
+                        'clients' => $aclub_info,
+                        'heads'=>$heads, 'atts'=>$atts,
+                        'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
                         'filter_birthdates' => $filter_birthdates,
                         'filter_cities' => $filter_cities
@@ -126,7 +126,7 @@ class AClubController extends Controller
     public function clientDetail($id, Request $request) {
         // detail master dengan master_id = $id
         // dd(1);
-        
+
         $aclub_information = AclubInformation::find($id);
 
         // aclub_master adalah aclub_master nya
@@ -201,7 +201,7 @@ class AClubController extends Controller
         $aclub_trans->red_zone = $request->red_zone;
         $aclub_trans->yellow_zone = $request->yellow_zone;
 
-        
+
         $aclub_trans->save();
 
         return redirect()->back()->withErrors($err);
@@ -230,23 +230,23 @@ class AClubController extends Controller
         $ins =  [   "Sales Name" => "sales_name",
                     "Group" => "group"];
 
-        $headsreg = [ "Payment Date", 
-                    "Kode", 
-                    "Status", 
+        $headsreg = [ "Payment Date",
+                    "Kode",
+                    "Status",
                     "Nominal",
-                    "Sales Name", 
-                    "Start Date" 
+                    "Sales Name",
+                    "Start Date"
                     ];
-      
-        $insreg = [ "Payment Date", 
-                    "Kode", 
-                    "Status", 
+
+        $insreg = [ "Payment Date",
+                    "Kode",
+                    "Status",
                     "Nominal",
-                    "Sales Name", 
-                    "Start Date", 
-                    "Expired Date", 
-                    "Masa Tenggang", 
-                    "Yellow Zone", 
+                    "Sales Name",
+                    "Start Date",
+                    "Expired Date",
+                    "Masa Tenggang",
+                    "Yellow Zone",
                     "Red Zone"];
 
         $attsreg = ["payment_date",
@@ -332,7 +332,7 @@ class AClubController extends Controller
                         "Masa Tenggang",
                         "Yellow Zone",
                         "Red Zone"];
-      
+
         $attsreg = ["payment_date",
                     "kode",
                     "status",
@@ -446,7 +446,7 @@ class AClubController extends Controller
             $aclub_trans->masa_tenggang = $request->masa_tenggang;
             $aclub_trans->yellow_zone = $request->yellow_zone;
             $aclub_trans->red_zone = $request->red_zone;
-            
+
             $aclub_trans->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -558,5 +558,23 @@ class AClubController extends Controller
                     "Red Zone"=> 'red_zone'];
 
         return view('content/aclubtranseditform', ['route'=>'AClub', 'client'=>$aclub_transaction, 'ins'=>$ins]);
+    }
+
+    public function addBonus(Request $request) {
+      $ids = $request['data'];
+      $days = $request['days'];
+      if ($ids && $days) {
+        foreach ($ids as $id) {
+          echo("Updated " . $days . " days : " . $id . "\n");
+
+          // $aclub = AclubTransaction::find($id);
+          //
+          // $aclub->masa_tenggang = $aclub->masa_tenggang + $days;
+          //
+          // $aclub->update();
+        }
+      } else {
+        echo("Failed, insufficient information");
+      }
     }
 }

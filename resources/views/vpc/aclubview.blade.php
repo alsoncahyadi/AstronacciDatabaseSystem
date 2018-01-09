@@ -41,7 +41,7 @@
 		}
 		.custtable {
 			float: left !important;
-		} th { 
+		} th {
 			max-height: 40px;
 		} td {
 			overflow: hidden;
@@ -84,15 +84,15 @@
 		<div class="panel-heading vpchead">
 			<div class="row">
 				<div class="col-md-4">
-					<i class="fa fa-child fa-fw"></i> Members 
+					<i class="fa fa-child fa-fw"></i> Members
 					<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
 					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 				</div>
 				<div class="col-md-2">
 					<div class="form-group input-group" style="margin-bottom: 0px">
-						<input type="number" class="form-control" placeholder="Add Bonus Days">
+						<input type="number" class="form-control" placeholder="Add Bonus Days" id="bonus-days">
 						<span class="input-group-btn">
-							<button class="btn btn-default" type="button"> <i class="fa fa-plus"></i>
+							<button class="btn btn-default" type="button" id="add-bonus"> <i class="fa fa-plus"></i>
 							</button>
 						</span>
 					</div>
@@ -157,12 +157,12 @@
 							@endforeach
 						</tr>
 					</thead>
-					<tbody>	
+					<tbody>
 						<?php $idx = 0 ?>
-						@foreach ($clients as $client)							
+						@foreach ($clients as $client)
 							<tr>
 								<td style="text-align:center; padding-bottom: 0px">
-									<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+									<input class="selectable" id="{{ $client->master_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 									<input type="hidden" name="id{{ $idx }}" value="">
 								@foreach ($attsMaster as $attMaster)
 									<td style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
@@ -207,8 +207,8 @@
 					<tbody>
 						<?php $idx = 0; ?>
 						<!-- Menampilkan seluruh client untuk PC terkait, dari list pada variabel clients -->
-						
-						@foreach ($clients as $client)																				
+
+						@foreach ($clients as $client)
 						<tr>
 							@foreach ($atts as $att)
 							<td style="max-width: 100px; white-space: nowrap;"> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
@@ -232,4 +232,36 @@
 		console.log("fuc");
 		$(".selectable").prop( "checked", $( "#selectAll" ).is(":checked"));
 	});
+
+	$("#add-bonus").click(function() {
+		console.log("add bonus");
+		var idSelector = function() { return this.id; };
+		var checked = $(".selectable:checked").map(idSelector).get();
+		var days = $("#bonus-days").val();
+		console.log(checked);
+		console.log(days);
+
+    // Let's disable the inputs for the duration of the Ajax request.
+    // Note: we disable elements AFTER the form data has been serialized.
+    // Disabled form elements will not be serialized.
+    // $inputs.prop("disabled", true);
+
+    // Fire off the request to /form.php
+    var request = $.ajax({
+        url: "/AClub/add-bonus",
+        type: "post",
+        data: {
+					"_token": "{{ csrf_token() }}",
+					"data": checked,
+					"days": days
+				}
+    });
+
+		// Callback handler that will be called on success
+    request.done(function (response, textStatus, jqXHR){
+        // Log a message to the console
+        console.log("Hooray, it worked!");
+				alert(response);
+    });
+	})
 </script>
