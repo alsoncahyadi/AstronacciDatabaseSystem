@@ -211,7 +211,7 @@
 						@foreach ($clients as $client)
 						<tr>
 							@foreach ($atts as $att)
-							<td style="max-width: 100px; white-space: nowrap;"> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+							<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 							@endforeach
 						</tr>
 
@@ -260,8 +260,15 @@
 		// Callback handler that will be called on success
     request.done(function (response, textStatus, jqXHR){
         // Log a message to the console
-        console.log("Hooray, it worked!");
-				alert(response);
+				console.log(response);
+				$.each(response, function(k, v) {
+				    //display the key and value pair
+				    var masa_tenggang_id = "#masa_tenggang_" + k;
+						$(masa_tenggang_id).html(v);
+						var bonus_id = "#bonus_" + k;
+						var updated_bonus = parseInt($(bonus_id).html()) + parseInt(days);
+						$(bonus_id).html(updated_bonus);
+				});
     });
 	})
 </script>

@@ -74,7 +74,7 @@ class AClubController extends Controller
                 $aclub_member->aktif = 'aktif';
             }
 
-            $aclub_member->bonus = $aclub_member->masa_tenggang - $aclub_member->expired_date;
+            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
         }
 
         return $aclub_members;
@@ -626,20 +626,17 @@ class AClubController extends Controller
       $ids = $request['data'];
       $days = $request['days'];
       if ($ids && $days) {
+        $updated_values = [];
         foreach ($ids as $id) {
-          echo("Updated " . $days . " days : " . $id . "\n");
-
           $aclub = AclubTransaction::where('user_id', $id)->first();
-          // dd($aclub);
-          echo ($aclub->masa_tenggang . "\n");
 
           $aclub->masa_tenggang = $aclub->masa_tenggang->addDays($days);
 
           $aclub->update();
           $aclub = AclubTransaction::where('user_id', $id)->first();
-          // dd($aclub);
-          echo ($aclub->masa_tenggang . "\n");
+          $updated_values[$id] = $aclub->masa_tenggang->toDateTimeString();
         }
+        return response()->json($updated_values);
       } else {
         echo("Failed, insufficient information");
       }
