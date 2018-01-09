@@ -147,7 +147,7 @@ class AClubController extends Controller
         return view('vpc/aclubview',
                     [
                         'route' => 'AClub',
-                        'clients' => $aclub_info,
+                        'clients' => $aclub_members,
                         'heads'=>$heads, 'atts'=>$atts,
                         'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
@@ -600,11 +600,16 @@ class AClubController extends Controller
         foreach ($ids as $id) {
           echo("Updated " . $days . " days : " . $id . "\n");
 
-          // $aclub = AclubTransaction::find($id);
-          //
-          // $aclub->masa_tenggang = $aclub->masa_tenggang + $days;
-          //
-          // $aclub->update();
+          $aclub = AclubTransaction::where('user_id', $id)->first();
+          // dd($aclub);
+          echo ($aclub->masa_tenggang . "\n");
+
+          $aclub->masa_tenggang = $aclub->masa_tenggang->addDays($days);
+
+          $aclub->update();
+          $aclub = AclubTransaction::where('user_id', $id)->first();
+          // dd($aclub);
+          echo ($aclub->masa_tenggang . "\n");
         }
       } else {
         echo("Failed, insufficient information");
