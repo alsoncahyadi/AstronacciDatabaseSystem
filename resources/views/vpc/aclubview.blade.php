@@ -233,6 +233,57 @@
 										<button class="btn btn-default btn-xs">Filter</button>
 									</form>
 								</div>
+							@elseif ($head == 'Sales')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+									<form>
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+										@foreach ($filter_sales as $filter_sale)
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_sale->sales_name }}
+												</label>
+											</div>											
+										@endforeach
+										</div>
+										<button class="btn btn-default btn-xs">Filter</button>
+									</form>
+								</div>
+							@elseif ($head == 'Kode')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+									<form>
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+										@foreach ($filter_kode as $filter_kod)
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_kod->kode }}
+												</label>
+											</div>											
+										@endforeach
+										</div>
+										<button class="btn btn-default btn-xs">Filter</button>
+									</form>
+								</div>
+							@elseif ($head == 'Status')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+									<form>
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+										@foreach ($filter_status as $filter_stat)
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_stat->status }}
+												</label>
+											</div>											
+										@endforeach
+										</div>
+										<button class="btn btn-default btn-xs">Filter</button>
+									</form>
+								</div>
 							@endif
 							</th>
 							<?php $idx = $idx + 1; ?>

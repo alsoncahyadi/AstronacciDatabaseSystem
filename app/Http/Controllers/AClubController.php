@@ -148,14 +148,14 @@ class AClubController extends Controller
         $filter_sumber = AclubInformation::select('sumber_data')->distinct()->get();
         $filter_sales = AclubTransaction::select('sales_name')->distinct()->get();
         $filter_kode = AclubTransaction::select('kode')->distinct()->get();
-        $filter_status = AclubTransaction::select('status')->distinct()->get();            
+        $filter_status = AclubTransaction::select('status')->distinct()->get();
         $filter_date = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];        
 
         //Return view table dengan parameter
-        return view('vpc/aclubview', 
+        return view('vpc/aclubview',
                     [
                         'route' => 'AClub', 
-                        'clients' => $aclub_info, 
+                        'clients' => $aclub_members, 
                         'heads'=>$heads, 'atts'=>$atts, 
                         'headsMaster' => $headsMaster, 
                         'attsMaster' => $attsMaster,
