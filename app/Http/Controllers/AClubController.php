@@ -24,6 +24,41 @@ class AClubController extends Controller
         return $newstring;
     }
 
+    public function getData()
+    {
+        $aclub_members = AclubMember::paginate(15);
+
+        foreach ($aclub_members as $aclub_member) {
+            $master = $aclub_member->master;
+            $aclub_member->redclub_user_id = $master->redclub_user_id;
+            $aclub_member->redclub_password = $master->redclub_password;
+            $aclub_member->name = $master->name;
+            $aclub_member->telephone_number = $master->telephone_number;
+            $aclub_member->email = $master->email;
+            $aclub_member->birthdate = $master->birthdate;
+            $aclub_member->address = $master->address;
+            $aclub_member->city = $master->city;
+            $aclub_member->province = $master->province;
+            $aclub_member->gender = $master->gender;
+            $aclub_member->line_id = $master->line_id;
+            $aclub_member->bbm = $master->bbm;
+            $aclub_member->whatsapp = $master->whatsapp;
+            $aclub_member->facebook = $master->facebook;
+
+            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
+            $aclub_member->sales_name = $last_transaction->sales_name;
+            $aclub_member->payment_date = $last_transaction->payment_date;
+            $aclub_member->kode = $last_transaction->kode;
+            $aclub_member->status = $last_transaction->status;
+            $aclub_member->start_date = $last_transaction->start_date;
+            $aclub_member->expired_date = $last_transaction->expired_date;
+            $aclub_member->yellow_zone = $last_transaction->yellow_zone;
+            $aclub_member->red_zone = $last_transaction->red_zone;
+        }
+
+        return $aclub_members;
+    }
+
     public function getTable(Request $request) {
         //Select seluruh tabel
         //$aclub_info = AclubInformation::paginate(15);
