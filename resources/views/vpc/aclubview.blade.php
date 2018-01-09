@@ -139,15 +139,15 @@
 									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 										<form>
 											<label>Filter</label>
-											@foreach($filter_birthdates as $filter_birthdate)
 											<div class="panel panel-default filter-selection">
+											@foreach($filter_birthdates as $filter_birthdate)
 												<div class="checkbox">
 													<label>
 														<input type="checkbox" value=""> {{ $filter_birthdate }}
 													</label>
 												</div>
-											</div>
 											@endforeach
+											</div>
 											<button class="btn btn-default btn-xs">Filter</button>
 										</form>
 									</div>
@@ -181,26 +181,61 @@
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							<?php $idx = 6; ?>
 							@foreach ($heads as $head)
-							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div> <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
 							@if ($head == 'Kota')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 									<form>
 										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
 										@foreach ($filter_cities as $filter_city)
-											<div class="panel panel-default filter-selection">
-												<div class="checkbox">
-													<label>
-														<input type="checkbox" value="">{{ $filter_city->city }}
-													</label>
-												</div>
-											</div>
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_city->city }}
+												</label>
+											</div>											
 										@endforeach
+										</div>
+										<button class="btn btn-default btn-xs">Filter</button>
+									</form>
+								</div>							
+							@elseif ($head == 'Gender')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+									<form>
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+										@foreach ($filter_gender as $filter_gend)
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_gend->gender }}
+												</label>
+											</div>											
+										@endforeach
+										</div>
 										<button class="btn btn-default btn-xs">Filter</button>
 									</form>
 								</div>
-								@endif
-								</th>
-								<?php $idx = $idx + 1; ?>
+							@elseif ($head == 'Sumber')
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+									<form>
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+										@foreach ($filter_sumber as $filter_sumb)
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" value="">{{ $filter_sumb->sumber_data }}
+												</label>
+											</div>											
+										@endforeach
+										</div>
+										<button class="btn btn-default btn-xs">Filter</button>
+									</form>
+								</div>
+							@endif
+							</th>
+							<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tr>
 					</thead>

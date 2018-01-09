@@ -106,9 +106,18 @@ class AClubController extends Controller
         foreach ($filter_birthdates as $key => $filter_birthdate) {
             // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
             $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
+        }        
 
-        $filter_cities = MasterClient::select('city')->distinct()->get();
+        $joined = DB::table('master_clients')
+                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+
+        $filter_cities = $joined->select('city')->distinct()->get();
+        $filter_gender = $joined->select('gender')->distinct()->get();
+        $filter_sumber = AclubInformation::select('sumber_data')->distinct()->get();
+        $filter_sales = AclubTransaction::select('sales_name')->distinct()->get();
+        $filter_kode = AclubTransaction::select('kode')->distinct()->get();
+        $filter_status = AclubTransaction::select('status')->distinct()->get();            
+        $filter_date = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];        
 
         //Return view table dengan parameter
         return view('vpc/aclubview', 
@@ -119,7 +128,13 @@ class AClubController extends Controller
                         'headsMaster' => $headsMaster, 
                         'attsMaster' => $attsMaster,
                         'filter_birthdates' => $filter_birthdates,
-                        'filter_cities' => $filter_cities
+                        'filter_cities' => $filter_cities,
+                        'filter_gender' => $filter_gender,
+                        'filter_sumber' => $filter_sumber,
+                        'filter_sales' => $filter_sales,
+                        'filter_kode' => $filter_kode,
+                        'filter_status' => $filter_status,
+                        'filter_date' => $filter_date
                     ]);
     }
 
