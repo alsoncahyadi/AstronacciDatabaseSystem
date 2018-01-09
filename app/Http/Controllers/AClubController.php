@@ -45,7 +45,7 @@ class AClubController extends Controller
             $aclub_member->whatsapp = $master->whatsapp;
             $aclub_member->facebook = $master->facebook;
 
-            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();            
+            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
             $aclub_member->sales_name = $last_transaction->sales_name;
             $aclub_member->payment_date = $last_transaction->payment_date;
             $aclub_member->kode = $last_transaction->kode;
@@ -53,8 +53,30 @@ class AClubController extends Controller
             $aclub_member->start_date = $last_transaction->start_date;
             $aclub_member->expired_date = $last_transaction->expired_date;
             $aclub_member->yellow_zone = $last_transaction->yellow_zone;
-            $aclub_member->red_zone = $last_transaction->red_zone;         
-        }        
+            $aclub_member->red_zone = $last_transaction->red_zone;
+            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
+
+            $aclub_info = $aclub_member->aclubInformation;
+            $aclub_member->sumber_data = $aclub_info->sumber_data;
+
+            $last_kode = substr($aclub_member->kode,-1);
+            if ($last_kode == 'S') {
+                $aclub_member->bulan_member = 1;
+            } else if($last_kode == 'G') {
+                $aclub_member->bulan_member = 6;
+            } else {
+                $aclub_member->bulan_member = 12;
+            }
+
+            if ($aclub_member->masa_tenggang < Carbon::now()) {
+                $aclub_member->aktif = 'tidak aktif';
+            } else {
+                $aclub_member->aktif = 'aktif';
+            }
+
+            $aclub_member->bonus = $aclub_member->masa_tenggang - $aclub_member->expired_date;
+        }
+
         return $aclub_members;
     }
 
