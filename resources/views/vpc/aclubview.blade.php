@@ -134,8 +134,9 @@
 							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							@foreach ($headsMaster as $headMaster)
-							<th> {{ $headMaster }} <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+							<th> {{ $headMaster }} 
 								@if ($headMaster == 'Tanggal Lahir')
+								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 										<form>
 											<label>Filter</label>
