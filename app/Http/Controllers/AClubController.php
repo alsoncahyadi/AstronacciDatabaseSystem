@@ -24,37 +24,75 @@ class AClubController extends Controller
         return $newstring;
     }
 
-    public function getTable(Request $request) {
-        //Select seluruh tabel
-        //$aclub_info = AclubInformation::paginate(15);
+    public function getData()
+    {
+        $aclub_members = AclubMember::paginate(15);
 
-        $keyword = $request['q'];
+        foreach ($aclub_members as $aclub_member) {
+            $master = $aclub_member->master;
+            $aclub_member->redclub_user_id = $master->redclub_user_id;
+            $aclub_member->redclub_password = $master->redclub_password;
+            $aclub_member->name = $master->name;
+            $aclub_member->telephone_number = $master->telephone_number;
+            $aclub_member->email = $master->email;
+            $aclub_member->birthdate = $master->birthdate;
+            $aclub_member->address = $master->address;
+            $aclub_member->city = $master->city;
+            $aclub_member->province = $master->province;
+            $aclub_member->gender = $master->gender;
+            $aclub_member->line_id = $master->line_id;
+            $aclub_member->bbm = $master->bbm;
+            $aclub_member->whatsapp = $master->whatsapp;
+            $aclub_member->facebook = $master->facebook;
 
-        $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-                ->orWhere('keterangan', 'like', "%{$keyword}%")
-                ->paginate(15);
+            //data from aclub transaction
+            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
+            $aclub_member->sales_name = $last_transaction->sales_name;
+            $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
+            $aclub_member->kode = $last_transaction->kode;
+            $aclub_member->status = $last_transaction->status;
+            $aclub_member->start_date = $last_transaction->start_date->toDateString();
+            $aclub_member->expired_date = $last_transaction->expired_date;
+            $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
+            $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
+            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
 
-        // $this->getAClubMember(100003);
+            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
 
-        // $this->getAClubTransaction(124);
+            $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
+            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
 
-        foreach ($aclub_info as $aclub_master) {
-            $master = $aclub_master->master;
-            $aclub_master->redclub_user_id = $master->redclub_user_id;
-            $aclub_master->redclub_password = $master->redclub_password;
-            $aclub_master->name = $master->name;
-            $aclub_master->telephone_number = $master->telephone_number;
-            $aclub_master->email = $master->email;
-            $aclub_master->birthdate = $master->birthdate;
-            $aclub_master->address = $master->address;
-            $aclub_master->city = $master->city;
-            $aclub_master->province = $master->province;
-            $aclub_master->gender = $master->gender;
-            $aclub_master->line_id = $master->line_id;
-            $aclub_master->bbm = $master->bbm;
-            $aclub_master->whatsapp = $master->whatsapp;
-            $aclub_master->facebook = $master->facebook;
+            $last_kode = substr($aclub_member->kode,-1);
+            if ($last_kode == 'S') {
+                $aclub_member->bulan_member = 1;
+            } else if($last_kode == 'G') {
+                $aclub_member->bulan_member = 6;
+            } else {
+                $aclub_member->bulan_member = 12;
+            }
+
+            if ($aclub_member->masa_tenggang < Carbon::now()) {
+                $aclub_member->aktif = 'tidak aktif';
+            } else {
+                $aclub_member->aktif = 'aktif';
+            }
+
+            //data from aclub information
+            $aclub_info = $aclub_member->aclubInformation;
+            $aclub_member->sumber_data = $aclub_info->sumber_data;
         }
+
+        return $aclub_members;
+    }
+
+    public function getTable(Request $request) {
+        // $keyword = $request['q'];
+
+        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
+        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
+        //         ->paginate(15);
+
+        $aclub_members = $this->getData();
 
         $headsMaster = [
                     "User ID",
@@ -74,25 +112,47 @@ class AClubController extends Controller
 
         //Judul kolom yang ditampilkan pada tabel
         $heads = [
-                "Alamat",
-                "Kota",
-                "Provinsi",
-                "Gender",
-                "Line ID",
-                "WhatsApp",
-                "Sumber"
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "WhatsApp" => "whatsapp",
+                "Sumber" => "sumber_data",
+                "Sales" => "sales_name",
+                "Payment Date" => "payment_date",
+                "Kode" => "kode",
+                "Status" => "status",
+                "Aktif" => "aktif",
+                "Bulan Member" => "bulan_member",
+                "Bonus Member" => "bonus",
+                "Start Date" => "start_date",
+                "Expire Date" => "expired_date",
+                "Masa Tenggang" => "masa_tenggang",
+                "Yellow Zone" => "yellow_zone",
+                "Red Zone" => "red_zone"
                 ];
-
+        
 
         //Nama attribute pada sql
         $atts = [
                 "address",
                 "city",
-                "province",
                 "gender",
                 "line_id",
                 "whatsapp",
-                "sumber_data"
+                "sumber_data",
+                "sales_name",
+                "payment_date",
+                "kode",
+                "status",
+                "aktif",
+                "bulan_member",
+                "bonus",
+                "start_date",
+                "expired_date",
+                "masa_tenggang",
+                "yellow_zone",
+                "red_zone"
                 ];
 
         //Filter
@@ -108,18 +168,59 @@ class AClubController extends Controller
             $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
         }
 
-        $filter_cities = MasterClient::select('city')->distinct()->get();
-        $this->getFilteredAndSortedTableList('test');
+        // $this->getFilteredAndSortedTable('test');
+
+        $joined = DB::table('master_clients')
+                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+
+        $filter_cities = $joined->select('city')->distinct()->get();
+        $filter_gender = $joined->select('gender')->distinct()->get();
+        $filter_sumber = DB::table('aclub_informations')->select('sumber_data')->distinct()->get();
+        $filter_sales = DB::table('aclub_transactions')->select('sales_name')->distinct()->get();
+        $filter_kode = DB::table('aclub_transactions')->select('kode')->distinct()->get();
+        $filter_status = DB::table('aclub_transactions')->select('status')->distinct()->get();
+        $filter_date = ['0'=>['0'=>'January'], 
+        '1'=>['0'=>'February'], 
+        '2'=>['0'=>'March'], 
+        '3'=>['0'=>'April'], 
+        '4'=>['0'=>'May'], 
+        '5'=>['0'=>'June'], 
+        '6'=>['0'=>'July'],
+        '7'=>['0'=>'August'],
+        '8'=>['0'=>'September'],
+        '9'=>['0'=>'October'],
+        '10'=>['0'=>'November'],
+        '11'=>['0'=>'December']];
+
+        $filterable = [
+            "Kota" => $filter_cities,
+            "Gender" => $filter_gender,
+            "Sumber" => $filter_sumber,
+            "Sales" => $filter_sales,
+            "Kode" => $filter_kode,
+            "Status" => $filter_status,            
+            "Start Date" => $filter_date,
+            "Payment Date" => $filter_date,            
+            "Masa Tenggang" => $filter_date
+            ];
+        
         //Return view table dengan parameter
-        return view('vpc/aclubview', 
+        return view('vpc/aclubview',
                     [
-                        'route' => 'AClub', 
-                        'clients' => $aclub_info, 
-                        'heads'=>$heads, 'atts'=>$atts, 
-                        'headsMaster' => $headsMaster, 
+                        'route' => 'AClub',
+                        'clients' => $aclub_members,
+                        'heads'=>$heads, 'atts'=>$atts,
+                        'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
                         'filter_birthdates' => $filter_birthdates,
-                        'filter_cities' => $filter_cities
+                        'filter_cities' => $filter_cities,
+                        'filter_gender' => $filter_gender,
+                        'filter_sumber' => $filter_sumber,
+                        'filter_sales' => $filter_sales,
+                        'filter_kode' => $filter_kode,
+                        'filter_status' => $filter_status,
+                        'filter_date' => $filter_date,
+                        'filterable' => $filterable
                     ]);
     }
 
@@ -150,15 +251,15 @@ class AClubController extends Controller
     }
 
     // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
-    public function getFilteredAndSortedTableList($request) {
+    public function getFilteredAndSortedTable(Request $request) {
         $example_filter = array('gender'=>['g'], 'name'=>['MAGIC_SEED']);
 
         $table_name = "master_clients inner join aclub_members on master_clients.master_id = aclub_members.master_id";
         $json_filter = json_encode($example_filter);
-        dd($json_filter);
+        // dd($json_filter);
         $query = $this->getFilteredTableQuery($table_name, $json_filter);
-        $list = DB::select($query);
-        dd($list);
+        $list = collect(DB::select($query));
+        print_r($list);
     }
  
     // RETURN : STRING QUERY FOR FILTER IN SQL 
@@ -203,7 +304,7 @@ class AClubController extends Controller
     public function clientDetail($id, Request $request) {
         // detail master dengan master_id = $id
         // dd(1);
-        
+
         $aclub_information = AclubInformation::find($id);
 
         // aclub_master adalah aclub_master nya
@@ -277,7 +378,7 @@ class AClubController extends Controller
         $aclub_trans->masa_tenggang = $request->masa_tenggang;
         $aclub_trans->red_zone = $request->red_zone;
         $aclub_trans->yellow_zone = $request->yellow_zone;
-        
+
         $aclub_trans->save();
 
         return redirect()->back()->withErrors($err);
@@ -306,23 +407,23 @@ class AClubController extends Controller
         $ins =  [   "Sales Name" => "sales_name",
                     "Group" => "group"];
 
-        $headsreg = [ "Payment Date", 
-                    "Kode", 
-                    "Status", 
+        $headsreg = [ "Payment Date",
+                    "Kode",
+                    "Status",
                     "Nominal",
-                    "Sales Name", 
-                    "Start Date" 
+                    "Sales Name",
+                    "Start Date"
                     ];
-      
-        $insreg = [ "Payment Date", 
-                    "Kode", 
-                    "Status", 
+
+        $insreg = [ "Payment Date",
+                    "Kode",
+                    "Status",
                     "Nominal",
-                    "Sales Name", 
-                    "Start Date", 
-                    "Expired Date", 
-                    "Masa Tenggang", 
-                    "Yellow Zone", 
+                    "Sales Name",
+                    "Start Date",
+                    "Expired Date",
+                    "Masa Tenggang",
+                    "Yellow Zone",
                     "Red Zone"];
 
         $attsreg = ["payment_date",
@@ -408,7 +509,7 @@ class AClubController extends Controller
                         "Masa Tenggang",
                         "Yellow Zone",
                         "Red Zone"];
-      
+
         $attsreg = ["payment_date",
                     "kode",
                     "status",
@@ -500,7 +601,7 @@ class AClubController extends Controller
                 'kode' => '',
                 'status' => '',
                 'nominal' => 'integer',
-                'sales_name' => '',
+                'sales_aclub' => '',
                 'start_date' => 'date',
                 'expired_date' => 'date',
                 'masa_tenggang' => 'date',
@@ -516,13 +617,13 @@ class AClubController extends Controller
             $aclub_trans->kode = $request->kode;
             $aclub_trans->status = $request->status;
             $aclub_trans->nominal = $request->nominal;
-            $aclub_trans->sales_name = $request->sales_name;
+            $aclub_trans->sales_name = $request->sales_aclub;
             $aclub_trans->start_date = $request->start_date;
             $aclub_trans->expired_date = $request->expired_date;
             $aclub_trans->masa_tenggang = $request->masa_tenggang;
             $aclub_trans->yellow_zone = $request->yellow_zone;
             $aclub_trans->red_zone = $request->red_zone;
-            
+
             $aclub_trans->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -634,5 +735,25 @@ class AClubController extends Controller
                     "Red Zone"=> 'red_zone'];
 
         return view('content/aclubtranseditform', ['route'=>'AClub', 'client'=>$aclub_transaction, 'ins'=>$ins]);
+    }
+
+    public function addBonus(Request $request) {
+      $ids = $request['data'];
+      $days = $request['days'];
+      if ($ids && $days) {
+        $updated_values = [];
+        foreach ($ids as $id) {
+          $aclub = AclubTransaction::where('user_id', $id)->first();
+
+          $aclub->masa_tenggang = $aclub->masa_tenggang->addDays($days);
+
+          $aclub->update();
+          $aclub = AclubTransaction::where('user_id', $id)->first();
+          $updated_values[$id] = $aclub->masa_tenggang->toDateTimeString();
+        }
+        return response()->json($updated_values);
+      } else {
+        echo("Failed, insufficient information");
+      }
     }
 }
