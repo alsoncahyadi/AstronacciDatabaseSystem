@@ -109,7 +109,7 @@ class AClubController extends Controller
         }
 
         $filter_cities = MasterClient::select('city')->distinct()->get();
-        $this->getFilteredAndSortedTableList('test');
+        $this->getFilteredAndSortedTable('test');
         //Return view table dengan parameter
         return view('vpc/aclubview', 
                     [
@@ -150,23 +150,33 @@ class AClubController extends Controller
     }
 
     // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
-    public function getFilteredAndSortedTableList($request) {
-        $example_filter = array('gender'=>['g'], 'name'=>['MAGIC_SEED']);
-
-        $table_name = "master_clients inner join aclub_members on master_clients.master_id = aclub_members.master_id";
+    public function getFilteredAndSortedTable($request) {
+        $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
+        $example_sort = array('email'=>false, 'name'=>true);
         $json_filter = json_encode($example_filter);
-        dd($json_filter);
-        $query = $this->getFilteredTableQuery($table_name, $json_filter);
-        $list = DB::select($query);
-        dd($list);
+        $json_sort = json_encode($example_sort);
+
+        // add 'select' of query
+        $table_name = "master_clients inner join aclub_members on master_clients.master_id = aclub_members.master_id";
+        $query = 'SELECT * FROM '.$table_name;
+
+        // add subquery of filter
+        $query = $this->addFilterSubquery($query, $json_filter);
+        // add subquery of sort
+        $query = $this->addSortSubquery($query, $json_sort);
+        // add semicolon
+        $query = $query.";";
+
+        // retrieve result
+        $list = collect(DB::select($query));
+
     }
  
     // RETURN : STRING QUERY FOR FILTER IN SQL 
-    public function getFilteredTableQuery($table_name, $json_filter) {
+    // NOTE : WITHOUT SEMICOLON
+    public function addFilterSubquery($query, $json_filter) {
         $filter = json_decode($json_filter);
 
-        // add 'select' of query
-        $query = 'SELECT * FROM '.$table_name;
         // add 'where' of query
         $query = $query.' WHERE ';        
         $is_first = true;
@@ -178,7 +188,14 @@ class AClubController extends Controller
             $query = $query.'(';
 
             if ($key_filter == 'birthdate') {
-                // made later
+                $idx_value = 0;
+                foreach ($values_filter as $value_filter) {
+                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
+                    $idx_value += 1;
+                    if ($idx_value != count($values_filter)) {
+                        $query = $query." or ";
+                    }   
+                 }
             } else {
                 $idx_value = 0;
                 foreach ($values_filter as $value_filter) {
@@ -192,12 +209,31 @@ class AClubController extends Controller
             $query = $query.')';
             $is_first = false;
         }   
-        // add semicolon
-        $query = $query.";";
 
         // get result
         return $query;
     }
+
+    public function addSortSubquery($query, $json_sort) {
+        $sort = json_decode($json_sort, true);
+        $subquery = " ORDER BY ";
+        $idx_sort = 0;
+        foreach ($sort as $key_sort => $value_sort) {
+            if ($value_sort == true) {
+                $subquery = $subquery.$key_sort." ASC";            
+            } else {
+                $subquery = $subquery.$key_sort." DESC";                            
+            }
+            $idx_sort += 1;
+            if ($idx_sort != count($sort)) {
+                $subquery = $subquery.", ";
+            }
+        }
+        $query = $query.$subquery;
+        return $query;
+    }
+
+
 
 
     public function clientDetail($id, Request $request) {
