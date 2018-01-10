@@ -45,19 +45,22 @@ class AClubController extends Controller
             $aclub_member->whatsapp = $master->whatsapp;
             $aclub_member->facebook = $master->facebook;
 
+            //data from aclub transaction
             $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
             $aclub_member->sales_name = $last_transaction->sales_name;
-            $aclub_member->payment_date = $last_transaction->payment_date;
+            $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
             $aclub_member->kode = $last_transaction->kode;
             $aclub_member->status = $last_transaction->status;
-            $aclub_member->start_date = $last_transaction->start_date;
+            $aclub_member->start_date = $last_transaction->start_date->toDateString();
             $aclub_member->expired_date = $last_transaction->expired_date;
-            $aclub_member->yellow_zone = $last_transaction->yellow_zone;
-            $aclub_member->red_zone = $last_transaction->red_zone;
+            $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
+            $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
             $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
 
-            $aclub_info = $aclub_member->aclubInformation;
-            $aclub_member->sumber_data = $aclub_info->sumber_data;
+            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
+
+            $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
+            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
 
             $last_kode = substr($aclub_member->kode,-1);
             if ($last_kode == 'S') {
@@ -74,25 +77,20 @@ class AClubController extends Controller
                 $aclub_member->aktif = 'aktif';
             }
 
-            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
+            //data from aclub information
+            $aclub_info = $aclub_member->aclubInformation;
+            $aclub_member->sumber_data = $aclub_info->sumber_data;
         }
 
         return $aclub_members;
     }
 
     public function getTable(Request $request) {
-        //Select seluruh tabel
-        //$aclub_info = AclubInformation::paginate(15);
-
         // $keyword = $request['q'];
 
         // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
         //         ->orWhere('keterangan', 'like', "%{$keyword}%")
         //         ->paginate(15);
-
-        // $this->getAClubMember(100003);
-
-        // $this->getAClubTransaction(124);
 
         $aclub_members = $this->getData();
 
@@ -486,7 +484,7 @@ class AClubController extends Controller
                 'kode' => '',
                 'status' => '',
                 'nominal' => 'integer',
-                'sales_name' => '',
+                'sales_aclub' => '',
                 'start_date' => 'date',
                 'expired_date' => 'date',
                 'masa_tenggang' => 'date',
@@ -502,7 +500,7 @@ class AClubController extends Controller
             $aclub_trans->kode = $request->kode;
             $aclub_trans->status = $request->status;
             $aclub_trans->nominal = $request->nominal;
-            $aclub_trans->sales_name = $request->sales_name;
+            $aclub_trans->sales_name = $request->sales_aclub;
             $aclub_trans->start_date = $request->start_date;
             $aclub_trans->expired_date = $request->expired_date;
             $aclub_trans->masa_tenggang = $request->masa_tenggang;

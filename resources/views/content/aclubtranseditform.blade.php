@@ -76,7 +76,7 @@
                                             @if (($key == "Keterangan") || ($key == "Sumber Data") || ($key == "User ID") || ($key == "Sales"))
                                                 <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}" value="{{$client->$value}}">
                                             @elseif ($key == "Payment Date")
-                                                <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                                <input class="form-control no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value->toDateString()}}">
                                             @elseif ($key == "Kode")
                                                 <select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $key))}}">
                                                     @if ($client->group == 'F' | $client->group == 'Future')
@@ -110,15 +110,15 @@
                                                     <option>Tidak Aktif</option>
                                                 </select>
                                             @elseif ($key == "Start Date")
-                                                <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                                <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value->toDateString()}}">
                                             @elseif ($key == "Expired Date")
-                                                <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}"readonly>
+                                                <input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value->toDateString()}}"readonly>
                                             @elseif ($key == "Masa Tenggang")
-                                                <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
+                                                <input class="form-control no-spin" type="date" id="masatenggang" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value->toDateString()}}">
                                             @elseif ($key == "Yellow Zone")
-                                                <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value}}">
+                                                <input class="form-control no-spin" type="date" id="yellowzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value->toDateString()}}">
                                             @elseif ($key == "Red Zone")
-                                                <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value}}">
+                                                <input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $key))}}" readonly value="{{$client->$value->toDateString()}}">
                                             @else
                                                 <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value}}">
                                             @endif
