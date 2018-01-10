@@ -198,9 +198,9 @@ class AClubController extends Controller
             "Sumber" => $filter_sumber,
             "Sales" => $filter_sales,
             "Kode" => $filter_kode,
-            "Status" => $filter_status,            
+            "Status" => $filter_status,
             "Start Date" => $filter_date,
-            "Payment Date" => $filter_date,            
+            "Payment Date" => $filter_date,
             "Masa Tenggang" => $filter_date
             ];
 

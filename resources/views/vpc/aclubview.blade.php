@@ -144,7 +144,7 @@
 											@foreach($filter_birthdates as $filter_birthdate)
 												<div class="checkbox">
 													<label>
-														<input class="check-filter" type="checkbox" value=""> {{ $filter_birthdate }}
+														<input type="checkbox" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
 													</label>
 												</div>
 											@endforeach
@@ -192,9 +192,15 @@
 										@foreach ($filterable[$head] as $filter)
 											<div class="checkbox">
 												<label>
-													@foreach ($filter as $f)									
-													<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
+													@foreach ($filter as $f)						
+													<?php $m = date('m', strtotime($f))?>
+													@if (($m == 01)&&($f != 'January'))
+													<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
 													{{ $f }}
+													@else
+													<input type="checkbox" value="{{date('m', strtotime($f))}}">
+													{{ $f }}
+													@endif
 													@endforeach
 												</label>
 											</div>											
