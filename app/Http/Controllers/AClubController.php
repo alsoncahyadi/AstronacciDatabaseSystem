@@ -131,7 +131,7 @@ class AClubController extends Controller
                 "Yellow Zone",
                 "Red Zone"
                 ];
-
+        
 
         //Nama attribute pada sql
         $atts = [
@@ -168,7 +168,40 @@ class AClubController extends Controller
             $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
         }
 
-        $filter_cities = MasterClient::select('city')->distinct()->get();
+        $joined = DB::table('master_clients')
+                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+
+        $filter_cities = $joined->select('city')->distinct()->get();
+        $filter_gender = $joined->select('gender')->distinct()->get();
+        $filter_sumber = DB::table('aclub_informations')->select('sumber_data')->distinct()->get();
+        $filter_sales = DB::table('aclub_transactions')->select('sales_name')->distinct()->get();
+        $filter_kode = DB::table('aclub_transactions')->select('kode')->distinct()->get();
+        $filter_status = DB::table('aclub_transactions')->select('status')->distinct()->get();
+        $filter_date = ['0'=>['0'=>'January'], 
+        '1'=>['0'=>'February'], 
+        '2'=>['0'=>'March'], 
+        '3'=>['0'=>'April'], 
+        '4'=>['0'=>'May'], 
+        '5'=>['0'=>'June'], 
+        '6'=>['0'=>'July'],
+        '7'=>['0'=>'August'],
+        '8'=>['0'=>'September'],
+        '9'=>['0'=>'October'],
+        '10'=>['0'=>'November'],
+        '11'=>['0'=>'December']];
+
+        $filterable = [
+            "Kota" => $filter_cities,
+            "Gender" => $filter_gender,
+            "Sumber" => $filter_sumber,
+            "Sales" => $filter_sales,
+            "Kode" => $filter_kode,
+            "Status" => $filter_status,            
+            "Start Date" => $filter_date,
+            "Payment Date" => $filter_date,            
+            "Masa Tenggang" => $filter_date
+            ];
+        
 
         //Return view table dengan parameter
         return view('vpc/aclubview',
@@ -179,7 +212,14 @@ class AClubController extends Controller
                         'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
                         'filter_birthdates' => $filter_birthdates,
-                        'filter_cities' => $filter_cities
+                        'filter_cities' => $filter_cities,
+                        'filter_gender' => $filter_gender,
+                        'filter_sumber' => $filter_sumber,
+                        'filter_sales' => $filter_sales,
+                        'filter_kode' => $filter_kode,
+                        'filter_status' => $filter_status,
+                        'filter_date' => $filter_date,
+                        'filterable' => $filterable
                     ]);
     }
 
