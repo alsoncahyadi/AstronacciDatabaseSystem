@@ -41,11 +41,12 @@
 		}
 		.custtable {
 			float: left !important;
+			position: relative;
 		} th { 
 			max-height: 40px;
 		} td {
 			overflow: hidden;
-			max-width: 150px;
+			max-width: 100px;
 		}
 		.filter {
 			height: 210px;
@@ -54,6 +55,7 @@
 			overflow-x: hidden;
 			overflow-y: hidden;
 			position: absolute;
+			z-index: 1;
 		} .checkbox {
 			margin-top: 3px;
 			margin-bottom: 3px;
@@ -139,15 +141,15 @@
 									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 										<form>
 											<label>Filter</label>
-											@foreach($filter_birthdates as $filter_birthdate)
 											<div class="panel panel-default filter-selection">
+											@foreach($filter_birthdates as $filter_birthdate)
 												<div class="checkbox">
 													<label>
 														<input type="checkbox" value=""> {{ $filter_birthdate }}
 													</label>
 												</div>
-											</div>
 											@endforeach
+											</div>
 											<button class="btn btn-default btn-xs">Filter</button>
 										</form>
 									</div>
@@ -184,18 +186,18 @@
 							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div> <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 							@if ($head == 'Kota')
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-									<form>
+									<form id="formCities" action="#" method="post">
 										<label>Filter</label>
-										@foreach ($filter_cities as $filter_city)
-											<div class="panel panel-default filter-selection">
-												<div class="checkbox">
-													<label>
-														<input type="checkbox" value="">{{ $filter_city->city }}
-													</label>
-												</div>
+										<div class="panel panel-default filter-selection">
+											@foreach ($filter_cities as $filter_city)
+											<div class="checkbox">
+												<label>
+													<input class="filterCity" type="checkbox" value="{{ $filter_city->city }}">{{ $filter_city->city }}
+												</label>
 											</div>
-										@endforeach
-										<button class="btn btn-default btn-xs">Filter</button>
+											@endforeach
+										</div>
+										<button type="submit" class="btn btn-default btn-xs">Filter</button>
 									</form>
 								</div>
 								@endif
@@ -225,11 +227,25 @@
 		</div>
 	</div>
 </div>
+
+
+
+
 </body>
 </html>
 <script type="text/javascript">
 	$( "#selectAll" ).change(function() {
 		console.log("fuc");
 		$(".selectable").prop( "checked", $( "#selectAll" ).is(":checked"));
+	});
+	var arrFilter = [];
+	var jsonFilter = [];
+	$( ".filterCity" ).change(function() {
+		arrFilter = [];
+		$.each($(".filterCity:checked"), function(){            
+                arrFilter.push($(this).val());
+            });
+		jsonFilter = JSON.parse(JSON.stringify(arrFilter));
+		console.log(jsonFilter);
 	});
 </script>
