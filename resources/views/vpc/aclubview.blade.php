@@ -41,8 +41,12 @@
 		}
 		.custtable {
 			float: left !important;
+<<<<<<< HEAD
 			position: relative;
 		} th { 
+=======
+		} th {
+>>>>>>> 795c316e6d35973bc262a4fa975bc25393265d96
 			max-height: 40px;
 		} td {
 			overflow: hidden;
@@ -86,15 +90,15 @@
 		<div class="panel-heading vpchead">
 			<div class="row">
 				<div class="col-md-4">
-					<i class="fa fa-child fa-fw"></i> Members 
+					<i class="fa fa-child fa-fw"></i> Members
 					<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
 					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 				</div>
 				<div class="col-md-2">
 					<div class="form-group input-group" style="margin-bottom: 0px">
-						<input type="number" class="form-control" placeholder="Add Bonus Days">
+						<input type="number" class="form-control" placeholder="Add Bonus Days" id="bonus-days">
 						<span class="input-group-btn">
-							<button class="btn btn-default" type="button"> <i class="fa fa-plus"></i>
+							<button class="btn btn-default" type="button" id="add-bonus"> <i class="fa fa-plus"></i>
 							</button>
 						</span>
 					</div>
@@ -136,8 +140,9 @@
 							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							@foreach ($headsMaster as $headMaster)
-							<th> {{ $headMaster }} <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+							<th> {{ $headMaster }} 
 								@if ($headMaster == 'Tanggal Lahir')
+								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 										<form>
 											<label>Filter</label>
@@ -159,12 +164,12 @@
 							@endforeach
 						</tr>
 					</thead>
-					<tbody>	
+					<tbody>
 						<?php $idx = 0 ?>
-						@foreach ($clients as $client)							
+						@foreach ($clients as $client)
 							<tr>
 								<td style="text-align:center; padding-bottom: 0px">
-									<input class="selectable" id="" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+									<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 									<input type="hidden" name="id{{ $idx }}" value="">
 								@foreach ($attsMaster as $attMaster)
 									<td style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
@@ -183,37 +188,40 @@
 							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 							<?php $idx = 6; ?>
 							@foreach ($heads as $head)
-							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div> <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-							@if ($head == 'Kota')
+							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
+							@if (isset($filterable[$head]))
+							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 									<form id="formCities" action="#" method="post">
 										<label>Filter</label>
 										<div class="panel panel-default filter-selection">
-											@foreach ($filter_cities as $filter_city)
+										@foreach ($filterable[$head] as $filter)
 											<div class="checkbox">
-												<label>
-													<input class="filterCity" type="checkbox" value="{{ $filter_city->city }}">{{ $filter_city->city }}
+												<label>												
+													<input type="checkbox" value="">@foreach ($filter as $f)
+													{{ $f }}
+													@endforeach
 												</label>
-											</div>
-											@endforeach
+											</div>											
+										@endforeach
 										</div>
-										<button type="submit" class="btn btn-default btn-xs">Filter</button>
+										<button class="btn btn-default btn-xs">Filter</button>
 									</form>
-								</div>
-								@endif
-								</th>
-								<?php $idx = $idx + 1; ?>
+								</div>							
+							@endif
+							</th>
+							<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tr>
 					</thead>
 					<tbody>
 						<?php $idx = 0; ?>
 						<!-- Menampilkan seluruh client untuk PC terkait, dari list pada variabel clients -->
-						
-						@foreach ($clients as $client)																				
+
+						@foreach ($clients as $client)
 						<tr>
 							@foreach ($atts as $att)
-							<td style="max-width: 100px; white-space: nowrap;"> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+							<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 							@endforeach
 						</tr>
 
@@ -248,4 +256,43 @@
 		jsonFilter = JSON.parse(JSON.stringify(arrFilter));
 		console.log(jsonFilter);
 	});
+
+	$("#add-bonus").click(function() {
+		console.log("add bonus");
+		var idSelector = function() { return this.id; };
+		var checked = $(".selectable:checked").map(idSelector).get();
+		var days = $("#bonus-days").val();
+		console.log(checked);
+		console.log(days);
+
+    // Let's disable the inputs for the duration of the Ajax request.
+    // Note: we disable elements AFTER the form data has been serialized.
+    // Disabled form elements will not be serialized.
+    // $inputs.prop("disabled", true);
+
+    // Fire off the request to /form.php
+    var request = $.ajax({
+        url: "/AClub/add-bonus",
+        type: "post",
+        data: {
+					"_token": "{{ csrf_token() }}",
+					"data": checked,
+					"days": days
+				}
+    });
+
+		// Callback handler that will be called on success
+    request.done(function (response, textStatus, jqXHR){
+        // Log a message to the console
+				console.log(response);
+				$.each(response, function(k, v) {
+				    //display the key and value pair
+				    var masa_tenggang_id = "#masa_tenggang_" + k;
+						$(masa_tenggang_id).html(v);
+						var bonus_id = "#bonus_" + k;
+						var updated_bonus = parseInt($(bonus_id).html()) + parseInt(days);
+						$(bonus_id).html(updated_bonus);
+				});
+    });
+	})
 </script>
