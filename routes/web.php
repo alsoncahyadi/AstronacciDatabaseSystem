@@ -67,6 +67,13 @@ Route::get('/home', [
 	'as' => 'home',
 	]);
 
+Route::get('/view', [
+    'uses' => 'HomeController@masterTable',
+    'as' => 'view',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 Route::post('/master/import', [
     'uses' => 'HomeController@importExcel',
     'as' => 'master.import',

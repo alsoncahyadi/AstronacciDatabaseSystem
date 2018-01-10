@@ -41,11 +41,16 @@
 		}
 		.custtable {
 			float: left !important;
+<<<<<<< HEAD
+			position: relative;
+		} th { 
+=======
 		} th {
+>>>>>>> 795c316e6d35973bc262a4fa975bc25393265d96
 			max-height: 40px;
 		} td {
 			overflow: hidden;
-			max-width: 150px;
+			max-width: 100px;
 		}
 		.filter {
 			height: 210px;
@@ -54,6 +59,7 @@
 			overflow-x: hidden;
 			overflow-y: hidden;
 			position: absolute;
+			z-index: 1;
 		} .checkbox {
 			margin-top: 3px;
 			margin-bottom: 3px;
@@ -186,7 +192,7 @@
 							@if (isset($filterable[$head]))
 							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-									<form>
+									<form id="formCities" action="#" method="post">
 										<label>Filter</label>
 										<div class="panel panel-default filter-selection">
 										@foreach ($filterable[$head] as $filter)
@@ -229,12 +235,26 @@
 		</div>
 	</div>
 </div>
+
+
+
+
 </body>
 </html>
 <script type="text/javascript">
 	$( "#selectAll" ).change(function() {
 		console.log("fuc");
 		$(".selectable").prop( "checked", $( "#selectAll" ).is(":checked"));
+	});
+	var arrFilter = [];
+	var jsonFilter = [];
+	$( ".filterCity" ).change(function() {
+		arrFilter = [];
+		$.each($(".filterCity:checked"), function(){            
+                arrFilter.push($(this).val());
+            });
+		jsonFilter = JSON.parse(JSON.stringify(arrFilter));
+		console.log(jsonFilter);
 	});
 
 	$("#add-bonus").click(function() {
