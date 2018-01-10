@@ -33,11 +33,13 @@
                 View Profit Center
             </div>
             <div class="panel-body">
-                Waiting
-                <!--BOTTLENECK-->
+                <a href="{{route('AClub')}}" class="btn btn-primary">A-CLUB</a>
+                <a href="{{route('MRG')}}" class="btn btn-primary">MRG</a>
+                <a href="{{route('CAT')}}" class="btn btn-primary">CAT</a>
+                <a href="{{route('UOB')}}" class="btn btn-primary">UOB</a>
             </div>
         </div>
-        <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
+        <!-- <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
         <div id="import" style="display:none"> 
         <div class="panel panel-default" style="padding:15px">
             <div class="panel-body">
@@ -48,7 +50,7 @@
                     <button class="btn btn-primary">Import .xls File</button>
                 </form>
             </div>
-        </div>
+        </div> -->
     </div>
     @if(count($errors) > 0)
         @foreach($errors->all() as $error)

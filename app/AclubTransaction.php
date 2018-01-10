@@ -11,6 +11,17 @@ class AclubTransaction extends Model
 
     protected $primaryKey = 'transaction_id';
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'payment_date',
+        'start_date',
+        'expired_date',
+        'masa_tenggang',
+        'yellow_zone',
+        'red_zone'
+    ];
+
     public function aclubMember() {
         return $this->hasMany('App\AclubMember', 'user_id', 'user_id');
     }

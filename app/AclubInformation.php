@@ -15,6 +15,10 @@ class AclubInformation extends Model
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }
 
+    public function aclubMembers() {
+        return $this->hasMany('App\AclubMember', 'master_id', 'master_id');
+    }
+
     public function createdBy() {
         return $this->belongsTo('App\User', 'created_by');
     }

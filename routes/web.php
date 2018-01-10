@@ -485,6 +485,13 @@ Route::get('/AClubtrans/edit/{id}', [
     'roles' => ['0', '1'],
     ]);
 
+Route::post('/AClub/add-bonus', [
+    'uses' => 'AClubController@addBonus',
+    'as' => 'AClub.add-bonus',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //GREEN ROUTES
 /*Route::get('/green', [
     'uses' => 'GreenController@getTable',
