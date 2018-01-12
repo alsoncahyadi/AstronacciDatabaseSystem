@@ -204,6 +204,19 @@ class AClubController extends Controller
             "Masa Tenggang" => $filter_date
             ];
 
+        //sort
+        $sortables = [
+            "Tanggal Lahir" => "birthdate",
+            "Kota" => "city",
+            "Gender" => "gender",
+            "Sumber" => "sumber_data",
+            "Sales" => "sales_name",
+            "Payment Date" => "payment_date",
+            "Kode" => "kode",
+            "Status" => "status",
+            "Start Date" => "start_date",
+            "Masa Tenggang" => "masa_tenggang"];
+
         //Return view table dengan parameter
         return view('vpc/aclubview',
                     [
@@ -220,7 +233,8 @@ class AClubController extends Controller
                         'filter_kode' => $filter_kode,
                         'filter_status' => $filter_status,
                         'filter_date' => $filter_date,
-                        'filterable' => $filterable
+                        'filterable' => $filterable,
+                        'sortables' => $sortables
                     ]);
     }
 
