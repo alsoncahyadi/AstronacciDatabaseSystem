@@ -103,18 +103,23 @@
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
 						<select class="form-control no-spin" name="sort1">
-							<option selected="selected">SS</option>
-							<option>SS</option>
+							@foreach ($sortables as $sortable => $value)
+								<option>{{ $sortable }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="col-md-3">
 						<select class="form-control no-spin" name="sort2">
-							<option selected="selected">SS2</option>
+							@foreach ($sortables as $sortable => $value)
+								<option>{{ $sortable }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="col-md-3">
 						<select class="form-control no-spin" name="sort3">
-							<option selected="selected">SS3</option>
+							@foreach ($sortables as $sortable => $value)
+								<option>{{ $sortable }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="col-md-1">
