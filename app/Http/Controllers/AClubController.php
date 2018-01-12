@@ -279,7 +279,10 @@ class AClubController extends Controller
 
         // add 'select' of query
 
-        $query = 'SELECT * FROM ';
+        $query =        "SELECT *, ";
+        $query = $query."(masa_tenggang-expired_date) as bonus, ";
+        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
+        $query = $query."FROM ";
         $query = $query."master_clients ";
         $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
         $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
@@ -290,7 +293,8 @@ class AClubController extends Controller
         $query = $query."                    FROM aclub_transactions ";
         $query = $query."                    GROUP BY user_id) as T1 ";
         $query = $query."            INNER JOIN ";
-        $query = $query."                ( SELECT * FROM aclub_transactions) as T2 ";
+        $query = $query."                ( SELECT *";
+        $query = $query."                   FROM aclub_transactions) as T2 ";
         $query = $query."                    ON T1.user_id = T2.user_id ";
         $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
         $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
@@ -302,10 +306,21 @@ class AClubController extends Controller
         // add semicolon
         $query = $query.";";
 
-        echo s($query);
-
         // retrieve result
         $list = collect(DB::select($query));
+        foreach ($list as $aclub_member) {
+
+            $last_kode = substr($aclub_member->kode,-1);
+            if ($last_kode == 'S') {
+                $aclub_member->bulan_member = 1;
+            } else if($last_kode == 'G') {
+                $aclub_member->bulan_member = 6;
+            } else {
+                $aclub_member->bulan_member = 12;
+            }
+        }
+
+        print_r($list);
     }
  
     // RETURN : STRING QUERY FOR FILTER IN SQL 
