@@ -235,6 +235,14 @@
 			</div>
 		</div>
 	</div>
+	<div id="pageController" style="margin-left: 15px">
+		Page
+		@for ($i = 1; $i <= $count; $i++)
+			<div>
+				<a href="?page={{$i}}">{{$i}}</a>
+			</div>
+		@endfor
+	</div>
 </div>
 </body>
 </html>
