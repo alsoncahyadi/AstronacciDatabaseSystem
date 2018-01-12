@@ -29,6 +29,7 @@ class AClubController extends Controller
         $p = 10;
         $aclub_members = AclubMember::take($p)->skip($page*$p)->get();
 
+        $count = ceil(count(AclubMember::all())/$p);
 
         foreach ($aclub_members as $aclub_member) {
             $master = $aclub_member->master;
@@ -83,8 +84,8 @@ class AClubController extends Controller
             $aclub_info = $aclub_member->aclubInformation;
             $aclub_member->sumber_data = $aclub_info->sumber_data;
         }
-
-        return $aclub_members;
+        
+        return [$aclub_members, $count];
     }
 
     public function getTable(Request $request) {
@@ -97,7 +98,10 @@ class AClubController extends Controller
         //         ->orWhere('keterangan', 'like', "%{$keyword}%")
         //         ->paginate(15);
 
-        $aclub_members = $this->getData($page);
+        $out = $this->getData($page);
+        
+        $aclub_members = $out[0];
+        $count = $out[1];
 
         $headsMaster = [
                     "User ID",
@@ -207,12 +211,12 @@ class AClubController extends Controller
             "Masa Tenggang" => $filter_date
             ];
         
-
         //Return view table dengan parameter
         return view('vpc/aclubview',
                     [
                         'route' => 'AClub',
                         'clients' => $aclub_members,
+                        'count' => $count,
                         'heads'=>$heads, 'atts'=>$atts,
                         'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
