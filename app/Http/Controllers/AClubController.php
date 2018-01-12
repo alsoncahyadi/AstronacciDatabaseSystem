@@ -261,15 +261,30 @@ class AClubController extends Controller
         // test
 
         $json_filter = $request['filters'];
+        $json_sort = $request['sorts'];
 
         // add 'select' of query
-        $table_name = "master_clients inner join aclub_members on master_clients.master_id = aclub_members.master_id";
-        $query = 'SELECT * FROM '.$table_name;
+
+        $query = 'SELECT * FROM ';
+        $query = $query."master_clients ";
+        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
+        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
+        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
+        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
+        $query = $query."            FROM ";
+        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
+        $query = $query."                    FROM aclub_transactions ";
+        $query = $query."                    GROUP BY user_id) as T1 ";
+        $query = $query."            INNER JOIN ";
+        $query = $query."                ( SELECT * FROM aclub_transactions) as T2 ";
+        $query = $query."                    ON T1.user_id = T2.user_id ";
+        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
+        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
 
         // add subquery of filter
         $query = $this->addFilterSubquery($query, $json_filter);
         // add subquery of sort
-        // $query = $this->addSortSubquery($query, $json_sort);
+        $query = $this->addSortSubquery($query, $json_sort);
         // add semicolon
         $query = $query.";";
 
@@ -282,7 +297,11 @@ class AClubController extends Controller
     // RETURN : STRING QUERY FOR FILTER IN SQL 
     // NOTE : WITHOUT SEMICOLON
     public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter);
+        $filter = json_decode($json_filter, true);
+
+        if (empty($filter)) {
+            return $query;
+        }
 
         // add 'where' of query
         $query = $query.' WHERE ';        
@@ -294,7 +313,7 @@ class AClubController extends Controller
             $idx_filter = 0;
             $query = $query.'(';
 
-            if ($key_filter == 'birthdate') {
+            if (in_array($key_filter, ['birthdate','payment_date'])) {
                 $idx_value = 0;
                 foreach ($values_filter as $value_filter) {
                     $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
@@ -323,6 +342,11 @@ class AClubController extends Controller
 
     public function addSortSubquery($query, $json_sort) {
         $sort = json_decode($json_sort, true);
+
+        if (empty($sort)) {
+            return $query;
+        }
+        
         $subquery = " ORDER BY ";
         $idx_sort = 0;
         foreach ($sort as $key_sort => $value_sort) {
