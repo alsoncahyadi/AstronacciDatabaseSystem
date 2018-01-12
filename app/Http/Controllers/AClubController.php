@@ -24,9 +24,11 @@ class AClubController extends Controller
         return $newstring;
     }
 
-    public function getData()
+    public function getData($page)
     {
-        $aclub_members = AclubMember::paginate(15);
+        $p = 10;
+        $aclub_members = AclubMember::take($p)->skip($page*$p)->get();
+
 
         foreach ($aclub_members as $aclub_member) {
             $master = $aclub_member->master;
@@ -86,13 +88,16 @@ class AClubController extends Controller
     }
 
     public function getTable(Request $request) {
+
+        $page = 0;
+        $page = $request['page'] - 1;
         // $keyword = $request['q'];
 
         // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
         //         ->orWhere('keterangan', 'like', "%{$keyword}%")
         //         ->paginate(15);
 
-        $aclub_members = $this->getData();
+        $aclub_members = $this->getData($page);
 
         $headsMaster = [
                     "User ID",
