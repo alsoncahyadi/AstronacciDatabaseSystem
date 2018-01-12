@@ -302,10 +302,10 @@ class AClubController extends Controller
         // add semicolon
         $query = $query.";";
 
+        echo s($query);
+
         // retrieve result
         $list = collect(DB::select($query));
-
-        print_r($list);
     }
  
     // RETURN : STRING QUERY FOR FILTER IN SQL 
