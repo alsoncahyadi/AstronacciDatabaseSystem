@@ -111,28 +111,31 @@
 					<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
-						<select class="form-control no-spin" name="sort1">
+						<select class="sort form-control no-spin" name="sort1">
+							<option value=""> <option>
 							@foreach ($sortables as $sortable => $value)
-								<option>{{ $sortable }}</option>
+								<option value="{{ $value }}">{{ $sortable }}</option>
 							@endforeach
 						</select>
 					</div>
 					<div class="col-md-3">
-						<select class="form-control no-spin" name="sort2">
+						<select class="sort form-control no-spin" name="sort2">
+							<option value=""> <option>
 							@foreach ($sortables as $sortable => $value)
-								<option>{{ $sortable }}</option>
+								<option value="{{ $value }}">{{ $sortable }}</option>
 							@endforeach
 						</select>
 					</div>
 					<div class="col-md-3">
-						<select class="form-control no-spin" name="sort3">
+						<select class="sort form-control no-spin" name="sort3">
+							<option value=""> <option>
 							@foreach ($sortables as $sortable => $value)
-								<option>{{ $sortable }}</option>
+								<option value="{{ $value }}">{{ $sortable }}</option>
 							@endforeach
 						</select>
 					</div>
 					<div class="col-md-1">
-						<button class="btn btn-default">Sort</button>
+						<button id="sort-button" class="btn btn-default">Sort</button>
 					</div>
 				</div>
 			</div>
@@ -292,8 +295,9 @@
 	    });
 	});
 
-	$(".check-filter").click(function() {
-		var filters = {}
+	function sortAndFilter() {
+		var filters = {};
+		var sorts = {};
 		$('.check-filter:checked').each(function () {
 			var filter_type = $(this).attr("data-type");
 			var filter_value = $(this).val();
@@ -305,9 +309,19 @@
 				filters[filter_type].push(filter_value);
 			}
 		});
-		console.log(filters);
+
 		var json_filters = JSON.stringify(filters);
 		console.log(json_filters);
+
+		$('.sort').each(function() {
+			var sort_value = $(this).find(":selected").val();
+			if (sort_value) {
+				sorts[sort_value] = true;
+			}
+		});
+
+		var json_sorts = JSON.stringify(sorts);
+		console.log(json_sorts);
 
 		// Request to API
 	    var request = $.ajax({
@@ -316,6 +330,7 @@
 	        data: {
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
+						"sorts": json_sorts
 					}
 	    });
 
@@ -325,5 +340,13 @@
 			// console.log(response);
 			
 	    });
+	}
+
+	$(".check-filter").click(function() {
+		sortAndFilter();
+	});
+
+	$("#sort-button").click(function() {
+		sortAndFilter();
 	});
 </script>
