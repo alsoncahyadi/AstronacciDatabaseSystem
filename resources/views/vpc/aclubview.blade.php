@@ -41,11 +41,16 @@
 		}
 		.custtable {
 			float: left !important;
+<<<<<<< HEAD
+			position: relative;
+		} th { 
+=======
 		} th {
+>>>>>>> 795c316e6d35973bc262a4fa975bc25393265d96
 			max-height: 40px;
 		} td {
 			overflow: hidden;
-			max-width: 150px;
+			max-width: 100px;
 		}
 		.filter {
 			height: 210px;
@@ -54,6 +59,7 @@
 			overflow-x: hidden;
 			overflow-y: hidden;
 			position: absolute;
+			z-index: 1;
 		} .checkbox {
 			margin-top: 3px;
 			margin-bottom: 3px;
@@ -66,6 +72,57 @@
 		}
 		.dd{
 			float: right;
+		}
+		.table-scroll {
+			position:relative;
+			margin:auto;
+			overflow:hidden;
+		}
+		.table-wrap {
+			overflow:auto;
+		}
+		.table-scroll table {
+			margin:auto;
+			border-collapse:separate;
+			border-spacing:0;
+		}
+		.table-scroll th, .table-scroll td {
+			white-space:nowrap;
+			vertical-align:top;
+		}
+		.table-scroll thead, .table-scroll tfoot {
+		}
+		.clone {
+			position:absolute;
+			top:0;
+			left:0;
+			pointer-events: none;
+		}
+		.clone .collumn-select {
+			pointer-events: auto !important;
+		}
+		.clone th, .clone td {
+			visibility:hidden
+		}
+		.clone td, .clone th {
+			border-color:transparent
+		}
+		.clone tbody th {
+			visibility:visible;
+			color:red;
+		}
+		.clone .fixed-side {
+			visibility:visible;
+			background: inherit;
+		}
+		.clone thead, .clone tfoot{background:transparent;}
+
+		.clone>tbody>tr:nth-of-type(even) {
+		    background-color: #fff !important;
+		}
+
+		th.fixed-side {
+			background-color: #fff !important;
 		}
 	</style>
 </head>
@@ -143,13 +200,98 @@
 
 		<div class="panel-body">
 			<div id="bod1">
+				<div id="table-scroll" class="table-scroll">
+				  <div class="table-wrap">
+				  	<div class="col-xs-12" style="margin:0px;padding: 0px;">
+				    <table id="tablebase" class="table table-condensed table-striped table-bordered table-hover custtable main-table">
+				    	<thead>
+							<tr>
+								<?php $idx = 1 ?>
+								<th class="fixed-side collumn-select" scope="col"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
+								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
+								@foreach ($headsMaster as $headMaster)
+								<th class="fixed-side" scope="col"> {{ $headMaster }} 
+									@if ($headMaster == 'Tanggal Lahir')
+									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+										<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+											<form>
+												<label>Filter</label>
+												<div class="panel panel-default filter-selection">
+												@foreach($filter_birthdates as $filter_birthdate)
+													<div class="checkbox">
+														<label>
+															<input type="checkbox" value=""> {{ $filter_birthdate }}
+														</label>
+													</div>
+												@endforeach
+												</div>
+												<button class="btn btn-default btn-xs">Filter</button>
+											</form>
+										</div>
+									@endif
+								</th>
+								<?php $idx = $idx + 1; ?>
+								@endforeach
+
+								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
+								<?php $idx = 6; ?>
+								@foreach ($heads as $head)
+								<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
+								@if (isset($filterable[$head]))
+								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+										<form id="formCities" action="#" method="post">
+											<label>Filter</label>
+											<div class="panel panel-default filter-selection">
+											@foreach ($filterable[$head] as $filter)
+												<div class="checkbox">
+													<label>												
+														<input type="checkbox" value="">@foreach ($filter as $f)
+														{{ $f }}
+														@endforeach
+													</label>
+												</div>											
+											@endforeach
+											</div>
+											<button class="btn btn-default btn-xs">Filter</button>
+										</form>
+									</div>							
+								@endif
+								</th>
+								<?php $idx = $idx + 1; ?>
+								@endforeach
+							</tr>
+						</thead>
+						<tbody>
+							<?php $idx = 0 ?>
+							@foreach ($clients as $client)
+								<tr>
+									<td class="fixed-side collumn-select" style="text-align:center; padding-bottom: 0px">
+										<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+										<input type="hidden" name="id{{ $idx }}" value="">
+									@foreach ($attsMaster as $attMaster)
+										<td class="fixed-side" style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
+									@endforeach
+									@foreach ($atts as $att)
+										<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+									@endforeach
+								</tr>
+							<?php $idx = $idx + 1; ?>
+							@endforeach
+						</tbody>
+						<input type="hidden" name="numusers" value="{{ $idx }}">
+				</table>
+				</div>
+			</div>
+
+			<!--
 				<div class="col-xs-6" style="margin:0px;padding: 0px;">
 				<table id="tablebase" class="table table-condensed table-striped table-bordered table-hover custtable">
 					<thead>
 						<tr>
 							<?php $idx = 1 ?>
 							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
-							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
+							Mendapatkan judul setiap kolom pada tabel dari variabel heads 
 							@foreach ($headsMaster as $headMaster)
 							<th> {{ $headMaster }} 
 								@if ($headMaster == 'Tanggal Lahir')
@@ -196,14 +338,14 @@
 
 					<thead>
 						<tr>
-							<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
+							Mendapatkan judul setiap kolom pada tabel dari variabel heads
 							<?php $idx = 6; ?>
 							@foreach ($heads as $head => $value)
 							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
 							@if (isset($filterable[$head]))
 							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-									<form>
+									<form id="formCities" action="#" method="post">
 										<label>Filter</label>
 										<div class="panel panel-default filter-selection">
 										@foreach ($filterable[$head] as $filter)
@@ -234,7 +376,7 @@
 					</thead>
 					<tbody>
 						<?php $idx = 0; ?>
-						<!-- Menampilkan seluruh client untuk PC terkait, dari list pada variabel clients -->
+						Menampilkan seluruh client untuk PC terkait, dari list pada variabel clients
 
 						@foreach ($clients as $client)
 						<tr>
@@ -250,15 +392,34 @@
 					<input type="hidden" name="numusers" value="{{ $idx }}">
 				</table>
 			</div>
+		-->
 		</div>
 	</div>
 </div>
+
+
+
+
 </body>
 </html>
 <script type="text/javascript">
+	$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');  
 	$( "#selectAll" ).change(function() {
-		console.log("fuc");
 		$(".selectable").prop( "checked", $( "#selectAll" ).is(":checked"));
+	});
+	$( ".clone #selectAll" ).change(function() {
+		$(".selectable").prop( "checked", $( ".clone #selectAll" ).is(":checked"));
+	});
+
+	var arrFilter = [];
+	var jsonFilter = [];
+	$( ".filterCity" ).change(function() {
+		arrFilter = [];
+		$.each($(".filterCity:checked"), function(){            
+                arrFilter.push($(this).val());
+            });
+		jsonFilter = JSON.parse(JSON.stringify(arrFilter));
+		console.log(jsonFilter);
 	});
 
 	$("#add-bonus").click(function() {

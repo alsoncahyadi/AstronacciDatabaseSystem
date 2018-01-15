@@ -265,6 +265,11 @@ class HomeController extends Controller
         })->export('xls');
     }
 
+    public function masterTable(){
+        $clients = MasterClient::select('name','email','master_id')->get();
+        return view('vpc/mastertable', ['clients' => $clients] );
+    }
+
     /**
      * Show the application dashboard.
      *

@@ -33,6 +33,7 @@
                 View Profit Center
             </div>
             <div class="panel-body">
+                <a href="{{route('view')}}" class="btn btn-warning">MASTER</a>
                 <a href="{{route('AClub')}}" class="btn btn-primary">A-CLUB</a>
                 <a href="{{route('MRG')}}" class="btn btn-primary">MRG</a>
                 <a href="{{route('CAT')}}" class="btn btn-primary">CAT</a>
