@@ -83,10 +83,19 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4">
-					<i class="fa fa-child fa-fw"></i> Members
-					<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
-					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
+				<div class="col-md-4 row">
+					<div class="col-md-3">
+						<i class="fa fa-child fa-fw"></i> Members
+					</div>
+					<div class="col-md-4">
+						<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
+					</div>
+					<div class="col-md-3">
+						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
+					</div>
+					<div class="col-md-2">
+						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px; margin-left: -50px"></i>
+					</div>
 				</div>
 				<div class="col-md-2">
 					<div class="form-group input-group" style="margin-bottom: 0px">
