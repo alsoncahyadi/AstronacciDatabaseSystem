@@ -394,6 +394,11 @@
 			</div>
 		-->
 		</div>
+		<div id="pageController" style="margin-left: 15px">
+			Page
+			<input id="pagenum" type="text" name="pagenum" value="1">
+			<button id="page_number">Go</button>
+		</div>
 	</div>
 </div>
 
@@ -484,6 +489,7 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
+		document.getElementById("pagenum").value = "1";
 		// Request to API
 	    var request = $.ajax({
 	        url: "/AClub/filter",
@@ -491,12 +497,63 @@
 	        data: {
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
-						"sorts": json_sorts
+						"sorts": json_sorts,
+						"page": 1
 					}
 	    });
 
 		// Callback handler that will be called on success
 	    request.done(function (response, textStatus, jqXHR){
+	        // Log a message to the console
+			// console.log(response);
+			
+	    });
+	}
+
+	function gotoPage() {
+		var filters = {};
+		var sorts = {};
+		$('.check-filter:checked').each(function () {
+			var filter_type = $(this).attr("data-type");
+			var filter_value = $(this).val();
+			// alert(filter_type + " " + filter_value);
+			if (filters[filter_type]) {
+				filters[filter_type].push(filter_value);
+			} else {
+				filters[filter_type] = [];
+				filters[filter_type].push(filter_value);
+			}
+		});
+
+		var json_filters = JSON.stringify(filters);
+		console.log(json_filters);
+
+		$('.sort').each(function() {
+			var sort_value = $(this).find(":selected").val();
+			if (sort_value) {
+				sorts[sort_value] = true;
+			}
+		});
+
+		var json_sorts = JSON.stringify(sorts);
+		console.log(json_sorts);
+
+		var_page = document.getElementById("pagenum").value;
+
+		// Request to API
+	    var request = $.ajax({
+	        url: "/AClub/filter",
+	        type: "post",
+	        data: {
+						"_token": "{{ csrf_token() }}",
+						"filters": json_filters,
+						"sorts": json_sorts,
+						"page": var_page
+					}
+		});
+
+		// Callback handler that will be called on success
+		request.done(function (response, textStatus, jqXHR){
 	        // Log a message to the console
 			// console.log(response);
 			
@@ -509,5 +566,8 @@
 
 	$("#sort-button").click(function() {
 		sortAndFilter();
+	});
+	$("#page_number").click(function() {
+		gotoPage();
 	});
 </script>

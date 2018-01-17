@@ -276,6 +276,10 @@ class AClubController extends Controller
 
         $json_filter = $request['filters'];
         $json_sort = $request['sorts'];
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 3;
+
 
         // add 'select' of query
 
@@ -307,7 +311,9 @@ class AClubController extends Controller
         $query = $query.";";
 
         // retrieve result
-        $list = collect(DB::select($query));
+        $list_old = DB::select($query);
+        
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
         foreach ($list as $aclub_member) {
 
             $last_kode = substr($aclub_member->kode,-1);
