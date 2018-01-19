@@ -54,8 +54,8 @@
 			padding: 5px;
 			overflow-x: hidden;
 			overflow-y: hidden;
-			position: absolute;
-			z-index: 1;
+			position: fixed;
+			z-index: 1000000;
 		} .checkbox {
 			margin-top: 3px;
 			margin-bottom: 3px;
@@ -216,7 +216,7 @@
 												@foreach($filter_birthdates as $filter_birthdate)
 													<div class="checkbox">
 														<label>
-															<input type="checkbox" value=""> {{ $filter_birthdate }}
+															<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
 														</label>
 													</div>
 												@endforeach
@@ -231,7 +231,7 @@
 
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 								<?php $idx = 6; ?>
-								@foreach ($heads as $head)
+								@foreach ($heads as $head => $value)
 								<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
 								@if (isset($filterable[$head]))
 								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
@@ -241,9 +241,16 @@
 											<div class="panel panel-default filter-selection">
 											@foreach ($filterable[$head] as $filter)
 												<div class="checkbox">
-													<label>												
-														<input type="checkbox" value="">@foreach ($filter as $f)
+													<label>
+														@foreach ($filter as $f)						
+														<?php $m = date('m', strtotime($f))?>
+														@if (($m == 01)&&($f != 'January'))
+														<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
 														{{ $f }}
+														@else
+														<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
+														{{ $f }}
+														@endif
 														@endforeach
 													</label>
 												</div>											
@@ -256,6 +263,7 @@
 								</th>
 								<?php $idx = $idx + 1; ?>
 								@endforeach
+
 							</tr>
 						</thead>
 						<!-- <tbody>
@@ -504,8 +512,11 @@
 	        // Log a message to the console
 			// console.log(response);
 			$("#tbody").html(response);
-			
+			$(".clone").remove();
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
 	    });
+
+
 	}
 
 	function gotoPage() {
