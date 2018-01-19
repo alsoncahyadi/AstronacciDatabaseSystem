@@ -423,6 +423,7 @@
 
 	var arrFilter = [];
 	var jsonFilter = [];
+	var filters = {};
 	$( ".filterCity" ).change(function() {
 		arrFilter = [];
 		$.each($(".filterCity:checked"), function(){            
@@ -467,19 +468,7 @@
 	});
 
 	function sortAndFilter() {
-		var filters = {};
 		var sorts = {};
-		$('.check-filter:checked').each(function () {
-			var filter_type = $(this).attr("data-type");
-			var filter_value = $(this).val();
-			// alert(filter_type + " " + filter_value);
-			if (filters[filter_type]) {
-				filters[filter_type].push(filter_value);
-			} else {
-				filters[filter_type] = [];
-				filters[filter_type].push(filter_value);
-			}
-		});
 
 		var json_filters = JSON.stringify(filters);
 		console.log(json_filters);
@@ -569,7 +558,24 @@
 	    });
 	}
 
-	$(".check-filter").click(function() {
+	$(".check-filter").change(function() {
+		var filter_type = $(this).attr("data-type");
+		var filter_value = $(this).val();
+		if ($(this).prop('checked')) {
+			// alert(filter_type + " " + filter_value);
+			if (filters[filter_type]) {
+				filters[filter_type].push(filter_value);
+			} else {
+				filters[filter_type] = [];
+				filters[filter_type].push(filter_value);
+			}
+		} else {
+			alert('b');
+			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
+			if (filters[filter_type].length == 0) {
+				delete filters[filter_type];
+			}
+		}
 		sortAndFilter();
 	});
 
