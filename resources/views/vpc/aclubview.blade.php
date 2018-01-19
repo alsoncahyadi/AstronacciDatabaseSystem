@@ -275,7 +275,7 @@
 							<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tbody> -->
-						@yield('content')
+						<tbody id="tbody">@include('vpc/aclubtable')</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 				</table>
 				</div>
@@ -503,6 +503,7 @@
 	    request.done(function (response, textStatus, jqXHR){
 	        // Log a message to the console
 			// console.log(response);
+			$("#tbody").html(response);
 			
 	    });
 	}

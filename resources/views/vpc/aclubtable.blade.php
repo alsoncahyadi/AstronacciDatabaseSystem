@@ -1,6 +1,4 @@
-@extends('vpc/aclubview')
-@section('content')
-						<tbody>
+
 							<?php $idx = 0 ?>
 							@foreach ($clients as $client)
 								<tr>
@@ -16,5 +14,4 @@
 								</tr>
 							<?php $idx = $idx + 1; ?>
 							@endforeach
-						</tbody>
-						@endsection
+						

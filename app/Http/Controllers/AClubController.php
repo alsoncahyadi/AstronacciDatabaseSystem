@@ -218,7 +218,7 @@ class AClubController extends Controller
             "Masa Tenggang" => "masa_tenggang"];
 
         //Return view table dengan parameter
-        return view('vpc/aclubtable',
+        return view('vpc/aclubview',
                     [
                         'route' => 'AClub',
                         'clients' => $aclub_members,
@@ -357,6 +357,7 @@ class AClubController extends Controller
         }
         return view('vpc/aclubtable',
                     [
+                        'route' => 'AClub',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster
