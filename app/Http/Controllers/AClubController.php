@@ -218,7 +218,7 @@ class AClubController extends Controller
             "Masa Tenggang" => "masa_tenggang"];
 
         //Return view table dengan parameter
-        return view('vpc/aclubview',
+        return view('vpc/aclubtable',
                     [
                         'route' => 'AClub',
                         'clients' => $aclub_members,
@@ -274,6 +274,36 @@ class AClubController extends Controller
         // $json_sort = json_encode($example_sort);
         // test
 
+         $attsMaster = [
+                        "master_id",
+                        "name",
+                        "email",
+                        "telephone_number",
+                        "birthdate"
+                    ];
+
+        //Nama attribute pada sql
+        $atts = [
+                "address",
+                "city",
+                "gender",
+                "line_id",
+                "whatsapp",
+                "sumber_data",
+                "sales_name",
+                "payment_date",
+                "kode",
+                "status",
+                "aktif",
+                "bulan_member",
+                "bonus",
+                "start_date",
+                "expired_date",
+                "masa_tenggang",
+                "yellow_zone",
+                "red_zone"
+                ];
+
         $json_filter = $request['filters'];
         $json_sort = $request['sorts'];
 
@@ -319,8 +349,13 @@ class AClubController extends Controller
                 $aclub_member->bulan_member = 12;
             }
         }
-
-        print_r($list);
+        return view('vpc/aclubtable',
+                    [
+                        'clients' => $list,
+                        'atts' => $atts,
+                        'attsMaster' => $attsMaster
+                    ]);
+        // return $list;
     }
  
     // RETURN : STRING QUERY FOR FILTER IN SQL 

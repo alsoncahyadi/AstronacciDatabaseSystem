@@ -41,12 +41,8 @@
 		}
 		.custtable {
 			float: left !important;
-<<<<<<< HEAD
 			position: relative;
 		} th { 
-=======
-		} th {
->>>>>>> 795c316e6d35973bc262a4fa975bc25393265d96
 			max-height: 40px;
 		} td {
 			overflow: hidden;
@@ -262,7 +258,7 @@
 								@endforeach
 							</tr>
 						</thead>
-						<tbody>
+						<!-- <tbody>
 							<?php $idx = 0 ?>
 							@foreach ($clients as $client)
 								<tr>
@@ -278,7 +274,8 @@
 								</tr>
 							<?php $idx = $idx + 1; ?>
 							@endforeach
-						</tbody>
+						</tbody> -->
+						@yield('content')
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 				</table>
 				</div>
@@ -510,4 +507,23 @@
 	$("#sort-button").click(function() {
 		sortAndFilter();
 	});
+
+	var mtable = [
+		@foreach ($clients as $client) [
+			@foreach ($attsMaster as $attMaster)
+				"{{ $client->$attMaster }}",
+			@endforeach ],
+		@endforeach
+	];
+	var table =[
+	@foreach ($clients as $client)[
+		@foreach ($atts as $att)
+			`{{$client->$att}}` ,
+		@endforeach ],
+	@endforeach
+	];
+	var idx = 0;
+	
+	console.log(mtable);
+	console.log(table);
 </script>
