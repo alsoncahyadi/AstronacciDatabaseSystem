@@ -499,6 +499,14 @@ Route::post('/AClub/add-bonus', [
     'roles' => ['0', '1'],
     ]);
 
+Route::post('/AClub/filter', [
+    'uses' => 'AClubController@getFilteredAndSortedTable',
+    'as' => 'AClub.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
+
 //GREEN ROUTES
 /*Route::get('/green', [
     'uses' => 'GreenController@getTable',
