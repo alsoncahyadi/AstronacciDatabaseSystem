@@ -402,6 +402,7 @@
 		<div id="pageController" style="margin-left: 15px">
 			Page
 			<input id="pagenum" type="text" name="pagenum" value="1">
+			/{{$count}}
 			<button id="page_number">Go</button>
 		</div>
 	</div>
@@ -550,11 +551,13 @@
 					}
 		});
 
-		// Callback handler that will be called on success
-		request.done(function (response, textStatus, jqXHR){
+		// Callback handler that will be called on success		
+	    request.done(function (response, textStatus, jqXHR){
 	        // Log a message to the console
 			// console.log(response);
-			
+			$("#tbody").html(response);
+			$(".clone").remove();
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
 	    });
 	}
 

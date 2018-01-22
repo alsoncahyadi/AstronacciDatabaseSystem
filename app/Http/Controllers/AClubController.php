@@ -26,7 +26,7 @@ class AClubController extends Controller
 
     public function getData()
     {
-        $aclub_members = AclubMember::paginate(15);
+        $aclub_members = AclubMember::all();
 
         foreach ($aclub_members as $aclub_member) {
             $master = $aclub_member->master;
@@ -91,8 +91,18 @@ class AClubController extends Controller
         // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
         //         ->orWhere('keterangan', 'like', "%{$keyword}%")
         //         ->paginate(15);
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 3;
 
         $aclub_members = $this->getData();
+        $record_count = count($aclub_members);
+        $aclub_members = $aclub_members->forPage(1, $record_amount);
+        // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
+        // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
+
+        // dd($aclub_members);
+        $page_count = ceil($record_count/$record_amount);
 
         $headsMaster = [
                     "User ID",
@@ -234,7 +244,8 @@ class AClubController extends Controller
                         'filter_status' => $filter_status,
                         'filter_date' => $filter_date,
                         'filterable' => $filterable,
-                        'sortables' => $sortables
+                        'sortables' => $sortables,
+                        'count' => $page_count
                     ]);
     }
 
