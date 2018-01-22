@@ -401,7 +401,7 @@
 		</div>
 		<div id="pageController" style="margin-left: 15px">
 			Page
-			<input id="pagenum" type="text" name="pagenum" value="1">
+			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
 			/{{$count}}
 			<button id="page_number">Go</button>
 		</div>
