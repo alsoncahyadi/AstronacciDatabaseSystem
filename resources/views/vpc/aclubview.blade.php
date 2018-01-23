@@ -156,7 +156,7 @@
 						</span>
 					</div>
 				</div>
-				<div class="col-md-6 row">
+				<div class="col-md-6 row" style="float: right;">
 					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px; max-width: 505px;">Sort by:</div>
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
