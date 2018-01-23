@@ -150,6 +150,8 @@
 						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px; margin-left: -50px"></i>
 					</div>
 				</div>
+				<div class="col-md-2">
+				</div>
 				<div class="col-md-6 row">
 					<div class="col-md-1"></div>
 					<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
