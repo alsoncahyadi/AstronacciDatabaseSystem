@@ -127,7 +127,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1>A-CLUB Members</h1>
+                <h1>UOB Members</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -151,13 +151,6 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <div class="form-group input-group" style="margin-bottom: 0px">
-                        <input type="number" class="form-control" placeholder="Add Bonus Days" id="bonus-days">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" id="add-bonus"> <i class="fa fa-plus"></i>
-                            </button>
-                        </span>
-                    </div>
                 </div>
                 <div class="col-md-6 row">
                     <div class="col-md-1"></div>
