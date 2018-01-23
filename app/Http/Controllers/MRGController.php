@@ -44,9 +44,9 @@ class MRGController extends Controller
             //data from mrg transaction
             $last_transaction = $mrg->accounts()->orderBy('created_at','desc')->first();
             // dd($last_transaction->sales_name);
-            // $mrg->sales_name = $last_transaction->sales_name;
-            // $mrg->accounts_number = $last_transaction->accounts_number;
-            // $mrg->account_type = $last_transaction->account_type;
+            $mrg->sales_name = $last_transaction->sales_name;
+            $mrg->accounts_number = $last_transaction->accounts_number;
+            $mrg->account_type = $last_transaction->account_type;
         }
 
         return $mrgs;
