@@ -722,7 +722,7 @@ Route::get('/AShop/{id}', [
 
 Route::get('/AShopTransactions', [
     'uses' => 'AshopController@getTable',
-    'as' => 'AShop',
+    'as' => 'AShopTransactions',
     'middleware' => ['auth', 'ashop'],
     ]);
 
