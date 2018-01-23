@@ -136,14 +136,14 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4 row" style="width:38%;">
+				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
 					<div class="col-md-4">
 						<button class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </a></button>
 					</div>
 					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 					</div>
-					<div class="col-md-2" style="width:10%;">
+					<div class="col-md-2" style="width:10%; max-width: 180px;">
 						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px;"></i>
 					</div>
 				</div>
@@ -157,7 +157,7 @@
 					</div>
 				</div>
 				<div class="col-md-6 row">
-					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px;">Sort by:</div>
+					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px; max-width: 505px;">Sort by:</div>
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
 						<select class="sort form-control no-spin" name="sort1">
