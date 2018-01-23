@@ -719,12 +719,12 @@ Route::get('/AShop/{id}', [
     'as' => 'AShop.detail',
     'middleware' => ['auth', 'ashop'],
     ]);
-/*
-Route::get('/AShop', [
+
+Route::get('/AShopTransactions', [
     'uses' => 'AshopController@getTable',
     'as' => 'AShop',
     'middleware' => ['auth', 'ashop'],
-    ]);*/
+    ]);
 
 Route::post('/AShop/insert', [
     'uses' => 'AshopController@addClient',

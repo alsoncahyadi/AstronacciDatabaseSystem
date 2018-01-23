@@ -23,42 +23,312 @@ class AshopController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
-        $master = MasterClient::all();
+    public function getData()
+    {
+        $ashops = AshopTransaction::all();
 
-        $heads= ["Master ID",
-                "User ID Redclub",
-                "Password Redclub",
-                "Nama",
-                "Telepon",
-                "Email",
-                "Tanggal Lahir",
-                "Alamat",
-                "Kota",
-                "Provinsi",
-                "Gender",
-                "Line ID",
-                "BBM",
-                "WhatsApp",
-                "Facebook"];
+        foreach ($ashops as $ashop) {
+            $master = $ashop->master;
+            $ashop->master_id = $master->master_id;
+            $ashop->name = $master->name;
+            $ashop->telephone_number = $master->telephone_number;
+            $ashop->email = $master->email;
+            $ashop->birthdate = $master->birthdate;
+            $ashop->address = $master->address;
+            $ashop->city = $master->city;
+            $ashop->gender = $master->gender;
+            $ashop->line_id = $master->line_id;
+            $ashop->bbm = $master->bbm;
+            $ashop->whatsapp = $master->whatsapp;
+            $ashop->facebook = $master->facebook;
+        }
 
-        $atts = ["master_id",
-                "redclub_user_id",
-                "redclub_password",
-                "name",
-                "telephone_number",
-                "email",
-                "birthdate",
+        return $ashops;
+    }
+
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 3;
+
+        $ashops = $this->getData();
+        $record_count = count($ashops);
+        $ashops = $ashops->forPage(1, $record_amount);
+
+        $page_count = ceil($record_count/$record_amount);
+
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
+                    "Email",
+                    "Telepon",
+                    "Tanggal Lahir"
+                ];
+
+        $attsMaster = [
+                        "master_id",
+                        "name",
+                        "email",
+                        "telephone_number",
+                        "birthdate"
+                    ];
+
+        //Judul kolom yang ditampilkan pada tabel
+        $heads = [
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Gender" => "gender",
+                "Product" => "product_type",
+                "Nama Product" => "product_name"
+                ];
+        
+
+        //Nama attribute pada sql
+        $atts = [
                 "address",
                 "city",
-                "province",
+                "gender",
+                "product_type",
+                "product_name"
+                ];
+
+        //Filter
+        $master_clients = MasterClient::all();
+        $array_month = array();
+        foreach ($master_clients as $master_client) {
+            array_push($array_month, date('m', strtotime($master_client->birthdate)));
+        }
+        $filter_birthdates = array_unique($array_month);
+        sort($filter_birthdates);
+        foreach ($filter_birthdates as $key => $filter_birthdate) {
+            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
+            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
+        }
+
+        // $this->getFilteredAndSortedTable('test');
+
+        $joined = DB::table('master_clients')
+                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+
+        $filter_cities = $joined->select('city')->distinct()->get();
+        $filter_gender = $joined->select('gender')->distinct()->get();
+        $filter_product_type = DB::table('ashop_transactions')->select('product_type')->distinct()->get();
+        $filter_product_name = DB::table('ashop_transactions')->select('product_name')->distinct()->get();
+        $filter_date = ['0'=>['0'=>'January'], 
+        '1'=>['0'=>'February'], 
+        '2'=>['0'=>'March'], 
+        '3'=>['0'=>'April'], 
+        '4'=>['0'=>'May'], 
+        '5'=>['0'=>'June'], 
+        '6'=>['0'=>'July'],
+        '7'=>['0'=>'August'],
+        '8'=>['0'=>'September'],
+        '9'=>['0'=>'October'],
+        '10'=>['0'=>'November'],
+        '11'=>['0'=>'December']];
+
+        $filterable = [
+            "Kota" => $filter_cities,
+            "Gender" => $filter_gender,
+            "Product" => $filter_product_type,
+            "Nama Product" => $filter_product_name
+            ];
+
+        //sort
+        $sortables = [
+            "Tanggal Lahir" => "birthdate",
+            "Kota" => "city",
+            "Gender" => "gender",
+            "Product" => "product_type",
+            "Nama Product" => "product_name"
+            ];
+
+        //Return view table dengan parameter
+        return view('vpc/ashopview',
+                    [
+                        'route' => 'AShop',
+                        'clients' => $ashops,
+                        'heads'=>$heads, 'atts'=>$atts,
+                        'headsMaster' => $headsMaster,
+                        'attsMaster' => $attsMaster,
+                        'filter_birthdates' => $filter_birthdates,
+                        'filter_cities' => $filter_cities,
+                        'filter_gender' => $filter_gender,
+                        'filter_date' => $filter_date,
+                        'filterable' => $filterable,
+                        'sortables' => $sortables,
+                        'count' => $page_count
+                    ]);
+    }
+
+    public function getFilteredAndSortedTable(Request $request) {
+        // test
+        // $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
+        // $example_sort = array('email'=>false, 'name'=>true);
+
+        // $json_filter = json_encode($example_filter);
+        // $json_sort = json_encode($example_sort);
+        // test
+
+         $attsMaster = [
+                        "master_id",
+                        "name",
+                        "email",
+                        "telephone_number",
+                        "birthdate"
+                    ];
+
+        //Nama attribute pada sql
+        $atts = [
+                "address",
+                "city",
                 "gender",
                 "line_id",
-                "bbm",
                 "whatsapp",
-                "facebook"];
+                "sumber_data",
+                "sales_name",
+                "payment_date",
+                "kode",
+                "status",
+                "aktif",
+                "bulan_member",
+                "bonus",
+                "start_date",
+                "expired_date",
+                "masa_tenggang",
+                "yellow_zone",
+                "red_zone"
+                ];
 
-        return view('content/table', ['route' => 'AShop', 'clients' => $master, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$heads]);
+        $json_filter = $request['filters'];
+        $json_sort = $request['sorts'];
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 3;
+
+
+        // add 'select' of query
+
+        $query =        "SELECT *, ";
+        $query = $query."(masa_tenggang-expired_date) as bonus, ";
+        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
+        $query = $query."FROM ";
+        $query = $query."master_clients ";
+        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
+        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
+        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
+        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
+        $query = $query."            FROM ";
+        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
+        $query = $query."                    FROM aclub_transactions ";
+        $query = $query."                    GROUP BY user_id) as T1 ";
+        $query = $query."            INNER JOIN ";
+        $query = $query."                ( SELECT *";
+        $query = $query."                   FROM aclub_transactions) as T2 ";
+        $query = $query."                    ON T1.user_id = T2.user_id ";
+        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
+        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
+
+        // add subquery of filter
+        $query = $this->addFilterSubquery($query, $json_filter);
+        // add subquery of sort
+        $query = $this->addSortSubquery($query, $json_sort);
+        // add semicolon
+        $query = $query.";";
+
+        // retrieve result
+        $list_old = DB::select($query);
+        
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
+        foreach ($list as $aclub_member) {
+
+            $last_kode = substr($aclub_member->kode,-1);
+            if ($last_kode == 'S') {
+                $aclub_member->bulan_member = 1;
+            } else if($last_kode == 'G') {
+                $aclub_member->bulan_member = 6;
+            } else {
+                $aclub_member->bulan_member = 12;
+            }
+        }
+        return view('vpc/aclubtable',
+                    [
+                        'route' => 'AClub',
+                        'clients' => $list,
+                        'atts' => $atts,
+                        'attsMaster' => $attsMaster
+                    ]);
+        // return $list;
+    }
+ 
+    // RETURN : STRING QUERY FOR FILTER IN SQL 
+    // NOTE : WITHOUT SEMICOLON
+    public function addFilterSubquery($query, $json_filter) {
+        $filter = json_decode($json_filter, true);
+
+        if (empty($filter)) {
+            return $query;
+        }
+
+        // add 'where' of query
+        $query = $query.' WHERE ';        
+        $is_first = true;
+        foreach ($filter as $key_filter => $values_filter) {
+            if (!$is_first) {
+                $query = $query." and ";
+            }
+            $idx_filter = 0;
+            $query = $query.'(';
+
+            if (in_array($key_filter, ['birthdate','payment_date'])) {
+                $idx_value = 0;
+                foreach ($values_filter as $value_filter) {
+                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
+                    $idx_value += 1;
+                    if ($idx_value != count($values_filter)) {
+                        $query = $query." or ";
+                    }   
+                 }
+            } else {
+                $idx_value = 0;
+                foreach ($values_filter as $value_filter) {
+                    $query = $query.$key_filter." = '".$value_filter."'";
+                    $idx_value += 1;
+                    if ($idx_value != count($values_filter)) {
+                        $query = $query." or ";
+                    }
+                 }
+            }
+            $query = $query.')';
+            $is_first = false;
+        }   
+
+        // get result
+        return $query;
+    }
+
+    public function addSortSubquery($query, $json_sort) {
+        $sort = json_decode($json_sort, true);
+
+        if (empty($sort)) {
+            return $query;
+        }
+        
+        $subquery = " ORDER BY ";
+        $idx_sort = 0;
+        foreach ($sort as $key_sort => $value_sort) {
+            if ($value_sort == true) {
+                $subquery = $subquery.$key_sort." ASC";            
+            } else {
+                $subquery = $subquery.$key_sort." DESC";                            
+            }
+            $idx_sort += 1;
+            if ($idx_sort != count($sort)) {
+                $subquery = $subquery.", ";
+            }
+        }
+        $query = $query.$subquery;
+        return $query;
     }
 
     public function clientDetail($id) {
