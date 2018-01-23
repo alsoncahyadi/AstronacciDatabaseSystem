@@ -353,7 +353,10 @@ class AClubController extends Controller
 
         // retrieve result
         $list_old = DB::select($query);
-        
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);        
+
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
         foreach ($list as $aclub_member) {
 
@@ -371,7 +374,8 @@ class AClubController extends Controller
                         'route' => 'AClub',
                         'clients' => $list,
                         'atts' => $atts,
-                        'attsMaster' => $attsMaster
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
                     ]);
         // return $list;
     }
