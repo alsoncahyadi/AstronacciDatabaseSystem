@@ -7,6 +7,7 @@ use DB;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Cat;
+use App\MasterClient;
 
 class CATController extends Controller
 {
@@ -22,63 +23,23 @@ class CATController extends Controller
 
     public function getData()
     {
-        $aclub_members = AclubMember::all();
+        $cats = Cat::all();
 
-        foreach ($aclub_members as $aclub_member) {
-            $master = $aclub_member->master;
-            $aclub_member->redclub_user_id = $master->redclub_user_id;
-            $aclub_member->redclub_password = $master->redclub_password;
-            $aclub_member->name = $master->name;
-            $aclub_member->telephone_number = $master->telephone_number;
-            $aclub_member->email = $master->email;
-            $aclub_member->birthdate = $master->birthdate;
-            $aclub_member->address = $master->address;
-            $aclub_member->city = $master->city;
-            $aclub_member->province = $master->province;
-            $aclub_member->gender = $master->gender;
-            $aclub_member->line_id = $master->line_id;
-            $aclub_member->bbm = $master->bbm;
-            $aclub_member->whatsapp = $master->whatsapp;
-            $aclub_member->facebook = $master->facebook;
-
-            //data from aclub transaction
-            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
-            $aclub_member->sales_name = $last_transaction->sales_name;
-            $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
-            $aclub_member->kode = $last_transaction->kode;
-            $aclub_member->status = $last_transaction->status;
-            $aclub_member->start_date = $last_transaction->start_date->toDateString();
-            $aclub_member->expired_date = $last_transaction->expired_date;
-            $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
-            $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
-            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
-
-            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
-
-            $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
-            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
-
-            $last_kode = substr($aclub_member->kode,-1);
-            if ($last_kode == 'S') {
-                $aclub_member->bulan_member = 1;
-            } else if($last_kode == 'G') {
-                $aclub_member->bulan_member = 6;
-            } else {
-                $aclub_member->bulan_member = 12;
-            }
-
-            if ($aclub_member->masa_tenggang < Carbon::now()) {
-                $aclub_member->aktif = 'tidak aktif';
-            } else {
-                $aclub_member->aktif = 'aktif';
-            }
-
-            //data from aclub information
-            $aclub_info = $aclub_member->aclubInformation;
-            $aclub_member->sumber_data = $aclub_info->sumber_data;
+        foreach ($cats as $cat) {
+            $master = $cat->master;
+            $cat->master_id = $master->master_id;
+            $cat->name = $master->name;
+            $cat->telephone_number = $master->telephone_number;
+            $cat->email = $master->email;
+            $cat->birthdate = $master->birthdate;
+            $cat->address = $master->address;
+            $cat->city = $master->city;
+            $cat->gender = $master->gender;
+            $cat->line_id = $master->line_id;
+            $cat->whatsapp = $master->whatsapp;
         }
 
-        return $aclub_members;
+        return $cats;
     }
 
     public function getTable(Request $request) {
@@ -91,9 +52,9 @@ class CATController extends Controller
         $page = $request['page']-1;
         $record_amount = 3;
 
-        $aclub_members = $this->getData();
-        $record_count = count($aclub_members);
-        $aclub_members = $aclub_members->forPage(1, $record_amount);
+        $cats = $this->getData();
+        $record_count = count($cats);
+        $cats = $cats->forPage(1, $record_amount);
         // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
         // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
@@ -125,17 +86,13 @@ class CATController extends Controller
                 "WhatsApp" => "whatsapp",
                 "Sumber" => "sumber_data",
                 "Sales" => "sales_name",
+                "DP Date" => "DP_date",
                 "Payment Date" => "payment_date",
-                "Kode" => "kode",
+                "Batch" => "batch",
                 "Status" => "status",
-                "Aktif" => "aktif",
-                "Bulan Member" => "bulan_member",
-                "Bonus Member" => "bonus",
-                "Start Date" => "start_date",
-                "Expire Date" => "expired_date",
-                "Masa Tenggang" => "masa_tenggang",
-                "Yellow Zone" => "yellow_zone",
-                "Red Zone" => "red_zone"
+                "Opening Class" => "tanggal_opening_class",
+                "End Class" => "tanggal_end_class",
+                "Ujian" => "tanggal_ujian"
                 ];
         
 
@@ -148,17 +105,13 @@ class CATController extends Controller
                 "whatsapp",
                 "sumber_data",
                 "sales_name",
+                "DP_date",
                 "payment_date",
-                "kode",
+                "batch",
                 "status",
-                "aktif",
-                "bulan_member",
-                "bonus",
-                "start_date",
-                "expired_date",
-                "masa_tenggang",
-                "yellow_zone",
-                "red_zone"
+                "tanggal_opening_class",
+                "tanggal_end_class",
+                "tanggal_ujian"
                 ];
 
         //Filter
@@ -174,17 +127,15 @@ class CATController extends Controller
             $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
         }
 
-        // $this->getFilteredAndSortedTable('test');
-
         $joined = DB::table('master_clients')
-                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+                    ->join('cats', 'cats.master_id', '=', 'master_clients.master_id');
 
         $filter_cities = $joined->select('city')->distinct()->get();
         $filter_gender = $joined->select('gender')->distinct()->get();
-        $filter_sumber = DB::table('aclub_informations')->select('sumber_data')->distinct()->get();
-        $filter_sales = DB::table('aclub_transactions')->select('sales_name')->distinct()->get();
-        $filter_kode = DB::table('aclub_transactions')->select('kode')->distinct()->get();
-        $filter_status = DB::table('aclub_transactions')->select('status')->distinct()->get();
+        $filter_sumber = DB::table('cats')->select('sumber_data')->distinct()->get();
+        $filter_sales = DB::table('cats')->select('sales_name')->distinct()->get();
+        $filter_batch = DB::table('cats')->select('batch')->distinct()->get();
+        $filter_status = DB::table('cats')->select('status')->distinct()->get();
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -203,31 +154,37 @@ class CATController extends Controller
             "Gender" => $filter_gender,
             "Sumber" => $filter_sumber,
             "Sales" => $filter_sales,
-            "Kode" => $filter_kode,
+            "Batch" => $filter_batch,
             "Status" => $filter_status,
-            "Start Date" => $filter_date,
+            "Tanggal Lahir" => $filter_date,
+            "DP Date" => $filter_date,
             "Payment Date" => $filter_date,
-            "Masa Tenggang" => $filter_date
+            "Opening Class" => $filter_date,
+            "End Class" => $filter_date,
+            "Ujian" => $filter_date
             ];
 
         //sort
         $sortables = [
-            "Tanggal Lahir" => "birthdate",
             "Kota" => "city",
             "Gender" => "gender",
             "Sumber" => "sumber_data",
             "Sales" => "sales_name",
-            "Payment Date" => "payment_date",
-            "Kode" => "kode",
+            "Batch" => "batch",
             "Status" => "status",
-            "Start Date" => "start_date",
-            "Masa Tenggang" => "masa_tenggang"];
+            "Tanggal Lahir" => "birthdate",
+            "DP Date" => "DP_date",
+            "Payment Date" => "payment_date",
+            "Opening Class" => "tanggal_opening_class",
+            "End Class" => "tanggal_end_class",
+            "Ujian" => "tanggal_ujian"
+            ];
 
         //Return view table dengan parameter
-        return view('vpc/aclubview',
+        return view('vpc/catview',
                     [
-                        'route' => 'AClub',
-                        'clients' => $aclub_members,
+                        'route' => 'CAT',
+                        'clients' => $cats,
                         'heads'=>$heads, 'atts'=>$atts,
                         'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
@@ -236,13 +193,28 @@ class CATController extends Controller
                         'filter_gender' => $filter_gender,
                         'filter_sumber' => $filter_sumber,
                         'filter_sales' => $filter_sales,
-                        'filter_kode' => $filter_kode,
+                        'filter_batch' => $filter_batch,
                         'filter_status' => $filter_status,
                         'filter_date' => $filter_date,
                         'filterable' => $filterable,
                         'sortables' => $sortables,
                         'count' => $page_count
                     ]);
+
+        $filterable = [
+            "Kota" => $filter_cities,
+            "Gender" => $filter_gender,
+            "Sumber" => $filter_sumber,
+            "Sales" => $filter_sales,
+            "Batch" => $filter_batch,
+            "Status" => $filter_status,
+            "Tanggal Lahir" => $filter_date,
+            "DP Date" => $filter_date,
+            "Payment Date" => $filter_date,
+            "Opening Class" => $filter_date,
+            "End Class" => $filter_date,
+            "Ujian" => $filter_date
+            ];
     }
 
     // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
