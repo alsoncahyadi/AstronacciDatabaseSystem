@@ -244,6 +244,13 @@ Route::get('/CAT/deletetrans/{id1}/{id2}', [
     'roles' => ['0', '3'],
     ]);
 
+Route::post('/CAT/filter', [
+    'uses' => 'CATController@getFilteredAndSortedTable',
+    'as' => 'CAT.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 // MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',

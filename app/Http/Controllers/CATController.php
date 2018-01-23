@@ -50,7 +50,7 @@ class CATController extends Controller
         //         ->paginate(15);
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 5;
 
         $cats = $this->getData();
         $record_count = count($cats);
@@ -137,17 +137,17 @@ class CATController extends Controller
         $filter_batch = DB::table('cats')->select('batch')->distinct()->get();
         $filter_status = DB::table('cats')->select('status')->distinct()->get();
         $filter_date = ['0'=>['0'=>'January'], 
-        '1'=>['0'=>'February'], 
-        '2'=>['0'=>'March'], 
-        '3'=>['0'=>'April'], 
-        '4'=>['0'=>'May'], 
-        '5'=>['0'=>'June'], 
-        '6'=>['0'=>'July'],
-        '7'=>['0'=>'August'],
-        '8'=>['0'=>'September'],
-        '9'=>['0'=>'October'],
-        '10'=>['0'=>'November'],
-        '11'=>['0'=>'December']];
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];
 
         $filterable = [
             "Kota" => $filter_cities,
@@ -228,7 +228,7 @@ class CATController extends Controller
         // $json_sort = json_encode($example_sort);
         // test
 
-         $attsMaster = [
+        $attsMaster = [
                         "master_id",
                         "name",
                         "email",
@@ -245,47 +245,28 @@ class CATController extends Controller
                 "whatsapp",
                 "sumber_data",
                 "sales_name",
+                "DP_date",
                 "payment_date",
-                "kode",
+                "batch",
                 "status",
-                "aktif",
-                "bulan_member",
-                "bonus",
-                "start_date",
-                "expired_date",
-                "masa_tenggang",
-                "yellow_zone",
-                "red_zone"
+                "tanggal_opening_class",
+                "tanggal_end_class",
+                "tanggal_ujian"
                 ];
 
         $json_filter = $request['filters'];
         $json_sort = $request['sorts'];
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
-
+        $record_amount = 5;
 
         // add 'select' of query
-
-        $query =        "SELECT *, ";
-        $query = $query."(masa_tenggang-expired_date) as bonus, ";
-        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
-        $query = $query."FROM ";
-        $query = $query."master_clients ";
-        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
-        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
-        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
-        $query = $query."            FROM ";
-        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
-        $query = $query."                    FROM aclub_transactions ";
-        $query = $query."                    GROUP BY user_id) as T1 ";
-        $query = $query."            INNER JOIN ";
-        $query = $query."                ( SELECT *";
-        $query = $query."                   FROM aclub_transactions) as T2 ";
-        $query = $query."                    ON T1.user_id = T2.user_id ";
-        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
-        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
+        $query = "";
+        $query = $query."SELECT * "; 
+        $query = $query."FROM master_clients "; 
+        $query = $query."INNER JOIN cats ";
+        $query = $query."ON cats.master_id = master_clients.master_id ";
+    
 
         // add subquery of filter
         $query = $this->addFilterSubquery($query, $json_filter);
@@ -297,21 +278,11 @@ class CATController extends Controller
         // retrieve result
         $list_old = DB::select($query);
         
-        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
-        foreach ($list as $aclub_member) {
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));  
 
-            $last_kode = substr($aclub_member->kode,-1);
-            if ($last_kode == 'S') {
-                $aclub_member->bulan_member = 1;
-            } else if($last_kode == 'G') {
-                $aclub_member->bulan_member = 6;
-            } else {
-                $aclub_member->bulan_member = 12;
-            }
-        }
         return view('vpc/aclubtable',
                     [
-                        'route' => 'AClub',
+                        'route' => 'CAT',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster
@@ -338,7 +309,8 @@ class CATController extends Controller
             $idx_filter = 0;
             $query = $query.'(';
 
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
+            if (in_array($key_filter, ['birthdate','payment_date', "DP_date", "payment_date", "tanggal_opening_class", 
+                "tanggal_end_class", "tanggal_ujian"])) {
                 $idx_value = 0;
                 foreach ($values_filter as $value_filter) {
                     $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
