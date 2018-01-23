@@ -136,18 +136,15 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4 row">
-					<div class="col-md-3">
-						<i class="fa fa-child fa-fw"></i> Members
-					</div>
+				<div class="col-md-4 row" style="width:38%;">
 					<div class="col-md-4">
-						<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
+						<button class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </a></button>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 					</div>
-					<div class="col-md-2">
-						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px; margin-left: -50px"></i>
+					<div class="col-md-2" style="width:10%;">
+						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px;"></i>
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -160,8 +157,7 @@
 					</div>
 				</div>
 				<div class="col-md-6 row">
-					<div class="col-md-1"></div>
-					<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
+					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px;">Sort by:</div>
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
 						<select class="sort form-control no-spin" name="sort1">
@@ -187,7 +183,7 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-1" style="width:2%;">
 						<button id="sort-button" class="btn btn-default">Sort</button>
 					</div>
 				</div>
@@ -203,13 +199,13 @@
 				    	<thead>
 							<tr>
 								<?php $idx = 1 ?>
-								<th class="fixed-side collumn-select" scope="col"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
+								<th class="fixed-side collumn-select" scope="col" style="min-width: 75px;"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 								@foreach ($headsMaster as $headMaster)
-								<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@if ($headMaster == 'Tanggal Lahir')
+									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }} 
 									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-										<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+										<div class="filter panel panel-default collapse" id="dd{{$idx}}" style="margin-left:98px;">
 											<form>
 												<label>Filter</label>
 												<div class="panel panel-default filter-selection">
@@ -221,9 +217,10 @@
 													</div>
 												@endforeach
 												</div>
-												<button class="btn btn-default btn-xs">Filter</button>
 											</form>
 										</div>
+									@else
+									<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@endif
 								</th>
 								<?php $idx = $idx + 1; ?>

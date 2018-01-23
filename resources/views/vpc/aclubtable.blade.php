@@ -6,10 +6,14 @@
 										<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 										<input type="hidden" name="id{{ $idx }}" value="">
 									@foreach ($attsMaster as $attMaster)
-										<td class="fixed-side" style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
+										@if ($attMaster == 'name')
+ 										<td class="fixed-side" style="white-space: nowrap;"> <a id="{{$attMaster}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;"> {{ $client->$attMaster }}</a></td>
+ 										@else
+ 											<td class="fixed-side" style="white-space: nowrap;"> {{ $client->$attMaster }} </td>
+ 										@endif
 									@endforeach
 									@foreach ($atts as $att)
-										<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+										<td style="max-width: 100px; white-space: nowrap;"> {{$client->$att}} </td>
 									@endforeach
 								</tr>
 							<?php $idx = $idx + 1; ?>
