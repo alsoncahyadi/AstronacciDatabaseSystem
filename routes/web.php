@@ -508,12 +508,12 @@ Route::post('/AClub/filter', [
 
 
 //GREEN ROUTES
-/*Route::get('/green', [
+Route::get('/GreenClients', [
     'uses' => 'GreenController@getTable',
-    'as' => 'green',
+    'as' => 'GreenClients',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
-    ]);*/
+    ]);
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
