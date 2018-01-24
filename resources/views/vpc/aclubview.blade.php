@@ -280,7 +280,8 @@
 							<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tbody> -->
-						<tbody id="tbody">@include('vpc/aclubtable')</tbody>
+						<tbody id="tbody">							
+						@include('vpc/aclubtable')</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 				</table>
 				</div>
@@ -399,7 +400,7 @@
 		<div id="pageController" style="margin-left: 15px">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
-			/{{$count}}
+			/<label id="page_count">{{$count}}</label>
 			<button id="page_number">Go</button>
 		</div>
 	</div>
@@ -482,6 +483,8 @@
 		console.log(json_sorts);
 
 		document.getElementById("pagenum").value = "1";
+		page_count = document.getElementById("page_count").innerHTML;
+		page_count = 5;
 		// Request to API
 	    var request = $.ajax({
 	        url: "/AClub/filter",
@@ -501,6 +504,9 @@
 			$("#tbody").html(response);
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
 	    });
 
 
@@ -534,7 +540,7 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
-		var_page = document.getElementById("pagenum").value;
+		var var_page = document.getElementById("pagenum").value;
 
 		// Request to API
 	    var request = $.ajax({
@@ -555,6 +561,9 @@
 			$("#tbody").html(response);
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
 	    });
 	}
 
