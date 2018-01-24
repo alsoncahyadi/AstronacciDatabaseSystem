@@ -54,8 +54,7 @@
                 View Green Prospect
             </div>
             <div class="panel-body">
-                Waiting
-                <!--BOTTLENECK-->
+               <a href="{{route('green')}}" class="btn btn-primary">Green</a>
             </div>
         </div>
     </div>

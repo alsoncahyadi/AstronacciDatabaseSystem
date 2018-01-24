@@ -127,7 +127,7 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<h1>A-CLUB Members</h1>
+				<h1>Green Clients</h1>
 			</div>
 			<!-- /.col-lg-12 -->
 		</div>
@@ -151,13 +151,6 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<div class="form-group input-group" style="margin-bottom: 0px">
-						<input type="number" class="form-control" placeholder="Add Bonus Days" id="bonus-days">
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="button" id="add-bonus"> <i class="fa fa-plus"></i>
-							</button>
-						</span>
-					</div>
 				</div>
 				<div class="col-md-6 row">
 					<div class="col-md-1"></div>
@@ -434,40 +427,6 @@
 		console.log(jsonFilter);
 	});
 
-	$("#add-bonus").click(function() {
-		console.log("add bonus");
-		var idSelector = function() { return this.id; };
-		var checked = $(".selectable:checked").map(idSelector).get();
-		var days = $("#bonus-days").val();
-		console.log(checked);
-		console.log(days);
-
-	    // Request to API
-	    var request = $.ajax({
-	        url: "/AClub/add-bonus",
-	        type: "post",
-	        data: {
-						"_token": "{{ csrf_token() }}",
-						"data": checked,
-						"days": days
-					}
-	    });
-
-			// Callback handler that will be called on success
-	    request.done(function (response, textStatus, jqXHR){
-	        // Log a message to the console
-					console.log(response);
-					$.each(response, function(k, v) {
-					    //display the key and value pair
-					    var masa_tenggang_id = "#masa_tenggang_" + k;
-							$(masa_tenggang_id).html(v);
-							var bonus_id = "#bonus_" + k;
-							var updated_bonus = parseInt($(bonus_id).html()) + parseInt(days);
-							$(bonus_id).html(updated_bonus);
-					});
-	    });
-	});
-
 	function sortAndFilter() {
 		var sorts = {};
 
@@ -487,7 +446,7 @@
 		document.getElementById("pagenum").value = "1";
 		// Request to API
 	    var request = $.ajax({
-	        url: "/GreenClients/filter",
+	        url: "/Green/filter",
 	        type: "post",
 	        data: {
 						"_token": "{{ csrf_token() }}",
@@ -541,7 +500,7 @@
 
 		// Request to API
 	    var request = $.ajax({
-	        url: "/green/filter",
+	        url: "/Green/filter",
 	        type: "post",
 	        data: {
 						"_token": "{{ csrf_token() }}",
