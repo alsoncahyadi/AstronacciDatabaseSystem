@@ -221,17 +221,9 @@ class MRGController extends Controller
                 "whatsapp",
                 "sumber_data",
                 "sales_name",
-                "payment_date",
-                "kode",
-                "status",
-                "aktif",
-                "bulan_member",
-                "bonus",
-                "start_date",
-                "expired_date",
-                "masa_tenggang",
-                "yellow_zone",
-                "red_zone"
+                "join_date",
+                "accounts_number",
+                "account_type"
                 ];
 
         $json_filter = $request['filters'];
@@ -242,26 +234,23 @@ class MRGController extends Controller
 
 
         // add 'select' of query
-
-        $query =        "SELECT *, ";
-        $query = $query."(masa_tenggang-expired_date) as bonus, ";
-        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
-        $query = $query."FROM ";
-        $query = $query."master_clients ";
-        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
-        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
-        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
-        $query = $query."            FROM ";
-        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
-        $query = $query."                    FROM aclub_transactions ";
-        $query = $query."                    GROUP BY user_id) as T1 ";
-        $query = $query."            INNER JOIN ";
-        $query = $query."                ( SELECT *";
-        $query = $query."                   FROM aclub_transactions) as T2 ";
-        $query = $query."                    ON T1.user_id = T2.user_id ";
-        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
-        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
+        $query = "";
+        $query = $query."SELECT * ";
+        $query = $query."FROM  ";
+        $query = $query."master_clients  ";
+        $query = $query."INNER JOIN mrgs ON master_clients.master_id = mrgs.master_id  ";
+        $query = $query."INNER JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
+        $query = $query."            sales_name, T1.created_at, updated_at, created_by, updated_by ";
+        $query = $query."            FROM  ";
+        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
+        $query = $query."                    FROM mrg_accounts ";
+        $query = $query."                    GROUP BY master_id) as T1  ";
+        $query = $query."            INNER JOIN  ";
+        $query = $query."                ( SELECT * ";
+        $query = $query."                   FROM mrg_accounts) as T2  ";
+        $query = $query."                    ON T1.master_id = T2.master_id  ";
+        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
+        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
 
         // add subquery of filter
         $query = $this->addFilterSubquery($query, $json_filter);
@@ -274,20 +263,10 @@ class MRGController extends Controller
         $list_old = DB::select($query);
         
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
-        foreach ($list as $aclub_member) {
 
-            $last_kode = substr($aclub_member->kode,-1);
-            if ($last_kode == 'S') {
-                $aclub_member->bulan_member = 1;
-            } else if($last_kode == 'G') {
-                $aclub_member->bulan_member = 6;
-            } else {
-                $aclub_member->bulan_member = 12;
-            }
-        }
-        return view('vpc/aclubtable',
+        return view('vpc/mrgtable',
                     [
-                        'route' => 'AClub',
+                        'route' => 'MRG',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster
