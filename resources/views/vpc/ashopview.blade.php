@@ -446,7 +446,7 @@
         document.getElementById("pagenum").value = "1";
         // Request to API
         var request = $.ajax({
-            url: "/AClub/filter",
+            url: "/AShop/filter",
             type: "post",
             data: {
                         "_token": "{{ csrf_token() }}",
@@ -500,7 +500,7 @@
 
         // Request to API
         var request = $.ajax({
-            url: "/AClub/filter",
+            url: "/AShop/filter",
             type: "post",
             data: {
                         "_token": "{{ csrf_token() }}",

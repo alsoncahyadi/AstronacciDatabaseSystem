@@ -774,6 +774,13 @@ Route::get('/AShop/{id}/{package}', [
     'middleware' => ['auth', 'ashop'],
     ]);
 
+Route::post('/AShop/filter', [
+    'uses' => 'AShopController@getFilteredAndSortedTable',
+    'as' => 'AShop.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //Assignment Routes
 Route::get('/assign', [
     'uses' => 'AssignmentController@getTable',
