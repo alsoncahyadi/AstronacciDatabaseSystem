@@ -71,11 +71,6 @@ class GreenController extends Controller
     }
 
     public function getTable(Request $request) {
-        // $keyword = $request['q'];
-
-        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
-        //         ->paginate(15);
         $page = 0;
         $page = $request['page']-1;
         $record_amount = 3;
@@ -83,10 +78,7 @@ class GreenController extends Controller
         $greens = $this->getData();
         $record_count = count($greens);
         $greens = $greens->forPage(1, $record_amount);
-        // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
-        // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
-        // dd($aclub_members);
         $page_count = ceil($record_count/$record_amount);
 
         $headsMaster = [
@@ -182,35 +174,39 @@ class GreenController extends Controller
         // $json_sort = json_encode($example_sort);
         // test
 
-         $attsMaster = [
-                        "master_id",
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
+                    "Email",
+                    "Telepon",
+                    "Interest"
+                ];
+
+        $attsMaster = [
+                        "green_id",
                         "name",
                         "email",
-                        "telephone_number",
-                        "birthdate"
+                        "phone",
+                        "interest"
                     ];
+        $heads = [
+                "Pemberi" => "pemberi",
+                "Perintah" => "keterangan_perintah",
+                "Status" => "status",
+                "Sales" => "sales_name",
+                "Nama Product" => "nama_product"
+                ];
+        
 
         //Nama attribute pada sql
         $atts = [
-                "address",
-                "city",
-                "gender",
-                "line_id",
-                "whatsapp",
-                "sumber_data",
-                "sales_name",
-                "payment_date",
-                "kode",
+                "pemberi",
+                "keterangan_perintah",
                 "status",
-                "aktif",
-                "bulan_member",
-                "bonus",
-                "start_date",
-                "expired_date",
-                "masa_tenggang",
-                "yellow_zone",
-                "red_zone"
+                "sales_name",
+                "nama_product",
                 ];
+
 
         $json_filter = $request['filters'];
         $json_sort = $request['sorts'];
@@ -220,28 +216,25 @@ class GreenController extends Controller
 
 
         // add 'select' of query
-
-        $query =        "SELECT *, ";
-        $query = $query."(masa_tenggang-expired_date) as bonus, ";
-        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
-        $query = $query."FROM ";
-        $query = $query."master_clients ";
-        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
-        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
-        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
-        $query = $query."            FROM ";
-        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
-        $query = $query."                    FROM aclub_transactions ";
-        $query = $query."                    GROUP BY user_id) as T1 ";
-        $query = $query."            INNER JOIN ";
-        $query = $query."                ( SELECT *";
-        $query = $query."                   FROM aclub_transactions) as T2 ";
-        $query = $query."                    ON T1.user_id = T2.user_id ";
-        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
-        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
+        $query = "";
+        $query = $query."SELECT * ";
+        $query = $query."FROM green_prospect_clients ";
+        $query = $query."INNER JOIN (SELECT  ";
+        $query = $query."            progress_id, T1.green_id as green_id, date, sales_name,  ";
+        $query = $query."            status, nama_product, nominal, keterangan, created_at, updated_at ";
+        $query = $query."            FROM  ";
+        $query = $query."                ( SELECT green_id, max(created_by) as created_by  ";
+        $query = $query."                    FROM green_prospect_progresses  ";
+        $query = $query."                    GROUP BY green_id) as T1  ";
+        $query = $query."            INNER JOIN  ";
+        $query = $query."                ( SELECT * ";
+        $query = $query."                   FROM green_prospect_progresses) as T2  ";
+        $query = $query."                    ON T1.green_id = T2.green_id  ";
+        $query = $query."                    AND T1.created_by = T2.created_by) as last_transaction  ";
+        $query = $query."ON green_prospect_clients.green_id = last_transaction.green_id";
 
         // add subquery of filter
+
         $query = $this->addFilterSubquery($query, $json_filter);
         // add subquery of sort
         $query = $this->addSortSubquery($query, $json_sort);
@@ -250,22 +243,12 @@ class GreenController extends Controller
 
         // retrieve result
         $list_old = DB::select($query);
-        
+        print_r($list_old);        
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
-        foreach ($list as $aclub_member) {
 
-            $last_kode = substr($aclub_member->kode,-1);
-            if ($last_kode == 'S') {
-                $aclub_member->bulan_member = 1;
-            } else if($last_kode == 'G') {
-                $aclub_member->bulan_member = 6;
-            } else {
-                $aclub_member->bulan_member = 12;
-            }
-        }
-        return view('vpc/aclubtable',
+        return view('vpc/greentable',
                     [
-                        'route' => 'AClub',
+                        'route' => 'GreenClients',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster

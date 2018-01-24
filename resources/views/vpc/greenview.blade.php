@@ -487,7 +487,7 @@
 		document.getElementById("pagenum").value = "1";
 		// Request to API
 	    var request = $.ajax({
-	        url: "/green/filter",
+	        url: "/GreenClients/filter",
 	        type: "post",
 	        data: {
 						"_token": "{{ csrf_token() }}",

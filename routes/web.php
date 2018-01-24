@@ -599,6 +599,13 @@ Route::post('/green/assign', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::post('/GreenClients/filter', [
+    'uses' => 'GreenController@getFilteredAndSortedTable',
+    'as' => 'GreenClients.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 
 //Red Club Route
 Route::get('/RedClub', [
