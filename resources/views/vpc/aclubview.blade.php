@@ -116,9 +116,23 @@
 		.clone>tbody>tr:nth-of-type(even) {
 		    background-color: #fff !important;
 		}
-
+		#copy_clipboard {
+		  position: fixed;
+		  bottom: 0;
+		  right: 0;
+		  pointer-events: none;
+		  opacity: 0;
+		  transform: scale(0);
+		}
 		th.fixed-side {
 			background-color: #fff !important;
+		}
+		.popup{
+			display:none;
+			position:absolute;
+			background:#f5f5f5;
+			border-radius:6px;
+			padding:6px;
 		}
 	</style>
 </head>
@@ -144,7 +158,7 @@
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 					</div>
 					<div class="col-md-2" style="width:10%; max-width: 180px;">
-						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px;"></i>
+						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -396,7 +410,7 @@
 			</div>
 		-->
 		</div>
-		<div id="pageController" style="margin-left: 15px">
+		<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
 			/{{$count}}
@@ -480,7 +494,7 @@
 
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
-
+		$(".spinner_load").css('display', 'table');
 		document.getElementById("pagenum").value = "1";
 		// Request to API
 	    var request = $.ajax({
@@ -502,7 +516,7 @@
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
 	    });
-
+	    $(".spinner_load").css('display', 'none');
 
 	}
 
@@ -604,4 +618,27 @@
 	$("#page_number").click(function() {
 		gotoPage();
 	});
+
+	function copyFunction(x) {
+		$('#copy_clipboard').remove();
+		const txt = document.createElement('textarea');
+		txt.id = 'copy_clipboard'
+		document.body.appendChild(txt);
+		txt.value = x.innerHTML; // chrome uses this
+		txt.textContent = x.innerHTML; // FF uses this
+		var sel = getSelection();
+		var range = document.createRange();
+		range.selectNode(txt);
+		sel.removeAllRanges();
+		sel.addRange(range);
+		document.execCommand("Copy");
+	    
+        var html_popup = '<div class="popup">text copied</div>';
+        $('.popup').remove();
+        $('#wrapper').prepend(html_popup);
+        $('.popup').css('top', '5vh');
+        $('.popup').css('left', 'calc( 50% - 30px)');
+        $('.popup').fadeIn();
+        $('.popup').delay(500).fadeOut("slow");
+	}
 </script>
