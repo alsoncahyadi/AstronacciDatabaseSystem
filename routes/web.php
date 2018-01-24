@@ -775,7 +775,7 @@ Route::get('/AShop/{id}/{package}', [
     ]);
 
 Route::post('/AShop/filter', [
-    'uses' => 'AShopController@getFilteredAndSortedTable',
+    'uses' => 'AshopController@getFilteredAndSortedTable',
     'as' => 'AShop.filter',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
