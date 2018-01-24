@@ -116,9 +116,23 @@
 		.clone>tbody>tr:nth-of-type(even) {
 		    background-color: #fff !important;
 		}
-
+		#copy_clipboard {
+		  position: fixed;
+		  bottom: 0;
+		  right: 0;
+		  pointer-events: none;
+		  opacity: 0;
+		  transform: scale(0);
+		}
 		th.fixed-side {
 			background-color: #fff !important;
+		}
+		.popup{
+			display:none;
+			position:absolute;
+			background:#f5f5f5;
+			border-radius:6px;
+			padding:6px;
 		}
 	</style>
 </head>
@@ -144,7 +158,7 @@
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 					</div>
 					<div class="col-md-2" style="width:10%; max-width: 180px;">
-						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px;"></i>
+						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 					</div>
 				</div>
 				<div class="col-md-2">
@@ -397,7 +411,7 @@
 			</div>
 		-->
 		</div>
-		<div id="pageController" style="margin-left: 15px">
+		<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
 			/<label id="page_count">{{$count}}</label>
@@ -480,8 +494,9 @@
 		});
 
 		var json_sorts = JSON.stringify(sorts);
-		console.log(json_sorts);		
-		
+
+		console.log(json_sorts);
+		$(".spinner_load").css('display', 'table');
 		// Request to API
 	    var request = $.ajax({
 	        url: "/AClub/filter",
@@ -502,6 +517,63 @@
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
 
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
+	    });
+	    $(".spinner_load").css('display', 'none');
+
+	}
+
+	function gotoPage() {
+		var filters = {};
+		var sorts = {};
+		$('.check-filter:checked').each(function () {
+			var filter_type = $(this).attr("data-type");
+			var filter_value = $(this).val();
+			// alert(filter_type + " " + filter_value);
+			if (filters[filter_type]) {
+				filters[filter_type].push(filter_value);
+			} else {
+				filters[filter_type] = [];
+				filters[filter_type].push(filter_value);
+			}
+		});
+
+		var json_filters = JSON.stringify(filters);
+		console.log(json_filters);
+
+		$('.sort').each(function() {
+			var sort_value = $(this).find(":selected").val();
+			if (sort_value) {
+				sorts[sort_value] = true;
+			}
+		});
+
+		var json_sorts = JSON.stringify(sorts);
+		console.log(json_sorts);
+
+		var var_page = document.getElementById("pagenum").value;
+
+		// Request to API
+	    var request = $.ajax({
+	        url: "/AClub/filter",
+	        type: "post",
+	        data: {
+						"_token": "{{ csrf_token() }}",
+						"filters": json_filters,
+						"sorts": json_sorts,
+						"page": var_page
+					}
+		});
+
+		// Callback handler that will be called on success		
+	    request.done(function (response, textStatus, jqXHR){
+	        // Log a message to the console
+			// console.log(response);
+			$("#tbody").html(response);
+			$(".clone").remove();
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 	    });
@@ -556,4 +628,27 @@
 		console.log($("#pagenum").val());
 		sortAndFilter($("#pagenum").val());
 	});
+
+	function copyFunction(x) {
+		$('#copy_clipboard').remove();
+		const txt = document.createElement('textarea');
+		txt.id = 'copy_clipboard'
+		document.body.appendChild(txt);
+		txt.value = x.innerHTML; // chrome uses this
+		txt.textContent = x.innerHTML; // FF uses this
+		var sel = getSelection();
+		var range = document.createRange();
+		range.selectNode(txt);
+		sel.removeAllRanges();
+		sel.addRange(range);
+		document.execCommand("Copy");
+	    
+        var html_popup = '<div class="popup">text copied</div>';
+        $('.popup').remove();
+        $('#wrapper').prepend(html_popup);
+        $('.popup').css('top', '5vh');
+        $('.popup').css('left', 'calc( 50% - 30px)');
+        $('.popup').fadeIn();
+        $('.popup').delay(500).fadeOut("slow");
+	}
 </script>
