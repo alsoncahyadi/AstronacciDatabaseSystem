@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\MasterClient;
-use App\AShopTransaction;
+use App\AshopTransaction;
 use App\GreenProspectClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -29,7 +29,7 @@ class HomeController extends Controller
 
     public function indexAShop() //JOVIAN
     {
-        $clients = AShopTransaction::orderBy('master_id','asc')->groupBy('master_id')->get();
+        $clients = AshopTransaction::orderBy('master_id','asc')->groupBy('master_id')->get();
 
         $heads= ["Master ID",
                 "User ID Redclub",

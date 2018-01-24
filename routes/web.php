@@ -85,12 +85,6 @@ Route::get('/dashboard', [
 	'middleware' => 'auth'
     ]);
 
-Route::get('/AShop', [
-    'uses' => 'HomeController@indexAShop',
-    'as' => 'ashop',
-    'middleware' => 'auth'
-    ]);
-
 Route::get('/Green', [
     'uses' => 'HomeController@indexGreen',
     'as' => 'green',
@@ -714,15 +708,21 @@ Route::post('/product/insert', [
     'roles' => ['0'],
     ]);
 
+Route::get('/AShopDashboards', [
+    'uses' => 'HomeController@indexAShop',
+    'as' => 'AShop.dashboard',
+    'middleware' => 'auth'
+    ]);
+
 Route::get('/AShop/{id}', [
     'uses' => 'AshopController@clientDetail',
     'as' => 'AShop.detail',
     'middleware' => ['auth', 'ashop'],
     ]);
 
-Route::get('/AShopTransactions', [
+Route::get('/AShop', [
     'uses' => 'AshopController@getTable',
-    'as' => 'AShopTransactions',
+    'as' => 'AShop',
     'middleware' => ['auth', 'ashop'],
     ]);
 

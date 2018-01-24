@@ -66,8 +66,7 @@
                 View A-Shop
             </div>
             <div class="panel-body">
-                Waiting
-                <!--BOTTLENECK-->
+                <a href="{{route('AShop')}}" class="btn btn-primary">A-SHOP</a>
             </div>
         </div>
     </div>
