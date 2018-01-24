@@ -466,7 +466,7 @@
 	    });
 	});
 
-	function sortAndFilter() {
+	function sortAndFilter(page) {
 		var sorts = {};
 
 		var json_filters = JSON.stringify(filters);
@@ -480,11 +480,8 @@
 		});
 
 		var json_sorts = JSON.stringify(sorts);
-		console.log(json_sorts);
-
-		document.getElementById("pagenum").value = "1";
-		page_count = document.getElementById("page_count").innerHTML;
-		page_count = 5;
+		console.log(json_sorts);		
+		
 		// Request to API
 	    var request = $.ajax({
 	        url: "/AClub/filter",
@@ -493,7 +490,7 @@
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
 						"sorts": json_sorts,
-						"page": 1
+						"page": page
 					}
 	    });
 
@@ -505,63 +502,6 @@
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
 
-			var count_page = $("#hidden_page_count").val();
-			$("#page_count").html(count_page);
-	    });
-
-
-	}
-
-	function gotoPage() {
-		var filters = {};
-		var sorts = {};
-		$('.check-filter:checked').each(function () {
-			var filter_type = $(this).attr("data-type");
-			var filter_value = $(this).val();
-			// alert(filter_type + " " + filter_value);
-			if (filters[filter_type]) {
-				filters[filter_type].push(filter_value);
-			} else {
-				filters[filter_type] = [];
-				filters[filter_type].push(filter_value);
-			}
-		});
-
-		var json_filters = JSON.stringify(filters);
-		console.log(json_filters);
-
-		$('.sort').each(function() {
-			var sort_value = $(this).find(":selected").val();
-			if (sort_value) {
-				sorts[sort_value] = true;
-			}
-		});
-
-		var json_sorts = JSON.stringify(sorts);
-		console.log(json_sorts);
-
-		var var_page = document.getElementById("pagenum").value;
-
-		// Request to API
-	    var request = $.ajax({
-	        url: "/AClub/filter",
-	        type: "post",
-	        data: {
-						"_token": "{{ csrf_token() }}",
-						"filters": json_filters,
-						"sorts": json_sorts,
-						"page": var_page
-					}
-		});
-
-		// Callback handler that will be called on success		
-	    request.done(function (response, textStatus, jqXHR){
-	        // Log a message to the console
-			// console.log(response);
-			$("#tbody").html(response);
-			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
-			
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 	    });
@@ -585,11 +525,13 @@
 				delete filters[filter_type];
 			}
 		}
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 
 	$("#sort-button").click(function() {
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 /*	var mtable = [
 		@foreach ($clients as $client) [
@@ -611,6 +553,7 @@
 	console.log(table);
 */
 	$("#page_number").click(function() {
-		gotoPage();
+		console.log($("#pagenum").val());
+		sortAndFilter($("#pagenum").val());
 	});
 </script>
