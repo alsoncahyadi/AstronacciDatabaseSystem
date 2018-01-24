@@ -379,6 +379,13 @@ Route::post('/UOB/inserttrans', [
     'roles' => ['0', '3'],
     ]);
 
+Route::post('/UOB/filter', [
+    'uses' => 'UOBController@getFilteredAndSortedTable',
+    'as' => 'UOB.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //A-CLUB ROUTES
 Route::get('/AClub', [
     'uses' => 'AClubController@getTable',
