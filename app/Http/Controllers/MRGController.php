@@ -138,7 +138,7 @@ class MRGController extends Controller
         $filter_gender = $joined->select('gender')->distinct()->get();
         $filter_sumber = DB::table('mrgs')->select('sumber_data')->distinct()->get();
         $filter_sales = DB::table('mrg_accounts')->select('sales_name')->distinct()->get();
-        $filter_accounts = DB::table('mrg_accounts')->select('accounts_number')->distinct()->get();
+        // $filter_accounts = DB::table('mrg_accounts')->select('accounts_number')->distinct()->get();
         $filter_type = DB::table('mrg_accounts')->select('account_type')->distinct()->get();
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
@@ -159,7 +159,6 @@ class MRGController extends Controller
             "Sumber" => $filter_sumber,
             "Sales" => $filter_sales,
             "Tanggal Join" => $filter_date,
-            "Account" => $filter_accounts,
             "Type" => $filter_type
             ];
 
@@ -186,7 +185,6 @@ class MRGController extends Controller
                         'filter_gender' => $filter_gender,
                         'filter_sumber' => $filter_sumber,
                         'filter_sales' => $filter_sales,
-                        'filter_accounts' => $filter_accounts,
                         'filter_type' => $filter_type,
                         'filter_date' => $filter_date,
                         'filterable' => $filterable,
