@@ -14,4 +14,3 @@
 								</tr>
 							<?php $idx = $idx + 1; ?>
 							@endforeach
-						
