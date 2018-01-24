@@ -25,25 +25,17 @@ class AshopController extends Controller
 
     public function getData()
     {
-        $ashops = AshopTransaction::all();
+        $masters = MasterClient::all();
 
-        foreach ($ashops as $ashop) {
-            $master = $ashop->master;
-            $ashop->master_id = $master->master_id;
-            $ashop->name = $master->name;
-            $ashop->telephone_number = $master->telephone_number;
-            $ashop->email = $master->email;
-            $ashop->birthdate = $master->birthdate;
-            $ashop->address = $master->address;
-            $ashop->city = $master->city;
-            $ashop->gender = $master->gender;
-            $ashop->line_id = $master->line_id;
-            $ashop->bbm = $master->bbm;
-            $ashop->whatsapp = $master->whatsapp;
-            $ashop->facebook = $master->facebook;
+        foreach ($masters as $master) {
+            if ($master->ashopTransactions()->first() != null) {
+                $last_transaction = $master->ashopTransactions()->orderBy('created_at','desc')->first();
+                $master->product_type = $last_transaction->product_type;
+                $master->product_name = $last_transaction->product_name;
+            }
         }
 
-        return $ashops;
+        return $masters;
     }
 
     public function getTable(Request $request) {
@@ -51,9 +43,9 @@ class AshopController extends Controller
         $page = $request['page']-1;
         $record_amount = 3;
 
-        $ashops = $this->getData();
-        $record_count = count($ashops);
-        $ashops = $ashops->forPage(1, $record_amount);
+        $masters = $this->getData();
+        $record_count = count($masters);
+        $masters = $masters->forPage(1, $record_amount);
 
         $page_count = ceil($record_count/$record_amount);
 
@@ -147,7 +139,7 @@ class AshopController extends Controller
         return view('vpc/ashopview',
                     [
                         'route' => 'AShop',
-                        'clients' => $ashops,
+                        'clients' => $masters,
                         'heads'=>$heads, 'atts'=>$atts,
                         'headsMaster' => $headsMaster,
                         'attsMaster' => $attsMaster,
