@@ -231,7 +231,7 @@ class AshopController extends Controller
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));        
         return view('vpc/aclubtable',
                     [
-                        'route' => 'Green',
+                        'route' => 'AShop',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster
