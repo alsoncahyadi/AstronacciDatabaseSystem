@@ -242,16 +242,19 @@ class GreenController extends Controller
         $query = $query.";";
 
         // retrieve result
-        $list_old = DB::select($query);
-        print_r($list_old);        
+        $list_old = DB::select($query);    
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);
 
         return view('vpc/greentable',
                     [
                         'route' => 'GreenClients',
                         'clients' => $list,
                         'atts' => $atts,
-                        'attsMaster' => $attsMaster
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
                     ]);
         // return $list;
     }

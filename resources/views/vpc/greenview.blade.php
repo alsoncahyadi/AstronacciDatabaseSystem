@@ -281,121 +281,11 @@
 				</table>
 				</div>
 			</div>
-
-			<!--
-				<div class="col-xs-6" style="margin:0px;padding: 0px;">
-				<table id="tablebase" class="table table-condensed table-striped table-bordered table-hover custtable">
-					<thead>
-						<tr>
-							<?php $idx = 1 ?>
-							<th> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
-							Mendapatkan judul setiap kolom pada tabel dari variabel heads 
-							@foreach ($headsMaster as $headMaster)
-							<th> {{ $headMaster }} 
-								@if ($headMaster == 'Tanggal Lahir')
-								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-										<form>
-											<label>Filter</label>
-											<div class="panel panel-default filter-selection">
-											@foreach($filter_birthdates as $filter_birthdate)
-												<div class="checkbox">
-													<label>
-														<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
-													</label>
-												</div>
-											@endforeach
-											</div>
-											<button class="btn btn-default btn-xs">Filter</button>
-										</form>
-									</div>
-								@endif
-							</th>
-							<?php $idx = $idx + 1; ?>
-							@endforeach
-						</tr>
-					</thead>
-					<tbody>
-						<?php $idx = 0 ?>
-						@foreach ($clients as $client)
-							<tr>
-								<td style="text-align:center; padding-bottom: 0px">
-									<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-									<input type="hidden" name="id{{ $idx }}" value="">
-								@foreach ($attsMaster as $attMaster)
-									<td style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
-								@endforeach
-							</tr>
-						<?php $idx = $idx + 1; ?>
-						@endforeach
-					</tbody>
-				</table>
-			</div>
-			<div class="col-xs-6" style="margin:0px;padding: 0px;overflow-x: scroll;">
-				<table id="tablebase2" class="table table-condensed table-striped table-bordered table-hover custtable">
-
-					<thead>
-						<tr>
-							Mendapatkan judul setiap kolom pada tabel dari variabel heads
-							<?php $idx = 6; ?>
-							@foreach ($heads as $head => $value)
-							<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
-							@if (isset($filterable[$head]))
-							<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-									<form id="formCities" action="#" method="post">
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-										@foreach ($filterable[$head] as $filter)
-											<div class="checkbox">
-												<label>
-													@foreach ($filter as $f)						
-													<?php $m = date('m', strtotime($f))?>
-													@if (($m == 01)&&($f != 'January'))
-													<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
-													{{ $f }}
-													@else
-													<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
-													{{ $f }}
-													@endif
-													@endforeach
-												</label>
-											</div>											
-										@endforeach
-										</div>
-										<button class="btn btn-default btn-xs">Filter</button>
-									</form>
-								</div>							
-							@endif
-							</th>
-							<?php $idx = $idx + 1; ?>
-							@endforeach
-						</tr>
-					</thead>
-					<tbody>
-						<?php $idx = 0; ?>
-						Menampilkan seluruh client untuk PC terkait, dari list pada variabel clients
-
-						@foreach ($clients as $client)
-						<tr>
-							@foreach ($atts as $att)
-							<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
-							@endforeach
-						</tr>
-
-						<?php $idx = $idx + 1; ?>
-
-						@endforeach
-					</tbody>
-					<input type="hidden" name="numusers" value="{{ $idx }}">
-				</table>
-			</div>
-		-->
 		</div>
 		<div id="pageController" style="margin-left: 15px">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
-			/{{$count}}
+			/<label id="page_count">{{$count}}</label>
 			<button id="page_number">Go</button>
 		</div>
 	</div>
@@ -427,7 +317,7 @@
 		console.log(jsonFilter);
 	});
 
-	function sortAndFilter() {
+	function sortAndFilter(page) {
 		var sorts = {};
 
 		var json_filters = JSON.stringify(filters);
@@ -443,7 +333,6 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
-		document.getElementById("pagenum").value = "1";
 		// Request to API
 	    var request = $.ajax({
 	        url: "/Green/filter",
@@ -452,7 +341,7 @@
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
 						"sorts": json_sorts,
-						"page": 1
+						"page": page
 					}
 	    });
 
@@ -462,7 +351,10 @@
 			// console.log(response);
 			$("#tbody").html(response);
 			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
 	    });
 
 
@@ -496,7 +388,7 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
-		var_page = document.getElementById("pagenum").value;
+		var var_page = document.getElementById("pagenum").value;
 
 		// Request to API
 	    var request = $.ajax({
@@ -516,7 +408,10 @@
 			// console.log(response);
 			$("#tbody").html(response);
 			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
 	    });
 	}
 
@@ -532,17 +427,18 @@
 				filters[filter_type].push(filter_value);
 			}
 		} else {
-			alert('b');
 			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
 			if (filters[filter_type].length == 0) {
 				delete filters[filter_type];
 			}
 		}
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 
 	$("#sort-button").click(function() {
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 /*	var mtable = [
 		@foreach ($clients as $client) [
@@ -564,6 +460,7 @@
 	console.log(table);
 */
 	$("#page_number").click(function() {
-		gotoPage();
+		console.log($("#pagenum").val());
+		sortAndFilter($("#pagenum").val());
 	});
 </script>
