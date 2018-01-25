@@ -116,9 +116,23 @@
 		.clone>tbody>tr:nth-of-type(even) {
 		    background-color: #fff !important;
 		}
-
+		#copy_clipboard {
+		  position: fixed;
+		  bottom: 0;
+		  right: 0;
+		  pointer-events: none;
+		  opacity: 0;
+		  transform: scale(0);
+		}
 		th.fixed-side {
 			background-color: #fff !important;
+		}
+		.popup{
+			display:none;
+			position:absolute;
+			background:#f5f5f5;
+			border-radius:6px;
+			padding:6px;
 		}
 	</style>
 </head>
@@ -136,23 +150,19 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4 row">
-					<div class="col-md-3">
-						<i class="fa fa-child fa-fw"></i> Members
-					</div>
+				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
 					<div class="col-md-4">
-						<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
+						<button class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </a></button>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 					</div>
-					<div class="col-md-2">
-						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px; margin-left: -50px"></i>
+					<div class="col-md-2" style="width:10%; max-width: 180px;">
+						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 					</div>
 				</div>
-				<div class="col-md-6 row">
-					<div class="col-md-1"></div>
-					<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
+				<div class="col-md-6 row" style="float: right;">
+					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px; max-width: 505px;">Sort by:</div>
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
 						<select class="sort form-control no-spin" name="sort1">
@@ -178,7 +188,7 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-1" style="width:2%;">
 						<button id="sort-button" class="btn btn-default">Sort</button>
 					</div>
 				</div>
@@ -390,7 +400,7 @@
 			</div>
 		-->
 		</div>
-		<div id="pageController" style="margin-left: 15px">
+		<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
 			/<label id="page_count">{{$count}}</label>
@@ -440,7 +450,7 @@
 
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
-
+		$(".spinner_load").css('display', 'table');
 		// Request to API
 	    var request = $.ajax({
 	        url: "/CAT/filter",
@@ -464,7 +474,7 @@
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 	    });
-
+	    $(".spinner_load").css('display', 'none');
 
 	}
 
@@ -571,4 +581,27 @@
 		console.log($("#pagenum").val());
 		sortAndFilter($("#pagenum").val());
 	});
+
+	function copyFunction(x) {
+		$('#copy_clipboard').remove();
+		const txt = document.createElement('textarea');
+		txt.id = 'copy_clipboard'
+		document.body.appendChild(txt);
+		txt.value = x.innerHTML; // chrome uses this
+		txt.textContent = x.innerHTML; // FF uses this
+		var sel = getSelection();
+		var range = document.createRange();
+		range.selectNode(txt);
+		sel.removeAllRanges();
+		sel.addRange(range);
+		document.execCommand("Copy");
+	    
+        var html_popup = '<div class="popup">text copied</div>';
+        $('.popup').remove();
+        $('#wrapper').prepend(html_popup);
+        $('.popup').css('top', '5vh');
+        $('.popup').css('left', 'calc( 50% - 30px)');
+        $('.popup').fadeIn();
+        $('.popup').delay(500).fadeOut("slow");
+	}
 </script>
