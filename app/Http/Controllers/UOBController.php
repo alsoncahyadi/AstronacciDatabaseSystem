@@ -219,17 +219,15 @@ class UOBController extends Controller
                 "whatsapp",
                 "sumber_data",
                 "sales_name",
-                "payment_date",
-                "kode",
+                "client_id",
                 "status",
-                "aktif",
-                "bulan_member",
-                "bonus",
-                "start_date",
-                "expired_date",
-                "masa_tenggang",
-                "yellow_zone",
-                "red_zone"
+                "nomor_rdi",
+                "tanggal_rdi_done",
+                "tanggal_top_up",
+                "tanggal_trading",
+                "bank_pribadi",
+                "nomor_rekening_pribadi",
+                "rdi_bank"
                 ];
 
         $json_filter = $request['filters'];
@@ -255,14 +253,18 @@ class UOBController extends Controller
 
         // retrieve result
         $list_old = DB::select($query);
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);
         
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
-        return view('vpc/aclubtable',
+        return view('vpc/uobtable',
                     [
                         'route' => 'UOB',
                         'clients' => $list,
                         'atts' => $atts,
-                        'attsMaster' => $attsMaster
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
                     ]);
         // return $list;
     }
