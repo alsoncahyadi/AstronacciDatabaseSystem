@@ -1,5 +1,6 @@
 
 							<?php $idx = 0 ?>
+							<input id="hidden_page_count" type="hidden" value="{{$count}}">
 							@foreach ($clients as $client)
 								<tr>
 									<td class="fixed-side collumn-select" style="text-align:center; padding-bottom: 0px">

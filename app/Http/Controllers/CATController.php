@@ -284,7 +284,7 @@ class CATController extends Controller
         
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));  
 
-        return view('vpc/aclubtable',
+        return view('vpc/cattable',
                     [
                         'route' => 'CAT',
                         'clients' => $list,

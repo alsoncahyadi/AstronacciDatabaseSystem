@@ -393,7 +393,7 @@
 		<div id="pageController" style="margin-left: 15px">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
-			/{{$count}}
+			/<label id="page_count">{{$count}}</label>
 			<button id="page_number">Go</button>
 		</div>
 	</div>
@@ -425,7 +425,7 @@
 		console.log(jsonFilter);
 	});
 
-	function sortAndFilter() {
+	function sortAndFilter(page) {
 		var sorts = {};
 
 		var json_filters = JSON.stringify(filters);
@@ -441,7 +441,6 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
-		document.getElementById("pagenum").value = "1";
 		// Request to API
 	    var request = $.ajax({
 	        url: "/CAT/filter",
@@ -450,7 +449,7 @@
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
 						"sorts": json_sorts,
-						"page": 1
+						"page": page
 					}
 	    });
 
@@ -460,7 +459,10 @@
 			// console.log(response);
 			$("#tbody").html(response);
 			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
 	    });
 
 
@@ -494,7 +496,7 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
-		var_page = document.getElementById("pagenum").value;
+		var var_page = document.getElementById("pagenum").value;
 
 		// Request to API
 	    var request = $.ajax({
@@ -514,7 +516,10 @@
 			// console.log(response);
 			$("#tbody").html(response);
 			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page); 
 	    });
 	}
 
@@ -530,17 +535,18 @@
 				filters[filter_type].push(filter_value);
 			}
 		} else {
-			alert('b');
 			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
 			if (filters[filter_type].length == 0) {
 				delete filters[filter_type];
 			}
 		}
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 
 	$("#sort-button").click(function() {
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 /*	var mtable = [
 		@foreach ($clients as $client) [
@@ -562,6 +568,7 @@
 	console.log(table);
 */
 	$("#page_number").click(function() {
-		gotoPage();
+		console.log($("#pagenum").val());
+		sortAndFilter($("#pagenum").val());
 	});
 </script>
