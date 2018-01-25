@@ -258,8 +258,8 @@ class UOBController extends Controller
         $page_count = ceil($record_count/$record_amount);
         
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
-        return view('vpc/uobtable',
-                    [
+
+        return view('vpc/uobtable', [
                         'route' => 'UOB',
                         'clients' => $list,
                         'atts' => $atts,

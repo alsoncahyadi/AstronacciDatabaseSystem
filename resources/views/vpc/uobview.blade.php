@@ -488,8 +488,7 @@
 
         var json_sorts = JSON.stringify(sorts);
         console.log(json_sorts);
-        $(".spinner_load").css('display', 'table');
-        document.getElementById("pagenum").value = "1";
+        $(".spinner_load").css('display', 'table');        
         // Request to API
         var request = $.ajax({
             url: "/UOB/filter",
