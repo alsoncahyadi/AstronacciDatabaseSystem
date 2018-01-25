@@ -250,7 +250,7 @@ class GreenController extends Controller
 
         return view('vpc/greentable',
                     [
-                        'route' => 'GreenClients',
+                        'route' => 'green',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster,
