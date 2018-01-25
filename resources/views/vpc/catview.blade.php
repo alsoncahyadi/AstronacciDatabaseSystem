@@ -204,11 +204,11 @@
 				    	<thead>
 							<tr>
 								<?php $idx = 1 ?>
-								<th class="fixed-side collumn-select" scope="col"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
+								<th class="fixed-side collumn-select" scope="col" style="min-width: 75px;"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 								@foreach ($headsMaster as $headMaster)
-								<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@if ($headMaster == 'Tanggal Lahir')
+									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }}
 									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 										<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 											<form>
@@ -225,6 +225,8 @@
 												<button class="btn btn-default btn-xs">Filter</button>
 											</form>
 										</div>
+									@else
+									<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@endif
 								</th>
 								<?php $idx = $idx + 1; ?>
