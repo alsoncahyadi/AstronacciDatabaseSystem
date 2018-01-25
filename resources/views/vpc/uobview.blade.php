@@ -288,7 +288,7 @@
                             <?php $idx = $idx + 1; ?>
                             @endforeach
                         </tbody> -->
-                        <tbody id="tbody">@include('vpc/aclubtable')</tbody>
+                        <tbody id="tbody">@include('vpc/uobtable')</tbody>
                         <input type="hidden" name="numusers" value="{{ $idx }}">
                 </table>
                 </div>
