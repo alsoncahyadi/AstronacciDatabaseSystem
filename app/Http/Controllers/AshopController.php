@@ -202,7 +202,6 @@ class AshopController extends Controller
         $page = $request['page']-1;
         $record_amount = 3;
 
-
         // add 'select' of query
 
         $query = "SELECT * FROM master_clients ";
@@ -228,13 +227,17 @@ class AshopController extends Controller
 
         // retrieve result
         $list_old = DB::select($query);
-        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));        
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);       
         return view('vpc/aclubtable',
                     [
                         'route' => 'AShop',
                         'clients' => $list,
                         'atts' => $atts,
-                        'attsMaster' => $attsMaster
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
                     ]);
         // return $list;
     }
