@@ -50,7 +50,7 @@ class CATController extends Controller
         //         ->paginate(15);
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 5;
+        $record_amount = 15;
 
         $cats = $this->getData();
         $record_count = count($cats);
@@ -258,7 +258,7 @@ class CATController extends Controller
         $json_sort = $request['sorts'];
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 5;
+        $record_amount = 15;
 
         // add 'select' of query
         $query = "";

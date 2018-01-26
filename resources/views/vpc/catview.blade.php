@@ -141,7 +141,7 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<h1>A-CLUB Members</h1>
+				<h1>CAT Members</h1>
 			</div>
 			<!-- /.col-lg-12 -->
 		</div>

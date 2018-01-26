@@ -41,7 +41,7 @@ class AshopController extends Controller
     public function getTable(Request $request) {
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
         $masters = $this->getData();
         $record_count = count($masters);
@@ -200,7 +200,7 @@ class AshopController extends Controller
         $json_sort = $request['sorts'];
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
         // add 'select' of query
 
@@ -231,7 +231,7 @@ class AshopController extends Controller
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);       
-        return view('vpc/aclubtable',
+        return view('vpc/ashoptable',
                     [
                         'route' => 'AShop',
                         'clients' => $list,

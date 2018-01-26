@@ -60,7 +60,7 @@ class MRGController extends Controller
         //         ->paginate(15);
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
         $mrgs = $this->getData();
         $record_count = count($mrgs);
@@ -230,7 +230,7 @@ class MRGController extends Controller
         $json_sort = $request['sorts'];
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
 
         // add 'select' of query

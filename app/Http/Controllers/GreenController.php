@@ -73,7 +73,7 @@ class GreenController extends Controller
     public function getTable(Request $request) {
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
         $greens = $this->getData();
         $record_count = count($greens);
@@ -212,7 +212,7 @@ class GreenController extends Controller
         $json_sort = $request['sorts'];
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
 
         // add 'select' of query

@@ -93,7 +93,7 @@ class AClubController extends Controller
         //         ->paginate(15);
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
         $aclub_members = $this->getData();
         $record_count = count($aclub_members);
@@ -319,7 +319,7 @@ class AClubController extends Controller
         $json_sort = $request['sorts'];
         $page = 0;
         $page = $request['page']-1;
-        $record_amount = 3;
+        $record_amount = 15;
 
 
         // add 'select' of query
