@@ -1,5 +1,6 @@
 
 							<?php $idx = 0 ?>
+							<input id="hidden_page_count" type="hidden" value="{{$count}}">
 							
 							@foreach ($clients as $client)
 								<tr>
@@ -14,9 +15,9 @@
  										@endif
 									@endforeach
 									@foreach ($atts as $att)
-										<td onclick="copyFunction(this)" style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+										<td onclick="copyFunction(this)" style="max-width: 100px; white-space: nowrap; cursor:context-menu;"> {{$client->$att}} </td>
+
 									@endforeach
 								</tr>
 							<?php $idx = $idx + 1; ?>
-							@endforeach
-						
+							@endforeach						
