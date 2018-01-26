@@ -91,9 +91,9 @@ Route::get('/AShop', [
     'middleware' => 'auth'
     ]);
 
-Route::get('/Green', [
+Route::get('/GreenDashboard', [
     'uses' => 'HomeController@indexGreen',
-    'as' => 'green',
+    'as' => 'green.dashboard',
     'middleware' => 'auth'
     ]);
 
@@ -529,12 +529,12 @@ Route::post('/AClub/filter', [
 
 
 //GREEN ROUTES
-/*Route::get('/green', [
+Route::get('/Green', [
     'uses' => 'GreenController@getTable',
     'as' => 'green',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
-    ]);*/
+    ]);
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
@@ -618,6 +618,13 @@ Route::post('/green/assign', [
     'as' => 'green.assign',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::post('/Green/filter', [
+    'uses' => 'GreenController@getFilteredAndSortedTable',
+    'as' => 'Green.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
     ]);
 
 
