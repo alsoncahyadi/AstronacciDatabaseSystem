@@ -116,9 +116,23 @@
 		.clone>tbody>tr:nth-of-type(even) {
 		    background-color: #fff !important;
 		}
-
+		#copy_clipboard {
+		  position: fixed;
+		  bottom: 0;
+		  right: 0;
+		  pointer-events: none;
+		  opacity: 0;
+		  transform: scale(0);
+		}
 		th.fixed-side {
 			background-color: #fff !important;
+		}
+		.popup{
+			display:none;
+			position:absolute;
+			background:#f5f5f5;
+			border-radius:6px;
+			padding:6px;
 		}
 	</style>
 </head>
@@ -136,32 +150,19 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4 row">
-					<div class="col-md-3">
-						<i class="fa fa-child fa-fw"></i> Members
-					</div>
+				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
 					<div class="col-md-4">
-						<button class="btn btn-default" style="margin-left:30px"><i class="fa fa-download"></i> &nbsp Download </a></button>
+						<button class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </a></button>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 					</div>
-					<div class="col-md-2">
-						<i class="fa fa-spinner fa-spin" style="font-size:24px; margin-top:4px; margin-left: -50px"></i>
+					<div class="col-md-2" style="width:10%; max-width: 180px;">
+						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 					</div>
 				</div>
-				<div class="col-md-2">
-					<div class="form-group input-group" style="margin-bottom: 0px">
-						<input type="number" class="form-control" placeholder="Add Bonus Days" id="bonus-days">
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="button" id="add-bonus"> <i class="fa fa-plus"></i>
-							</button>
-						</span>
-					</div>
-				</div>
-				<div class="col-md-6 row">
-					<div class="col-md-1"></div>
-					<div class="col-md-1" style="white-space: nowrap;">Sort by:</div>
+				<div class="col-md-6 row" style="float: right;">
+					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px; max-width: 505px;">Sort by:</div>
 					<!--SORT PARAMS -->
 					<div class="col-md-3">
 						<select class="sort form-control no-spin" name="sort1">
@@ -187,7 +188,7 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-1" style="width:2%;">
 						<button id="sort-button" class="btn btn-default">Sort</button>
 					</div>
 				</div>
@@ -203,11 +204,11 @@
 				    	<thead>
 							<tr>
 								<?php $idx = 1 ?>
-								<th class="fixed-side collumn-select" scope="col"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
+								<th class="fixed-side collumn-select" scope="col" style="min-width: 75px;"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 								@foreach ($headsMaster as $headMaster)
-								<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@if ($headMaster == 'Tanggal Lahir')
+									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }}
 									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
 										<div class="filter panel panel-default collapse" id="dd{{$idx}}">
 											<form>
@@ -224,6 +225,8 @@
 												<button class="btn btn-default btn-xs">Filter</button>
 											</form>
 										</div>
+									@else
+									<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@endif
 								</th>
 								<?php $idx = $idx + 1; ?>
@@ -283,7 +286,7 @@
 							<?php $idx = $idx + 1; ?>
 							@endforeach
 						</tbody> -->
-						<tbody id="tbody">@include('vpc/aclubtable')</tbody>
+						<tbody id="tbody">@include('vpc/cattable')</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 				</table>
 				</div>
@@ -399,10 +402,10 @@
 			</div>
 		-->
 		</div>
-		<div id="pageController" style="margin-left: 15px">
+		<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
 			Page
 			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
-			/{{$count}}
+			/<label id="page_count">{{$count}}</label>
 			<button id="page_number">Go</button>
 		</div>
 	</div>
@@ -434,41 +437,7 @@
 		console.log(jsonFilter);
 	});
 
-	$("#add-bonus").click(function() {
-		console.log("add bonus");
-		var idSelector = function() { return this.id; };
-		var checked = $(".selectable:checked").map(idSelector).get();
-		var days = $("#bonus-days").val();
-		console.log(checked);
-		console.log(days);
-
-	    // Request to API
-	    var request = $.ajax({
-	        url: "/AClub/add-bonus",
-	        type: "post",
-	        data: {
-						"_token": "{{ csrf_token() }}",
-						"data": checked,
-						"days": days
-					}
-	    });
-
-			// Callback handler that will be called on success
-	    request.done(function (response, textStatus, jqXHR){
-	        // Log a message to the console
-					console.log(response);
-					$.each(response, function(k, v) {
-					    //display the key and value pair
-					    var masa_tenggang_id = "#masa_tenggang_" + k;
-							$(masa_tenggang_id).html(v);
-							var bonus_id = "#bonus_" + k;
-							var updated_bonus = parseInt($(bonus_id).html()) + parseInt(days);
-							$(bonus_id).html(updated_bonus);
-					});
-	    });
-	});
-
-	function sortAndFilter() {
+	function sortAndFilter(page) {
 		var sorts = {};
 
 		var json_filters = JSON.stringify(filters);
@@ -483,17 +452,16 @@
 
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
-
-		document.getElementById("pagenum").value = "1";
+		$(".spinner_load").css('display', 'table');
 		// Request to API
 	    var request = $.ajax({
-	        url: "/AClub/filter",
+	        url: "/CAT/filter",
 	        type: "post",
 	        data: {
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
 						"sorts": json_sorts,
-						"page": 1
+						"page": page
 					}
 	    });
 
@@ -503,9 +471,13 @@
 			// console.log(response);
 			$("#tbody").html(response);
 			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
-	    });
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
 
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
+			$("#pagenum").attr({"max" : count_page});
+	    });
+	    $(".spinner_load").css('display', 'none');
 
 	}
 
@@ -537,11 +509,11 @@
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
 
-		var_page = document.getElementById("pagenum").value;
+		var var_page = document.getElementById("pagenum").value;
 
 		// Request to API
 	    var request = $.ajax({
-	        url: "/AClub/filter",
+	        url: "/CAT/filter",
 	        type: "post",
 	        data: {
 						"_token": "{{ csrf_token() }}",
@@ -557,7 +529,10 @@
 			// console.log(response);
 			$("#tbody").html(response);
 			$(".clone").remove();
-			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page); 
 	    });
 	}
 
@@ -573,17 +548,18 @@
 				filters[filter_type].push(filter_value);
 			}
 		} else {
-			alert('b');
 			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
 			if (filters[filter_type].length == 0) {
 				delete filters[filter_type];
 			}
 		}
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 
 	$("#sort-button").click(function() {
-		sortAndFilter();
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 /*	var mtable = [
 		@foreach ($clients as $client) [
@@ -605,6 +581,30 @@
 	console.log(table);
 */
 	$("#page_number").click(function() {
-		gotoPage();
+		console.log($("#pagenum").val());
+		sortAndFilter($("#pagenum").val());
 	});
+
+	function copyFunction(x) {
+		$('#copy_clipboard').remove();
+		const txt = document.createElement('textarea');
+		txt.id = 'copy_clipboard'
+		document.body.appendChild(txt);
+		txt.value = x.innerHTML; // chrome uses this
+		txt.textContent = x.innerHTML; // FF uses this
+		var sel = getSelection();
+		var range = document.createRange();
+		range.selectNode(txt);
+		sel.removeAllRanges();
+		sel.addRange(range);
+		document.execCommand("Copy");
+	    
+        var html_popup = '<div class="popup">text copied</div>';
+        $('.popup').remove();
+        $('#wrapper').prepend(html_popup);
+        $('.popup').css('top', '5vh');
+        $('.popup').css('left', 'calc( 50% - 30px)');
+        $('.popup').fadeIn();
+        $('.popup').delay(500).fadeOut("slow");
+	}
 </script>

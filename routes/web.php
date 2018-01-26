@@ -244,6 +244,13 @@ Route::get('/CAT/deletetrans/{id1}/{id2}', [
     'roles' => ['0', '3'],
     ]);
 
+Route::post('/CAT/filter', [
+    'uses' => 'CATController@getFilteredAndSortedTable',
+    'as' => 'CAT.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 // MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
@@ -498,6 +505,14 @@ Route::post('/AClub/add-bonus', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],
     ]);
+
+Route::post('/AClub/filter', [
+    'uses' => 'AClubController@getFilteredAndSortedTable',
+    'as' => 'AClub.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 
 //GREEN ROUTES
 /*Route::get('/green', [
