@@ -1,11 +1,11 @@
-
+	
 							<?php $idx = 0 ?>
 							<input id="hidden_page_count" type="hidden" value="{{$count}}">
 							
 							@foreach ($clients as $client)
 								<tr>
 									<td class="fixed-side collumn-select" style="text-align:center; padding-bottom: 0px">
-										<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
+										<input class="selectable" id="{{ $client->master_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
 										<input type="hidden" name="id{{ $idx }}" value="">
 									@foreach ($attsMaster as $attMaster)
 										@if ($attMaster == 'name')

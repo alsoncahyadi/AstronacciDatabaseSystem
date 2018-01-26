@@ -85,6 +85,7 @@ Route::get('/dashboard', [
 	'middleware' => 'auth'
     ]);
 
+
 Route::get('/AShop', [
     'uses' => 'HomeController@indexAShop',
     'as' => 'ashop',
@@ -742,17 +743,23 @@ Route::post('/product/insert', [
     'roles' => ['0'],
     ]);
 
+Route::get('/AShopDashboards', [
+    'uses' => 'HomeController@indexAShop',
+    'as' => 'AShop.dashboard',
+    'middleware' => 'auth'
+    ]);
+
 Route::get('/AShop/{id}', [
     'uses' => 'AshopController@clientDetail',
     'as' => 'AShop.detail',
     'middleware' => ['auth', 'ashop'],
     ]);
-/*
+
 Route::get('/AShop', [
     'uses' => 'AshopController@getTable',
     'as' => 'AShop',
     'middleware' => ['auth', 'ashop'],
-    ]);*/
+    ]);
 
 Route::post('/AShop/insert', [
     'uses' => 'AshopController@addClient',
@@ -800,6 +807,13 @@ Route::get('/AShop/{id}/{package}', [
     'uses' => 'AshopController@clientDetailTrans',
     'as' => 'AShop.trans',
     'middleware' => ['auth', 'ashop'],
+    ]);
+
+Route::post('/AShop/filter', [
+    'uses' => 'AshopController@getFilteredAndSortedTable',
+    'as' => 'AShop.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
     ]);
 
 //Assignment Routes
