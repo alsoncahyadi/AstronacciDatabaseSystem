@@ -91,9 +91,9 @@ Route::get('/AShop', [
     'middleware' => 'auth'
     ]);
 
-Route::get('/Green', [
+Route::get('/GreenDashboard', [
     'uses' => 'HomeController@indexGreen',
-    'as' => 'green',
+    'as' => 'green.dashboard',
     'middleware' => 'auth'
     ]);
 
@@ -244,6 +244,13 @@ Route::get('/CAT/deletetrans/{id1}/{id2}', [
     'roles' => ['0', '3'],
     ]);
 
+Route::post('/CAT/filter', [
+    'uses' => 'CATController@getFilteredAndSortedTable',
+    'as' => 'CAT.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 // MRG ROUTES
 Route::get('/MRG', [
     'uses' => 'MRGController@getTable',
@@ -329,6 +336,13 @@ Route::post('/MRG/edittrans', [
     'roles' => ['0', '2'],
     ]);
 
+Route::post('/MRG/filter', [
+    'uses' => 'MRGController@getFilteredAndSortedTable',
+    'as' => 'MRG.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
@@ -377,6 +391,13 @@ Route::post('/UOB/inserttrans', [
     'as' => 'UOB.inserttrans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '3'],
+    ]);
+
+Route::post('/UOB/filter', [
+    'uses' => 'UOBController@getFilteredAndSortedTable',
+    'as' => 'UOB.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
     ]);
 
 //A-CLUB ROUTES
@@ -508,12 +529,12 @@ Route::post('/AClub/filter', [
 
 
 //GREEN ROUTES
-/*Route::get('/green', [
+Route::get('/Green', [
     'uses' => 'GreenController@getTable',
     'as' => 'green',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
-    ]);*/
+    ]);
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
@@ -597,6 +618,13 @@ Route::post('/green/assign', [
     'as' => 'green.assign',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::post('/Green/filter', [
+    'uses' => 'GreenController@getFilteredAndSortedTable',
+    'as' => 'Green.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
     ]);
 
 
