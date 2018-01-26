@@ -215,7 +215,7 @@
                     @endif
 
                     <li id="t3">
-                        <a href="Green" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
+                        <a href="GreenDashboard" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>
                 </ul>
             </div>

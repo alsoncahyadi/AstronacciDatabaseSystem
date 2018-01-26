@@ -21,39 +21,312 @@ class GreenController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
-        $clients = GreenProspectClient::paginate(15);
+    // public function getTable() {
+    //     $clients = GreenProspectClient::paginate(15);
 
-        $heads = ["Green ID",
-                    "Name",
-                    "Date",
-                    "Phone",
+    //     $heads = ["Green ID",
+    //                 "Name",
+    //                 "Date",
+    //                 "Phone",
+    //                 "Email",
+    //                 "Interest",
+    //                 "Pemberi",
+    //                 "Sumber Data",
+    //                 "Keterangan Perintah"];
+
+    //     $ins = ["Name",
+    //                 "Date",
+    //                 "Phone",
+    //                 "Email",
+    //                 "Interest",
+    //                 "Pemberi",
+    //                 "Sumber Data",
+    //                 "Keterangan Perintah"];
+
+    //     $atts = ["green_id",
+    //                 "name",
+    //                 "date",
+    //                 "phone",
+    //                 "email",
+    //                 "interest",
+    //                 "pemberi",
+    //                 "sumber_data",
+    //                 "keterangan_perintah"];
+
+    //     return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+    // }
+
+    public function getData()
+    {
+        $greens = GreenProspectClient::all();
+
+        foreach ($greens as $green) {
+            $progress = $green->progresses()->orderBy('created_at','desc')->first();
+            $green->status = $progress->status;
+            $green->sales_name = $progress->sales_name;
+            $green->nama_product = $progress->nama_product;
+        }
+
+        return $greens;
+    }
+
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 3;
+
+        $greens = $this->getData();
+        $record_count = count($greens);
+        $greens = $greens->forPage(1, $record_amount);
+
+        $page_count = ceil($record_count/$record_amount);
+
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
                     "Email",
-                    "Interest",
-                    "Pemberi",
-                    "Sumber Data",
-                    "Keterangan Perintah"];
+                    "Telepon",
+                    "Interest"
+                ];
 
-        $ins = ["Name",
-                    "Date",
-                    "Phone",
+        $attsMaster = [
+                        "green_id",
+                        "name",
+                        "email",
+                        "phone",
+                        "interest"
+                    ];
+
+        //Judul kolom yang ditampilkan pada tabel
+        $heads = [
+                "Pemberi" => "pemberi",
+                "Perintah" => "keterangan_perintah",
+                "Status" => "status",
+                "Sales" => "sales_name",
+                "Nama Product" => "nama_product"
+                ];
+        
+
+        //Nama attribute pada sql
+        $atts = [
+                "pemberi",
+                "keterangan_perintah",
+                "status",
+                "sales_name",
+                "nama_product",
+                ];
+
+        //Filter
+        $filter_sales = DB::table('green_prospect_progresses')->select('sales_name')->distinct()->get();
+        $filter_product = DB::table('green_prospect_progresses')->select('nama_product')->distinct()->get();
+        $filter_status = DB::table('green_prospect_progresses')->select('status')->distinct()->get();
+        $filter_date = ['0'=>['0'=>'January'], 
+        '1'=>['0'=>'February'], 
+        '2'=>['0'=>'March'], 
+        '3'=>['0'=>'April'], 
+        '4'=>['0'=>'May'], 
+        '5'=>['0'=>'June'], 
+        '6'=>['0'=>'July'],
+        '7'=>['0'=>'August'],
+        '8'=>['0'=>'September'],
+        '9'=>['0'=>'October'],
+        '10'=>['0'=>'November'],
+        '11'=>['0'=>'December']];
+
+        $filterable = [
+            "Status" => $filter_status,
+            "Sales" => $filter_sales,
+            "Nama Product" => $filter_product
+            ];
+
+        //sort
+        $sortables = [
+            "Status" => "status",
+            "Sales" => "sales_name",
+            "Nama Product" => "nama_product",
+            ];
+
+        //Return view table dengan parameter
+        return view('vpc/greenview',
+                    [
+                        'route' => 'green',
+                        'clients' => $greens,
+                        'heads'=>$heads, 'atts'=>$atts,
+                        'headsMaster' => $headsMaster,
+                        'attsMaster' => $attsMaster,
+                        'filter_sales' => $filter_sales,
+                        'filter_status' => $filter_status,
+                        'filter_product' => $filter_product,
+                        'filterable' => $filterable,
+                        'sortables' => $sortables,
+                        'count' => $page_count
+                    ]);
+    }
+
+    // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
+
+    public function getFilteredAndSortedTable(Request $request) {
+        // test
+        // $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
+        // $example_sort = array('email'=>false, 'name'=>true);
+
+        // $json_filter = json_encode($example_filter);
+        // $json_sort = json_encode($example_sort);
+        // test
+
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
                     "Email",
-                    "Interest",
-                    "Pemberi",
-                    "Sumber Data",
-                    "Keterangan Perintah"];
+                    "Telepon",
+                    "Interest"
+                ];
 
-        $atts = ["green_id",
-                    "name",
-                    "date",
-                    "phone",
-                    "email",
-                    "interest",
-                    "pemberi",
-                    "sumber_data",
-                    "keterangan_perintah"];
+        $attsMaster = [
+                        "green_id",
+                        "name",
+                        "email",
+                        "phone",
+                        "interest"
+                    ];
+        $heads = [
+                "Pemberi" => "pemberi",
+                "Perintah" => "keterangan_perintah",
+                "Status" => "status",
+                "Sales" => "sales_name",
+                "Nama Product" => "nama_product"
+                ];
+        
 
-        return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
+        //Nama attribute pada sql
+        $atts = [
+                "pemberi",
+                "keterangan_perintah",
+                "status",
+                "sales_name",
+                "nama_product",
+                ];
+
+
+        $json_filter = $request['filters'];
+        $json_sort = $request['sorts'];
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 3;
+
+
+        // add 'select' of query
+        $query = "";
+        $query = $query."SELECT * ";
+        $query = $query."FROM green_prospect_clients ";
+        $query = $query."INNER JOIN (SELECT  ";
+        $query = $query."            progress_id, T1.green_id as green_id, date, sales_name,  ";
+        $query = $query."            status, nama_product, nominal, keterangan, created_at, updated_at ";
+        $query = $query."            FROM  ";
+        $query = $query."                ( SELECT green_id, max(created_by) as created_by  ";
+        $query = $query."                    FROM green_prospect_progresses  ";
+        $query = $query."                    GROUP BY green_id) as T1  ";
+        $query = $query."            INNER JOIN  ";
+        $query = $query."                ( SELECT * ";
+        $query = $query."                   FROM green_prospect_progresses) as T2  ";
+        $query = $query."                    ON T1.green_id = T2.green_id  ";
+        $query = $query."                    AND T1.created_by = T2.created_by) as last_transaction  ";
+        $query = $query."ON green_prospect_clients.green_id = last_transaction.green_id";
+
+        // add subquery of filter
+
+        $query = $this->addFilterSubquery($query, $json_filter);
+        // add subquery of sort
+        $query = $this->addSortSubquery($query, $json_sort);
+        // add semicolon
+        $query = $query.";";
+
+        // retrieve result
+        $list_old = DB::select($query);    
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);
+
+        return view('vpc/greentable',
+                    [
+                        'route' => 'green',
+                        'clients' => $list,
+                        'atts' => $atts,
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
+                    ]);
+        // return $list;
+    }
+ 
+    // RETURN : STRING QUERY FOR FILTER IN SQL 
+    // NOTE : WITHOUT SEMICOLON
+    public function addFilterSubquery($query, $json_filter) {
+        $filter = json_decode($json_filter, true);
+
+        if (empty($filter)) {
+            return $query;
+        }
+
+        // add 'where' of query
+        $query = $query.' WHERE ';        
+        $is_first = true;
+        foreach ($filter as $key_filter => $values_filter) {
+            if (!$is_first) {
+                $query = $query." and ";
+            }
+            $idx_filter = 0;
+            $query = $query.'(';
+
+            if (in_array($key_filter, ['birthdate','payment_date'])) {
+                $idx_value = 0;
+                foreach ($values_filter as $value_filter) {
+                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
+                    $idx_value += 1;
+                    if ($idx_value != count($values_filter)) {
+                        $query = $query." or ";
+                    }   
+                 }
+            } else {
+                $idx_value = 0;
+                foreach ($values_filter as $value_filter) {
+                    $query = $query.$key_filter." = '".$value_filter."'";
+                    $idx_value += 1;
+                    if ($idx_value != count($values_filter)) {
+                        $query = $query." or ";
+                    }
+                 }
+            }
+            $query = $query.')';
+            $is_first = false;
+        }   
+
+        // get result
+        return $query;
+    }
+
+    public function addSortSubquery($query, $json_sort) {
+        $sort = json_decode($json_sort, true);
+
+        if (empty($sort)) {
+            return $query;
+        }
+        
+        $subquery = " ORDER BY ";
+        $idx_sort = 0;
+        foreach ($sort as $key_sort => $value_sort) {
+            if ($value_sort == true) {
+                $subquery = $subquery.$key_sort." ASC";            
+            } else {
+                $subquery = $subquery.$key_sort." DESC";                            
+            }
+            $idx_sort += 1;
+            if ($idx_sort != count($sort)) {
+                $subquery = $subquery.", ";
+            }
+        }
+        $query = $query.$subquery;
+        return $query;
     }
 
     public function clientDetail($id) {
