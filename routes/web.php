@@ -336,6 +336,13 @@ Route::post('/MRG/edittrans', [
     'roles' => ['0', '2'],
     ]);
 
+Route::post('/MRG/filter', [
+    'uses' => 'MRGController@getFilteredAndSortedTable',
+    'as' => 'MRG.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
+
 //UOB ROUTES
 Route::get('/UOB', [
     'uses' => 'UOBController@getTable',
