@@ -609,4 +609,59 @@ class GreenController extends Controller
 
         return view('content/greentranseditform', ['route'=>'green', 'client'=>$progress, 'ins'=>$ins]);
     }
+
+    public function exportExcel() {
+        $data = GreenProspectProgress::all();
+
+        foreach ($data as $dat) {
+            $client = $dat->client->first();
+
+            $dat->green_id = $client->green_id;
+            $dat->date = $client->date;
+            $dat->name = $client->name;
+            $dat->phone = $client->phone;
+            $dat->email = $client->email;
+            $dat->interest = $client->interest;
+            $dat->pemberi = $client->pemberi;
+            $dat->sumber_data = $client->sumber_data;
+            $dat->keterangan_perintah = $client->keterangan_perintah;
+        }
+
+        $array = [];
+        $heads = [
+                "Progress ID" => "progress_id",
+                "Green ID" => "green_id",
+                "Date" => "date",
+                "Name" => "name",
+                "Phone" => "phone",
+                "Email" => "email",
+                "Interest" => "interest",
+                "Pemberi" => "pemberi",
+                "Sumber Data" => "sumber_data",
+                "Keterangan Perintah" => "keterangan_perintah",
+                "Sales Name" => "sales_name",
+                "Status" => "status",
+                "Nama Product" => "nama_product",
+                "Nominal" => "nominal",
+                "Keterangan" => "keterangan",
+                "Created At" => "created_at",
+                "Updated At" => "updated_at"
+                    ];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedGreen', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
 }

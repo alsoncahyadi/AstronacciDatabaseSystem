@@ -152,7 +152,7 @@
 			<div class="row">
 				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
 					<div class="col-md-4">
-						<button class="btn btn-default" style=""><a style="color: inherit" href="/export/cat"><i class="fa fa-download"></i> &nbsp Download </a></button>
+						<button onclick="downloadFx()" class="btn btn-default" style=""><a style="color: inherit"><i class="fa fa-download"></i> &nbsp Download </a></button>
 					</div>
 					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
@@ -606,5 +606,9 @@
         $('.popup').css('left', 'calc( 50% - 30px)');
         $('.popup').fadeIn();
         $('.popup').delay(500).fadeOut("slow");
+	}
+
+	function downloadFx() {
+		window.location.href = "/export/cat";
 	}
 </script>

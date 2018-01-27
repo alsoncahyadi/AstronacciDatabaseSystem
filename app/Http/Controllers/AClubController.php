@@ -844,10 +844,69 @@ class AClubController extends Controller
     }
 
     public function exportExcel() {
-        $data = AclubInformation::all();
+        $datas = AclubTransaction::all();
+
+        foreach ($datas as $data) {
+            $member = $data->aclubMember->first();
+
+            $data->master_id = $member->master_id;
+            $data->group = $member->group;
+
+            $info = $member->aclubInformation->first();
+
+            $data->sumber_data = $info->sumber_data;
+            $data->keterangan = $info->keterangan;
+
+            $master = $member->master->first();
+
+            $data->redclub_user_id = $master->redclub_user_id;
+            $data->redclub_password = $master->redclub_password;
+            $data->name = $master->name;
+            $data->telephone_number = $master->telephone_number;
+            $data->email = $master->email;
+            $data->birthdate = $master->birthdate;
+            $data->address = $master->address;
+            $data->city = $master->city;
+            $data->province = $master->province;
+            $data->gender = $master->gender;
+            $data->line_id = $master->line_id;
+            $data->bbm = $master->bbm;
+            $data->whatsapp = $master->whatsapp;
+            $data->facebook = $master->facebook;
+        }
         $array = [];
-        $heads = ["Master ID" => "master_id", "Sumber Data" => "sumber_data", "Keterangan" => "keterangan"];
-        foreach ($data as $dat) {
+        $heads = ["Transaction ID" => "transaction_id",
+                    "Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Keterangan" => "keterangan",
+                    "Group" => "group",
+                    "Payment Date" => "payment_date",
+                    "Kode" => "kode",
+                    "Status" => "status",
+                    "Nominal" => "nominal",
+                    "Start Date" => "start_date",
+                    "Expired Date" => "expired_date",
+                    "Masa Tenggang" => "masa_tenggang",
+                    "Yellow Zone" => "yellow_zone",
+                    "Red Zone" => "red_zone",
+                    "Sales Name" => "sales_name",
+                    "Created At" => "created_at",
+                    "Updated At" => "updated_at"];
+        foreach ($datas as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
                 //echo $key . " " . $value . "<br>";

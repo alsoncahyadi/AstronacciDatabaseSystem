@@ -921,3 +921,17 @@ Route::get('/export/master', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
+
+Route::get('/export/ashop', [
+    'uses' => 'AshopController@exportExcel',
+    'as' => 'ashopexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/export/green', [
+    'uses' => 'GreenController@exportExcel',
+    'as' => 'greenexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);

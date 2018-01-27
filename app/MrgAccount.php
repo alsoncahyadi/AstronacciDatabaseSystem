@@ -12,7 +12,7 @@ class MrgAccount extends Model
     protected $primaryKey = 'accounts_number';
 
     public function mrg() {
-        $this->belongsTo('App\Mrg', 'master_id', 'master_id');
+        return $this->belongsTo('App\Mrg', 'master_id', 'master_id');
     }
 
     public function createdBy() {
