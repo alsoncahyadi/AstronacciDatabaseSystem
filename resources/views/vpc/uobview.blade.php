@@ -584,7 +584,6 @@
                 filters[filter_type].push(filter_value);
             }
         } else {
-            alert('b');
             filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
             if (filters[filter_type].length == 0) {
                 delete filters[filter_type];

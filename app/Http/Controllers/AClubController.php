@@ -56,6 +56,7 @@ class AClubController extends Controller
             $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
             $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
             $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
+            $aclub_member->transaction_id = $last_transaction->transaction_id;
 
             $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
 
@@ -895,12 +896,12 @@ class AClubController extends Controller
       if ($ids && $days) {
         $updated_values = [];
         foreach ($ids as $id) {
-          $aclub = AclubTransaction::where('user_id', $id)->first();
+          $aclub = AclubTransaction::where('transaction_id', $id)->first();
 
           $aclub->masa_tenggang = $aclub->masa_tenggang->addDays($days);
 
           $aclub->update();
-          $aclub = AclubTransaction::where('user_id', $id)->first();
+          $aclub = AclubTransaction::where('transaction_id', $id)->first();
           $updated_values[$id] = $aclub->masa_tenggang->toDateTimeString();
         }
         return response()->json($updated_values);
