@@ -114,7 +114,7 @@ class AClubController extends Controller
                 ];
 
         $attsMaster = [
-                        "master_id",
+                        "user_id",
                         "name",
                         "email",
                         "telephone_number",
