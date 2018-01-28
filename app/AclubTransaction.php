@@ -23,7 +23,7 @@ class AclubTransaction extends Model
     ];
 
     public function aclubMember() {
-        return $this->hasMany('App\AclubMember', 'user_id', 'user_id');
+        return $this->belongsTo('App\AclubMember', 'user_id', 'user_id');
     }
 
     public function createdBy() {

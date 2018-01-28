@@ -563,8 +563,60 @@ class CATController extends Controller
 
     public function exportExcel() {
         $data = Cat::all();
+
+        foreach ($data as $dat) {
+            $master = $dat->master->first();
+
+            $dat->redclub_user_id = $master->redclub_user_id;
+            $dat->redclub_password = $master->redclub_password;
+            $dat->name = $master->name;
+            $dat->telephone_number = $master->telephone_number;
+            $dat->email = $master->email;
+            $dat->birthdate = $master->birthdate;
+            $dat->address = $master->address;
+            $dat->city = $master->city;
+            $dat->province = $master->province;
+            $dat->gender = $master->gender;
+            $dat->line_id = $master->line_id;
+            $dat->bbm = $master->bbm;
+            $dat->whatsapp = $master->whatsapp;
+            $dat->facebook = $master->facebook;
+        }
+
         $array = [];
-        $heads = ["User ID" => "user_id", "Nomor Induk" => "nomor_induk", "Master ID" => "master_id", "Batch" => "batch", "Sales" => "sales", "Sumber Data" => "sumber_data", "DP Date" => "DP_date", "DP Nominal" => "DP_nominal", "Payment Date" => "payment_date", "Payment Nominal" => "payment_nominal", "Tanggal Opening Class" => "tanggal_opening_class", "Tanggal End Class" => "tanggal_end_class", "Tanggal Ujian" => "tanggal_ujian", "Status" => "status", "Keterangan" => "keterangan"];
+        $heads = [
+                "User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Batch" => "batch",
+                "Sales" => "sales",
+                "Sumber Data" => "sumber_data",
+                "DP Date" => "DP_date",
+                "DP Nominal" => "DP_nominal",
+                "Payment Date" => "payment_date",
+                "Payment Nominal" => "payment_nominal",
+                "Tanggal Opening Class" => "tanggal_opening_class",
+                "Tanggal End Class" => "tanggal_end_class",
+                "Tanggal Ujian" => "tanggal_ujian",
+                "Status" => "status",
+                "Keterangan" => "keterangan",
+                "Created At" => "created_at",
+                "Updated At" => "updated_at"
+                    ];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {

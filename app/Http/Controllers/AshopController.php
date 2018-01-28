@@ -606,4 +606,67 @@ class AshopController extends Controller
         return view('content/ashoptranseditform', ['route'=>'AShop', 'client'=>$ashop, 'ins'=>$ins]);
     }
 
+    public function exportExcel() {
+        $data = AshopTransaction::all();
+
+        foreach ($data as $dat) {
+            $master = $dat->master->first();
+
+            $dat->redclub_user_id = $master->redclub_user_id;
+            $dat->redclub_password = $master->redclub_password;
+            $dat->name = $master->name;
+            $dat->telephone_number = $master->telephone_number;
+            $dat->email = $master->email;
+            $dat->birthdate = $master->birthdate;
+            $dat->address = $master->address;
+            $dat->city = $master->city;
+            $dat->province = $master->province;
+            $dat->gender = $master->gender;
+            $dat->line_id = $master->line_id;
+            $dat->bbm = $master->bbm;
+            $dat->whatsapp = $master->whatsapp;
+            $dat->facebook = $master->facebook;
+        }
+
+        $array = [];
+        $heads = [
+                "Transaction ID" => "transaction_id",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Product Type" => "product_type",
+                "Product Name" => "product_name",
+                "Nominal" => "nominal",
+                "Created At" => "created_at",
+                "Updated At" => "updated_at"
+                    ];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedAShop', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
 }

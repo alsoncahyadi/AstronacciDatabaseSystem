@@ -544,9 +544,56 @@ class MRGController extends Controller
     }
 
     public function exportExcel() {
-        $data = Mrg::all();
+        $data = MrgAccount::all();
+
+        foreach ($data as $dat) {
+            $mrg = $dat->mrg->first();
+
+            $dat->sumber_data = $mrg->sumber_data;
+            $dat->join_date = $mrg->join_date;
+
+            $master = $mrg->master->first();
+
+            $dat->redclub_user_id = $master->redclub_user_id;
+            $dat->redclub_password = $master->redclub_password;
+            $dat->name = $master->name;
+            $dat->telephone_number = $master->telephone_number;
+            $dat->email = $master->email;
+            $dat->birthdate = $master->birthdate;
+            $dat->address = $master->address;
+            $dat->city = $master->city;
+            $dat->province = $master->province;
+            $dat->gender = $master->gender;
+            $dat->line_id = $master->line_id;
+            $dat->bbm = $master->bbm;
+            $dat->whatsapp = $master->whatsapp;
+            $dat->facebook = $master->facebook;
+        }
         $array = [];
-        $heads = ["Master ID" => "master_id", "Sumber Data" => "sumber_data", "Join Date" => "join_date"];
+        $heads = [
+                    "Account Number" => "accounts_number",
+                    "Account Type" => "account_type",
+                    "Sales Name" => "sales_name",
+                    "Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Join Date" => "join_date",
+                    "Created At" => "created_at",
+                    "Updated At" => "updated_at"
+                    ];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
