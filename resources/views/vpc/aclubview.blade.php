@@ -472,10 +472,10 @@
 					$.each(response, function(k, v) {
 					    //display the key and value pair
 					    var masa_tenggang_id = "#masa_tenggang_" + k;
-							$(masa_tenggang_id).html(v);
-							var bonus_id = "#bonus_" + k;
-							var updated_bonus = parseInt($(bonus_id).html()) + parseInt(days);
-							$(bonus_id).html(updated_bonus);
+						$(masa_tenggang_id).html(v.substring(0,10));
+						var bonus_id = "#bonus_" + k;
+						var updated_bonus = parseInt($(bonus_id).html()) + parseInt(days);
+						$(bonus_id).html(updated_bonus);
 					});
 	    });
 	});

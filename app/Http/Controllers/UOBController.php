@@ -65,7 +65,7 @@ class UOBController extends Controller
                 ];
 
         $attsMaster = [
-                        "master_id",
+                        "client_id",
                         "name",
                         "email",
                         "telephone_number",
