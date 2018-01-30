@@ -54,8 +54,7 @@
 			padding: 5px;
 			overflow-x: hidden;
 			overflow-y: hidden;
-			position: fixed;
-			z-index: 1000000;
+			position: absolute;
 		} .checkbox {
 			margin-top: 3px;
 			margin-bottom: 3px;
@@ -152,7 +151,7 @@
 			<div class="row">
 				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
 					<div class="col-md-4">
-						<button onclick="downloadFx()" class="btn btn-default" style=""><a style="color: inherit"><i class="fa fa-download"></i> &nbsp Download </a></button>
+						<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
 					</div>
 					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
@@ -224,7 +223,6 @@
 													</div>
 												@endforeach
 												</div>
-												<button class="btn btn-default btn-xs">Filter</button>
 											</form>
 										</div>
 									@else
@@ -261,7 +259,6 @@
 												</div>											
 											@endforeach
 											</div>
-											<button class="btn btn-default btn-xs">Filter</button>
 										</form>
 									</div>							
 								@endif
@@ -271,23 +268,6 @@
 
 							</tr>
 						</thead>
-						<!-- <tbody>
-							<?php $idx = 0 ?>
-							@foreach ($clients as $client)
-								<tr>
-									<td class="fixed-side collumn-select" style="text-align:center; padding-bottom: 0px">
-										<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-										<input type="hidden" name="id{{ $idx }}" value="">
-									@foreach ($attsMaster as $attMaster)
-										<td class="fixed-side" style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
-									@endforeach
-									@foreach ($atts as $att)
-										<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
-									@endforeach
-								</tr>
-							<?php $idx = $idx + 1; ?>
-							@endforeach
-						</tbody> -->
 						<tbody id="tbody">@include('vpc/greentable')</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
 				</table>
@@ -453,25 +433,7 @@
 		sortAndFilter(1);
 		$("#pagenum").val("1");
 	});
-/*	var mtable = [
-		@foreach ($clients as $client) [
-			@foreach ($attsMaster as $attMaster)
-				"{{ $client->$attMaster }}",
-			@endforeach ],
-		@endforeach
-	];
-	var table =[
-	@foreach ($clients as $client)[
-		@foreach ($atts as $att)
-			`{{$client->$att}}` ,
-		@endforeach ],
-	@endforeach
-	];
-	var idx = 0;
-	
-	console.log(mtable);
-	console.log(table);
-*/
+
 	$("#page_number").click(function() {
 		console.log($("#pagenum").val());
 		sortAndFilter($("#pagenum").val());

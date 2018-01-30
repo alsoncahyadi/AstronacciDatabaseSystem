@@ -164,6 +164,27 @@
             <div class="tab-content">
                 <div class="tab-pane fade" id="aclub-pills">
                     <h3>A-CLUB</h3>
+
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editaclub">Edit</a>
+                    <div id="editaclub" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('AClub.insertmembers')}}">
+                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                @foreach ($heads_aclub as $atr => $value)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    <input class="form-control" type="text" name="{{$value}}">
+                                </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
+
                     <div>
                         @foreach ($heads_aclub as $key => $value)
                             <div class="col-lg-2" style="height:30px">
@@ -246,6 +267,25 @@
                 </div>
                 <div class="tab-pane fade" id="mrg-pills">
                     <h3>MRG</h3>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editmrg">Edit</a>
+                    <div id="editmrg" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('AClub.insertmembers')}}">
+                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                @foreach ($heads_mrg as $atr => $value)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    <input class="form-control" type="text" name="{{$value}}">
+                                </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
                     <div>
                         @foreach ($heads_mrg as $key => $value)
                             <div class="col-lg-2" style="height:30px">
@@ -295,6 +335,25 @@
                 <div class="tab-pane fade" id="cat-pills">
                     <div>
                         <h3>CAT</h3>
+                        <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editcat">Edit</a>
+                        <div id="editcat" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <form method="post" action="{{route('AClub.insertmembers')}}">
+                                    <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                    @foreach ($heads_cat as $atr => $value)
+                                    <div class="form-group">
+                                        <label>{{$atr}}</label>
+                                        <input class="form-control" type="text" name="{{$value}}">
+                                    </div>
+                                    @endforeach
+                                    <br>
+                                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                    <input type="submit" class="btn btn-primary" value="Insert">
+                                    <button type="reset" class="btn btn-default">Reset Form</button>
+                                </form>
+                            </div>
+                            <br>
+                        </div>
                         @foreach ($heads_cat as $key => $value)
                         <div class="col-lg-2" style="height:30px">
                             <label>{{$key}}</label>
@@ -343,6 +402,25 @@
                 </div>
                 <div class="tab-pane fade" id="uob-pills">
                     <h3>UOB</h3>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#edituob">Edit</a>
+                    <div id="edituob" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" action="{{route('AClub.insertmembers')}}">
+                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                @foreach ($heads_uob as $atr => $value)
+                                <div class="form-group">
+                                    <label>{{$atr}}</label>
+                                    <input class="form-control" type="text" name="{{$value}}">
+                                </div>
+                                @endforeach
+                                <br>
+                                <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <button type="reset" class="btn btn-default">Reset Form</button>
+                            </form>
+                        </div>
+                        <br>
+                    </div>
                     <div>
                         @foreach ($heads_uob as $key => $value)
                             <div class="col-lg-2" style="height:30px">
