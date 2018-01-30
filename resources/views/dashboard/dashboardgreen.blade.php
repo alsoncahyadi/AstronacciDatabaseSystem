@@ -30,7 +30,7 @@
                 <br><br>
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel panel-default" style="padding:15px" >
-                        <form method="post" action="{{route('green.insert')}}">
+                        <form method="post" action="{{route('Green.insert')}}">
                             @foreach ($ins as $atr)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
@@ -54,7 +54,7 @@
                 View Green Prospect
             </div>
             <div class="panel-body">
-               <a href="{{route('green')}}" class="btn btn-primary">Green</a>
+               <a href="{{route('Green')}}" class="btn btn-primary">Green</a>
             </div>
         </div>
     </div>
@@ -96,7 +96,7 @@
             var arrayLength = fullnames.length;
             for (var i = 0; i < arrayLength; i++) {
                 if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
-                    joinName += ' <a href="{{route("green.detail", ["id" => ""])}}/'+ ids[i] +' "><li class="list-group-item" style="cursor:pointer;">' 
+                    joinName += ' <a href="{{route("Green.detail", ["id" => ""])}}/'+ ids[i] +' "><li class="list-group-item" style="cursor:pointer;">' 
                                 + fullnames[i] + '<br><p style="font-style:italic; color:gray">'
                                 + emails[i] + '</p></li></a>';
                     listlen++;

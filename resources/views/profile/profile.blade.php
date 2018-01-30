@@ -75,7 +75,7 @@
     else if ($route == "AClub") $userid = "master_id";
     else if ($route == "MRG") $userid = "master_id";
     else if ($route == "UOB") $userid = "client_id";
-    else if ($route == "green") $userid = "green_id";
+    else if ($route == "Green") $userid = "green_id";
     else if ($route == "grow") $userid = "grow_id";
     else if ($route == "RedClub") $userid = "username";
     else if ($route == "assigngreen") $userid = "green_assign_id";
@@ -140,7 +140,7 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        @if (($route != "green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
+                        @if (($route != "Green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))
                             <input type="hidden" name="all_pc_id" value="{{$client->all_pc_id}}">
                         @elseif ($route == 'assigngrow')
                             <input type="hidden" name="grow_assign_id" value="{{$client->grow_assign_id}}">
@@ -226,12 +226,12 @@
                         @foreach ($attsreg as $attreg)
                         @if ($route == 'AClub')
                         <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a></td>
-                        @elseif ($route == 'green')
-                        <td> <a target="_blank" href="{{route('green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
+                        @elseif ($route == 'Green')
+                        <td> <a target="_blank" href="{{route('Green.trans',['id' => $client->green_id, 'progress' => $clientreg->progress_id])}}">{{$clientreg->$attreg}} </a>
                             @if ($count_temp == 1)
                             <div class="btn-hvr-container">
-                                <a href="{{route('greentrans.edit', ['id' => $clientreg->progress_id])}}" class="btn btn-primary hvr-btn">edit</a>
-                                <form action="{{route('green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return delTrans()">
+                                <a href="{{route('Greentrans.edit', ['id' => $clientreg->progress_id])}}" class="btn btn-primary hvr-btn">edit</a>
+                                <form action="{{route('Green.deletetrans', ['id' => $clientreg->progress_id])}}" method="post" onsubmit="return delTrans()">
                                     <input type="hidden" name="_method" value="DELETE" >
                                     <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
                                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">

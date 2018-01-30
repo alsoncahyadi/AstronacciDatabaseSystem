@@ -63,7 +63,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h1>Green Transaction Detail</h1>
+            <h1>Green Profile</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -89,7 +89,7 @@
                         @endforeach
                 </div>
                 <?php
-                    if($route == "green") $userid = "progress_id";
+                    if($route == "Green") $userid = "progress_id";
                 ?>           
             </div>
 

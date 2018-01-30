@@ -74,7 +74,77 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                            @if ($key == "Product Type")
+                                                <select class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                    <option>Video</option>
+                                                    <option>E-Book</option>
+                                                    <option>Seasonal Report</option>
+                                                    <option>Event</option>
+                                                    <option>Other</option>
+                                                </select>
+                                            @elseif ($key == "Status")
+                                                <select class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                    @if ($client->$value == "GOAL - BUY")
+                                                        <option selected="selected">GOAL - BUY</option>
+                                                        <option>GOAL - JOIN</option>
+                                                        <option>NO ANSWER</option>
+                                                        <option>TIDAK GOAL</option>
+                                                        <option>DALAM PROSES</option>
+                                                    @elseif ($client->$value == "GOAL - JOIN")
+                                                        <option>GOAL - BUY</option>
+                                                        <option selected="selected">GOAL - JOIN</option>
+                                                        <option>NO ANSWER</option>
+                                                        <option>TIDAK GOAL</option>
+                                                        <option>DALAM PROSES</option>
+                                                    @elseif ($client->$value == "NO ANSWER")
+                                                        <option>GOAL - BUY</option>
+                                                        <option>GOAL - JOIN</option>
+                                                        <option selected="selected">NO ANSWER</option>
+                                                        <option>TIDAK GOAL</option>
+                                                        <option>DALAM PROSES</option>
+                                                    @elseif ($client->$value == "TIDAK GOAL")
+                                                        <option>GOAL - BUY</option>
+                                                        <option>GOAL - JOIN</option>
+                                                        <option>NO ANSWER</option>
+                                                        <option selected="selected">TIDAK GOAL</option>
+                                                        <option>DALAM PROSES</option>
+                                                    @elseif ($client->$value == "DALAM PROSES")
+                                                        <option>GOAL - BUY</option>
+                                                        <option>GOAL - JOIN</option>
+                                                        <option>NO ANSWER</option>
+                                                        <option>TIDAK GOAL</option>
+                                                        <option selected="selected">DALAM PROSES</option>
+                                                    @endif
+                                                </select>
+                                            @elseif ($key == "Nama Product")
+                                                <select class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                @if ($client->$value == "A-Club")
+                                                        <option selected="selected">A-Club</option>
+                                                        <option>UOB</option>
+                                                        <option>MRG</option>
+                                                        <option>CAT</option>
+                                                    @elseif ($client->$value == "UOB")
+                                                        <option>A-Club</option>
+                                                        <option selected="selected">UOB</option>
+                                                        <option>MRG</option>
+                                                        <option>CAT</option>
+                                                    @elseif ($client->$value == "MRG")
+                                                        <option>A-Club</option>
+                                                        <option>UOB</option>
+                                                        <option selected="selected">MRG</option>
+                                                        <option>CAT</option>
+                                                    @elseif ($client->$value == "CAT")
+                                                        <option>A-Club</option>
+                                                        <option>UOB</option>
+                                                        <option>MRG</option>
+                                                        <option selected="selected">CAT</option>
+                                                    @endif
+                                                </select>
+                                            @elseif ($key == "Date")
+                                                <input class="form-control no-spin" value="{{$client->$value}}" type="date" name="{{$value}}">
+                                            @else
+                                               <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                            @endif
                                         </div>
                                     @endforeach
                             

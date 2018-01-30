@@ -71,7 +71,7 @@
     
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Basic Information 
+            <i class="fa fa-child fa-fw"></i> Transaction Information 
         </div>
         
         <div class="panel-body">
