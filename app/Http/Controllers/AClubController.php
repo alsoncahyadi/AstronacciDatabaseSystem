@@ -552,6 +552,12 @@ class AClubController extends Controller
         $aclub_member = AclubMember::where('user_id', $member)->first();
 
         $aclub_transaction = $aclub_member->aclubTransactions()->get();
+        
+        foreach ($aclub_transaction as $aclub_trans) {
+            $aclub_trans->payment_date_1 = $aclub_trans->payment_date->toDateString();
+            $aclub_trans->start_date_1 = $aclub_trans->start_date->toDateString();
+        }
+        
 
         $heads = [  "User ID" => "user_id",
                     "Master ID" => "master_id",
@@ -579,14 +585,13 @@ class AClubController extends Controller
                     "Yellow Zone",
                     "Red Zone"];
 
-        $attsreg = ["payment_date",
+        $attsreg = ["payment_date_1",
                     "kode",
                     "status",
                     "nominal",
                     "sales_name",
-                    "start_date",
+                    "start_date_1",
                     ];
-
 
         return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 'heads'=>$heads]);
     }
@@ -629,18 +634,25 @@ class AClubController extends Controller
 
         $aclub_transaction = AclubTransaction::where('transaction_id', $package)->first();
         // dd($aclub_transaction);
+        $aclub_transaction->payment_date_1 = $aclub_transaction->payment_date->toDateString();
+        $aclub_transaction->start_date_1 = $aclub_transaction->start_date->toDateString();
+        $aclub_transaction->expired_date_1 = $aclub_transaction->expired_date->toDateString();
+        $aclub_transaction->masa_tenggang_1 = $aclub_transaction->masa_tenggang->toDateString();
+        $aclub_transaction->yellow_zone_1 = $aclub_transaction->yellow_zone->toDateString();
+        $aclub_transaction->red_zone_1 = $aclub_transaction->red_zone->toDateString();
 
         $heads = [  "Transaction ID" => 'transaction_id',
                     "User ID" => 'user_id',
-                    "Payment Date" => 'payment_date',
+                    "Payment Date" => 'payment_date_1',
                     "Kode" => 'kode',
                     "Status" => 'status',
                     "Nominal" => 'nominal',
-                    "Start Date" => 'start_date',
-                    "Expired Date" => 'expired_date',
-                    "Masa Tenggang" => 'masa_tenggang',
-                    "Yellow Zone" => 'yellow_zone',
-                    "Red Zone" => 'red_zone'];
+                    "Start Date" => 'start_date_1',
+                    "Expired Date" => 'expired_date_1',
+                    "Masa Tenggang" => 'masa_tenggang_1',
+                    "Yellow Zone" => 'yellow_zone_1',
+                    "Red Zone" => 'red_zone_1'];
+
         $ins = [      "Payment Date" => "payment_date",
                         "Kode" => "kode",
                         "Status" => "status",
@@ -768,7 +780,7 @@ class AClubController extends Controller
 
             $aclub_trans->payment_date = $request->payment_date;
             $aclub_trans->kode = $request->kode;
-            $aclub_trans->status = $request->status;
+            $aclub_trans->status = $request->status_aclub;
             $aclub_trans->nominal = $request->nominal;
             $aclub_trans->sales_name = $request->sales_aclub;
             $aclub_trans->start_date = $request->start_date;
@@ -938,6 +950,7 @@ class AClubController extends Controller
 
         $ins = [    "Payment Date" => 'payment_date',
                     "Kode" => 'kode',
+                    "Status" => 'status',
                     "Nominal" => 'nominal',
                     "Sales" => "sales_name",
                     "Start Date" => 'start_date',

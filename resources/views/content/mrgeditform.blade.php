@@ -91,7 +91,7 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="hidden" name="user_id" value="{{$client->accounts_number}}">
+                        <input type="hidden" name="accounts_number" value="{{$client->accounts_number}}">
                     </form>
             </div>
 
