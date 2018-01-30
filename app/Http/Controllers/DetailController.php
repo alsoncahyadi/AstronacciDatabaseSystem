@@ -145,13 +145,17 @@ class DetailController extends Controller
             $client_cat = Cat::first();
         }
 
-        $ins_cat = ["User ID" => "user_id",
+        $ins_cat = [
                 "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales_name",
                 ];
 
-        $heads_cat = $ins_cat;
+        $heads_cat = ["User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Batch" => "batch",
+                "Sales" => "sales_name",
+                ];
 
         $insreg_cat = [ "Nomer Induk" => 'nomor_induk',
                     "DP Date" => 'DP_date',
@@ -186,6 +190,18 @@ class DetailController extends Controller
         }
 
         $ins_uob = [
+                "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data",
+                "Tanggal Join" => "join_date",
+                "Nomor KTP" => "nomor_ktp",
+                "Expired KTP" => "tanggal_expired_ktp",
+                "Nomor NPWP" => "nomor_npwp",
+                "Alamat Surat Menyurat" => "alamat_surat",
+                "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+                "Nama Ibu Kandung" => "nama_ibu_kandung",
+            ];
+
+        $heads_uob = [
                 "Kode Client" => "client_id",
                 "Master ID" => "master_id",
                 "Sales" => "sales_name",
@@ -198,8 +214,6 @@ class DetailController extends Controller
                 "Saudara Tidak Serumah" => "saudara_tidak_serumah",
                 "Nama Ibu Kandung" => "nama_ibu_kandung",
             ];
-
-        $heads_uob = $ins_uob;
 
         $insreg_uob = ["Bank Pribadi" => "bank_pribadi",
                         "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
@@ -233,8 +247,8 @@ class DetailController extends Controller
             $client_mrg = Mrg::first();
         }
 
-        $ins_mrg = ["Sumber Data (MRG)" => "sumber_data",
-                "Join Date (MRG)" => "join_date",
+        $ins_mrg = ["Sumber Data MRG" => "sumber_data",
+                "Join Date MRG" => "join_date",
                 "Sales" => "sales_name"];
 
         $heads_mrg = $ins_mrg;
@@ -258,11 +272,13 @@ class DetailController extends Controller
 
         $aclub_master = $client_aclub->master;
 
-        $ins_aclub = ["Master_id" => "master_id", 
+        $ins_aclub = [
                 "Sumber Data" => "sumber_data", 
                 "Keterangan" => "keterangan"];
 
-        $heads_aclub = $ins_aclub;
+        $heads_aclub = ["Master_id" => "master_id", 
+                "Sumber Data" => "sumber_data", 
+                "Keterangan" => "keterangan"];
 
         $clientsreg_aclub= $aclub_master->aclubMembers()->get();
 

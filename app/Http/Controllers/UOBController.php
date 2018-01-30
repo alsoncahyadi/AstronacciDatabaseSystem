@@ -428,8 +428,7 @@ class UOBController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'master_id' => 'required',
-                'kode_client' => 'required|unique:uobs',
+                'client_id' => 'required',
                 'sales_uob' => '',
                 'sumber_data_uob' => '',
                 'tanggal_join_uob' => 'date',
@@ -444,12 +443,11 @@ class UOBController extends Controller
         //Inisialisasi array error
         $err = [];
         try {
-            $uob = UOB::where('client_id',$request->user_id)->first();
+            $uob = UOB::where('client_id',$request->client_id)->first();
 
             $err =[];
 
             $uob->client_id = $request->client_id;
-            $uob->master_id = $request->master_id;
             $uob->sales_name = $request->sales_name;
             $uob->sumber_data = $request->sumber_data;
             $uob->join_date = $request->join_date;
@@ -475,7 +473,7 @@ class UOBController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function importExcel() {

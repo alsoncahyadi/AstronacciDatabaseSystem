@@ -412,19 +412,19 @@ class MRGController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => 'required|unique:mrgs',
+                'master_id' => 'required',
                 'sumber_data' => '',
-                'join_date' => 'date'
+                'join_date_mrg' => 'date'
             ]);
         //Inisialisasi array error
         $err = [];
         try {
-            $mrg = Mrg::where('master_id',$request->user_id)->first();
+            $mrg = Mrg::where('master_id',$request->master_id)->first();
 
             $err =[];
 
             $mrg->sumber_data = $request->sumber_data;
-            $mrg->join_date = $request->join_date;
+            $mrg->join_date = $request->join_date_mrg;
 
             $mrg->update();
         } catch(\Illuminate\Database\QueryException $ex){

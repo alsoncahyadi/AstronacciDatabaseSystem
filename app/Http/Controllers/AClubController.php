@@ -545,7 +545,7 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function clientDetailMember($id, $member) {
@@ -692,14 +692,14 @@ class AClubController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'master_id' => 'required|unique:aclub_informations',
+                'master_id' => 'required',
                 'sumber_data' => '',
                 'keterangan' => ''
             ]);
 
         $err = [];
         try {
-            $aclub = AclubInformation::find($request->user_id);
+            $aclub = AclubInformation::find($request->master_id);
 
             $aclub->master_id = $request->master_id;
             $aclub->sumber_data = $request->sumber_data;

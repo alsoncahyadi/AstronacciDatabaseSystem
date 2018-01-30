@@ -166,14 +166,19 @@
                     <h3>A-CLUB</h3>
 
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editaclub">Edit</a>
+                    <form action="{{route('AClub.deleteclient', ['id' => $client_aclub->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                     <div id="editaclub" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
+                            <form method="post" action="{{route('AClub.edit')}}">
                                 <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
-                                @foreach ($heads_aclub as $atr => $value)
+                                @foreach ($ins_aclub as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{$value}}">
+                                    <input class="form-control" type="text" value="{{$client_aclub->$value}}" name="{{$value}}">
                                 </div>
                                 @endforeach
                                 <br>
@@ -268,14 +273,23 @@
                 <div class="tab-pane fade" id="mrg-pills">
                     <h3>MRG</h3>
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editmrg">Edit</a>
+                    <form action="{{route('MRG.deleteclient', ['id' => $client_mrg->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                     <div id="editmrg" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
-                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                            <form method="post" action="{{route('MRG.edit')}}">
+                                <input name="master_id" type="hidden" value="{{$client_mrg->master_id}}">
                                 @foreach ($heads_mrg as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{$value}}">
+                                    @if ($atr == "Join Date MRG")
+                                        <input class="form-control no-spin" type="date" value="{{$client_mrg->$value}}" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @else
+                                        <input class="form-control" type="text" value="{{$client_mrg->$value}}" name="{{$value}}">
+                                    @endif
                                 </div>
                                 @endforeach
                                 <br>
@@ -336,14 +350,19 @@
                     <div>
                         <h3>CAT</h3>
                         <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editcat">Edit</a>
+                        <form action="{{route('CAT.deleteclient', ['id' => $client_cat->user_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                         <div id="editcat" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <form method="post" action="{{route('AClub.insertmembers')}}">
-                                    <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                <form method="post" action="{{route('CAT.edit')}}">
+                                    <input name="user_id" type="hidden" value="{{$client_cat->user_id}}">
                                     @foreach ($heads_cat as $atr => $value)
                                     <div class="form-group">
                                         <label>{{$atr}}</label>
-                                        <input class="form-control" type="text" name="{{$value}}">
+                                        <input class="form-control" type="text" value="{{$client_cat->$value}}"" name="{{$value}}">
                                     </div>
                                     @endforeach
                                     <br>
@@ -403,14 +422,19 @@
                 <div class="tab-pane fade" id="uob-pills">
                     <h3>UOB</h3>
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#edituob">Edit</a>
+                    <form action="{{route('UOB.deleteclient', ['id' => $client_uob->client_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                     <div id="edituob" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
-                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                            <form method="post" action="{{route('UOB.edit')}}">
+                                <input name="client_id" type="hidden" value="{{$client_uob->client_id}}">
                                 @foreach ($heads_uob as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{$value}}">
+                                    <input class="form-control" type="text" value="{{$client_uob->$value}}" name="{{$value}}">
                                 </div>
                                 @endforeach
                                 <br>
