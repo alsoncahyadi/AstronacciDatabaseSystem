@@ -367,11 +367,17 @@ class MRGController extends Controller
 
         $keyword = $request['q'];
 
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
         $clientsreg = $mrg->accounts()
                     ->where('accounts_number', 'like', "%{$keyword}%")
                     // ->orWhere('account_type', 'like', "%{$keyword}%")
                     // ->orWhere('sales_name', 'like', "%{$keyword}%")
-                    ->paginate(15);
+                    ->skip($record_amount*$page)->take($record_amount)->get();
+
+        // dd($clientsreg);
         // $clientsreg = $mrg->accounts()->get();
         // dd($clientsreg);
 

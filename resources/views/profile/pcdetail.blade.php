@@ -345,6 +345,12 @@
                         <button type="button" onclick="load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
                     </div>
                     <div id="tab2"></div>
+                    <div id="pageController" style="margin-left: 2px; margin-top: 12px;">
+                        Page
+                        <input id="pagenum" type="number" name="pagenum" value="1" min="1" >
+                        
+                        <button id="page_number" onclick="load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?page=' + document.getElementById('pagenum').value + '&q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Go</button>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="cat-pills">
                     <div>
@@ -505,7 +511,7 @@
     @endif
 	
 </div>
-<script>
+<script type="text/javascript">
 	$(document).ready(function(){
 		$("#hide").click(function(){
 			$("#bod1").hide();
@@ -522,8 +528,7 @@
 		});
 		$("delete").click(function(){
 			$("#delete").hide();
-			$("#condel").show();
-			
+			$("#condel").show();			
 		});
 	});
 
