@@ -491,12 +491,23 @@ class AClubController extends Controller
 
         $keyword = $request['q'];
 
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
         // aclub_members adalah list member dari master_id = $id
         // $aclub_members = $aclub_master->aclubMembers();
         //                 ->where('user_id', 'like', "%{$keyword}%")
         //                 ->orWhere('group', 'like', "%{$keyword}%")
         //                 ->paginate(15);
-        $aclub_members = $aclub_master->aclubMembers()->get();
+        $aclub_members_old = $aclub_master->aclubMembers();
+
+                    // ->orWhere('account_type', 'like', "%{$keyword}%")
+                    // ->orWhere('sales_name', 'like', "%{$keyword}%")
+        $total = count($aclub_members_old->get());
+        $total = ceil($total / $record_amount);
+
+        $aclub_members = $aclub_members_old->skip($record_amount*$page)->take($record_amount)->get();
         // dd($aclub_members);
 
         $headsreg = ["User ID",
@@ -568,10 +579,21 @@ class AClubController extends Controller
         return back();
     }
 
-    public function clientDetailMember($id, $member) {
+    public function clientDetailMember($id, $member, Request $request) {
         $aclub_member = AclubMember::where('user_id', $member)->first();
 
-        $aclub_transaction = $aclub_member->aclubTransactions()->get();
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
+        $aclub_transaction_old = $aclub_member->aclubTransactions();
+
+        $total = count($aclub_transaction_old->get());
+        $total = ceil($total / $record_amount);
+
+        $aclub_transaction = $aclub_transaction_old->skip($record_amount*$page)->take($record_amount)->get();
+
+        // dd($aclub_transaction);
         
         foreach ($aclub_transaction as $aclub_trans) {
             $aclub_trans->payment_date_1 = $aclub_trans->payment_date->toDateString();
@@ -613,7 +635,13 @@ class AClubController extends Controller
                     "start_date_1",
                     ];
 
-        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 'heads'=>$heads]);
+        $page = $page + 1;
+
+        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 
+                'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 
+                'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 
+                'heads'=>$heads, 'page'=>$page, 'count'=>$total
+            ]);
     }
 
     public function editMember(Request $request) {
