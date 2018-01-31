@@ -42,11 +42,16 @@ class MRGController extends Controller
             $mrg->facebook = $master->facebook;
 
             //data from mrg transaction
-            $last_transaction = $mrg->accounts()->orderBy('created_at','desc')->first();
-            // dd($last_transaction->sales_name);
-            $mrg->sales_name = $last_transaction->sales_name;
-            $mrg->accounts_number = $last_transaction->accounts_number;
-            $mrg->account_type = $last_transaction->account_type;
+            if ($mrg->accounts()->orderBy('created_at','desc')->first() != null) {
+                $last_transaction = $mrg->accounts()->orderBy('created_at','desc')->first();
+                $mrg->sales_name = $last_transaction->sales_name;
+                $mrg->accounts_number = $last_transaction->accounts_number;
+                $mrg->account_type = $last_transaction->account_type;
+            } else {
+                $mrg->sales_name = null;
+                $mrg->accounts_number = null;
+                $mrg->account_type = null;
+            }
         }
 
         return $mrgs;
@@ -239,7 +244,7 @@ class MRGController extends Controller
         $query = $query."FROM  ";
         $query = $query."master_clients  ";
         $query = $query."INNER JOIN mrgs ON master_clients.master_id = mrgs.master_id  ";
-        $query = $query."INNER JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
+        $query = $query."LEFT JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
         $query = $query."            sales_name, T1.created_at, updated_at, created_by, updated_by ";
         $query = $query."            FROM  ";
         $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";

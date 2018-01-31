@@ -62,9 +62,16 @@ class GreenController extends Controller
 
         foreach ($greens as $green) {
             $progress = $green->progresses()->orderBy('created_at','desc')->first();
-            $green->status = $progress->status;
-            $green->sales_name = $progress->sales_name;
-            $green->nama_product = $progress->nama_product;
+            if ($green->progresses()->orderBy('created_at','desc')->first() != null) {
+                $green->status = $progress->status;
+                $green->sales_name = $progress->sales_name;
+                $green->nama_product = $progress->nama_product;
+            } else {
+                $green->status = null;
+                $green->sales_name = null;
+                $green->nama_product = null;
+            }
+            
         }
 
         return $greens;
@@ -219,7 +226,7 @@ class GreenController extends Controller
         $query = "";
         $query = $query."SELECT * ";
         $query = $query."FROM green_prospect_clients ";
-        $query = $query."INNER JOIN (SELECT  ";
+        $query = $query."LEFT JOIN (SELECT  ";
         $query = $query."            progress_id, T1.green_id as green_id, date, sales_name,  ";
         $query = $query."            status, nama_product, nominal, keterangan, created_at, updated_at ";
         $query = $query."            FROM  ";

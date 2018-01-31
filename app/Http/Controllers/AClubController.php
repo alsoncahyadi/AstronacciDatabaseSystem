@@ -46,30 +46,50 @@ class AClubController extends Controller
             $aclub_member->facebook = $master->facebook;
 
             //data from aclub transaction
-            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
-            $aclub_member->sales_name = $last_transaction->sales_name;
-            $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
-            $aclub_member->kode = $last_transaction->kode;
-            $aclub_member->status = $last_transaction->status;
-            $aclub_member->start_date = $last_transaction->start_date->toDateString();
-            $aclub_member->expired_date = $last_transaction->expired_date;
-            $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
-            $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
-            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
-            $aclub_member->transaction_id = $last_transaction->transaction_id;
+            if ($aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first() != null) {
+                $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
+                $aclub_member->sales_name = $last_transaction->sales_name;
+                $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
+                $aclub_member->kode = $last_transaction->kode;
+                $aclub_member->status = $last_transaction->status;
+                $aclub_member->start_date = $last_transaction->start_date->toDateString();
+                $aclub_member->expired_date = $last_transaction->expired_date;
+                $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
+                $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
+                $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
+                $aclub_member->transaction_id = $last_transaction->transaction_id;
 
-            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
+                $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
 
-            $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
-            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
+                $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
+                $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
+            } else {
+                $aclub_member->sales_name = null;
+                $aclub_member->payment_date = null;
+                $aclub_member->kode = null;
+                $aclub_member->status = null;
+                $aclub_member->start_date = null;
+                $aclub_member->expired_date = null;
+                $aclub_member->yellow_zone = null;
+                $aclub_member->red_zone = null;
+                $aclub_member->masa_tenggang = null;
+                $aclub_member->transaction_id = null;
+
+                $aclub_member->bonus = null;
+
+                $aclub_member->expired_date = null;
+                $aclub_member->masa_tenggang = null;
+            }
 
             $last_kode = substr($aclub_member->kode,-1);
             if ($last_kode == 'S') {
                 $aclub_member->bulan_member = 1;
             } else if($last_kode == 'G') {
                 $aclub_member->bulan_member = 6;
-            } else {
+            } else if ($last_kode == 'P') {
                 $aclub_member->bulan_member = 12;
+            } else {
+                $aclub_member->bulan_member = null;
             }
 
             if ($aclub_member->masa_tenggang < Carbon::now()) {
@@ -332,7 +352,7 @@ class AClubController extends Controller
         $query = $query."master_clients ";
         $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
         $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
+        $query = $query."LEFT JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
         $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
         $query = $query."            FROM ";
         $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
