@@ -33,7 +33,7 @@ class DetailController extends Controller
         $cat = $master->cat;
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins= ["Master ID"=> "master_id",
+        $ins= [
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
@@ -49,7 +49,21 @@ class DetailController extends Controller
                 "WhatsApp" => "whatsapp",
                 "Facebook" => "facebook"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = $ins;
+        $heads = ["Master ID"=> "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook"];
         $insreg = ["Cuki"];
         //dd($cat);   
 		return view('profile/pcdetail', ['route'=>'detail', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'cat'=> $cat, 'mrg'=> $mrg, 'aclub'=> $aclub , 'uob'=> $uob]);
@@ -68,7 +82,6 @@ class DetailController extends Controller
   
     public function editClient(Request $request) {
          $this->validate($request, [
-                'master_id' => 'required|unique:master_clients',
                 'redclub_user_id' => '',
                 'name' => '',
                 'telephone_number' => '',
@@ -88,7 +101,6 @@ class DetailController extends Controller
         try {
             $master = MasterClient::find($request->user_id);
 
-            $master->master_id = $request->master_id;
             $master->redclub_user_id = $request->redclub_user_id;
             $master->name = $request->name;
             $master->telephone_number = $request->telephone_number;
@@ -120,7 +132,7 @@ class DetailController extends Controller
         $cat = $client_master->cat;
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins_master = ["Master ID"=> "master_id",
+        $ins_master = [
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
@@ -136,7 +148,21 @@ class DetailController extends Controller
                 "WhatsApp" => "whatsapp",
                 "Facebook" => "facebook"];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads_master = $ins_master;
+        $heads_master = ["Master ID"=> "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook"];
 
         //CAT
         $client_cat = Cat::where('master_id', $id)->first();

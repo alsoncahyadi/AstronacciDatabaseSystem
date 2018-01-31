@@ -717,7 +717,7 @@ class AClubController extends Controller
                 'user_id' => 'required|integer',
                 'payment_date' => 'date',
                 'kode' => '',
-                'status' => '',
+                'status_aclub' => '',
                 'nominal' => 'integer',
                 'sales_name' => '',
                 'start_date' => 'date',
@@ -734,7 +734,7 @@ class AClubController extends Controller
         $aclub_trans->user_id = $request->user_id;
         $aclub_trans->payment_date = $request->payment_date;
         $aclub_trans->kode = $request->kode;
-        $aclub_trans->status = $request->status;
+        $aclub_trans->status = $request->status_aclub;
         $aclub_trans->nominal = $request->nominal;
         $aclub_trans->sales_name = $request->sales_name;
         $aclub_trans->start_date = $request->start_date;

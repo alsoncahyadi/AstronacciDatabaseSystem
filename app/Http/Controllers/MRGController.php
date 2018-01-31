@@ -364,9 +364,11 @@ class MRGController extends Controller
 
         $clientsreg = $mrg->accounts()
                     ->where('accounts_number', 'like', "%{$keyword}%")
-                    ->orWhere('account_type', 'like', "%{$keyword}%")
-                    ->orWhere('sales_name', 'like', "%{$keyword}%")
+                    // ->orWhere('account_type', 'like', "%{$keyword}%")
+                    // ->orWhere('sales_name', 'like', "%{$keyword}%")
                     ->paginate(15);
+        // $clientsreg = $mrg->accounts()->get();
+        // dd($clientsreg);
 
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];

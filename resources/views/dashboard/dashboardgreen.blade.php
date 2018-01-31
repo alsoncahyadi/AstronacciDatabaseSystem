@@ -36,6 +36,29 @@
                                     <label>{{$atr}}</label>
                                     @if ($atr == 'Date')
                                         <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @elseif ($atr == "Product Type")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>Video</option>
+                                            <option>E-Book</option>
+                                            <option>Seasonal Report</option>
+                                            <option>Event</option>
+                                            <option>Other</option>
+                                        </select>
+                                    @elseif ($atr == "Status")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>GOAL - BUY</option>
+                                            <option>GOAL - JOIN</option>
+                                            <option>NO ANSWER</option>
+                                            <option>TIDAK GOAL</option>
+                                            <option>DALAM PROSES</option>
+                                        </select>
+                                    @elseif ($atr == "Nama Product")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>A-Club</option>
+                                            <option>UOB</option>
+                                            <option>MRG</option>
+                                            <option>CAT</option>
+                                        </select>
                                     @else
                                         <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                     @endif

@@ -421,7 +421,13 @@ class GreenController extends Controller
                 'interest' => '',
                 'pemberi' => '',
                 'sumber_data' => '',
-                'keterangan_perintah' => ''
+                'keterangan_perintah' => '',
+                'date' => '',
+                'sales_name' => '',
+                'status' => '',
+                'nama_product' => '',
+                'nominal' => '',
+                'keterangan' => ''
             ]);
         //Inisialisasi array error
         $err = [];
@@ -439,6 +445,19 @@ class GreenController extends Controller
         $green->keterangan_perintah = $request->keterangan_perintah;
 
         $green->save();
+
+        $green_progress = new \App\GreenProspectProgress();
+
+        $green_progress->green_id = $green->green_id;
+        $green_progress->date = $request->date;
+        $green_progress->sales_name = $request->sales_name;
+        $green_progress->status = $request->status;
+        $green_progress->nama_product = $request->nama_product;
+        $green_progress->nominal = $request->nominal;
+        $green_progress->keterangan = $request->keterangan;
+
+        $green_progress->save();
+
         return redirect()->back()->withErrors($err);
     }
 
