@@ -27,6 +27,7 @@
                         <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
                        @if ($route == 'AClub')
+                       <input id="hidden_page_countA" type="hidden" value="{{$count}}">
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">
@@ -93,7 +94,6 @@
             </table>
             @endif
     @elseif ($route == 'AClub')    
-    <input id="hidden_page_countA" type="hidden" value="{{$count}}">
     <div class="panel panel-default" style="margin:15px">                
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>

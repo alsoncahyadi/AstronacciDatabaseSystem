@@ -625,7 +625,7 @@
         load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?page=' + document.getElementById('pagenum').value + '&q=' + document.getElementById('searchkey2').value, 'tab2'); 
         updateMax()        
     }
-    function gotoPageA() {        
+    function gotoPageA() {
         load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?page=' + document.getElementById('pagenumA').value + '&q=' + document.getElementById('searchkey').value)
         updateMaxA()
     }
