@@ -500,7 +500,9 @@ class AClubController extends Controller
         //                 ->where('user_id', 'like', "%{$keyword}%")
         //                 ->orWhere('group', 'like', "%{$keyword}%")
         //                 ->paginate(15);
-        $aclub_members_old = $aclub_master->aclubMembers();
+        $aclub_members_old = $aclub_master->aclubMembers()
+                            ->where('user_id', 'like', "%{$keyword}%")
+                            ->orWhere('group', 'like', "%{$keyword}%");
 
                     // ->orWhere('account_type', 'like', "%{$keyword}%")
                     // ->orWhere('sales_name', 'like', "%{$keyword}%")
@@ -530,7 +532,11 @@ class AClubController extends Controller
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
-        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 
+                    'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 
+                    'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg,
+                    'count'=>$total
+                ]);
     }
 
     public function addMember(Request $request) {
@@ -636,6 +642,9 @@ class AClubController extends Controller
                     ];
 
         $page = $page + 1;
+        if ($page < 1) {
+            $page = 1;
+        }
 
         return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 
                 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 

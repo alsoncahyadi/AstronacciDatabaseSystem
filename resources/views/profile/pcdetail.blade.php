@@ -269,6 +269,13 @@
                         <button type="button" onclick="load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
                     </div>
                     <div id="tab"></div>
+                    <div id="pageControllerA" style="margin-left: 2px; margin-top: 12px;">
+                        Page
+                        <input id="pagenumA" type="number" name="pagenumA" value="1" min="1" >
+                        /<label id="page_countA">{{ (isset($count) ? $count : "" )}}</label>
+                        <button id="page_numberA" onclick="gotoPageA()" href="#">Go</button>
+                    </div>
+
                 </div>
                 <div class="tab-pane fade" id="mrg-pills">
                     <h3>MRG</h3>
@@ -515,6 +522,9 @@
     window.setInterval(function(){
     updateMax()
     }, 500);
+    window.setInterval(function(){
+    updateMaxA()
+    }, 500);
 	$(document).ready(function(){
 		$("#hide").click(function(){
 			$("#bod1").hide();
@@ -602,6 +612,9 @@
     function updateMax() {
         document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;
     }
+    function updateMaxA() {
+        document.getElementById('page_countA').innerHTML = document.getElementById('hidden_page_countA').value;
+    }
 
     function searchPage() {
         load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2');
@@ -611,6 +624,10 @@
     function gotoPage() {
         load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?page=' + document.getElementById('pagenum').value + '&q=' + document.getElementById('searchkey2').value, 'tab2'); 
         updateMax()        
+    }
+    function gotoPageA() {        
+        load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?page=' + document.getElementById('pagenumA').value + '&q=' + document.getElementById('searchkey').value)
+        updateMaxA()
     }
     // ======================================================================================================
 

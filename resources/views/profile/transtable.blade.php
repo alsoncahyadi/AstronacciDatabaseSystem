@@ -93,6 +93,7 @@
             </table>
             @endif
     @elseif ($route == 'AClub')    
+    <input id="hidden_page_countA" type="hidden" value="{{$count}}">
     <div class="panel panel-default" style="margin:15px">                
             <table width="100%" class="table table-striped table-bordered table-hover" id="trans">
                 <thead>
