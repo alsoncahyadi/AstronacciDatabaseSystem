@@ -371,15 +371,16 @@ class MRGController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $clientsreg = $mrg->accounts()
-                    ->where('accounts_number', 'like', "%{$keyword}%")
+        $clientsregold = $mrg->accounts()
+                    ->where('accounts_number', 'like', "%{$keyword}%");
                     // ->orWhere('account_type', 'like', "%{$keyword}%")
                     // ->orWhere('sales_name', 'like', "%{$keyword}%")
-                    ->skip($record_amount*$page)->take($record_amount)->get();
+        $total = count($clientsregold->get());
+        $total = ceil($total / $record_amount);        
 
+        $clientsreg = $clientsregold->skip($record_amount*$page)->take($record_amount)->get();
         // dd($clientsreg);
-        // $clientsreg = $mrg->accounts()->get();
-        // dd($clientsreg);
+        // $clientsreg = $mrg->accounts()->get();        
 
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
@@ -387,7 +388,17 @@ class MRGController extends Controller
         //attribute sql account
         $attsreg = ["accounts_number", "account_type", "sales_name"];
 
-        return view('profile/transtable', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', [
+                'route'=>'MRG', 
+                'client'=>$mrg, 
+                'heads'=>$heads, 
+                'ins'=>$ins, 
+                'insreg'=>$insreg, 
+                'clientsreg'=>$clientsreg, 
+                'headsreg'=>$headsreg, 
+                'attsreg'=>$attsreg,
+                'count'=>$total
+            ]);
     }
 
      public function addTrans(Request $request) {

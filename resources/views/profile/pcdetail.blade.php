@@ -138,7 +138,7 @@
                     </li>
                 @endif
                 @if($mrg)
-                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2')">MRG</a>
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2');document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;">MRG</a>
                     </li>
                 @else
                     <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
@@ -341,15 +341,15 @@
                     <br><br>
                     <div>
                     <p>Search</p>
-                        <input id="searchkey2" type="text"/>    
-                        <button type="button" onclick="load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
+                        <input id="searchkey2" type="text"/>
+                        <button type="button" onclick="searchPage()" href="#">Search</button>
                     </div>
                     <div id="tab2"></div>
                     <div id="pageController" style="margin-left: 2px; margin-top: 12px;">
                         Page
                         <input id="pagenum" type="number" name="pagenum" value="1" min="1" >
-                        
-                        <button id="page_number" onclick="load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?page=' + document.getElementById('pagenum').value + '&q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Go</button>
+                        /<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
+                        <button id="page_number" onclick="gotoPage()" href="#">Go</button>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="cat-pills">
@@ -512,6 +512,9 @@
 	
 </div>
 <script type="text/javascript">
+    window.setInterval(function(){
+    updateMax()
+    }, 500);
 	$(document).ready(function(){
 		$("#hide").click(function(){
 			$("#bod1").hide();
@@ -530,7 +533,7 @@
 			$("#delete").hide();
 			$("#condel").show();			
 		});
-	});
+	});    
 
     // ======================================================================================================
     // RUMUS ACLUB
@@ -596,7 +599,21 @@
         document.getElementById("yellowzone").stepDown(3);
         document.getElementById("redzone").stepUp(3);
     });
-    // ======================================================================================================    
+    function updateMax() {
+        document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;
+    }
+
+    function searchPage() {
+        load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2');
+        updateMax()
+        document.getElementById('pagenum').value='1';
+    }
+    function gotoPage() {
+        load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?page=' + document.getElementById('pagenum').value + '&q=' + document.getElementById('searchkey2').value, 'tab2'); 
+        updateMax()        
+    }
+    // ======================================================================================================
+
 	</script>
 </body>
 </html>

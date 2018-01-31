@@ -1,6 +1,5 @@
 
 <body>	   
-
     @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop") || ($route == "AClub"))    
     <div class="panel panel-default" style="margin:15px">        
             @if (($route == "CAT") || ($route == "UOB"))
@@ -56,6 +55,7 @@
                                     </td>
                                 @endif
                         @elseif ($route == 'MRG')
+                            <input id="hidden_page_count" type="hidden" value="{{$count}}">
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">
