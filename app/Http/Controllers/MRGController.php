@@ -371,8 +371,23 @@ class MRGController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $clientsregold = $mrg->accounts()
-                    ->where('accounts_number', 'like', "%{$keyword}%");
+        $query = "SELECT * FROM mrg_accounts ";
+        $query = $query."WHERE (master_id = ".$mrg->master_id.") ";
+        $query = $query."AND ";
+        $query = $query."( ";
+        $query = $query."accounts_number like '%".$keyword."%' ";
+        $query = $query."OR ";
+        $query = $query."account_type like '%".$keyword."%' "; 
+        $query = $query."OR ";
+        $query = $query."sales_name like '%".$keyword."%' ";       
+        $query = $query.") ";
+
+        // dd($query);
+
+        $clientsregold = DB::select($query);
+
+        // $clientsregold = $mrg->accounts()
+        //             ->where('accounts_number', 'like', "%{$keyword}%");
                     // ->orWhere('account_type', 'like', "%{$keyword}%")
                     // ->orWhere('sales_name', 'like', "%{$keyword}%")
         $total = count($clientsregold->get());

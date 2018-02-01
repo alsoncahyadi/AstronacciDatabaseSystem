@@ -495,17 +495,23 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        // aclub_members adalah list member dari master_id = $id
-        // $aclub_members = $aclub_master->aclubMembers();
-        //                 ->where('user_id', 'like', "%{$keyword}%")
-        //                 ->orWhere('group', 'like', "%{$keyword}%")
-        //                 ->paginate(15);
-        $aclub_members_old = $aclub_master->aclubMembers()
-                            ->where('user_id', 'like', "%{$keyword}%")
-                            ->orWhere('group', 'like', "%{$keyword}%");
+        $query = "SELECT * FROM aclub_members ";
+        $query = $query."WHERE (master_id = ".$aclub_master->master_id.") ";
+        $query = $query."AND ";
+        $query = $query."( ";
+        $query = $query."user_id like '%".$keyword."%' ";
+        $query = $query."OR ";
+        $query = $query."aclub_members.group like '%".$keyword."%' ";        
+        $query = $query.") ";
 
-                    // ->orWhere('account_type', 'like', "%{$keyword}%")
-                    // ->orWhere('sales_name', 'like', "%{$keyword}%")
+        $aclub_members_old = DB::select($query);
+
+        // $aclub_members_old = $aclub_master->aclubMembers()
+        //                     ->where('user_id', 'like', "%{$keyword}%")
+        //                     ->orWhere('aclub_members.group', 'like', "%{$keyword}%")->get();
+
+        // dd($aclub_members_old);
+                    
         $total = count($aclub_members_old->get());
         $total = ceil($total / $record_amount);
 
