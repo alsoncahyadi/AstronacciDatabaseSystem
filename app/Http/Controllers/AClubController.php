@@ -512,10 +512,12 @@ class AClubController extends Controller
 
         // dd($aclub_members_old);
                     
-        $total = count($aclub_members_old->get());
+        $total = count($aclub_members_old);
         $total = ceil($total / $record_amount);
 
-        $aclub_members = $aclub_members_old->skip($record_amount*$page)->take($record_amount)->get();
+        $aclub_members = collect(array_slice($aclub_members_old, $page*$record_amount, $record_amount));
+
+        // $aclub_members = $aclub_members_old->skip($record_amount*$page)->take($record_amount)->get();
         // dd($aclub_members);
 
         $headsreg = ["User ID",

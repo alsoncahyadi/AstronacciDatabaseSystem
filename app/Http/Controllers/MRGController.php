@@ -386,14 +386,19 @@ class MRGController extends Controller
 
         $clientsregold = DB::select($query);
 
+        $total = count($clientsregold);
+        $total = ceil($total / $record_amount);
+
+        $clientsreg = collect(array_slice($clientsregold, $page*$record_amount, $record_amount));
+
         // $clientsregold = $mrg->accounts()
         //             ->where('accounts_number', 'like', "%{$keyword}%");
                     // ->orWhere('account_type', 'like', "%{$keyword}%")
                     // ->orWhere('sales_name', 'like', "%{$keyword}%")
-        $total = count($clientsregold->get());
-        $total = ceil($total / $record_amount);        
+        // $total = count($clientsregold->get());
+        // $total = ceil($total / $record_amount);        
 
-        $clientsreg = $clientsregold->skip($record_amount*$page)->take($record_amount)->get();
+        // $clientsreg = $clientsregold->skip($record_amount*$page)->take($record_amount)->get();
         // dd($clientsreg);
         // $clientsreg = $mrg->accounts()->get();        
 
