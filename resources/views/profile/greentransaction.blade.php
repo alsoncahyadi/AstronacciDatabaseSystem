@@ -63,7 +63,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h1>Green Transaction Detail</h1>
+            <h1>Green Profile</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -72,8 +72,6 @@
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Transaction Detail 
-            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
         </div>
         
         <div class="panel-body">
@@ -91,13 +89,8 @@
                         @endforeach
                 </div>
                 <?php
-                    if($route == "green") $userid = "progress_id";
-                ?>
-                <form action="{{route($route . '.deletetrans', ['id' => $client->progress_id])}}" method="post">
-                    <input type="hidden" name="_method" value="DELETE" >
-                    <input type="submit" onclick="del()" value="Delete Progress" >
-                    <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                </form>                
+                    if($route == "Green") $userid = "progress_id";
+                ?>           
             </div>
 
                 <div id="bod2" style="display:none">

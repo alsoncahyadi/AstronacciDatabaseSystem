@@ -25,15 +25,23 @@ class AshopController extends Controller
 
     public function getData()
     {
-        $masters = MasterClient::all();
+        $query = "SELECT * FROM master_clients ";
+        $query = $query."INNER JOIN (SELECT T1.master_id, transaction_id, product_type, product_name,  ";
+        $query = $query."            nominal, T1.created_at, updated_at, created_by, updated_by ";
+        $query = $query."            FROM  ";
+        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
+        $query = $query."                    FROM ashop_transactions ";
+        $query = $query."                    GROUP BY master_id) as T1  ";
+        $query = $query."            INNER JOIN  ";
+        $query = $query."                ( SELECT * ";
+        $query = $query."                   FROM ashop_transactions) as T2  ";
+        $query = $query."                    ON T1.master_id = T2.master_id  ";
+        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
+        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
 
-        foreach ($masters as $master) {
-            if ($master->ashopTransactions()->first() != null) {
-                $last_transaction = $master->ashopTransactions()->orderBy('created_at','desc')->first();
-                $master->product_type = $last_transaction->product_type;
-                $master->product_name = $last_transaction->product_name;
-            }
-        }
+        $query = $query.";";
+
+        $masters = collect(DB::select($query));
 
         return $masters;
     }
@@ -550,7 +558,6 @@ class AshopController extends Controller
             'bbm' => '',
             'whatsapp' => '',
             'facebook' => '',
-            'trasaction_id' => 'required|unique:ashop_transactions',
             'product_type' => '',
             'product_name' => '',
             'nominal' => 'integer'
@@ -561,7 +568,6 @@ class AshopController extends Controller
         try {
             $master = new \App\MasterClient;
 
-            $master->master_id =  $request->master_id;
             $master->redclub_user_id = $request->user_id_redclub;
             $master->redclub_password = $request->password_redclub;
             $master->name = $request->nama;
@@ -581,8 +587,7 @@ class AshopController extends Controller
             
             $trans = new \App\AshopTransaction;
 
-            $trans->transaction_id = $request->transaction_id;
-            $trans->master_id =  $request->master_id;
+            $trans->master_id =  $master->master_id;
             $trans->product_type = $request->product_type;
             $trans->product_name = $request->product_name;
             $trans->nominal = $request->nominal;

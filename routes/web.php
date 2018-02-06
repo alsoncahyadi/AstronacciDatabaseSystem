@@ -94,7 +94,7 @@ Route::get('/AShop', [
 
 Route::get('/GreenDashboard', [
     'uses' => 'HomeController@indexGreen',
-    'as' => 'green.dashboard',
+    'as' => 'Green.dashboard',
     'middleware' => 'auth'
     ]);
 
@@ -532,91 +532,91 @@ Route::post('/AClub/filter', [
 //GREEN ROUTES
 Route::get('/Green', [
     'uses' => 'GreenController@getTable',
-    'as' => 'green',
+    'as' => 'Green',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
-    'as' => 'green.detail',
+    'as' => 'Green.detail',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/green/{id}/{progress}', [
     'uses' => 'GreenController@clientTrans',
-    'as' => 'green.trans',
+    'as' => 'Green.trans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/insert', [
     'uses' => 'GreenController@addClient',
-    'as' => 'green.insert',
+    'as' => 'Green.insert',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/inserttrans', [
     'uses' => 'GreenController@addTrans',
-    'as' => 'green.inserttrans',
+    'as' => 'Green.inserttrans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/import', [
     'uses' => 'GreenController@importExcel',
-    'as' => 'green.import',
+    'as' => 'Green.import',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/edit', [
     'uses' => 'GreenController@editClient',
-    'as' => 'green.edit',
+    'as' => 'Green.edit',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::delete('/green/deletetrans/{id}', [
     'uses' => 'GreenController@deleteTrans',
-    'as' => 'green.deletetrans',
+    'as' => 'Green.deletetrans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/greentrans/edit/{id}', [
     'uses' => 'GreenController@updateTrans',
-    'as' => 'greentrans.edit',
+    'as' => 'Greentrans.edit',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/edittrans', [
     'uses' => 'GreenController@editTrans',
-    'as' => 'green.edittrans',
+    'as' => 'Green.edittrans',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::delete('/green/deleteclient/{id}', [
     'uses' => 'GreenController@deleteClient',
-    'as' => 'green.deleteclient',
+    'as' => 'Green.deleteclient',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/assign', [
     'uses' => 'GreenController@assignClient',
-    'as' => 'green.assign',
+    'as' => 'Green.assign',
 	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/green/assign', [
     'uses' => 'GreenController@assignClient',
-    'as' => 'green.assign',
+    'as' => 'Green.assign',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);

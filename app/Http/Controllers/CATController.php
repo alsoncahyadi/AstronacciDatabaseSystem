@@ -444,16 +444,15 @@ class CATController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => 'required|unique:cats',
-                'nomor_induk' => 'required|unique:cats',
+                'nomor_induk' => 'required',
                 'batch' => '',
-                'sales' => ''
+                'sales_name' => ''
             ]);
         $cat = Cat::where('user_id',$request->user_id)->first();
         //Inisialisasi array error
@@ -463,7 +462,7 @@ class CATController extends Controller
             $cat->user_id = $request->user_id;
             $cat->nomor_induk = $request->nomor_induk;
             $cat->batch = $request->batch;
-            $cat->sales_name = $request->sales;
+            $cat->sales_name = $request->sales_name;
 
             $cat->update();
         } catch(\Illuminate\Database\QueryException $ex){

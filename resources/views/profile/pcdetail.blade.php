@@ -138,7 +138,7 @@
                     </li>
                 @endif
                 @if($mrg)
-                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2')">MRG</a>
+                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2');document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;">MRG</a>
                     </li>
                 @else
                     <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
@@ -166,14 +166,19 @@
                     <h3>A-CLUB</h3>
 
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editaclub">Edit</a>
+                    <form action="{{route('AClub.deleteclient', ['id' => $client_aclub->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                     <div id="editaclub" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
+                            <form method="post" action="{{route('AClub.edit')}}">
                                 <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
-                                @foreach ($heads_aclub as $atr => $value)
+                                @foreach ($ins_aclub as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{$value}}">
+                                    <input class="form-control" type="text" value="{{$client_aclub->$value}}" name="{{$value}}">
                                 </div>
                                 @endforeach
                                 <br>
@@ -264,18 +269,34 @@
                         <button type="button" onclick="load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
                     </div>
                     <div id="tab"></div>
+                    <div id="pageControllerA" style="margin-left: 2px; margin-top: 12px;">
+                        Page
+                        <input id="pagenumA" type="number" name="pagenumA" value="1" min="1" >
+                        /<label id="page_countA">{{ (isset($count) ? $count : "" )}}</label>
+                        <button id="page_numberA" onclick="gotoPageA()" href="#">Go</button>
+                    </div>
+
                 </div>
                 <div class="tab-pane fade" id="mrg-pills">
                     <h3>MRG</h3>
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editmrg">Edit</a>
+                    <form action="{{route('MRG.deleteclient', ['id' => $client_mrg->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                     <div id="editmrg" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
-                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                            <form method="post" action="{{route('MRG.edit')}}">
+                                <input name="master_id" type="hidden" value="{{$client_mrg->master_id}}">
                                 @foreach ($heads_mrg as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{$value}}">
+                                    @if ($atr == "Join Date MRG")
+                                        <input class="form-control no-spin" type="date" value="{{$client_mrg->$value}}" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @else
+                                        <input class="form-control" type="text" value="{{$client_mrg->$value}}" name="{{$value}}">
+                                    @endif
                                 </div>
                                 @endforeach
                                 <br>
@@ -327,23 +348,35 @@
                     <br><br>
                     <div>
                     <p>Search</p>
-                        <input id="searchkey2" type="text"/>    
-                        <button type="button" onclick="load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2')" href="#">Search</button>
+                        <input id="searchkey2" type="text"/>
+                        <button type="button" onclick="searchPage()" href="#">Search</button>
                     </div>
                     <div id="tab2"></div>
+                    <div id="pageController" style="margin-left: 2px; margin-top: 12px;">
+                        Page
+                        <input id="pagenum" type="number" name="pagenum" value="1" min="1" >
+                        /<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
+                        <button id="page_number" onclick="gotoPage()" href="#">Go</button>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="cat-pills">
                     <div>
                         <h3>CAT</h3>
                         <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editcat">Edit</a>
+                        <form action="{{route('CAT.deleteclient', ['id' => $client_cat->user_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                            <input type="hidden" name="_method" value="DELETE" >
+                            <input class="btn btn-primary" type="submit" value="Delete Client" >
+                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        </form>
+                        <br>
                         <div id="editcat" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <form method="post" action="{{route('AClub.insertmembers')}}">
-                                    <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                                <form method="post" action="{{route('CAT.edit')}}">
+                                    <input name="user_id" type="hidden" value="{{$client_cat->user_id}}">
                                     @foreach ($heads_cat as $atr => $value)
                                     <div class="form-group">
                                         <label>{{$atr}}</label>
-                                        <input class="form-control" type="text" name="{{$value}}">
+                                        <input class="form-control" type="text" value="{{$client_cat->$value}}"" name="{{$value}}">
                                     </div>
                                     @endforeach
                                     <br>
@@ -381,7 +414,7 @@
                                 @endforeach
                                 <br>
                                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <input type="submit" class="btn btn-primary" value="Update">
                                 <button type="reset" class="btn btn-default">Reset Form</button>
                             </form>
                         </div>
@@ -403,14 +436,19 @@
                 <div class="tab-pane fade" id="uob-pills">
                     <h3>UOB</h3>
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#edituob">Edit</a>
+                    <form action="{{route('UOB.deleteclient', ['id' => $client_uob->client_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input class="btn btn-primary" type="submit" value="Delete Client" >
+                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                    </form>
                     <div id="edituob" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
-                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                            <form method="post" action="{{route('UOB.edit')}}">
+                                <input name="client_id" type="hidden" value="{{$client_uob->client_id}}">
                                 @foreach ($heads_uob as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    <input class="form-control" type="text" name="{{$value}}">
+                                    <input class="form-control" type="text" value="{{$client_uob->$value}}" name="{{$value}}">
                                 </div>
                                 @endforeach
                                 <br>
@@ -449,7 +487,7 @@
                                 @endforeach
                                 <br>
                                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                <input type="submit" class="btn btn-primary" value="Insert">
+                                <input type="submit" class="btn btn-primary" value="Update">
                                 <button type="reset" class="btn btn-default">Reset Form</button>
                             </form>
                         </div>
@@ -481,7 +519,13 @@
     @endif
 	
 </div>
-<script>
+<script type="text/javascript">
+    window.setInterval(function(){
+    updateMax()
+    }, 500);
+    window.setInterval(function(){
+    updateMaxA()
+    }, 500);
 	$(document).ready(function(){
 		$("#hide").click(function(){
 			$("#bod1").hide();
@@ -498,10 +542,9 @@
 		});
 		$("delete").click(function(){
 			$("#delete").hide();
-			$("#condel").show();
-			
+			$("#condel").show();			
 		});
-	});
+	});    
 
     // ======================================================================================================
     // RUMUS ACLUB
@@ -567,7 +610,32 @@
         document.getElementById("yellowzone").stepDown(3);
         document.getElementById("redzone").stepUp(3);
     });
-    // ======================================================================================================    
+    function updateMax() {
+        var page = document.getElementById('hidden_page_count').value;
+        document.getElementById('page_count').innerHTML = page;
+        document.getElementById('pagenum').max = page;
+    }
+    function updateMaxA() {
+        var page = document.getElementById('hidden_page_countA').value;
+        document.getElementById('page_countA').innerHTML = page;
+        document.getElementById('pagenumA').max = page;
+    }
+
+    function searchPage() {
+        load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?q=' + document.getElementById('searchkey2').value, 'tab2');
+        updateMax()
+        document.getElementById('pagenum').value='1';
+    }
+    function gotoPage() {
+        load('{{route('MRG.detail', ['id' => $client_mrg->master_id])}}?page=' + document.getElementById('pagenum').value + '&q=' + document.getElementById('searchkey2').value, 'tab2'); 
+        updateMax()        
+    }
+    function gotoPageA() {
+        load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?page=' + document.getElementById('pagenumA').value + '&q=' + document.getElementById('searchkey').value)
+        updateMaxA()
+    }
+    // ======================================================================================================
+
 	</script>
 </body>
 </html>

@@ -1,6 +1,5 @@
 
 <body>	   
-
     @if(($route == "CAT") || ($route == "MRG") || ($route == "UOB") || ($route == "green") || ($route == "AShop") || ($route == "AClub"))    
     <div class="panel panel-default" style="margin:15px">        
             @if (($route == "CAT") || ($route == "UOB"))
@@ -28,6 +27,7 @@
                         <?php $count_temp = 1 ; ?>
                         @foreach ($attsreg as $attreg)
                        @if ($route == 'AClub')
+                       <input id="hidden_page_countA" type="hidden" value="{{$count}}">
                             <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">
@@ -56,6 +56,7 @@
                                     </td>
                                 @endif
                         @elseif ($route == 'MRG')
+                            <input id="hidden_page_count" type="hidden" value="{{$count}}">
                             <td> <a target="_blank" href="{{route('MRG.account',['id' => $client->master_id, 'account' => $clientreg->accounts_number])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">

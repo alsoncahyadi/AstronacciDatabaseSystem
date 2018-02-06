@@ -30,12 +30,35 @@
                 <br><br>
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel panel-default" style="padding:15px" >
-                        <form method="post" action="{{route('green.insert')}}">
+                        <form method="post" action="{{route('Green.insert')}}">
                             @foreach ($ins as $atr)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
                                     @if ($atr == 'Date')
                                         <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                    @elseif ($atr == "Product Type")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>Video</option>
+                                            <option>E-Book</option>
+                                            <option>Seasonal Report</option>
+                                            <option>Event</option>
+                                            <option>Other</option>
+                                        </select>
+                                    @elseif ($atr == "Status")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>GOAL - BUY</option>
+                                            <option>GOAL - JOIN</option>
+                                            <option>NO ANSWER</option>
+                                            <option>TIDAK GOAL</option>
+                                            <option>DALAM PROSES</option>
+                                        </select>
+                                    @elseif ($atr == "Nama Product")
+                                        <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                            <option>A-Club</option>
+                                            <option>UOB</option>
+                                            <option>MRG</option>
+                                            <option>CAT</option>
+                                        </select>
                                     @else
                                         <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                     @endif
@@ -54,7 +77,7 @@
                 View Green Prospect
             </div>
             <div class="panel-body">
-               <a href="{{route('green')}}" class="btn btn-primary">Green</a>
+               <a href="{{route('Green')}}" class="btn btn-primary">Green</a>
             </div>
         </div>
     </div>
@@ -96,7 +119,7 @@
             var arrayLength = fullnames.length;
             for (var i = 0; i < arrayLength; i++) {
                 if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
-                    joinName += ' <a href="{{route("green.detail", ["id" => ""])}}/'+ ids[i] +' "><li class="list-group-item" style="cursor:pointer;">' 
+                    joinName += ' <a href="{{route("Green.detail", ["id" => ""])}}/'+ ids[i] +' "><li class="list-group-item" style="cursor:pointer;">' 
                                 + fullnames[i] + '<br><p style="font-style:italic; color:gray">'
                                 + emails[i] + '</p></li></a>';
                     listlen++;

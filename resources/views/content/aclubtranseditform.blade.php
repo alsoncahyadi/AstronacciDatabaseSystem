@@ -105,9 +105,19 @@
                                                 </select>
                                             @elseif ($key == "Status")
                                                 <select class="form-control" name="{{strtolower(str_replace(' ', '_', $key)).'_aclub'}}">
-                                                    <option selected="selected">Baru</option>
-                                                    <option>Perpanjang</option>
-                                                    <option>Tidak Aktif</option>
+                                                    @if ($client->status == "Baru")
+                                                        <option selected="selected">Baru</option>
+                                                        <option>Perpanjang</option>
+                                                        <option>Tidak Aktif</option>
+                                                    @elseif ($client->status == "Perpanjang")
+                                                        <option>Baru</option>
+                                                        <option selected="selected">Perpanjang</option>
+                                                        <option>Tidak Aktif</option>
+                                                    @else
+                                                        <option>Baru</option>
+                                                        <option>Perpanjang</option>
+                                                        <option selected="selected">Tidak Aktif</option>
+                                                    @endif
                                                 </select>
                                             @elseif ($key == "Start Date")
                                                 <input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $key))}}" value="{{$client->$value->toDateString()}}">

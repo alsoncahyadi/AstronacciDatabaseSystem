@@ -76,10 +76,27 @@
                                             <label>{{$key}}</label>
                                                 @if ($key == "Type Account")
                                                     <select class="form-control" id="accounttype" name="{{$value}}">
-                                                        <option selected="selected">Recreation</option>
-                                                        <option>Basic</option>
-                                                        <option>Syariah</option>
-                                                        <option>Signature</option>
+                                                        @if ($client->$value == "Recreation")
+                                                            <option selected="selected">Recreation</option>
+                                                            <option>Basic</option>
+                                                            <option>Syariah</option>
+                                                            <option>Signature</option>
+                                                        @elseif ($client->$value == "Basic")
+                                                            <option>Recreation</option>
+                                                            <option selected="selected">Basic</option>
+                                                            <option>Syariah</option>
+                                                            <option>Signature</option>
+                                                        @elseif ($client->$value == "Syariah")
+                                                            <option>Recreation</option>
+                                                            <option>Basic</option>
+                                                            <option selected="selected">Syariah</option>
+                                                            <option>Signature</option>
+                                                        @elseif ($client->$value == "Signature")
+                                                            <option>Recreation</option>
+                                                            <option>Basic</option>
+                                                            <option>Syariah</option>
+                                                            <option selected="selected">Signature</option>
+                                                        @endif
                                                     </select>
                                                 @else
                                                     <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
@@ -91,7 +108,7 @@
                         <button type="submit" class="btn btn-default">Submit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                        <input type="hidden" name="user_id" value="{{$client->accounts_number}}">
+                        <input type="hidden" name="accounts_number" value="{{$client->accounts_number}}">
                     </form>
             </div>
 

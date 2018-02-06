@@ -71,9 +71,7 @@
     
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
-            <i class="fa fa-child fa-fw"></i> Basic Information 
-            <button class="btn btn-default" id="hide" style="margin-left:30px"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
-            <button class="btn btn-danger" id="show" style="margin-left:30px;display:none"><i class="fa fa-pencil-square-o"></i> Edit </a></button>
+            <i class="fa fa-child fa-fw"></i> Transaction Information 
         </div>
         
         <div class="panel-body">
@@ -103,8 +101,6 @@
                     else if ($route == "assignredclub") $userid = "redclub_assign_id";
                     else if ($route == "AShop") $userid = "transaction_id";
                 ?>
-
-                <a class="btn btn-default" onclick="del()" style="margin:10px;" href="{{route($route . '.deletetrans', ['id' => $client->$userid])}}"> Delete Client </a>
                 
             </div>
 

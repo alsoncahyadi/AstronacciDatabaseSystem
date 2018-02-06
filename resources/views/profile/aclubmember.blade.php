@@ -98,7 +98,7 @@
         <div class="panel-heading">
             <i class="fa fa-money fa-fw"></i> Transactions
         </div>
-        <div class="panel-body">
+        <div class="panel-body">            
             <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
             <div id="addcli" class="panel-collapse collapse">
                 <div class="panel-body">
@@ -214,6 +214,12 @@
                     @endforeach
                 </tbody>
             </table>
+            <div id="pageController" style="margin-left: 2px; margin-top: 12px;">
+                Page
+                <input id="pagenum" type="number" name="pagenum" value="{{$page}}" min="1" max="{{$count}}">
+                /<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
+                <button id="page_number" onclick="gotoPage()" href="#">Go</button>
+            </div>
     </div>
 
     <br><br>
@@ -319,7 +325,9 @@
         document.getElementById("redzone").stepUp(3);
     });
     // ======================================================================================================
-    
+    function gotoPage() {
+        window.location.href = '{{route('AClub.member', ['id' => $client->master_id, 'member' => $client->user_id])}}?page=' + document.getElementById('pagenum').value;
+    }
 
     </script>
 </body>

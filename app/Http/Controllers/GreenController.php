@@ -62,9 +62,16 @@ class GreenController extends Controller
 
         foreach ($greens as $green) {
             $progress = $green->progresses()->orderBy('created_at','desc')->first();
-            $green->status = $progress->status;
-            $green->sales_name = $progress->sales_name;
-            $green->nama_product = $progress->nama_product;
+            if ($green->progresses()->orderBy('created_at','desc')->first() != null) {
+                $green->status = $progress->status;
+                $green->sales_name = $progress->sales_name;
+                $green->nama_product = $progress->nama_product;
+            } else {
+                $green->status = null;
+                $green->sales_name = null;
+                $green->nama_product = null;
+            }
+            
         }
 
         return $greens;
@@ -149,7 +156,7 @@ class GreenController extends Controller
         //Return view table dengan parameter
         return view('vpc/greenview',
                     [
-                        'route' => 'green',
+                        'route' => 'Green',
                         'clients' => $greens,
                         'heads'=>$heads, 'atts'=>$atts,
                         'headsMaster' => $headsMaster,
@@ -219,7 +226,7 @@ class GreenController extends Controller
         $query = "";
         $query = $query."SELECT * ";
         $query = $query."FROM green_prospect_clients ";
-        $query = $query."INNER JOIN (SELECT  ";
+        $query = $query."LEFT JOIN (SELECT  ";
         $query = $query."            progress_id, T1.green_id as green_id, date, sales_name,  ";
         $query = $query."            status, nama_product, nominal, keterangan, created_at, updated_at ";
         $query = $query."            FROM  ";
@@ -250,7 +257,7 @@ class GreenController extends Controller
 
         return view('vpc/greentable',
                     [
-                        'route' => 'green',
+                        'route' => 'Green',
                         'clients' => $list,
                         'atts' => $atts,
                         'attsMaster' => $attsMaster,
@@ -356,7 +363,7 @@ class GreenController extends Controller
         //attribute sql account
         $attsreg = ["date", "sales_name", "status", "nama_product", "nominal", "keterangan"];
 
-        return view('profile/profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/profile', ['route'=>'Green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
     }
 
      public function clientTrans($id,$trans) {
@@ -374,14 +381,14 @@ class GreenController extends Controller
 
         $heads = $ins;
 
-        return view('profile/greentransaction', ['route'=>'green', 'client'=>$progress, 'heads'=>$heads, 'ins'=>$ins]);
+        return view('profile/greentransaction', ['route'=>'Green', 'client'=>$progress, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {
         //Validasi input
 
         $this->validate($request, [
-                'green_id' => 'required|unique:green_prospect_clients',
+                'green_id' => 'required',
                 'date' => 'date'
             ]);
         //Inisialisasi array error
@@ -421,7 +428,13 @@ class GreenController extends Controller
                 'interest' => '',
                 'pemberi' => '',
                 'sumber_data' => '',
-                'keterangan_perintah' => ''
+                'keterangan_perintah' => '',
+                'date' => '',
+                'sales_name' => '',
+                'status' => '',
+                'nama_product' => '',
+                'nominal' => '',
+                'keterangan' => ''
             ]);
         //Inisialisasi array error
         $err = [];
@@ -439,6 +452,19 @@ class GreenController extends Controller
         $green->keterangan_perintah = $request->keterangan_perintah;
 
         $green->save();
+
+        $green_progress = new \App\GreenProspectProgress();
+
+        $green_progress->green_id = $green->green_id;
+        $green_progress->date = $request->date;
+        $green_progress->sales_name = $request->sales_name;
+        $green_progress->status = $request->status;
+        $green_progress->nama_product = $request->nama_product;
+        $green_progress->nominal = $request->nominal;
+        $green_progress->keterangan = $request->keterangan;
+
+        $green_progress->save();
+
         return redirect()->back()->withErrors($err);
     }
 
@@ -455,14 +481,13 @@ class GreenController extends Controller
             ]);
         //Inisialisasi array error
 
-
         $progress = GreenProspectProgress::where('progress_id',$request->user_id)->first();
         $err = [];
         try {
             // dd($request);
             $progress->date = $request->date;
             $progress->sales_name = $request->sales_name;
-            $progress->status = $request->interest;
+            $progress->status = $request->status;
             $progress->nama_product = $request->nama_product;
             $progress->nominal = $request->nominal;
             $progress->keterangan = $request->keterangan;
@@ -477,7 +502,7 @@ class GreenController extends Controller
         if(!empty($err)) {
             return redirect()->back()->withErrors($err);
         } else {
-            return redirect()->route('green.detail', ['id' => $progress->green_id]);
+            return redirect()->route('Green.detail', ['id' => $progress->green_id]);
         }
     }
 
@@ -607,7 +632,7 @@ class GreenController extends Controller
                     "Nominal" => "nominal",
                     "Keterangan" => "keterangan",];
 
-        return view('content/greentranseditform', ['route'=>'green', 'client'=>$progress, 'ins'=>$ins]);
+        return view('content/greentranseditform', ['route'=>'Green', 'client'=>$progress, 'ins'=>$ins]);
     }
 
     public function exportExcel() {

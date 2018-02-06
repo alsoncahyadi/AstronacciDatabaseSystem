@@ -42,11 +42,16 @@ class MRGController extends Controller
             $mrg->facebook = $master->facebook;
 
             //data from mrg transaction
-            $last_transaction = $mrg->accounts()->orderBy('created_at','desc')->first();
-            // dd($last_transaction->sales_name);
-            $mrg->sales_name = $last_transaction->sales_name;
-            $mrg->accounts_number = $last_transaction->accounts_number;
-            $mrg->account_type = $last_transaction->account_type;
+            if ($mrg->accounts()->orderBy('created_at','desc')->first() != null) {
+                $last_transaction = $mrg->accounts()->orderBy('created_at','desc')->first();
+                $mrg->sales_name = $last_transaction->sales_name;
+                $mrg->accounts_number = $last_transaction->accounts_number;
+                $mrg->account_type = $last_transaction->account_type;
+            } else {
+                $mrg->sales_name = null;
+                $mrg->accounts_number = null;
+                $mrg->account_type = null;
+            }
         }
 
         return $mrgs;
@@ -239,7 +244,7 @@ class MRGController extends Controller
         $query = $query."FROM  ";
         $query = $query."master_clients  ";
         $query = $query."INNER JOIN mrgs ON master_clients.master_id = mrgs.master_id  ";
-        $query = $query."INNER JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
+        $query = $query."LEFT JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
         $query = $query."            sales_name, T1.created_at, updated_at, created_by, updated_by ";
         $query = $query."            FROM  ";
         $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
@@ -362,11 +367,40 @@ class MRGController extends Controller
 
         $keyword = $request['q'];
 
-        $clientsreg = $mrg->accounts()
-                    ->where('accounts_number', 'like', "%{$keyword}%")
-                    ->orWhere('account_type', 'like', "%{$keyword}%")
-                    ->orWhere('sales_name', 'like', "%{$keyword}%")
-                    ->paginate(15);
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
+        $query = "SELECT * FROM mrg_accounts ";
+        $query = $query."WHERE (master_id = ".$mrg->master_id.") ";
+        $query = $query."AND ";
+        $query = $query."( ";
+        $query = $query."accounts_number like '%".$keyword."%' ";
+        $query = $query."OR ";
+        $query = $query."account_type like '%".$keyword."%' "; 
+        $query = $query."OR ";
+        $query = $query."sales_name like '%".$keyword."%' ";       
+        $query = $query.") ";
+
+        // dd($query);
+
+        $clientsregold = DB::select($query);
+
+        $total = count($clientsregold);
+        $total = ceil($total / $record_amount);
+
+        $clientsreg = collect(array_slice($clientsregold, $page*$record_amount, $record_amount));
+
+        // $clientsregold = $mrg->accounts()
+        //             ->where('accounts_number', 'like', "%{$keyword}%");
+                    // ->orWhere('account_type', 'like', "%{$keyword}%")
+                    // ->orWhere('sales_name', 'like', "%{$keyword}%")
+        // $total = count($clientsregold->get());
+        // $total = ceil($total / $record_amount);        
+
+        // $clientsreg = $clientsregold->skip($record_amount*$page)->take($record_amount)->get();
+        // dd($clientsreg);
+        // $clientsreg = $mrg->accounts()->get();        
 
         //kolom account
         $headsreg = ["Account Number", "Account Type", "Sales Name"];
@@ -374,13 +408,23 @@ class MRGController extends Controller
         //attribute sql account
         $attsreg = ["accounts_number", "account_type", "sales_name"];
 
-        return view('profile/transtable', ['route'=>'MRG', 'client'=>$mrg, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', [
+                'route'=>'MRG', 
+                'client'=>$mrg, 
+                'heads'=>$heads, 
+                'ins'=>$ins, 
+                'insreg'=>$insreg, 
+                'clientsreg'=>$clientsreg, 
+                'headsreg'=>$headsreg, 
+                'attsreg'=>$attsreg,
+                'count'=>$total
+            ]);
     }
 
      public function addTrans(Request $request) {
         $this->validate($request, [
-                'master_id' => 'required',
-                "account_number" => 'required|unique:mrg_accounts|string:20', 
+                "user_id" => 'required',
+                "accounts_number" => 'required|unique:mrg_accounts|string:20', 
                 "account_type" => 'string:20', 
                 "sales_name" => ''
             ]);
@@ -388,7 +432,6 @@ class MRGController extends Controller
         $mrg_account = new \App\MrgAccount();
 
         $err = [];
-
         $mrg_account->master_id = $request->user_id;
         $mrg_account->accounts_number = $request->accounts_number;
         $mrg_account->account_type = $request->account_type;
@@ -413,19 +456,19 @@ class MRGController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'user_id' => 'required|unique:mrgs',
+                'master_id' => 'required',
                 'sumber_data' => '',
-                'join_date' => 'date'
+                'join_date_mrg' => 'date'
             ]);
         //Inisialisasi array error
         $err = [];
         try {
-            $mrg = Mrg::where('master_id',$request->user_id)->first();
+            $mrg = Mrg::where('master_id',$request->master_id)->first();
 
             $err =[];
 
             $mrg->sumber_data = $request->sumber_data;
-            $mrg->join_date = $request->join_date;
+            $mrg->join_date = $request->join_date_mrg;
 
             $mrg->update();
         } catch(\Illuminate\Database\QueryException $ex){
@@ -452,11 +495,11 @@ class MRGController extends Controller
      public function editTrans(Request $request) {
         //Validasi input
         $this->validate($request, [
-                "account_number" => 'required|unique:mrg_accounts|string:20', 
+                "accounts_number" => 'required', 
                 "account_type" => 'string:20', 
                 "sales_name" => ''
             ]);
-        $mrg_account = MrgAccount::where('accounts_number',$request->user_id)->first();
+        $mrg_account = MrgAccount::where('accounts_number',$request->accounts_number)->first();
         //Inisialisasi array error
         $err = [];
 

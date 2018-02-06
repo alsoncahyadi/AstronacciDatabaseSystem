@@ -31,7 +31,7 @@ class HomeController extends Controller
     {
         $clients = AshopTransaction::orderBy('master_id','asc')->groupBy('master_id')->get();
 
-        $heads= ["Master ID",
+        $heads= [
                 "User ID Redclub",
                 "Password Redclub",
                 "Nama",
@@ -51,7 +51,7 @@ class HomeController extends Controller
                 "Product Name",
                 "Nominal"];
 
-        $atts = ["master_id",
+        $atts = [
                 "redclub_user_id",
                 "redclub_password",
                 "name",
@@ -95,7 +95,13 @@ class HomeController extends Controller
                     "Interest",
                     "Pemberi",
                     "Sumber Data",
-                    "Keterangan Perintah"];
+                    "Keterangan Perintah",
+                    "Date",
+                    "Sales Name",
+                    "Status",
+                    "Nama Product",
+                    "Nominal",
+                    "Keterangan"];
 
         $atts = ["green_id",
                     "name",
@@ -105,7 +111,13 @@ class HomeController extends Controller
                     "interest",
                     "pemberi",
                     "sumber_data",
-                    "keterangan_perintah"];
+                    "keterangan_perintah",
+                    "date",
+                    "sales_name",
+                    "status",
+                    "nama_product",
+                    "nominal",
+                    "keterangan"];
 
         return view('dashboard/dashboardgreen', ['clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins] );
     }

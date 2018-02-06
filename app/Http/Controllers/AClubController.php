@@ -46,30 +46,50 @@ class AClubController extends Controller
             $aclub_member->facebook = $master->facebook;
 
             //data from aclub transaction
-            $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
-            $aclub_member->sales_name = $last_transaction->sales_name;
-            $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
-            $aclub_member->kode = $last_transaction->kode;
-            $aclub_member->status = $last_transaction->status;
-            $aclub_member->start_date = $last_transaction->start_date->toDateString();
-            $aclub_member->expired_date = $last_transaction->expired_date;
-            $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
-            $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
-            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
-            $aclub_member->transaction_id = $last_transaction->transaction_id;
+            if ($aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first() != null) {
+                $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
+                $aclub_member->sales_name = $last_transaction->sales_name;
+                $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
+                $aclub_member->kode = $last_transaction->kode;
+                $aclub_member->status = $last_transaction->status;
+                $aclub_member->start_date = $last_transaction->start_date->toDateString();
+                $aclub_member->expired_date = $last_transaction->expired_date;
+                $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
+                $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
+                $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
+                $aclub_member->transaction_id = $last_transaction->transaction_id;
 
-            $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
+                $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
 
-            $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
-            $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
+                $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
+                $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
+            } else {
+                $aclub_member->sales_name = null;
+                $aclub_member->payment_date = null;
+                $aclub_member->kode = null;
+                $aclub_member->status = null;
+                $aclub_member->start_date = null;
+                $aclub_member->expired_date = null;
+                $aclub_member->yellow_zone = null;
+                $aclub_member->red_zone = null;
+                $aclub_member->masa_tenggang = null;
+                $aclub_member->transaction_id = null;
+
+                $aclub_member->bonus = null;
+
+                $aclub_member->expired_date = null;
+                $aclub_member->masa_tenggang = null;
+            }
 
             $last_kode = substr($aclub_member->kode,-1);
             if ($last_kode == 'S') {
                 $aclub_member->bulan_member = 1;
             } else if($last_kode == 'G') {
                 $aclub_member->bulan_member = 6;
-            } else {
+            } else if ($last_kode == 'P') {
                 $aclub_member->bulan_member = 12;
+            } else {
+                $aclub_member->bulan_member = null;
             }
 
             if ($aclub_member->masa_tenggang < Carbon::now()) {
@@ -332,7 +352,7 @@ class AClubController extends Controller
         $query = $query."master_clients ";
         $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
         $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."INNER JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
+        $query = $query."LEFT JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
         $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
         $query = $query."            FROM ";
         $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
@@ -471,12 +491,33 @@ class AClubController extends Controller
 
         $keyword = $request['q'];
 
-        // aclub_members adalah list member dari master_id = $id
-        // $aclub_members = $aclub_master->aclubMembers();
-        //                 ->where('user_id', 'like', "%{$keyword}%")
-        //                 ->orWhere('group', 'like', "%{$keyword}%")
-        //                 ->paginate(15);
-        $aclub_members = $aclub_master->aclubMembers()->get();
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
+        $query = "SELECT * FROM aclub_members ";
+        $query = $query."WHERE (master_id = ".$aclub_master->master_id.") ";
+        $query = $query."AND ";
+        $query = $query."( ";
+        $query = $query."user_id like '%".$keyword."%' ";
+        $query = $query."OR ";
+        $query = $query."aclub_members.group like '%".$keyword."%' ";        
+        $query = $query.") ";
+
+        $aclub_members_old = DB::select($query);
+
+        // $aclub_members_old = $aclub_master->aclubMembers()
+        //                     ->where('user_id', 'like', "%{$keyword}%")
+        //                     ->orWhere('aclub_members.group', 'like', "%{$keyword}%")->get();
+
+        // dd($aclub_members_old);
+                    
+        $total = count($aclub_members_old);
+        $total = ceil($total / $record_amount);
+
+        $aclub_members = collect(array_slice($aclub_members_old, $page*$record_amount, $record_amount));
+
+        // $aclub_members = $aclub_members_old->skip($record_amount*$page)->take($record_amount)->get();
         // dd($aclub_members);
 
         $headsreg = ["User ID",
@@ -499,7 +540,11 @@ class AClubController extends Controller
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
-        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 
+                    'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 
+                    'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg,
+                    'count'=>$total
+                ]);
     }
 
     public function addMember(Request $request) {
@@ -545,13 +590,30 @@ class AClubController extends Controller
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
-    public function clientDetailMember($id, $member) {
+    public function clientDetailMember($id, $member, Request $request) {
         $aclub_member = AclubMember::where('user_id', $member)->first();
 
-        $aclub_transaction = $aclub_member->aclubTransactions()->get();
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
+        $aclub_transaction_old = $aclub_member->aclubTransactions();
+
+        $total = count($aclub_transaction_old->get());
+        $total = ceil($total / $record_amount);
+
+        $aclub_transaction = $aclub_transaction_old->skip($record_amount*$page)->take($record_amount)->get();
+
+        // dd($aclub_transaction);
+        
+        foreach ($aclub_transaction as $aclub_trans) {
+            $aclub_trans->payment_date_1 = $aclub_trans->payment_date->toDateString();
+            $aclub_trans->start_date_1 = $aclub_trans->start_date->toDateString();
+        }
+        
 
         $heads = [  "User ID" => "user_id",
                     "Master ID" => "master_id",
@@ -579,16 +641,24 @@ class AClubController extends Controller
                     "Yellow Zone",
                     "Red Zone"];
 
-        $attsreg = ["payment_date",
+        $attsreg = ["payment_date_1",
                     "kode",
                     "status",
                     "nominal",
                     "sales_name",
-                    "start_date",
+                    "start_date_1",
                     ];
 
+        $page = $page + 1;
+        if ($page < 1) {
+            $page = 1;
+        }
 
-        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 'heads'=>$heads]);
+        return view('profile/aclubmember', ['route'=>'AClub', 'client'=>$aclub_member, 
+                'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 
+                'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$headsreg, 
+                'heads'=>$heads, 'page'=>$page, 'count'=>$total
+            ]);
     }
 
     public function editMember(Request $request) {
@@ -629,18 +699,25 @@ class AClubController extends Controller
 
         $aclub_transaction = AclubTransaction::where('transaction_id', $package)->first();
         // dd($aclub_transaction);
+        $aclub_transaction->payment_date_1 = $aclub_transaction->payment_date->toDateString();
+        $aclub_transaction->start_date_1 = $aclub_transaction->start_date->toDateString();
+        $aclub_transaction->expired_date_1 = $aclub_transaction->expired_date->toDateString();
+        $aclub_transaction->masa_tenggang_1 = $aclub_transaction->masa_tenggang->toDateString();
+        $aclub_transaction->yellow_zone_1 = $aclub_transaction->yellow_zone->toDateString();
+        $aclub_transaction->red_zone_1 = $aclub_transaction->red_zone->toDateString();
 
         $heads = [  "Transaction ID" => 'transaction_id',
                     "User ID" => 'user_id',
-                    "Payment Date" => 'payment_date',
+                    "Payment Date" => 'payment_date_1',
                     "Kode" => 'kode',
                     "Status" => 'status',
                     "Nominal" => 'nominal',
-                    "Start Date" => 'start_date',
-                    "Expired Date" => 'expired_date',
-                    "Masa Tenggang" => 'masa_tenggang',
-                    "Yellow Zone" => 'yellow_zone',
-                    "Red Zone" => 'red_zone'];
+                    "Start Date" => 'start_date_1',
+                    "Expired Date" => 'expired_date_1',
+                    "Masa Tenggang" => 'masa_tenggang_1',
+                    "Yellow Zone" => 'yellow_zone_1',
+                    "Red Zone" => 'red_zone_1'];
+
         $ins = [      "Payment Date" => "payment_date",
                         "Kode" => "kode",
                         "Status" => "status",
@@ -680,14 +757,14 @@ class AClubController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'master_id' => 'required|unique:aclub_informations',
+                'master_id' => 'required',
                 'sumber_data' => '',
                 'keterangan' => ''
             ]);
 
         $err = [];
         try {
-            $aclub = AclubInformation::find($request->user_id);
+            $aclub = AclubInformation::find($request->master_id);
 
             $aclub->master_id = $request->master_id;
             $aclub->sumber_data = $request->sumber_data;
@@ -705,7 +782,7 @@ class AClubController extends Controller
                 'user_id' => 'required|integer',
                 'payment_date' => 'date',
                 'kode' => '',
-                'status' => '',
+                'status_aclub' => '',
                 'nominal' => 'integer',
                 'sales_name' => '',
                 'start_date' => 'date',
@@ -722,7 +799,7 @@ class AClubController extends Controller
         $aclub_trans->user_id = $request->user_id;
         $aclub_trans->payment_date = $request->payment_date;
         $aclub_trans->kode = $request->kode;
-        $aclub_trans->status = $request->status;
+        $aclub_trans->status = $request->status_aclub;
         $aclub_trans->nominal = $request->nominal;
         $aclub_trans->sales_name = $request->sales_name;
         $aclub_trans->start_date = $request->start_date;
@@ -768,7 +845,7 @@ class AClubController extends Controller
 
             $aclub_trans->payment_date = $request->payment_date;
             $aclub_trans->kode = $request->kode;
-            $aclub_trans->status = $request->status;
+            $aclub_trans->status = $request->status_aclub;
             $aclub_trans->nominal = $request->nominal;
             $aclub_trans->sales_name = $request->sales_aclub;
             $aclub_trans->start_date = $request->start_date;
@@ -938,6 +1015,7 @@ class AClubController extends Controller
 
         $ins = [    "Payment Date" => 'payment_date',
                     "Kode" => 'kode',
+                    "Status" => 'status',
                     "Nominal" => 'nominal',
                     "Sales" => "sales_name",
                     "Start Date" => 'start_date',
