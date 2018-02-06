@@ -24,7 +24,7 @@ class MRGController extends Controller
 
     public function getData()
     {
-        $mrgs = MRG::all();
+        $mrgs = MRG::orderBy('created_at', 'desc')->get();
 
         foreach ($mrgs as $mrg) {
             $master = $mrg->master;

@@ -26,7 +26,7 @@ class AClubController extends Controller
 
     public function getData()
     {
-        $aclub_members = AclubMember::all();
+        $aclub_members = AclubMember::orderBy('created_at', 'desc')->get();
 
         foreach ($aclub_members as $aclub_member) {
             $master = $aclub_member->master;

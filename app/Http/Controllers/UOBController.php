@@ -23,7 +23,7 @@ class UOBController extends Controller
 
     public function getData()
     {
-        $uobs = Uob::all();
+        $uobs = Uob::orderBy('created_at', 'desc')->get();
 
         foreach ($uobs as $uob) {
             $master = $uob->master;

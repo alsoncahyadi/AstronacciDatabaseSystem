@@ -23,7 +23,7 @@ class CATController extends Controller
 
     public function getData()
     {
-        $cats = Cat::all();
+        $cats = Cat::orderBy('created_at', 'desc')->get();
 
         foreach ($cats as $cat) {
             $master = $cat->master;

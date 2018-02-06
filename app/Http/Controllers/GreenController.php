@@ -58,7 +58,7 @@ class GreenController extends Controller
 
     public function getData()
     {
-        $greens = GreenProspectClient::all();
+        $greens = GreenProspectClient::orderBy('created_at', 'desc')->get();
 
         foreach ($greens as $green) {
             $progress = $green->progresses()->orderBy('created_at','desc')->first();
