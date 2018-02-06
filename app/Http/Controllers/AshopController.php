@@ -320,7 +320,7 @@ class AshopController extends Controller
         return $query;
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         $master = MasterClient::find($id);
 
         //judul + sql
@@ -357,8 +357,16 @@ class AshopController extends Controller
           "Facebook" => "facebook"
                 ];
 
-        $clientsreg = $master->ashopTransactions()->get();
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
 
+        $clientsreg_old = $master->ashopTransactions();
+        $total = count($clientsreg_old->get());
+        $total = ceil($total / $record_amount);
+        $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();
+
+        $page = $page + 1;
         //form transaction
         $insreg = [ "Product Type",
                     "Nama Product",
@@ -373,7 +381,11 @@ class AshopController extends Controller
 
         $attsreg = ["product_type", "product_name", "nominal"];
 
-        return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+        return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 
+            'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
+            'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 
+            'attsreg' => $attsreg, 'count' => $total, 'page' => $page
+        ]);
     }
 
      public function editClient(Request $request) {
