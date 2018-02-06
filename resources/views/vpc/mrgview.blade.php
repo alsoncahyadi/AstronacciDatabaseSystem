@@ -205,7 +205,6 @@
 				    	<thead>
 							<tr>
 								<?php $idx = 1 ?>
-								<th class="fixed-side collumn-select" scope="col" style="min-width: 75px;"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
 								@foreach ($headsMaster as $headMaster)
 									@if ($headMaster == 'Tanggal Lahir')

@@ -603,7 +603,7 @@ class AshopController extends Controller
     {
         $ashop = AshopTransaction::where('transaction_id', $id)->first();
 
-        $ins = ["Product" => "product_type",
+        $ins = ["Product Type" => "product_type",
                 "Nama Product" => "product_name",
                 "Nominal" => "nominal"];
         //dd($aclub_transaction);
