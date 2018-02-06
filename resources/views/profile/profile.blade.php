@@ -132,7 +132,16 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
+                                            @if ($key == "Tanggal Lahir")
+                                                <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client->$value}}"> 
+                                            @elseif ($key == "Jenis Kelamin")
+                                                <select class="form-control" name="{{$value}}" value="{{$client->$value}}">
+                                                    <option>M</option>
+                                                    <option>F</option>
+                                                </select>
+                                            @else
                                                 <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                            @endif
                                         </div>
                                     @endforeach
                             

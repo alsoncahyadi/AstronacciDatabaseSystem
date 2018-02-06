@@ -377,8 +377,8 @@ class AshopController extends Controller
     }
 
      public function editClient(Request $request) {
+
          $this->validate($request, [
-                'master_id' => 'required|unique:master_clients',
                 'redclub_user_id' => '',
                 'name' => '',
                 'telephone_number' => '',
