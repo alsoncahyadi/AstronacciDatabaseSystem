@@ -364,10 +364,11 @@
                         <h3>CAT</h3>
                         <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editcat">Edit</a>
                         <form action="{{route('CAT.deleteclient', ['id' => $client_cat->user_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
-                        <input type="hidden" name="_method" value="DELETE" >
-                        <input class="btn btn-primary" type="submit" value="Delete Client" >
-                        <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                    </form>
+                            <input type="hidden" name="_method" value="DELETE" >
+                            <input class="btn btn-primary" type="submit" value="Delete Client" >
+                            <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
+                        </form>
+                        <br>
                         <div id="editcat" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <form method="post" action="{{route('CAT.edit')}}">
