@@ -336,7 +336,7 @@ class GreenController extends Controller
         return $query;
     }
 
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         //Select seluruh data client $id yang ditampilkan di detail
         $green = GreenProspectClient::where('green_id', $id)->first();
 
@@ -351,9 +351,21 @@ class GreenController extends Controller
                 "Keterangan Perintah"   => "keterangan_perintah"];
 
         $heads = $ins;
+        
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
 
-        $clientsreg = $green->progresses()->get();
+        $clientsreg_old = $green->progresses();
+        $total = count($clientsreg_old->get());
+        $total = ceil($total / $record_amount);
+        $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();
 
+        $page = $page + 1;
+
+        if ($page < 1) {
+            $page = 1;
+        }
         // form progress
         $insreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
         
@@ -363,7 +375,11 @@ class GreenController extends Controller
         //attribute sql account
         $attsreg = ["date", "sales_name", "status", "nama_product", "nominal", "keterangan"];
 
-        return view('profile/profile', ['route'=>'Green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/profile', ['route'=>'Green', 'client'=>$green, 
+                'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
+                'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 
+                'attsreg'=>$attsreg, 'count'=>$total, 'page'=>$page
+            ]);
     }
 
      public function clientTrans($id,$trans) {

@@ -245,6 +245,12 @@
 					@endforeach
 					</tbody>
 				</table>
+			</div>			
+			<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
+				Page
+				<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{ (isset($count) ? $count : "" )}}">
+				/<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
+				<button id="page_number">Go</button>
 			</div>
 		</div>
 	</div>

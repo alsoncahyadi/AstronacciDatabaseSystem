@@ -367,6 +367,10 @@ class AshopController extends Controller
         $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();
 
         $page = $page + 1;
+
+        if ($page < 1) {
+            $page = 1;
+        }
         //form transaction
         $insreg = [ "Product Type",
                     "Nama Product",
