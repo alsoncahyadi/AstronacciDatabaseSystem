@@ -389,8 +389,8 @@ class AshopController extends Controller
     }
 
      public function editClient(Request $request) {
+
          $this->validate($request, [
-                'master_id' => 'required|unique:master_clients',
                 'redclub_user_id' => '',
                 'name' => '',
                 'telephone_number' => '',
@@ -615,7 +615,7 @@ class AshopController extends Controller
     {
         $ashop = AshopTransaction::where('transaction_id', $id)->first();
 
-        $ins = ["Product" => "product_type",
+        $ins = ["Product Type" => "product_type",
                 "Nama Product" => "product_name",
                 "Nominal" => "nominal"];
         //dd($aclub_transaction);
@@ -627,7 +627,7 @@ class AshopController extends Controller
         $data = AshopTransaction::all();
 
         foreach ($data as $dat) {
-            $master = $dat->master->first();
+            $master = $dat->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;

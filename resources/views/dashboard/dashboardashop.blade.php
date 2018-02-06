@@ -22,7 +22,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                New A-Shop Member
+                New Member
             </div>
             <div class="panel-body">
                 <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Client</a>

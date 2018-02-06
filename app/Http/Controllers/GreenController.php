@@ -639,7 +639,7 @@ class GreenController extends Controller
         $data = GreenProspectProgress::all();
 
         foreach ($data as $dat) {
-            $client = $dat->client->first();
+            $client = $dat->client;
 
             $dat->green_id = $client->green_id;
             $dat->date = $client->date;

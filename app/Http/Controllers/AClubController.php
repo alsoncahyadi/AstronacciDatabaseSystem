@@ -853,8 +853,18 @@ class AClubController extends Controller
             $aclub_trans->masa_tenggang = $request->masa_tenggang;
             $aclub_trans->yellow_zone = $request->yellow_zone;
             $aclub_trans->red_zone = $request->red_zone;
+            
+            $aclub_member = $aclub_trans->aclubMember;
+            if (substr($aclub_trans->kode, -2, 1) == "S") {
+                $aclub_member->group = "Stock";
+            } else if (substr($aclub_trans->kode, -2, 1) == "F") {
+                $aclub_member->group = "Future";
+            }  else if (substr($aclub_trans->kode, -2, 1) == "R") {
+                $aclub_member->group = "RD";
+            }
 
             $aclub_trans->update();
+            $aclub_member->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
@@ -925,17 +935,17 @@ class AClubController extends Controller
         $datas = AclubTransaction::all();
 
         foreach ($datas as $data) {
-            $member = $data->aclubMember->first();
+            $member = $data->aclubMember;
 
             $data->master_id = $member->master_id;
             $data->group = $member->group;
 
-            $info = $member->aclubInformation->first();
+            $info = $member->aclubInformation;
 
             $data->sumber_data = $info->sumber_data;
             $data->keterangan = $info->keterangan;
 
-            $master = $member->master->first();
+            $master = $member->master;
 
             $data->redclub_user_id = $master->redclub_user_id;
             $data->redclub_password = $master->redclub_password;

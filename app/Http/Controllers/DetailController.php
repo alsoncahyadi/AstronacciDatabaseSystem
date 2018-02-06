@@ -274,8 +274,7 @@ class DetailController extends Controller
         }
 
         $ins_mrg = ["Sumber Data MRG" => "sumber_data",
-                "Join Date MRG" => "join_date",
-                "Sales" => "sales_name"];
+                "Join Date MRG" => "join_date"];
 
         $heads_mrg = $ins_mrg;
 

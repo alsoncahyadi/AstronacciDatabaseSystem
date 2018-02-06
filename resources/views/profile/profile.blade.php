@@ -132,7 +132,16 @@
                                     @foreach ($ins as $key => $value)
                                         <div style="height:60px">
                                             <label>{{$key}}</label>
+                                            @if ($key == "Tanggal Lahir")
+                                                <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client->$value}}"> 
+                                            @elseif ($key == "Jenis Kelamin")
+                                                <select class="form-control" name="{{$value}}" value="{{$client->$value}}">
+                                                    <option>M</option>
+                                                    <option>F</option>
+                                                </select>
+                                            @else
                                                 <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                            @endif
                                         </div>
                                     @endforeach
                             
@@ -159,11 +168,21 @@
      </div>
 
      <div class="panel panel-default" style="margin:15px">
-        <div class="panel-heading">
-            <i class="fa fa-money fa-fw"></i> Transactions
-        </div>
+        @if ($route == 'Green')
+            <div class="panel-heading">
+                <i class="fa fa-money fa-fw"></i> Progresses
+            </div>
+        @else
+            <div class="panel-heading">
+                <i class="fa fa-money fa-fw"></i> Transactions
+            </div>
+        @endif
         <div class="panel-body">
-            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+            @if ($route == 'Green')
+                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Progress</a>
+            @else
+                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+            @endif
             <div id="addcli" class="panel-collapse collapse">
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">

@@ -564,7 +564,7 @@ class CATController extends Controller
         $data = Cat::all();
 
         foreach ($data as $dat) {
-            $master = $dat->master->first();
+            $master = $dat->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;
