@@ -610,10 +610,14 @@
         document.getElementById("redzone").stepUp(3);
     });
     function updateMax() {
-        document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;
+        var page = document.getElementById('hidden_page_count').value;
+        document.getElementById('page_count').innerHTML = page;
+        document.getElementById('pagenum').max = page;
     }
     function updateMaxA() {
-        document.getElementById('page_countA').innerHTML = document.getElementById('hidden_page_countA').value;
+        var page = document.getElementById('hidden_page_countA').value;
+        document.getElementById('page_countA').innerHTML = page;
+        document.getElementById('pagenumA').max = page;
     }
 
     function searchPage() {
