@@ -302,7 +302,7 @@ class MRGController extends Controller
             $idx_filter = 0;
             $query = $query.'(';
 
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
+            if (in_array($key_filter, ['birthdate','payment_date', 'join_date'])) {
                 $idx_value = 0;
                 foreach ($values_filter as $value_filter) {
                     $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
@@ -331,9 +331,10 @@ class MRGController extends Controller
 
     public function addSortSubquery($query, $json_sort) {
         $sort = json_decode($json_sort, true);
+        $created_at = "mrgs.created_at DESC";
 
         if (empty($sort)) {
-            return $query;
+            return $query." ORDER BY ".$created_at;
         }
         
         $subquery = " ORDER BY ";
@@ -344,11 +345,10 @@ class MRGController extends Controller
             } else {
                 $subquery = $subquery.$key_sort." DESC";                            
             }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
+            $subquery = $subquery.", ";
         }
+        $subquery = $subquery.$created_at;
+
         $query = $query.$subquery;
         return $query;
     }

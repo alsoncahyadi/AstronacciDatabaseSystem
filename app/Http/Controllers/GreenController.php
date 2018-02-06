@@ -314,9 +314,10 @@ class GreenController extends Controller
 
     public function addSortSubquery($query, $json_sort) {
         $sort = json_decode($json_sort, true);
+        $created_at = "aclub_members.created_at DESC";
 
         if (empty($sort)) {
-            return $query;
+            return $query." ORDER BY ".$created_at;
         }
         
         $subquery = " ORDER BY ";
@@ -327,11 +328,10 @@ class GreenController extends Controller
             } else {
                 $subquery = $subquery.$key_sort." DESC";                            
             }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
+            $subquery = $subquery.", ";
         }
+        $subquery = $subquery.$created_at;
+
         $query = $query.$subquery;
         return $query;
     }

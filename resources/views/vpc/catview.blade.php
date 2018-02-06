@@ -245,11 +245,11 @@
 													<label>
 														@foreach ($filter as $f)						
 														<?php $m = date('m', strtotime($f))?>
-														@if (($m == 01)&&($f != 'January'))
-														<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
+														@if (($m == 01) && ($f != 'January'))
+														<input input class="check-filter" data-type="{{$value}}" AAA type="checkbox" value="{{$f}}">
 														{{ $f }}
 														@else
-														<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
+														<input class="check-filter" data-type="{{$value}}" BBB type="checkbox" value="{{date('m', strtotime($f))}}">
 														{{ $f }}
 														@endif
 														@endforeach
