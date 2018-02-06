@@ -99,11 +99,11 @@
 					<thead>
 						<th>ID</th>
 						<th>Name</th>
-						<th>A-CLUB Stocks</th>
-						<th>A-CLUB Futures</th>
-						<th>CAT</th>
-						<th>MRG</th>
-						<th>UOB</th>
+						<th>A-CLUB Stocks<button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button></th>
+						<th>A-CLUB Futures<button id="bt2" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd2"><i class="fa fa-caret-down"></i></button></th>
+						<th>CAT<button id="bt3" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd3"><i class="fa fa-caret-down"></i></button></th>
+						<th>MRG<button id="bt4" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd4"><i class="fa fa-caret-down"></i></button></th>
+						<th>UOB<button id="bt5" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd5"><i class="fa fa-caret-down"></i></button></th>
 					</thead>
 					<tbody>
 					@foreach ($clients as $client)	
