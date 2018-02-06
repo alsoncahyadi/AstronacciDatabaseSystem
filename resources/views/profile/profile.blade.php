@@ -159,11 +159,21 @@
      </div>
 
      <div class="panel panel-default" style="margin:15px">
-        <div class="panel-heading">
-            <i class="fa fa-money fa-fw"></i> Transactions
-        </div>
+        @if ($route == 'Green')
+            <div class="panel-heading">
+                <i class="fa fa-money fa-fw"></i> Progresses
+            </div>
+        @else
+            <div class="panel-heading">
+                <i class="fa fa-money fa-fw"></i> Transactions
+            </div>
+        @endif
         <div class="panel-body">
-            <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+            @if ($route == 'Green')
+                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Progress</a>
+            @else
+                <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli">Add New Transaction</a>
+            @endif
             <div id="addcli" class="panel-collapse collapse">
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">

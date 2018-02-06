@@ -590,12 +590,12 @@ class MRGController extends Controller
         $data = MrgAccount::all();
 
         foreach ($data as $dat) {
-            $mrg = $dat->mrg->first();
+            $mrg = $dat->mrg;
 
             $dat->sumber_data = $mrg->sumber_data;
             $dat->join_date = $mrg->join_date;
 
-            $master = $mrg->master->first();
+            $master = $mrg->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;
