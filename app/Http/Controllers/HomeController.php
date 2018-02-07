@@ -316,7 +316,33 @@ class HomeController extends Controller
                 }
             }
         }
+
+        // $example_filter = array('cat' => True);
+        // $json_filter = json_encode($example_filter);
+
+        // $clients = $this->filterClients($clients, $json_filter);
+
         return view('vpc/mastertable', ['clients' => $clients] );
+    }
+
+    public function filterClients($clients, $json_filter) {
+        $filters = json_decode($json_filter, true);
+        $filtered_clients = [];
+
+        foreach ($clients as $client) {
+            $passed_filter = True;
+            foreach ($filters as $filter => $value) {
+                if ($client[$filter] != $value) {
+                    $passed_filter = False;
+                    $break;
+                }
+            }
+            if ($passed_filter) {
+                array_push($filtered_clients, $client);
+            }
+        }
+
+        return $filtered_clients;
     }
 
     /**

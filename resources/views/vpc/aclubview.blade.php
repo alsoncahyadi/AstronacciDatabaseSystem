@@ -203,6 +203,12 @@
 			</div>
 		</div>
 
+		<?php 
+			$months_name = array('January', 'February', 'March', 'April', 
+				'May', 'June', 'July', 'August', 'September', 'October', 'November', 
+				'December');
+		?>
+
 		<div class="panel-body">
 			<div id="bod1">
 				<div id="table-scroll" class="table-scroll">
@@ -214,6 +220,7 @@
 								<?php $idx = 1 ?>
 								<th class="fixed-side collumn-select" scope="col" style="min-width: 75px;"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
+
 								@foreach ($headsMaster as $headMaster)
 									@if ($headMaster == 'Tanggal Lahir')
 									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }} 
@@ -253,12 +260,11 @@
 												<div class="checkbox">
 													<label>
 														@foreach ($filter as $f)						
-														<?php $m = date('m', strtotime($f))?>
-														@if (($m == 01)&&($f != 'January'))
-														<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
+														@if (!in_array($f, $months_name))
+														<input input HARUSNYA BUKAN BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
 														{{ $f }}
 														@else
-														<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
+														<input HARUSNYA BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
 														{{ $f }}
 														@endif
 														@endforeach
