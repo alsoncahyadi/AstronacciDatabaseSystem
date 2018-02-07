@@ -277,7 +277,7 @@ class HomeController extends Controller
         })->export('xls');
     }
 
-    public function masterTable(){
+    public function masterTable(Request $request){
         $clients = MasterClient::select('name','email','master_id')->get();
         foreach ($clients as $client) {
             //CAT
@@ -318,9 +318,11 @@ class HomeController extends Controller
         }
 
         // $example_filter = array('cat' => True);
-        // $json_filter = json_encode($example_filter);
+        $json_filter = $request['filters'];
 
-        // $clients = $this->filterClients($clients, $json_filter);
+        if ($json_filter != null) {
+            $clients = $this->filterClients($clients, $json_filter);
+        }
 
         return view('vpc/masterview', ['clients' => $clients] );
     }

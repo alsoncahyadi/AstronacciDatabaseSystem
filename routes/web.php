@@ -935,3 +935,10 @@ Route::get('/export/green', [
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
+
+Route::post('/master/filter', [
+    'uses' => 'HomeController@masterTable',
+    'as' => 'master.filter',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1'],
+    ]);
