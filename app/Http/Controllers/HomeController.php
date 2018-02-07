@@ -322,7 +322,7 @@ class HomeController extends Controller
 
         // $clients = $this->filterClients($clients, $json_filter);
 
-        return view('vpc/mastertable', ['clients' => $clients] );
+        return view('vpc/masterview', ['clients' => $clients] );
     }
 
     public function filterClients($clients, $json_filter) {

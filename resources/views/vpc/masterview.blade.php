@@ -111,13 +111,13 @@
 									<label>Filter</label>
 									<div class="panel panel-default filter-selection">
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="stock" type="checkbox" value="TRUE">
 											<label>
 												Yes
 											</label>
 										</div>
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="stock" type="checkbox" value="FALSE">
 											<label>
 												No
 											</label>
@@ -132,13 +132,13 @@
 									<label>Filter</label>
 									<div class="panel panel-default filter-selection">
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="future" type="checkbox" value="TRUE">
 											<label>
 												Yes
 											</label>
 										</div>
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="future" type="checkbox" value="FALSE">
 											<label>
 												No
 											</label>
@@ -153,13 +153,13 @@
 									<label>Filter</label>
 									<div class="panel panel-default filter-selection">
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="cat" type="checkbox" value="TRUE">
 											<label>
 												Yes
 											</label>
 										</div>
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="cat" type="checkbox" value="FALSE">
 											<label>
 												No
 											</label>
@@ -174,13 +174,13 @@
 									<label>Filter</label>
 									<div class="panel panel-default filter-selection">
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="TRUE">
 											<label>
 												Yes
 											</label>
 										</div>
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="FALSE">
 											<label>
 												No
 											</label>
@@ -195,13 +195,13 @@
 									<label>Filter</label>
 									<div class="panel panel-default filter-selection">
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="uob" type="checkbox" value="TRUE">
 											<label>
 												Yes
 											</label>
 										</div>
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="0" type="checkbox" value="0">
+											<input class="check-filter margincheck" data-type="uob" type="checkbox" value="FALSE">
 											<label>
 												No
 											</label>
@@ -268,6 +268,7 @@
 	});
 	var arrFilter = [];
 	var jsonFilter = [];
+	var filters = {};
 	$( ".filterCity" ).change(function() {
 		arrFilter = [];
 		$.each($(".filterCity:checked"), function(){            
@@ -275,5 +276,60 @@
             });
 		jsonFilter = JSON.parse(JSON.stringify(arrFilter));
 		console.log(jsonFilter);
+	});
+
+	function sortAndFilter(page) {
+		var sorts = {};
+
+		var json_filters = JSON.stringify(filters);
+		console.log(json_filters);
+
+		$(".spinner_load").css('display', 'table');
+		// Request to API
+	    var request = $.ajax({
+	        url: "/master/filter",
+	        type: "post",
+	        data: {
+						"_token": "{{ csrf_token() }}",
+						"filters": json_filters,
+						"page": page
+					}
+	    });
+
+		// Callback handler that will be called on success
+	    request.done(function (response, textStatus, jqXHR){
+	        // Log a message to the console
+			// console.log(response);
+			$("#tbody").html(response);
+			$(".clone").remove();
+			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+
+			var count_page = $("#hidden_page_count").val();
+			$("#page_count").html(count_page);
+			$("#pagenum").attr({"max" : count_page});
+	    });
+	    $(".spinner_load").css('display', 'none');
+
+	}
+
+	$(".check-filter").change(function() {
+		var filter_type = $(this).attr("data-type");
+		var filter_value = $(this).val();
+		if ($(this).prop('checked')) {
+			// alert(filter_type + " " + filter_value);
+			if (filters[filter_type]) {
+				filters[filter_type].push(filter_value);
+			} else {
+				filters[filter_type] = [];
+				filters[filter_type].push(filter_value);
+			}
+		} else {
+			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
+			if (filters[filter_type].length == 0) {
+				delete filters[filter_type];
+			}
+		}
+		sortAndFilter(1);
+		$("#pagenum").val("1");
 	});
 </script>
