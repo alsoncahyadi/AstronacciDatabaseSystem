@@ -330,25 +330,21 @@ class HomeController extends Controller
         // $example_filter = array('cat' => True);
         $json_filter = $request['filters'];
 
+        if ($json_filter != null) {
+            $clients = $this->filterClients($clients, $json_filter);
+            $clients = collect(array_slice($clients, $page*$record_amount, $record_amount));
+        }
+
+        $arr_pair = ['clients' => $clients,
+                    'count' => $record_count];
+
         if (isset($request['ajax'])) {
             if ($request['ajax']) {
-                $clients = $this->filterClients($clients, $json_filter);
-                $clients = array_slice($clients, $page*$record_amount, $record_amount);
-
-                $arr_pair = ['clients' => $clients,
-                    'count' => $record_count];
-                    
                 return view('vpc/mastertable', $arr_pair );
             } else {
-                $arr_pair = ['clients' => $clients,
-                    'count' => $record_count];
-
                 return view('vpc/masterview', $arr_pair );
             }
         } else {
-            $arr_pair = ['clients' => $clients,
-                    'count' => $record_count];
-
             return view('vpc/masterview', $arr_pair );
         }
     }
