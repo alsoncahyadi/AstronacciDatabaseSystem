@@ -111,13 +111,13 @@
 									<label>Filter</label>
 									<div class="panel panel-default filter-selection">
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="stock" type="radio" value="TRUE">
+											<input class="check-filter margincheck" data-type="stock" type="checkbox" value="TRUE">
 											<label>
 												Yes
 											</label>
 										</div>
 										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="stock" type="radio" value="FALSE">
+											<input class="check-filter margincheck" data-type="stock" type="checkbox" value="FALSE">
 											<label>
 												No
 											</label>
