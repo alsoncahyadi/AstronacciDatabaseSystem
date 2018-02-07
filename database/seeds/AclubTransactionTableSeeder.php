@@ -13,7 +13,7 @@ class AclubTransactionTableSeeder extends Seeder
     {
         //
         $this->makeMagicSeedAclubTransaction(100);
-        // factory(App\AclubTransaction::class, 10)->create();
+        // factory(App\AclubTransaction::class, 10 )->create();
     }
 
     public function makeMagicSeedAclubTransaction($amount) {

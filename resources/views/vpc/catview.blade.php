@@ -1,3 +1,4 @@
+<?php use App\MonthDropdownValidator; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -244,7 +245,7 @@
 													<label>
 														@foreach ($filter as $f)						
 														<?php $m = date('m', strtotime($f))?>
-														@if (($m == 01) && ($f != 'January'))
+														@if (!MonthDropdownValidator::is_month($f))
 														<input input class="check-filter" data-type="{{$value}}" AAA type="checkbox" value="{{$f}}">
 														{{ $f }}
 														@else

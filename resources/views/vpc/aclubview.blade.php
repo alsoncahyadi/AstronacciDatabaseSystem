@@ -1,3 +1,4 @@
+<?php use App\MonthDropdownValidator; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -203,11 +204,7 @@
 			</div>
 		</div>
 
-		<?php 
-			$months_name = array('January', 'February', 'March', 'April', 
-				'May', 'June', 'July', 'August', 'September', 'October', 'November', 
-				'December');
-		?>
+
 
 		<div class="panel-body">
 			<div id="bod1">
@@ -260,7 +257,7 @@
 												<div class="checkbox">
 													<label>
 														@foreach ($filter as $f)						
-														@if (!in_array($f, $months_name))
+														@if (!MonthDropdownValidator::is_month($f))
 														<input input HARUSNYA BUKAN BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
 														{{ $f }}
 														@else
