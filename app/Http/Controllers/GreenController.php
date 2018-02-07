@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use App\GreenProspectClient;
 use App\GreenProspectProgress;
+use App\Http\QueryModifier;
 use DB;
 
 class GreenController extends Controller
@@ -242,9 +243,9 @@ class GreenController extends Controller
 
         // add subquery of filter
 
-        $query = $this->addFilterSubquery($query, $json_filter);
+        $query = QueryModifier::addFilterSubquery($query, $json_filter);
         // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
+        $query = QueryModifier::addSortSubquery($query, $json_sort, 'green_prospect_clients');
         // add semicolon
         $query = $query.";";
 
@@ -266,76 +267,6 @@ class GreenController extends Controller
         // return $list;
     }
  
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
-
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-        $created_at = "aclub_members.created_at DESC";
-
-        if (empty($sort)) {
-            return $query." ORDER BY ".$created_at;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $subquery = $subquery.", ";
-        }
-        $subquery = $subquery.$created_at;
-
-        $query = $query.$subquery;
-        return $query;
-    }
-
     public function clientDetail($id, Request $request) {
         //Select seluruh data client $id yang ditampilkan di detail
         $green = GreenProspectClient::where('green_id', $id)->first();
