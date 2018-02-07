@@ -283,11 +283,16 @@ class HomeController extends Controller
         $page = $request['page']-1;
         $record_amount = 15;
 
-        $record_count = MasterClient::count();
-        $record_count = ceil($record_count / $record_amount);
 
-        $clients = MasterClient::select('name','email','master_id')->skip($record_amount*$page)->take($record_amount)->get();
-        
+        // $example_filter = array('cat' => True);
+        $json_filter = $request['filters'];
+
+        if ($json_filter == null){
+            $record_count = MasterClient::count();
+            $clients = MasterClient::select('name','email','master_id')->skip($record_amount*$page)->take($record_amount)->get();
+        } else {
+            $clients = MasterClient::select('name','email','master_id')->get();
+        }
         
         foreach ($clients as $client) {
             //CAT
@@ -327,13 +332,13 @@ class HomeController extends Controller
             }
         }
 
-        // $example_filter = array('cat' => True);
-        $json_filter = $request['filters'];
-
         if ($json_filter != null) {
             $clients = $this->filterClients($clients, $json_filter);
+            $record_count = count($clients);
             $clients = collect(array_slice($clients, $page*$record_amount, $record_amount));
         }
+
+        $record_count = ceil($record_count / $record_amount);
 
         $arr_pair = ['clients' => $clients,
                     'count' => $record_count];
