@@ -12,6 +12,6 @@ class GreenProspectProgressTableSeeder extends Seeder
     public function run()
     {
         //
-	    factory(App\GreenProspectProgress::class, 5)->create();
+	    factory(App\GreenProspectProgress::class, 10)->create();
     }
 }

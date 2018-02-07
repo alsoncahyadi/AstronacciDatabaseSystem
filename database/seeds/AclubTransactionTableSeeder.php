@@ -12,8 +12,8 @@ class AclubTransactionTableSeeder extends Seeder
     public function run()
     {
         //
-        $this->makeMagicSeedAclubTransaction(50);
-        factory(App\AclubTransaction::class, 10)->create();
+        $this->makeMagicSeedAclubTransaction(100);
+        // factory(App\AclubTransaction::class, 10)->create();
     }
 
     public function makeMagicSeedAclubTransaction($amount) {

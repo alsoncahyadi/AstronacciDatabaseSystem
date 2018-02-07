@@ -12,7 +12,7 @@ class MasterClientTableSeeder extends Seeder
     public function run()
     {
         $this->makeMagicSeedMasterClient();
-        factory(App\MasterClient::class, 50)->create();
+        factory(App\MasterClient::class, 20000)->create();
     }
 
     public function makeMagicSeedMasterClient() {
