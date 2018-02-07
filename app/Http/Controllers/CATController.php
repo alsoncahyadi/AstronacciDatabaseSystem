@@ -53,9 +53,23 @@ class CATController extends Controller
         $page = $request['page']-1;
         $record_amount = 15;
 
-        $cats = $this->getData();
-        $record_count = count($cats);
-        $cats = $cats->forPage(1, $record_amount);
+        // $cats = $this->getData();
+        $record_count = CAT::count();
+        $cats = CAT::skip($record_amount*$page)->take($record_amount)->get();
+
+        foreach ($cats as $cat) {
+            $master = $cat->master;
+            $cat->master_id = $master->master_id;
+            $cat->name = $master->name;
+            $cat->telephone_number = $master->telephone_number;
+            $cat->email = $master->email;
+            $cat->birthdate = $master->birthdate;
+            $cat->address = $master->address;
+            $cat->city = $master->city;
+            $cat->gender = $master->gender;
+            $cat->line_id = $master->line_id;
+            $cat->whatsapp = $master->whatsapp;
+        }
         // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
         // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
