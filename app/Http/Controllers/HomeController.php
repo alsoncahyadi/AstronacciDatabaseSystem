@@ -353,10 +353,16 @@ class HomeController extends Controller
         $filters = json_decode($json_filter, true);
         $filtered_clients = [];
 
+        foreach ($filters as $filter => $value) {
+            if (count($value) > 1) {
+                unset($filters[$filter]);
+            }
+        }
+
         foreach ($clients as $client) {
             $passed_filter = True;
             foreach ($filters as $filter => $value) {
-                if ($client[$filter] != $value) {
+                if ($client[$filter] != $value[0]) {
                     $passed_filter = False;
                     $break;
                 }
