@@ -937,7 +937,7 @@ Route::get('/export/green', [
     ]);
 
 Route::post('/master/filter', [
-    'uses' => 'HomeController@masterTableAjax',
+    'uses' => 'HomeController@masterTable',
     'as' => 'master.filter',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1'],

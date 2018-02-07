@@ -1,4 +1,5 @@
 
+		<input id="hidden_page_count" type="hidden" value="{{$count}}">
 		@foreach ($clients as $client)	
 			<tr>
 				<td> {{$client->master_id}} </td>

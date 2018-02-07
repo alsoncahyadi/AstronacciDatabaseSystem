@@ -278,7 +278,17 @@ class HomeController extends Controller
     }
 
     public function masterTable(Request $request){
-        $clients = MasterClient::select('name','email','master_id')->get();
+
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        $record_count = MasterClient::count();
+        $record_count = ceil($record_count / $record_amount);
+
+        $clients = MasterClient::select('name','email','master_id')->skip($record_amount*$page)->take($record_amount)->get();
+        
+        
         foreach ($clients as $client) {
             //CAT
             if ($client->cat()->first()) {
@@ -324,57 +334,19 @@ class HomeController extends Controller
             $clients = $this->filterClients($clients, $json_filter);
         }
 
-        return view('vpc/masterview', ['clients' => $clients] );
-    }
 
-    public function masterTableAjax(Request $request){
-        $clients = MasterClient::select('name','email','master_id')->get();
-        foreach ($clients as $client) {
-            //CAT
-            if ($client->cat()->first()) {
-                $client->cat = TRUE;
+        $arr_pair = ['clients' => $clients,
+                    'count' => $record_count];
+
+        if (isset($request['ajax'])) {
+            if ($request['ajax']) {
+                return view('vpc/mastertable', $arr_pair );
             } else {
-                $client->cat = FALSE;
+                return view('vpc/masterview', $arr_pair );
             }
-
-            //UOB
-            if ($client->uob()->first()) {
-                $client->uob = TRUE;
-            } else {
-                $client->uob = FALSE;
-            }
-
-            //MRG
-            if ($client->mrg()->first()) {
-                $client->mrg = TRUE;
-            } else {
-                $client->mrg = FALSE;
-            }
-
-            //ACLUB
-            $aclub_info = $client->aclubInformation()->first();
-            $client->stock = FALSE;
-            $client->future = FALSE;
-            if ($client->aclubInformation()->first()) {
-                $members = $aclub_info->aclubMembers()->get();
-                foreach ($members as $member) {
-                    if ((!$client->stock) && ($member->group == "Stock")) {
-                        $client->stock = TRUE;
-                    } else if ((!$client->future) && ($member->group == "Future")) {
-                        $client->future = TRUE;
-                    }
-                }
-            }
+        } else {
+            return view('vpc/masterview', $arr_pair );
         }
-
-        // $example_filter = array('cat' => True);
-        $json_filter = $request['filters'];
-
-        if ($json_filter != null) {
-            $clients = $this->filterClients($clients, $json_filter);
-        }
-
-        return view('vpc/mastertable', ['clients' => $clients] );
     }
 
     public function filterClients($clients, $json_filter) {

@@ -260,7 +260,8 @@
 	        data: {
 						"_token": "{{ csrf_token() }}",
 						"filters": json_filters,
-						"page": page
+						"page": page,
+						"ajax": true
 					}
 	    });
 
@@ -300,4 +301,26 @@
 		sortAndFilter(1);
 		$("#pagenum").val("1");
 	});
+
+	$("#page_number").click(function() {
+		// var filter_type = $(".check-filter").attr("data-type");
+		// var filter_value = $(".check-filter").val();
+		// if ($(".check-filter").prop('checked')) {
+		// 	// alert(filter_type + " " + filter_value);
+		// 	if (filters[filter_type]) {
+		// 		filters[filter_type].push(filter_value);
+		// 	} else {
+		// 		filters[filter_type] = [];
+		// 		filters[filter_type].push(filter_value);
+		// 	}
+		// } else {
+		// 	filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
+		// 	if (filters[filter_type].length == 0) {
+		// 		delete filters[filter_type];
+		// 	}
+		// }
+		var page = $("#pagenum").val();		
+		sortAndFilter(page);
+	});
+
 </script>
