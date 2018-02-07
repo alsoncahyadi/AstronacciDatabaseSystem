@@ -452,9 +452,9 @@ class CATController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'nomor_induk' => 'required',
+                'sales_name' => '',
                 'batch' => '',
-                'sales_name' => ''
+                'sumber_data' => ''
             ]);
         $cat = Cat::where('user_id',$request->user_id)->first();
         //Inisialisasi array error
@@ -464,7 +464,7 @@ class CATController extends Controller
             $cat->user_id = $request->user_id;
             $cat->nomor_induk = $request->nomor_induk;
             $cat->batch = $request->batch;
-            $cat->sales_name = $request->sales_name;
+            $cat->sumber_data = $request->sumber_data;
 
             $cat->update();
         } catch(\Illuminate\Database\QueryException $ex){

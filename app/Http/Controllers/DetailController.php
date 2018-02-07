@@ -172,15 +172,15 @@ class DetailController extends Controller
         }
 
         $ins_cat = [
-                "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data"
                 ];
 
         $heads_cat = ["User ID" => "user_id",
-                "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data"
                 ];
 
         $insreg_cat = [ "Nomer Induk" => 'nomor_induk',
