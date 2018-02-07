@@ -12,6 +12,6 @@ class GreenProspectClientTableSeeder extends Seeder
     public function run()
     {
         //
-	    factory(App\GreenProspectClient::class, 20)->create();
+	    factory(App\GreenProspectClient::class, 10)->create();
     }
 }

@@ -108,7 +108,7 @@ class AshopController extends Controller
         // $this->getFilteredAndSortedTable('test');
 
         $joined = DB::table('master_clients')
-                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+                    ->join('ashop_transactions', 'ashop_transactions.master_id', '=', 'master_clients.master_id');
 
         $filter_cities = $joined->select('city')->distinct()->get();
         $filter_gender = $joined->select('gender')->distinct()->get();
@@ -298,9 +298,10 @@ class AshopController extends Controller
 
     public function addSortSubquery($query, $json_sort) {
         $sort = json_decode($json_sort, true);
+        $created_at = "master_clients.created_at DESC";
 
         if (empty($sort)) {
-            return $query;
+            return $query." ORDER BY ".$created_at;
         }
         
         $subquery = " ORDER BY ";
@@ -311,11 +312,10 @@ class AshopController extends Controller
             } else {
                 $subquery = $subquery.$key_sort." DESC";                            
             }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
+            $subquery = $subquery.", ";
         }
+        $subquery = $subquery.$created_at;
+
         $query = $query.$subquery;
         return $query;
     }

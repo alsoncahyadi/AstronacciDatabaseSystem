@@ -229,7 +229,7 @@ class CATController extends Controller
         // test
 
         $attsMaster = [
-                        "master_id",
+                        "user_id",
                         "name",
                         "email",
                         "telephone_number",
@@ -274,6 +274,8 @@ class CATController extends Controller
         $query = $this->addSortSubquery($query, $json_sort);
         // add semicolon
         $query = $query.";";
+
+        // dd($json_filter);
 
         // retrieve result
         $list_old = DB::select($query);
@@ -344,9 +346,10 @@ class CATController extends Controller
 
     public function addSortSubquery($query, $json_sort) {
         $sort = json_decode($json_sort, true);
+        $created_at = "cats.created_at DESC";
 
         if (empty($sort)) {
-            return $query;
+            return $query." ORDER BY ".$created_at;
         }
         
         $subquery = " ORDER BY ";
@@ -357,11 +360,10 @@ class CATController extends Controller
             } else {
                 $subquery = $subquery.$key_sort." DESC";                            
             }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
+            $subquery = $subquery.", ";
         }
+        $subquery = $subquery.$created_at;
+
         $query = $query.$subquery;
         return $query;
     }

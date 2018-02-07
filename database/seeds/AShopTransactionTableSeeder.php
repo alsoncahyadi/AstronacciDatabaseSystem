@@ -12,6 +12,6 @@ class AShopTransactionTableSeeder extends Seeder
     public function run()
     {
         //
-        factory(App\AshopTransaction::class, 20)->create();
+        factory(App\AshopTransaction::class, 100)->create();
     }
 }

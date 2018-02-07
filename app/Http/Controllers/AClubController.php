@@ -307,7 +307,7 @@ class AClubController extends Controller
         // test
 
          $attsMaster = [
-                        "master_id",
+                        "user_id",
                         "name",
                         "email",
                         "telephone_number",
@@ -365,12 +365,16 @@ class AClubController extends Controller
         $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
         $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
 
+
+
         // add subquery of filter
         $query = $this->addFilterSubquery($query, $json_filter);
         // add subquery of sort
         $query = $this->addSortSubquery($query, $json_sort);
         // add semicolon
         $query = $query.";";
+
+        // dd($json_filter);
 
         // retrieve result
         $list_old = DB::select($query);
@@ -420,7 +424,7 @@ class AClubController extends Controller
             $idx_filter = 0;
             $query = $query.'(';
 
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
+            if (in_array($key_filter, ['birthdate','payment_date','start_date','masa_tenggang'])) {
                 $idx_value = 0;
                 foreach ($values_filter as $value_filter) {
                     $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
@@ -449,9 +453,10 @@ class AClubController extends Controller
 
     public function addSortSubquery($query, $json_sort) {
         $sort = json_decode($json_sort, true);
+        $created_at = "aclub_members.created_at DESC";
 
         if (empty($sort)) {
-            return $query;
+            return $query." ORDER BY ".$created_at;
         }
         
         $subquery = " ORDER BY ";
@@ -462,11 +467,10 @@ class AClubController extends Controller
             } else {
                 $subquery = $subquery.$key_sort." DESC";                            
             }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
+            $subquery = $subquery.", ";
         }
+        $subquery = $subquery.$created_at;
+
         $query = $query.$subquery;
         return $query;
     }
