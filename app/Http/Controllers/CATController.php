@@ -22,27 +22,6 @@ class CATController extends Controller
         return $newstring;
     }
 
-    public function getData()
-    {
-        $cats = Cat::orderBy('created_at', 'desc')->get();
-
-        foreach ($cats as $cat) {
-            $master = $cat->master;
-            $cat->master_id = $master->master_id;
-            $cat->name = $master->name;
-            $cat->telephone_number = $master->telephone_number;
-            $cat->email = $master->email;
-            $cat->birthdate = $master->birthdate;
-            $cat->address = $master->address;
-            $cat->city = $master->city;
-            $cat->gender = $master->gender;
-            $cat->line_id = $master->line_id;
-            $cat->whatsapp = $master->whatsapp;
-        }
-
-        return $cats;
-    }
-
     public function getTable(Request $request) {
         // $keyword = $request['q'];
 

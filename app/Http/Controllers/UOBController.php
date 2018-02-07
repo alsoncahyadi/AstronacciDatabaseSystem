@@ -22,9 +22,14 @@ class UOBController extends Controller
         return $newstring;
     }
 
-    public function getData()
-    {
-        $uobs = Uob::orderBy('created_at', 'desc')->get();
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $uobs = $this->getData();
+        $record_count = Uob::count();
+        $uobs = Uob::skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($uobs as $uob) {
             $master = $uob->master;
@@ -42,18 +47,6 @@ class UOBController extends Controller
             $uob->whatsapp = $master->whatsapp;
             $uob->facebook = $master->facebook;
         }
-
-        return $uobs;
-    }
-
-    public function getTable(Request $request) {
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $uobs = $this->getData();
-        $record_count = count($uobs);
-        $uobs = $uobs->forPage(1, $record_amount);
 
         $page_count = ceil($record_count/$record_amount);
 

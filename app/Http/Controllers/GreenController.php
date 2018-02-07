@@ -20,46 +20,16 @@ class GreenController extends Controller
            return null;
         }
         return $newstring;
-    }
+    }    
 
-    // public function getTable() {
-    //     $clients = GreenProspectClient::paginate(15);
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
 
-    //     $heads = ["Green ID",
-    //                 "Name",
-    //                 "Date",
-    //                 "Phone",
-    //                 "Email",
-    //                 "Interest",
-    //                 "Pemberi",
-    //                 "Sumber Data",
-    //                 "Keterangan Perintah"];
-
-    //     $ins = ["Name",
-    //                 "Date",
-    //                 "Phone",
-    //                 "Email",
-    //                 "Interest",
-    //                 "Pemberi",
-    //                 "Sumber Data",
-    //                 "Keterangan Perintah"];
-
-    //     $atts = ["green_id",
-    //                 "name",
-    //                 "date",
-    //                 "phone",
-    //                 "email",
-    //                 "interest",
-    //                 "pemberi",
-    //                 "sumber_data",
-    //                 "keterangan_perintah"];
-
-    //     return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
-    // }
-
-    public function getData()
-    {
-        $greens = GreenProspectClient::orderBy('created_at', 'desc')->get();
+        // $greens = $this->getData();
+        $record_count = GreenProspectClient::count();
+        $greens = GreenProspectClient::skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($greens as $green) {
             $progress = $green->progresses()->orderBy('created_at','desc')->first();
@@ -74,18 +44,6 @@ class GreenController extends Controller
             }
             
         }
-
-        return $greens;
-    }
-
-    public function getTable(Request $request) {
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $greens = $this->getData();
-        $record_count = count($greens);
-        $greens = $greens->forPage(1, $record_amount);
 
         $page_count = ceil($record_count/$record_amount);
 

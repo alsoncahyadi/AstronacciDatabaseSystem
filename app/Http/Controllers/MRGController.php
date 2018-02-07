@@ -21,11 +21,21 @@ class MRGController extends Controller
            return null;
         }
         return $newstring;
-    }
+    }    
 
-    public function getData()
-    {
-        $mrgs = MRG::orderBy('created_at', 'desc')->get();
+    public function getTable(Request $request) {
+        // $keyword = $request['q'];
+
+        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
+        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
+        //         ->paginate(15);
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $mrgs = $this->getData();
+        $record_count = MRG::count();
+        $mrgs = MRG::skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($mrgs as $mrg) {
             $master = $mrg->master;
@@ -55,22 +65,6 @@ class MRGController extends Controller
             }
         }
 
-        return $mrgs;
-    }
-
-    public function getTable(Request $request) {
-        // $keyword = $request['q'];
-
-        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
-        //         ->paginate(15);
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $mrgs = $this->getData();
-        $record_count = count($mrgs);
-        $mrgs = $mrgs->forPage(1, $record_amount);
         // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
         // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
