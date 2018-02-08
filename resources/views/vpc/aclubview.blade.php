@@ -393,6 +393,7 @@
 
 		console.log(json_sorts);
 		$(".spinner_load").css('display', 'table');
+		console.log("spinner on");
 		// Request to API
 	    var request = $.ajax({
 	        url: "/AClub/filter",
@@ -416,9 +417,9 @@
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 			$("#pagenum").attr({"max" : count_page});
+		    $(".spinner_load").css('display', 'none');
+		    console.log("spinner off");
 	    });
-	    $(".spinner_load").css('display', 'none');
-
 	}
 
 	function gotoPage() {

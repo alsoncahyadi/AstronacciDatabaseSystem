@@ -382,8 +382,8 @@
             var count_page = $("#hidden_page_count").val();
             $("#page_count").html(count_page);
             $("#pagenum").attr({"max" : count_page});
-        });
         $(".spinner_load").css('display', 'none');
+        });
 
     }
 
@@ -414,7 +414,6 @@
 
         var json_sorts = JSON.stringify(sorts);
         console.log(json_sorts);
-
         var var_page = document.getElementById("pagenum").value;
 
         // Request to API

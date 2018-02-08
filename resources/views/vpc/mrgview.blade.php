@@ -326,7 +326,7 @@
 
 		var json_sorts = JSON.stringify(sorts);
 		console.log(json_sorts);
-
+		$(".spinner_load").css('display', 'table');
 		// Request to API
 	    var request = $.ajax({
 	        url: "/MRG/filter",
@@ -350,6 +350,7 @@
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 			$("#pagenum").attr({"max" : count_page});
+	    	$(".spinner_load").css('display', 'none');
 	    });
 
 

@@ -94,131 +94,134 @@
 				<div class="col-md-4">
 					<i class="fa fa-child fa-fw"></i> Members &nbsp;
 					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
+					<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 				</div>
 			</div>
 		</div>
 
 		<div class="panel-body">
-			<div id="bod1">
-				<div class="col-xs-6" style="margin:0px;padding: 0px;">
-				<table id="tablebase" class="table table-condensed table-striped table-bordered table-hover">
-					<thead>
-						<th>ID</th>
-						<th>Name</th>
-						<th>A-CLUB Stocks <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
-							<div class="filter panel panel-default collapse" id="dd1">
-								<form id="form1" action="#" method="post">
-									<label>Filter</label>
-									<div class="panel panel-default filter-selection">
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="stock" type="checkbox" value="TRUE">
-											<label>
-												Yes
-											</label>
+			<div class="row" id="bod1">
+				<div class="col-xs-6">
+					<table id="tablebase" class="table table-condensed table-striped table-bordered table-hover">
+						<thead>
+							<th>ID</th>
+							<th>Name</th>
+							<th style="min-width: 100px">A-CLUB Stocks <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd1">
+									<form id="form1" action="#" method="post">
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="stock" type="checkbox" value="TRUE">
+												<label>
+													Yes
+												</label>
+											</div>
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="stock" type="checkbox" value="FALSE">
+												<label>
+													No
+												</label>
+											</div>
 										</div>
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="stock" type="checkbox" value="FALSE">
-											<label>
-												No
-											</label>
+									</form>
+								</div>
+							</th>
+							<th style="min-width: 100px">A-CLUB Futures<button id="bt2" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd2"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd2">
+									<form id="form1" action="#" method="post">
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="future" type="checkbox" value="TRUE">
+												<label>
+													Yes
+												</label>
+											</div>
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="future" type="checkbox" value="FALSE">
+												<label>
+													No
+												</label>
+											</div>
 										</div>
-									</div>
-								</form>
-							</div>
-						</th>
-						<th>A-CLUB Futures<button id="bt2" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd2"><i class="fa fa-caret-down"></i></button>
-							<div class="filter panel panel-default collapse" id="dd2">
-								<form id="form1" action="#" method="post">
-									<label>Filter</label>
-									<div class="panel panel-default filter-selection">
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="future" type="checkbox" value="TRUE">
-											<label>
-												Yes
-											</label>
+									</form>
+								</div>
+							</th>
+							<th style="min-width: 80px">CAT<button id="bt3" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd3"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd3">
+									<form id="form1" action="#" method="post">
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="cat" type="checkbox" value="TRUE">
+												<label>
+													Yes
+												</label>
+											</div>
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="cat" type="checkbox" value="FALSE">
+												<label>
+													No
+												</label>
+											</div>
 										</div>
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="future" type="checkbox" value="FALSE">
-											<label>
-												No
-											</label>
+									</form>
+								</div>
+							</th>
+							<th style="min-width: 80px">MRG<button id="bt4" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd4"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd4">
+									<form id="form1" action="#" method="post">
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="TRUE">
+												<label>
+													Yes
+												</label>
+											</div>
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="FALSE">
+												<label>
+													No
+												</label>
+											</div>
 										</div>
-									</div>
-								</form>
-							</div>
-						</th>
-						<th>CAT<button id="bt3" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd3"><i class="fa fa-caret-down"></i></button>
-							<div class="filter panel panel-default collapse" id="dd3">
-								<form id="form1" action="#" method="post">
-									<label>Filter</label>
-									<div class="panel panel-default filter-selection">
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="cat" type="checkbox" value="TRUE">
-											<label>
-												Yes
-											</label>
+									</form>
+								</div>
+							</th>
+							<th style="min-width: 80px">UOB<button id="bt5" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd5"><i class="fa fa-caret-down"></i></button>
+								<div class="filter panel panel-default collapse" id="dd5">
+									<form id="form1" action="#" method="post">
+										<label>Filter</label>
+										<div class="panel panel-default filter-selection">
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="uob" type="checkbox" value="TRUE">
+												<label>
+													Yes
+												</label>
+											</div>
+											<div class="checkbox">
+												<input class="check-filter margincheck" data-type="uob" type="checkbox" value="FALSE">
+												<label>
+													No
+												</label>
+											</div>
 										</div>
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="cat" type="checkbox" value="FALSE">
-											<label>
-												No
-											</label>
-										</div>
-									</div>
-								</form>
-							</div>
-						</th>
-						<th>MRG<button id="bt4" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd4"><i class="fa fa-caret-down"></i></button>
-							<div class="filter panel panel-default collapse" id="dd4">
-								<form id="form1" action="#" method="post">
-									<label>Filter</label>
-									<div class="panel panel-default filter-selection">
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="TRUE">
-											<label>
-												Yes
-											</label>
-										</div>
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="FALSE">
-											<label>
-												No
-											</label>
-										</div>
-									</div>
-								</form>
-							</div>
-						</th>
-						<th>UOB<button id="bt5" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd5"><i class="fa fa-caret-down"></i></button>
-							<div class="filter panel panel-default collapse" id="dd5">
-								<form id="form1" action="#" method="post">
-									<label>Filter</label>
-									<div class="panel panel-default filter-selection">
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="uob" type="checkbox" value="TRUE">
-											<label>
-												Yes
-											</label>
-										</div>
-										<div class="checkbox">
-											<input class="check-filter margincheck" data-type="uob" type="checkbox" value="FALSE">
-											<label>
-												No
-											</label>
-										</div>
-									</div>
-								</form>
-							</div>
-						</th>
-					</thead>
-					<tbody id="tbody">@include('vpc/mastertable')</tbody>
-				</table>
-			</div>			
-			<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
-				Page
-				<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{ (isset($count) ? $count : "" )}}">
-				/<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
-				<button id="page_number">Go</button>
+									</form>
+								</div>
+							</th>
+						</thead>
+						<tbody id="tbody">@include('vpc/mastertable')</tbody>
+					</table>
+				</div>
+				<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
+				<div class="col-xs-6" style="margin-left: 200px">
+					Page
+					<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{ (isset($count) ? $count : "" )}}">
+					/<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
+					<button id="page_number">Go</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -252,7 +255,7 @@
 		var json_filters = JSON.stringify(filters);
 		console.log(json_filters);
 
-		$(".spinner_load").css('display', 'table');
+		$(".spinner_load").css('display', 'inline');
 		// Request to API
 	    var request = $.ajax({
 	        url: "/master/filter",
@@ -276,8 +279,8 @@
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 			$("#pagenum").attr({"max" : count_page});
+	    	$(".spinner_load").css('display', 'none');
 	    });
-	    $(".spinner_load").css('display', 'none');
 
 	}
 

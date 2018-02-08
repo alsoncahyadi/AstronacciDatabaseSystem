@@ -346,8 +346,8 @@
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 			$("#pagenum").attr({"max" : count_page});
+	    	$(".spinner_load").css('display', 'none');
 	    });
-	    $(".spinner_load").css('display', 'none');
 
 	}
 
