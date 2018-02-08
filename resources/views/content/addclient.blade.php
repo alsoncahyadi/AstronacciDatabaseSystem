@@ -101,6 +101,8 @@
 							</select>
 						@elseif ($atr == "Start Date")
 							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+						@elseif ($atr == "Payment Date")
+							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 						@elseif ($atr == "Expired Date")
 							<input class="form-control no-spin" type="date" id="expireddate" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
 						@elseif ($atr == "Masa Tenggang")

@@ -292,7 +292,7 @@ class AshopController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $clientsreg_old = $master->ashopTransactions();
+        $clientsreg_old = $master->ashopTransactions()->orderBy('created_at','desc');
         $total = count($clientsreg_old->get());
         $total = ceil($total / $record_amount);
         $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();

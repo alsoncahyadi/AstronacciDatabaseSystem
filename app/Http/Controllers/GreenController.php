@@ -29,7 +29,7 @@ class GreenController extends Controller
 
         // $greens = $this->getData();
         $record_count = GreenProspectClient::count();
-        $greens = GreenProspectClient::skip($record_amount*$page)->take($record_amount)->get();
+        $greens = GreenProspectClient::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($greens as $green) {
             $progress = $green->progresses()->orderBy('created_at','desc')->first();
@@ -245,7 +245,7 @@ class GreenController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $clientsreg_old = $green->progresses();
+        $clientsreg_old = $green->progresses()->orderBy('created_at','desc');
         $total = count($clientsreg_old->get());
         $total = ceil($total / $record_amount);
         $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();

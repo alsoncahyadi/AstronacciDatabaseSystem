@@ -40,7 +40,7 @@ class AClubController extends Controller
 
         // $aclub_members = $this->getData();
         $record_count = AclubMember::count();
-        $aclub_members = AclubMember::skip($record_amount*$page)->take($record_amount)->get();        
+        $aclub_members = AclubMember::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();        
 
         foreach ($aclub_members as $aclub_member) {
             $master = $aclub_member->master;
@@ -530,7 +530,7 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $aclub_transaction_old = $aclub_member->aclubTransactions();
+        $aclub_transaction_old = $aclub_member->aclubTransactions()->orderBy('created_at','desc');
 
         $total = $aclub_transaction_old->count();
         $total = ceil($total / $record_amount);
