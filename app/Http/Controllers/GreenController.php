@@ -182,33 +182,9 @@ class GreenController extends Controller
 
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * ";
-        $query = $query."FROM green_prospect_clients ";
-        $query = $query."LEFT JOIN (SELECT  ";
-        $query = $query."            progress_id, T1.green_id as green_id, date, sales_name,  ";
-        $query = $query."            status, nama_product, nominal, keterangan, created_at, updated_at ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT green_id, max(created_by) as created_by  ";
-        $query = $query."                    FROM green_prospect_progresses  ";
-        $query = $query."                    GROUP BY green_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM green_prospect_progresses) as T2  ";
-        $query = $query."                    ON T1.green_id = T2.green_id  ";
-        $query = $query."                    AND T1.created_by = T2.created_by) as last_transaction  ";
-        $query = $query."ON green_prospect_clients.green_id = last_transaction.green_id";
-
-        // add subquery of filter
-
-        $query = QueryModifier::addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = QueryModifier::addSortSubquery($query, $json_sort, 'green_prospect_clients');
-        // add semicolon
-        $query = $query.";";
-
-        // retrieve result
-        $list_old = DB::select($query);    
+        $query = QueryModifier::queryView('Green', $json_filter, $json_sort);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
 
         $record_count = count($list_old);

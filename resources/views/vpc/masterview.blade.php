@@ -331,7 +331,8 @@
 
 	$("body").click(function(e) {
 		var elem = e.target;
-		if (elem.className =='check-filter'){
+		console.log(elem.className);
+		if (elem.className =='check-filter margincheck'){
 			var filter_type = elem.getAttribute("data-type");
 			var filter_value = elem.value;
 			if (elem.checked) {

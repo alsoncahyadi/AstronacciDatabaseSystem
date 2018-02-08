@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\MasterClient;
 use App\AshopTransaction;
 use App\GreenProspectClient;
+use App\Http\QueryModifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
@@ -284,18 +285,13 @@ class HomeController extends Controller
         $page = $request['page']-1;
         $record_amount = 15;
 
-        $query = "SELECT master_id, name, 
-             IF (master_clients.master_id IN (SELECT master_id FROM cats), 1, 0) as cat,
-             IF (master_clients.master_id IN (SELECT master_id FROM mrgs), 1, 0) as mrg, 
-             IF (master_clients.master_id IN (SELECT master_id FROM uobs), 1, 0) as uob,
-             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Stock'), 1, 0) as stock,
-             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Future'), 1, 0) as future 
-             FROM master_clients;";
-
-        $clients = DB::select($query);
 
         // $example_filter = array('cat' => True);
         $json_filter = $request['filters'];
+
+        $query = QueryModifier::queryView('Master', null, null);
+
+        $clients = DB::select($query['text']);
         
         if ($json_filter != null) {
             $clients = $this->filterClients($clients, $json_filter);

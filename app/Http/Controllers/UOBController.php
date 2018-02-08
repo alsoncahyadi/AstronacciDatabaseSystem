@@ -232,21 +232,10 @@ class UOBController extends Controller
 
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * ";
-        $query = $query."FROM master_clients ";
-        $query = $query."INNER JOIN uobs ";
-        $query = $query."ON uobs.master_id = master_clients.master_id ";
-
-        // add subquery of filter
-        $query = QueryModifier::addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = QueryModifier::addSortSubquery($query, $json_sort, 'uobs');
-        // add semicolon
-        $query = $query.";";
+        $query = QueryModifier::queryView('UOB', $json_filter, $json_sort);
 
         // retrieve result
-        $list_old = DB::select($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);

@@ -28,7 +28,6 @@ class AClubController extends Controller
     }
 
     public function getTable(Request $request) {
-        Log::info("asdf");
         // $keyword = $request['q'];
 
         // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
@@ -340,42 +339,11 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 15;
 
-
         // add 'select' of query
-
-        $query =        "SELECT *, ";
-        $query = $query."(masa_tenggang-expired_date) as bonus, ";
-        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
-        $query = $query."FROM ";
-        $query = $query."master_clients ";
-        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
-        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."LEFT JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
-        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
-        $query = $query."            FROM ";
-        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
-        $query = $query."                    FROM aclub_transactions ";
-        $query = $query."                    GROUP BY user_id) as T1 ";
-        $query = $query."            INNER JOIN ";
-        $query = $query."                ( SELECT *";
-        $query = $query."                   FROM aclub_transactions) as T2 ";
-        $query = $query."                    ON T1.user_id = T2.user_id ";
-        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
-        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
-
-
-
-        // add subquery of filter
-        $query = QueryModifier::addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = QueryModifier::addSortSubquery($query, $json_sort, 'aclub_members');
-        // add semicolon
-        $query = $query.";";
-
-        // dd($json_filter);
+        $query = QueryModifier::queryView('AClub', $json_filter, $json_sort);
 
         // retrieve result
-        $list_old = DB::select($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);        
@@ -425,14 +393,7 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $query = "SELECT * FROM aclub_members ";
-        $query = $query."WHERE (master_id = ".$aclub_master->master_id.") ";
-        $query = $query."AND ";
-        $query = $query."( ";
-        $query = $query."user_id like '%".$keyword."%' ";
-        $query = $query."OR ";
-        $query = $query."aclub_members.group like '%".$keyword."%' ";        
-        $query = $query.") ";
+        $query = QueryModifier::queryAClubClientDetailSearch($aclub_master->master_id, $keyword);
 
         $aclub_members_old = DB::select($query);
 

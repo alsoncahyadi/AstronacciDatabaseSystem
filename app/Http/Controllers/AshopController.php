@@ -26,23 +26,10 @@ class AshopController extends Controller
 
     public function getData()
     {
-        $query = "SELECT * FROM master_clients ";
-        $query = $query."INNER JOIN (SELECT T1.master_id, transaction_id, product_type, product_name,  ";
-        $query = $query."            nominal, T1.created_at, updated_at, created_by, updated_by ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
-        $query = $query."                    FROM ashop_transactions ";
-        $query = $query."                    GROUP BY master_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM ashop_transactions) as T2  ";
-        $query = $query."                    ON T1.master_id = T2.master_id  ";
-        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
-        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
-
-        $query = $query.";";
-
-        $masters = collect(DB::select($query));
+        // add 'select' of query
+        $query = QueryModifier::queryView('AShop', null, null);
+        // dd($query);
+        $masters = collect(DB::select(DB::raw($query['text']), $query['variables']));
 
         return $masters;
     }
@@ -212,30 +199,10 @@ class AshopController extends Controller
         $record_amount = 15;
 
         // add 'select' of query
+        $query = QueryModifier::queryView('AShop', $json_filter, $json_sort);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
-        $query = "SELECT * FROM master_clients ";
-        $query = $query."INNER JOIN (SELECT T1.master_id, transaction_id, product_type, product_name,  ";
-        $query = $query."            nominal, T1.created_at, updated_at, created_by, updated_by ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
-        $query = $query."                    FROM ashop_transactions ";
-        $query = $query."                    GROUP BY master_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM ashop_transactions) as T2  ";
-        $query = $query."                    ON T1.master_id = T2.master_id  ";
-        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
-        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
-        
-        // add subquery of filter
-        $query = QueryModifier::addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = QueryModifier::addSortSubquery($query, $json_sort, 'master_clients');
-        // add semicolon
-        $query = $query.";";
-
-        // retrieve result
-        $list_old = DB::select($query);
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
 
         $record_count = count($list_old);

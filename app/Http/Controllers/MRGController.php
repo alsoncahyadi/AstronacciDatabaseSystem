@@ -234,33 +234,10 @@ class MRGController extends Controller
 
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * ";
-        $query = $query."FROM  ";
-        $query = $query."master_clients  ";
-        $query = $query."INNER JOIN mrgs ON master_clients.master_id = mrgs.master_id  ";
-        $query = $query."LEFT JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
-        $query = $query."            sales_name, T1.created_at, updated_at, created_by, updated_by ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
-        $query = $query."                    FROM mrg_accounts ";
-        $query = $query."                    GROUP BY master_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM mrg_accounts) as T2  ";
-        $query = $query."                    ON T1.master_id = T2.master_id  ";
-        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
-        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
-
-        // add subquery of filter
-        $query = QueryModifier::addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = QueryModifier::addSortSubquery($query, $json_sort, 'mrgs');
-        // add semicolon
-        $query = $query.";";
+        $query = QueryModifier::queryView('MRG', $json_filter, $json_sort);
 
         // retrieve result
-        $list_old = DB::select($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);
@@ -296,16 +273,7 @@ class MRGController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $query = "SELECT * FROM mrg_accounts ";
-        $query = $query."WHERE (master_id = ".$mrg->master_id.") ";
-        $query = $query."AND ";
-        $query = $query."( ";
-        $query = $query."accounts_number like '%".$keyword."%' ";
-        $query = $query."OR ";
-        $query = $query."account_type like '%".$keyword."%' "; 
-        $query = $query."OR ";
-        $query = $query."sales_name like '%".$keyword."%' ";       
-        $query = $query.") ";
+        $query = QueryModifier::queryMRGClientDetailSearch($mrg->master_id, $keyword);
 
         // dd($query);
 

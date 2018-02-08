@@ -254,11 +254,7 @@ class CATController extends Controller
         $record_amount = 15;
 
         // add 'select' of query
-        $query = QueryModifier::queryViewCAT($json_filter, $json_sort);
-        // echo($query['text']);
-        // dd($query['variables']); 
-        // retrieve result
-        // dd($query['variables']);
+        $query = QueryModifier::queryView('CAT', $json_filter, $json_sort);
         // dd($query);
         $list_old = DB::select(DB::raw($query['text']), $query['variables']);
         
