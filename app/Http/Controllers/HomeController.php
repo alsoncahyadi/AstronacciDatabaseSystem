@@ -297,36 +297,36 @@ class HomeController extends Controller
         foreach ($clients as $client) {
             //CAT
             if ($client->cat()->first()) {
-                $client->cat = TRUE;
+                $client->cat = 1;
             } else {
-                $client->cat = FALSE;
+                $client->cat = 0;
             }
 
             //UOB
             if ($client->uob()->first()) {
-                $client->uob = TRUE;
+                $client->uob = 1;
             } else {
-                $client->uob = FALSE;
+                $client->uob = 0;
             }
 
             //MRG
             if ($client->mrg()->first()) {
-                $client->mrg = TRUE;
+                $client->mrg = 1;
             } else {
-                $client->mrg = FALSE;
+                $client->mrg = 0;
             }
 
             //ACLUB
             $aclub_info = $client->aclubInformation()->first();
-            $client->stock = FALSE;
-            $client->future = FALSE;
+            $client->stock = 1;
+            $client->future = 0;
             if ($client->aclubInformation()->first()) {
                 $members = $aclub_info->aclubMembers()->get();
                 foreach ($members as $member) {
                     if ((!$client->stock) && ($member->group == "Stock")) {
-                        $client->stock = TRUE;
+                        $client->stock = 1;
                     } else if ((!$client->future) && ($member->group == "Future")) {
-                        $client->future = TRUE;
+                        $client->future = 1;
                     }
                 }
             }
@@ -367,7 +367,12 @@ class HomeController extends Controller
         foreach ($clients as $client) {
             $passed_filter = True;
             foreach ($filters as $filter => $value) {
-                if ($client[$filter] != $value[0]) {
+                if ($client[$filter]) {
+                    $temp_client_filter = "TRUE";
+                } else {
+                    $temp_client_filter = "FALSE";
+                }
+                if ($temp_client_filter != $value[0]) {
                     $passed_filter = False;
                     $break;
                 }
