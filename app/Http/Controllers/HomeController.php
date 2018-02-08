@@ -8,6 +8,7 @@ use App\GreenProspectClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use DB;
 
 class HomeController extends Controller
 {
@@ -283,60 +284,25 @@ class HomeController extends Controller
         $page = $request['page']-1;
         $record_amount = 15;
 
+        $query = "SELECT master_id, name, 
+             IF (master_clients.master_id IN (SELECT master_id FROM cats), 1, 0) as cat,
+             IF (master_clients.master_id IN (SELECT master_id FROM mrgs), 1, 0) as mrg, 
+             IF (master_clients.master_id IN (SELECT master_id FROM uobs), 1, 0) as uob,
+             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Stock'), 1, 0) as stock,
+             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Future'), 1, 0) as future 
+             FROM master_clients;";
+
+        $clients = DB::select($query);
 
         // $example_filter = array('cat' => True);
         $json_filter = $request['filters'];
-
-        if ($json_filter == null){
-            $record_count = MasterClient::count();
-            $clients = MasterClient::select('name','email','master_id')->skip($record_amount*$page)->take($record_amount)->get();
-        } else {
-            $clients = MasterClient::select('name','email','master_id')->get();
-        }
         
-        foreach ($clients as $client) {
-            //CAT
-            if ($client->cat()->first()) {
-                $client->cat = 1;
-            } else {
-                $client->cat = 0;
-            }
-
-            //UOB
-            if ($client->uob()->first()) {
-                $client->uob = 1;
-            } else {
-                $client->uob = 0;
-            }
-
-            //MRG
-            if ($client->mrg()->first()) {
-                $client->mrg = 1;
-            } else {
-                $client->mrg = 0;
-            }
-
-            //ACLUB
-            $aclub_info = $client->aclubInformation()->first();
-            $client->stock = 1;
-            $client->future = 0;
-            if ($client->aclubInformation()->first()) {
-                $members = $aclub_info->aclubMembers()->get();
-                foreach ($members as $member) {
-                    if ((!$client->stock) && ($member->group == "Stock")) {
-                        $client->stock = 1;
-                    } else if ((!$client->future) && ($member->group == "Future")) {
-                        $client->future = 1;
-                    }
-                }
-            }
-        }
-
         if ($json_filter != null) {
             $clients = $this->filterClients($clients, $json_filter);
-            $record_count = count($clients);
-            $clients = collect(array_slice($clients, $page*$record_amount, $record_amount));
         }
+
+        $record_count = count($clients);
+        $clients = collect(array_slice($clients, $page*$record_amount, $record_amount));
 
         $record_count = ceil($record_count / $record_amount);
 
@@ -367,7 +333,7 @@ class HomeController extends Controller
         foreach ($clients as $client) {
             $passed_filter = True;
             foreach ($filters as $filter => $value) {
-                if ($client[$filter]) {
+                if ($client->$filter) {
                     $temp_client_filter = "TRUE";
                 } else {
                     $temp_client_filter = "FALSE";
