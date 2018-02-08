@@ -146,7 +146,32 @@
 			<!-- /.col-lg-12 -->
 		</div>
 	</div>
+<!-- MODAL TGL LAHIR -->
+	<div id="tgllahir" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Filter</h4>
+				</div>
+				<div class="modal-body">
+					@foreach($filter_birthdates as $filter_birthdate)
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
+						</label>
+					</div>
+					@endforeach
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
@@ -210,21 +235,7 @@
 								@foreach ($headsMaster as $headMaster)
 									@if ($headMaster == 'Tanggal Lahir')
 									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }} 
-									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-										<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-											<form>
-												<label>Filter</label>
-												<div class="panel panel-default filter-selection">
-												@foreach($filter_birthdates as $filter_birthdate)
-													<div class="checkbox">
-														<label>
-															<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
-														</label>
-													</div>
-												@endforeach
-												</div>
-											</form>
-										</div>
+									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" href="#tgllahir"><i class="fa fa-caret-down"></i></button>
 									@else
 									<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@endif
@@ -237,29 +248,41 @@
 								@foreach ($heads as $head => $value)
 								<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
 								@if (isset($filterable[$head]))
-								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
-										<form id="formCities" action="#" method="post">
-											<label>Filter</label>
-											<div class="panel panel-default filter-selection">
-											@foreach ($filterable[$head] as $filter)
+								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+
+									<div id="dd{{$idx}}" class="modal fade" role="dialog">
+									  <div class="modal-dialog">
+
+									    <!-- Modal content-->
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <button type="button" class="close" data-dismiss="modal">&times;</button>
+									        <h4 class="modal-title">Filter</h4>
+									      </div>
+									      <div class="modal-body">
+									        @foreach ($filterable[$head] as $filter)
 												<div class="checkbox">
 													<label>
 														@foreach ($filter as $f)						
 														@if (!MonthDropdownValidator::is_month($f))
-														<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
+														<input {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
 														{{ $f }}
 														@else
-														<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
+														<input {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
 														{{ $f }}
 														@endif
 														@endforeach
 													</label>
 												</div>											
 											@endforeach
-											</div>
-										</form>
-									</div>							
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+
+									  </div>
+									</div>
 								@endif
 								</th>
 								<?php $idx = $idx + 1; ?>
