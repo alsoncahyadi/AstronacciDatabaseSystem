@@ -34,7 +34,7 @@ class CATController extends Controller
 
         // $cats = $this->getData();
         $record_count = CAT::count();
-        $cats = CAT::skip($record_amount*$page)->take($record_amount)->get();
+        $cats = CAT::orderBy('created_at', 'desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($cats as $cat) {
             $master = $cat->master;

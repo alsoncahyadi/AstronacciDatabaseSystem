@@ -29,7 +29,7 @@ class UOBController extends Controller
 
         // $uobs = $this->getData();
         $record_count = Uob::count();
-        $uobs = Uob::skip($record_amount*$page)->take($record_amount)->get();
+        $uobs = Uob::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($uobs as $uob) {
             $master = $uob->master;

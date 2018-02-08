@@ -35,7 +35,7 @@ class MRGController extends Controller
 
         // $mrgs = $this->getData();
         $record_count = MRG::count();
-        $mrgs = MRG::skip($record_amount*$page)->take($record_amount)->get();
+        $mrgs = MRG::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($mrgs as $mrg) {
             $master = $mrg->master;

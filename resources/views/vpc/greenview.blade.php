@@ -146,32 +146,6 @@
 			<!-- /.col-lg-12 -->
 		</div>
 	</div>
-<!-- MODAL TGL LAHIR -->
-	<div id="tgllahir" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-
-			<!-- Modal content-->
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Filter</h4>
-				</div>
-				<div class="modal-body">
-					@foreach($filter_birthdates as $filter_birthdate)
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
-						</label>
-					</div>
-					@endforeach
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-
-		</div>
-	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
@@ -430,25 +404,28 @@
 	    });
 	}
 
-	$(".check-filter").change(function() {
-		var filter_type = $(this).attr("data-type");
-		var filter_value = $(this).val();
-		if ($(this).prop('checked')) {
-			// alert(filter_type + " " + filter_value);
-			if (filters[filter_type]) {
-				filters[filter_type].push(filter_value);
+	$("body").click(function(e) {
+		var elem = e.target;
+		if (elem.className =='check-filter'){
+			var filter_type = elem.getAttribute("data-type");
+			var filter_value = elem.value;
+			if (elem.checked) {
+				// alert(filter_type + " " + filter_value);
+				if (filters[filter_type]) {
+					filters[filter_type].push(filter_value);
+				} else {
+					filters[filter_type] = [];
+					filters[filter_type].push(filter_value);
+				}
 			} else {
-				filters[filter_type] = [];
-				filters[filter_type].push(filter_value);
+				filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
+				if (filters[filter_type].length == 0) {
+					delete filters[filter_type];
+				}
 			}
-		} else {
-			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
-			if (filters[filter_type].length == 0) {
-				delete filters[filter_type];
-			}
+			sortAndFilter(1);
+			$("#pagenum").val("1");
 		}
-		sortAndFilter(1);
-		$("#pagenum").val("1");
 	});
 
 	$("#sort-button").click(function() {

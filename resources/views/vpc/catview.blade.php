@@ -429,13 +429,11 @@
 	}
 
 	$("body").click(function(e) {
-		var Elem = e.target;
-		console.log("lalal");
-		if (Elem.type=='checkbox'){
-			console.log("checkbox");
-			var filter_type = Elem.getAttribute("data-type");
-			var filter_value = Elem.value;
-			if (Elem.checked) {
+		var elem = e.target;
+		if (elem.className =='check-filter'){
+			var filter_type = elem.getAttribute("data-type");
+			var filter_value = elem.value;
+			if (elem.checked) {
 				// alert(filter_type + " " + filter_value);
 				if (filters[filter_type]) {
 					filters[filter_type].push(filter_value);
