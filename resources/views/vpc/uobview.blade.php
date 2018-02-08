@@ -464,25 +464,28 @@
         });
     }
 
-    $(".check-filter").change(function() {
-        var filter_type = $(this).attr("data-type");
-        var filter_value = $(this).val();
-        if ($(this).prop('checked')) {
-            // alert(filter_type + " " + filter_value);
-            if (filters[filter_type]) {
-                filters[filter_type].push(filter_value);
+    $("body").click(function(e) {
+        var elem = e.target;
+        if (elem.className =='check-filter'){
+            var filter_type = elem.getAttribute("data-type");
+            var filter_value = elem.value;
+            if (elem.checked) {
+                // alert(filter_type + " " + filter_value);
+                if (filters[filter_type]) {
+                    filters[filter_type].push(filter_value);
+                } else {
+                    filters[filter_type] = [];
+                    filters[filter_type].push(filter_value);
+                }
             } else {
-                filters[filter_type] = [];
-                filters[filter_type].push(filter_value);
+                filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
+                if (filters[filter_type].length == 0) {
+                    delete filters[filter_type];
+                }
             }
-        } else {
-            filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
-            if (filters[filter_type].length == 0) {
-                delete filters[filter_type];
-            }
+            sortAndFilter(1);
+            $("#pagenum").val("1");
         }
-        sortAndFilter(1);
-        $("#pagenum").val("1");
     });
 
     $("#sort-button").click(function() {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
@@ -12,6 +13,7 @@ use App\AclubTransaction;
 use App\MasterClient;
 use App\Http\QueryModifier;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AClubController extends Controller
 {
@@ -26,6 +28,7 @@ class AClubController extends Controller
     }
 
     public function getTable(Request $request) {
+        Log::info("asdf");
         // $keyword = $request['q'];
 
         // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
