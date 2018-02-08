@@ -106,12 +106,16 @@
 						<thead>
 							<th>ID</th>
 							<th>Name</th>
-							<th style="min-width: 100px">A-CLUB Stocks <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd1"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd1">
-									<form id="form1" action="#" method="post">
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
+							<th style="min-width: 100px">A-CLUB Stocks <button id="bt1" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd1"><i class="fa fa-caret-down"></i></button>
+								<div id="dd1" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title">Filter</h4>
+											</div>
+											<div class="modal-body">
+												<div class="checkbox">
 												<input class="check-filter margincheck" data-type="stock" type="checkbox" value="TRUE">
 												<label>
 													Yes
@@ -123,16 +127,25 @@
 													No
 												</label>
 											</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											</div>
 										</div>
-									</form>
+
+									</div>
 								</div>
 							</th>
-							<th style="min-width: 100px">A-CLUB Futures<button id="bt2" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd2"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd2">
-									<form id="form1" action="#" method="post">
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
+							<th style="min-width: 100px">A-CLUB Futures<button id="bt2" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd2"><i class="fa fa-caret-down"></i></button>
+								<div id="dd2" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title">Filter</h4>
+											</div>
+											<div class="modal-body">
+												<div class="checkbox">
 												<input class="check-filter margincheck" data-type="future" type="checkbox" value="TRUE">
 												<label>
 													Yes
@@ -144,16 +157,25 @@
 													No
 												</label>
 											</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											</div>
 										</div>
-									</form>
+
+									</div>
 								</div>
 							</th>
-							<th style="min-width: 80px">CAT<button id="bt3" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd3"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd3">
-									<form id="form1" action="#" method="post">
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
+							<th style="min-width: 80px">CAT<button id="bt3" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd3"><i class="fa fa-caret-down"></i></button>
+								<div id="dd3" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title">Filter</h4>
+											</div>
+											<div class="modal-body">
+												<div class="checkbox">
 												<input class="check-filter margincheck" data-type="cat" type="checkbox" value="TRUE">
 												<label>
 													Yes
@@ -165,16 +187,25 @@
 													No
 												</label>
 											</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											</div>
 										</div>
-									</form>
+
+									</div>
 								</div>
 							</th>
-							<th style="min-width: 80px">MRG<button id="bt4" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd4"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd4">
-									<form id="form1" action="#" method="post">
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
+							<th style="min-width: 80px">MRG<button id="bt4" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd4"><i class="fa fa-caret-down"></i></button>
+								<div id="dd4" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title">Filter</h4>
+											</div>
+											<div class="modal-body">
+												<div class="checkbox">
 												<input class="check-filter margincheck" data-type="mrg" type="checkbox" value="TRUE">
 												<label>
 													Yes
@@ -186,16 +217,25 @@
 													No
 												</label>
 											</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											</div>
 										</div>
-									</form>
+
+									</div>
 								</div>
 							</th>
-							<th style="min-width: 80px">UOB<button id="bt5" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd5"><i class="fa fa-caret-down"></i></button>
-								<div class="filter panel panel-default collapse" id="dd5">
-									<form id="form1" action="#" method="post">
-										<label>Filter</label>
-										<div class="panel panel-default filter-selection">
-											<div class="checkbox">
+							<th style="min-width: 80px">UOB<button id="bt5" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd5"><i class="fa fa-caret-down"></i></button>
+								<div id="dd5" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal">&times;</button>
+												<h4 class="modal-title">Filter</h4>
+											</div>
+											<div class="modal-body">
+												<div class="checkbox">
 												<input class="check-filter margincheck" data-type="uob" type="checkbox" value="TRUE">
 												<label>
 													Yes
@@ -207,8 +247,13 @@
 													No
 												</label>
 											</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+											</div>
 										</div>
-									</form>
+
+									</div>
 								</div>
 							</th>
 						</thead>
@@ -255,7 +300,7 @@
 		var json_filters = JSON.stringify(filters);
 		console.log(json_filters);
 
-		$(".spinner_load").css('display', 'inline');
+		$(".spinner_load").css('display', 'inline-block');
 		// Request to API
 	    var request = $.ajax({
 	        url: "/master/filter",
