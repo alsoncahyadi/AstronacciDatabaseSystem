@@ -254,25 +254,14 @@ class CATController extends Controller
         $record_amount = 15;
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * "; 
-        $query = $query."FROM master_clients "; 
-        $query = $query."INNER JOIN cats ";
-        $query = $query."ON cats.master_id = master_clients.master_id ";
-    
-
-        // add subquery of filter
-        $query = QueryModifier::addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = QueryModifier::addSortSubquery($query, $json_sort, 'cats');
-        // add semicolon
-        $query = $query.";";
-
-        // dd($json_filter);
-
+        $query = QueryModifier::queryViewCAT($json_filter, $json_sort);
+        // echo($query['text']);
+        // dd($query['variables']); 
         // retrieve result
-        $list_old = DB::select($query);
-
+        // dd($query['variables']);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
+        
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);        
 
