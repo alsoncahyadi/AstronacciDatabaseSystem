@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\MasterClient;
 use App\AshopTransaction;
 use App\GreenProspectClient;
+use App\Http\QueryModifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use DB;
 
 class HomeController extends Controller
 {
@@ -277,46 +279,72 @@ class HomeController extends Controller
         })->export('xls');
     }
 
-    public function masterTable(){
-        $clients = MasterClient::select('name','email','master_id')->get();
-        foreach ($clients as $client) {
-            //CAT
-            if ($client->cat()->first()) {
-                $client->cat = TRUE;
-            } else {
-                $client->cat = FALSE;
-            }
+    public function masterTable(Request $request){
 
-            //UOB
-            if ($client->uob()->first()) {
-                $client->uob = TRUE;
-            } else {
-                $client->uob = FALSE;
-            }
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
 
-            //MRG
-            if ($client->mrg()->first()) {
-                $client->mrg = TRUE;
-            } else {
-                $client->mrg = FALSE;
-            }
 
-            //ACLUB
-            $aclub_info = $client->aclubInformation()->first();
-            $client->stock = FALSE;
-            $client->future = FALSE;
-            if ($client->aclubInformation()->first()) {
-                $members = $aclub_info->aclubMembers()->get();
-                foreach ($members as $member) {
-                    if ((!$client->stock) && ($member->group == "Stock")) {
-                        $client->stock = TRUE;
-                    } else if ((!$client->future) && ($member->group == "Future")) {
-                        $client->future = TRUE;
-                    }
-                }
+        // $example_filter = array('cat' => True);
+        $json_filter = $request['filters'];
+
+        $query = QueryModifier::queryView('Master', null, null);
+
+        $clients = DB::select($query['text']);
+        
+        if ($json_filter != null) {
+            $clients = $this->filterClients($clients, $json_filter);
+        }
+
+        $record_count = count($clients);
+        $clients = collect(array_slice($clients, $page*$record_amount, $record_amount));
+
+        $record_count = ceil($record_count / $record_amount);
+
+        $arr_pair = ['clients' => $clients,
+                    'count' => $record_count];
+
+        if (isset($request['ajax'])) {
+            if ($request['ajax']) {
+                return view('vpc/mastertable', $arr_pair );
+            } else {
+                return view('vpc/masterview', $arr_pair );
+            }
+        } else {
+            return view('vpc/masterview', $arr_pair );
+        }
+    }
+
+    public function filterClients($clients, $json_filter) {
+        $filters = json_decode($json_filter, true);
+        $filtered_clients = [];
+
+        foreach ($filters as $filter => $value) {
+            if (count($value) > 1) {
+                unset($filters[$filter]);
             }
         }
-        return view('vpc/mastertable', ['clients' => $clients] );
+
+        foreach ($clients as $client) {
+            $passed_filter = True;
+            foreach ($filters as $filter => $value) {
+                if ($client->$filter) {
+                    $temp_client_filter = "TRUE";
+                } else {
+                    $temp_client_filter = "FALSE";
+                }
+                if ($temp_client_filter != $value[0]) {
+                    $passed_filter = False;
+                    $break;
+                }
+            }
+            if ($passed_filter) {
+                array_push($filtered_clients, $client);
+            }
+        }
+
+        return $filtered_clients;
     }
 
     /**

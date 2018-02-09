@@ -13,7 +13,7 @@ class MrgTableSeeder extends Seeder
     {
         //
 
-        factory(App\Mrg::class, 20)->create();
+        factory(App\Mrg::class, 10000)->create();
         $this->makeMagicSeedMrg();
     }
 

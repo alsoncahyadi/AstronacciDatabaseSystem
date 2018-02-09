@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
@@ -10,7 +11,9 @@ use App\AclubInformation;
 use App\AclubMember;
 use App\AclubTransaction;
 use App\MasterClient;
+use App\Http\QueryModifier;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AClubController extends Controller
 {
@@ -24,9 +27,19 @@ class AClubController extends Controller
         return $newstring;
     }
 
-    public function getData()
-    {
-        $aclub_members = AclubMember::all();
+    public function getTable(Request $request) {
+        // $keyword = $request['q'];
+
+        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
+        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
+        //         ->paginate(15);
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $aclub_members = $this->getData();
+        $record_count = AclubMember::count();
+        $aclub_members = AclubMember::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();        
 
         foreach ($aclub_members as $aclub_member) {
             $master = $aclub_member->master;
@@ -103,22 +116,6 @@ class AClubController extends Controller
             $aclub_member->sumber_data = $aclub_info->sumber_data;
         }
 
-        return $aclub_members;
-    }
-
-    public function getTable(Request $request) {
-        // $keyword = $request['q'];
-
-        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
-        //         ->paginate(15);
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $aclub_members = $this->getData();
-        $record_count = count($aclub_members);
-        $aclub_members = $aclub_members->forPage(1, $record_amount);
         // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
         // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
@@ -307,7 +304,7 @@ class AClubController extends Controller
         // test
 
          $attsMaster = [
-                        "master_id",
+                        "user_id",
                         "name",
                         "email",
                         "telephone_number",
@@ -342,38 +339,11 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 15;
 
-
         // add 'select' of query
-
-        $query =        "SELECT *, ";
-        $query = $query."(masa_tenggang-expired_date) as bonus, ";
-        $query = $query."IF(masa_tenggang > NOW(), 'Aktif', 'Tidak Aktif') as aktif ";
-        $query = $query."FROM ";
-        $query = $query."master_clients ";
-        $query = $query."INNER JOIN aclub_informations ON master_clients.master_id = aclub_informations.master_id ";
-        $query = $query."INNER JOIN aclub_members ON master_clients.master_id = aclub_members.master_id ";
-        $query = $query."LEFT JOIN (SELECT  T1.user_id as user_id, transaction_id, payment_date, kode, status, ";
-        $query = $query."         start_date, expired_date, T1.masa_tenggang, yellow_zone, red_zone, sales_name ";
-        $query = $query."            FROM ";
-        $query = $query."                ( SELECT user_id, max(masa_tenggang) as masa_tenggang ";
-        $query = $query."                    FROM aclub_transactions ";
-        $query = $query."                    GROUP BY user_id) as T1 ";
-        $query = $query."            INNER JOIN ";
-        $query = $query."                ( SELECT *";
-        $query = $query."                   FROM aclub_transactions) as T2 ";
-        $query = $query."                    ON T1.user_id = T2.user_id ";
-        $query = $query."                    AND T1.masa_tenggang = T2.masa_tenggang) as last_transaction ";
-        $query = $query."ON aclub_members.user_id = last_transaction.user_id ";
-
-        // add subquery of filter
-        $query = $this->addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
-        // add semicolon
-        $query = $query.";";
+        $query = QueryModifier::queryView('AClub', $json_filter, $json_sort);
 
         // retrieve result
-        $list_old = DB::select($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);        
@@ -401,78 +371,6 @@ class AClubController extends Controller
         // return $list;
     }
  
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
-
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-
-        if (empty($sort)) {
-            return $query;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
-        }
-        $query = $query.$subquery;
-        return $query;
-    }
-
-
-
 
     public function clientDetail($id, Request $request) {
         // detail master dengan master_id = $id
@@ -495,14 +393,7 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $query = "SELECT * FROM aclub_members ";
-        $query = $query."WHERE (master_id = ".$aclub_master->master_id.") ";
-        $query = $query."AND ";
-        $query = $query."( ";
-        $query = $query."user_id like '%".$keyword."%' ";
-        $query = $query."OR ";
-        $query = $query."aclub_members.group like '%".$keyword."%' ";        
-        $query = $query.") ";
+        $query = QueryModifier::queryAClubClientDetailSearch($aclub_master->master_id, $keyword);
 
         $aclub_members_old = DB::select($query);
 
@@ -600,9 +491,9 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $aclub_transaction_old = $aclub_member->aclubTransactions();
+        $aclub_transaction_old = $aclub_member->aclubTransactions()->orderBy('created_at','desc');
 
-        $total = count($aclub_transaction_old->get());
+        $total = $aclub_transaction_old->count();
         $total = ceil($total / $record_amount);
 
         $aclub_transaction = $aclub_transaction_old->skip($record_amount*$page)->take($record_amount)->get();
@@ -853,8 +744,18 @@ class AClubController extends Controller
             $aclub_trans->masa_tenggang = $request->masa_tenggang;
             $aclub_trans->yellow_zone = $request->yellow_zone;
             $aclub_trans->red_zone = $request->red_zone;
+            
+            $aclub_member = $aclub_trans->aclubMember;
+            if (substr($aclub_trans->kode, -2, 1) == "S") {
+                $aclub_member->group = "Stock";
+            } else if (substr($aclub_trans->kode, -2, 1) == "F") {
+                $aclub_member->group = "Future";
+            }  else if (substr($aclub_trans->kode, -2, 1) == "R") {
+                $aclub_member->group = "RD";
+            }
 
             $aclub_trans->update();
+            $aclub_member->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
@@ -925,17 +826,17 @@ class AClubController extends Controller
         $datas = AclubTransaction::all();
 
         foreach ($datas as $data) {
-            $member = $data->aclubMember->first();
+            $member = $data->aclubMember;
 
             $data->master_id = $member->master_id;
             $data->group = $member->group;
 
-            $info = $member->aclubInformation->first();
+            $info = $member->aclubInformation;
 
             $data->sumber_data = $info->sumber_data;
             $data->keterangan = $info->keterangan;
 
-            $master = $member->master->first();
+            $master = $member->master;
 
             $data->redclub_user_id = $master->redclub_user_id;
             $data->redclub_password = $master->redclub_password;

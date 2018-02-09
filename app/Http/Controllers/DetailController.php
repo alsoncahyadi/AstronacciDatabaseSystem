@@ -172,15 +172,15 @@ class DetailController extends Controller
         }
 
         $ins_cat = [
-                "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data"
                 ];
 
         $heads_cat = ["User ID" => "user_id",
-                "Nomor Induk" => "nomor_induk",
                 "Batch" => "batch",
                 "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data"
                 ];
 
         $insreg_cat = [ "Nomer Induk" => 'nomor_induk',
@@ -274,8 +274,7 @@ class DetailController extends Controller
         }
 
         $ins_mrg = ["Sumber Data MRG" => "sumber_data",
-                "Join Date MRG" => "join_date",
-                "Sales" => "sales_name"];
+                "Join Date MRG" => "join_date"];
 
         $heads_mrg = $ins_mrg;
 

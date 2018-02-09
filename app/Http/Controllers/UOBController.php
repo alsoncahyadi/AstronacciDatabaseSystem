@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
 use App\Uob;
+use App\Http\QueryModifier;
 use App\MasterClient;
 
 class UOBController extends Controller
@@ -21,9 +22,14 @@ class UOBController extends Controller
         return $newstring;
     }
 
-    public function getData()
-    {
-        $uobs = Uob::all();
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $uobs = $this->getData();
+        $record_count = Uob::count();
+        $uobs = Uob::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($uobs as $uob) {
             $master = $uob->master;
@@ -41,18 +47,6 @@ class UOBController extends Controller
             $uob->whatsapp = $master->whatsapp;
             $uob->facebook = $master->facebook;
         }
-
-        return $uobs;
-    }
-
-    public function getTable(Request $request) {
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $uobs = $this->getData();
-        $record_count = count($uobs);
-        $uobs = $uobs->forPage(1, $record_amount);
 
         $page_count = ceil($record_count/$record_amount);
 
@@ -238,21 +232,10 @@ class UOBController extends Controller
 
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * ";
-        $query = $query."FROM master_clients ";
-        $query = $query."INNER JOIN uobs ";
-        $query = $query."ON uobs.master_id = master_clients.master_id ";
-
-        // add subquery of filter
-        $query = $this->addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
-        // add semicolon
-        $query = $query.";";
+        $query = QueryModifier::queryView('UOB', $json_filter, $json_sort);
 
         // retrieve result
-        $list_old = DB::select($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);
@@ -267,76 +250,6 @@ class UOBController extends Controller
                         'count' => $page_count
                     ]);
         // return $list;
-    }
- 
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
-
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-
-        if (empty($sort)) {
-            return $query;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
-        }
-        $query = $query.$subquery;
-        return $query;
     }
 
     public function clientDetail($id) {
@@ -576,7 +489,7 @@ class UOBController extends Controller
         $data = UOB::all();
 
         foreach ($data as $dat) {
-            $master = $dat->master->first();
+            $master = $dat->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;

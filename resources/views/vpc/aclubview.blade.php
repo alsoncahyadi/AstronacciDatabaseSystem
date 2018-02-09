@@ -1,3 +1,4 @@
+<?php use App\MonthDropdownValidator; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -145,7 +146,32 @@
 			<!-- /.col-lg-12 -->
 		</div>
 	</div>
+	<!-- MODAL TGL LAHIR -->
+	<div id="tgllahir" class="modal fade" role="dialog">
+		<div class="modal-dialog">
 
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Filter</h4>
+				</div>
+				<div class="modal-body">
+					@foreach($filter_birthdates as $filter_birthdate)
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
+						</label>
+					</div>
+					@endforeach
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
@@ -214,24 +240,13 @@
 								<?php $idx = 1 ?>
 								<th class="fixed-side collumn-select" scope="col" style="min-width: 75px;"> Select <input id="selectAll" class="dd" style="margin-bottom:0px " type="checkbox" value=""> </th>
 								<!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
+
 								@foreach ($headsMaster as $headMaster)
 									@if ($headMaster == 'Tanggal Lahir')
 									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }} 
-									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-										<div class="filter panel panel-default collapse" id="dd{{$idx}}" style="margin-left:98px;">
-											<form>
-												<label>Filter</label>
-												<div class="panel panel-default filter-selection">
-												@foreach($filter_birthdates as $filter_birthdate)
-													<div class="checkbox">
-														<label>
-															<input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
-														</label>
-													</div>
-												@endforeach
-												</div>
-											</form>
-										</div>
+									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" href="#tgllahir"><i class="fa fa-caret-down"></i></button>
+
+										
 									@else
 									<th class="fixed-side" scope="col"> {{ $headMaster }} 
 									@endif
@@ -244,8 +259,45 @@
 								@foreach ($heads as $head => $value)
 								<th style="white-space: nowrap; min-width: 180px"> <div style="display: inline-block;">{{$head}}</div>
 								@if (isset($filterable[$head]))
-								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="collapse" href="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
-									<div class="filter panel panel-default collapse" id="dd{{$idx}}">
+								<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" data-target="#dd{{$idx}}"><i class="fa fa-caret-down"></i></button>
+
+									<div id="dd{{$idx}}" class="modal fade" role="dialog">
+									  <div class="modal-dialog">
+
+									    <!-- Modal content-->
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <button type="button" class="close" data-dismiss="modal">&times;</button>
+									        <h4 class="modal-title">Filter</h4>
+									      </div>
+									      <div class="modal-body">
+									        @foreach ($filterable[$head] as $filter)
+												<div class="checkbox">
+													<label>
+														@foreach ($filter as $f)						
+														@if (!MonthDropdownValidator::is_month($f))
+														<input {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
+														{{ $f }}
+														@else
+														<input {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
+														{{ $f }}
+														@endif
+														@endforeach
+													</label>
+												</div>											
+											@endforeach
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+
+									  </div>
+									</div>
+
+
+
+									<!-- <div class="modal fade" role="dialog" id="dd{{$idx}}">
 										<form id="formCities" action="#" method="post">
 											<label>Filter</label>
 											<div class="panel panel-default filter-selection">
@@ -253,12 +305,11 @@
 												<div class="checkbox">
 													<label>
 														@foreach ($filter as $f)						
-														<?php $m = date('m', strtotime($f))?>
-														@if (($m == 01)&&($f != 'January'))
-														<input input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
+														@if (!MonthDropdownValidator::is_month($f))
+														<input input HARUSNYA BUKAN BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
 														{{ $f }}
 														@else
-														<input class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
+														<input HARUSNYA BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
 														{{ $f }}
 														@endif
 														@endforeach
@@ -267,7 +318,7 @@
 											@endforeach
 											</div>
 										</form>
-									</div>							
+									</div>				 -->			
 								@endif
 								</th>
 								<?php $idx = $idx + 1; ?>
@@ -275,23 +326,6 @@
 
 							</tr>
 						</thead>
-						<!-- <tbody>
-							<?php $idx = 0 ?>
-							@foreach ($clients as $client)
-								<tr>
-									<td class="fixed-side collumn-select" style="text-align:center; padding-bottom: 0px">
-										<input class="selectable" id="{{ $client->user_id }}" onchange="" type="checkbox" style="" name="assigned{{ $idx }}">
-										<input type="hidden" name="id{{ $idx }}" value="">
-									@foreach ($attsMaster as $attMaster)
-										<td class="fixed-side" style="white-space: nowrap;"> {{ $client->$attMaster }}</td>
-									@endforeach
-									@foreach ($atts as $att)
-										<td style="max-width: 100px; white-space: nowrap;"> <a id="{{$att}}_{{$client->user_id}}" target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
-									@endforeach
-								</tr>
-							<?php $idx = $idx + 1; ?>
-							@endforeach
-						</tbody> -->
 						<tbody id="tbody">							
 						@include('vpc/aclubtable')</tbody>
 						<input type="hidden" name="numusers" value="{{ $idx }}">
@@ -390,6 +424,7 @@
 
 		console.log(json_sorts);
 		$(".spinner_load").css('display', 'table');
+		console.log("spinner on");
 		// Request to API
 	    var request = $.ajax({
 	        url: "/AClub/filter",
@@ -413,9 +448,9 @@
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 			$("#pagenum").attr({"max" : count_page});
+		    $(".spinner_load").css('display', 'none');
+		    console.log("spinner off");
 	    });
-	    $(".spinner_load").css('display', 'none');
-
 	}
 
 	function gotoPage() {
@@ -473,25 +508,28 @@
 	    });
 	}
 
-	$(".check-filter").change(function() {
-		var filter_type = $(this).attr("data-type");
-		var filter_value = $(this).val();
-		if ($(this).prop('checked')) {
-			// alert(filter_type + " " + filter_value);
-			if (filters[filter_type]) {
-				filters[filter_type].push(filter_value);
+	$("body").click(function(e) {
+		var elem = e.target;
+		if (elem.className =='check-filter'){
+			var filter_type = elem.getAttribute("data-type");
+			var filter_value = elem.value;
+			if (elem.checked) {
+				// alert(filter_type + " " + filter_value);
+				if (filters[filter_type]) {
+					filters[filter_type].push(filter_value);
+				} else {
+					filters[filter_type] = [];
+					filters[filter_type].push(filter_value);
+				}
 			} else {
-				filters[filter_type] = [];
-				filters[filter_type].push(filter_value);
+				filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
+				if (filters[filter_type].length == 0) {
+					delete filters[filter_type];
+				}
 			}
-		} else {
-			filters[filter_type].splice($.inArray(filter_value, filters[filter_type]),1);
-			if (filters[filter_type].length == 0) {
-				delete filters[filter_type];
-			}
+			sortAndFilter(1);
+			$("#pagenum").val("1");
 		}
-		sortAndFilter(1);
-		$("#pagenum").val("1");
 	});
 
 	$("#sort-button").click(function() {

@@ -8,6 +8,7 @@ use Excel;
 use DB;
 use App\AshopTransaction;
 use App\MasterClient;
+use App\Http\QueryModifier;
 
 class AshopController extends Controller
 {
@@ -25,23 +26,10 @@ class AshopController extends Controller
 
     public function getData()
     {
-        $query = "SELECT * FROM master_clients ";
-        $query = $query."INNER JOIN (SELECT T1.master_id, transaction_id, product_type, product_name,  ";
-        $query = $query."            nominal, T1.created_at, updated_at, created_by, updated_by ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
-        $query = $query."                    FROM ashop_transactions ";
-        $query = $query."                    GROUP BY master_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM ashop_transactions) as T2  ";
-        $query = $query."                    ON T1.master_id = T2.master_id  ";
-        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
-        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
-
-        $query = $query.";";
-
-        $masters = collect(DB::select($query));
+        // add 'select' of query
+        $query = QueryModifier::queryView('AShop', null, null);
+        // dd($query);
+        $masters = collect(DB::select(DB::raw($query['text']), $query['variables']));
 
         return $masters;
     }
@@ -108,7 +96,7 @@ class AshopController extends Controller
         // $this->getFilteredAndSortedTable('test');
 
         $joined = DB::table('master_clients')
-                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+                    ->join('ashop_transactions', 'ashop_transactions.master_id', '=', 'master_clients.master_id');
 
         $filter_cities = $joined->select('city')->distinct()->get();
         $filter_gender = $joined->select('gender')->distinct()->get();
@@ -211,30 +199,10 @@ class AshopController extends Controller
         $record_amount = 15;
 
         // add 'select' of query
+        $query = QueryModifier::queryView('AShop', $json_filter, $json_sort);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
-        $query = "SELECT * FROM master_clients ";
-        $query = $query."INNER JOIN (SELECT T1.master_id, transaction_id, product_type, product_name,  ";
-        $query = $query."            nominal, T1.created_at, updated_at, created_by, updated_by ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
-        $query = $query."                    FROM ashop_transactions ";
-        $query = $query."                    GROUP BY master_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM ashop_transactions) as T2  ";
-        $query = $query."                    ON T1.master_id = T2.master_id  ";
-        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
-        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
-        
-        // add subquery of filter
-        $query = $this->addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
-        // add semicolon
-        $query = $query.";";
-
-        // retrieve result
-        $list_old = DB::select($query);
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
 
         $record_count = count($list_old);
@@ -249,78 +217,8 @@ class AshopController extends Controller
                     ]);
         // return $list;
     }
- 
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
 
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-
-        if (empty($sort)) {
-            return $query;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
-        }
-        $query = $query.$subquery;
-        return $query;
-    }
-
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         $master = MasterClient::find($id);
 
         //judul + sql
@@ -357,8 +255,20 @@ class AshopController extends Controller
           "Facebook" => "facebook"
                 ];
 
-        $clientsreg = $master->ashopTransactions()->get();
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
 
+        $clientsreg_old = $master->ashopTransactions()->orderBy('created_at','desc');
+        $total = count($clientsreg_old->get());
+        $total = ceil($total / $record_amount);
+        $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();
+
+        $page = $page + 1;
+
+        if ($page < 1) {
+            $page = 1;
+        }
         //form transaction
         $insreg = [ "Product Type",
                     "Nama Product",
@@ -373,12 +283,16 @@ class AshopController extends Controller
 
         $attsreg = ["product_type", "product_name", "nominal"];
 
-        return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 'attsreg' => $attsreg]);
+        return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 
+            'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
+            'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 
+            'attsreg' => $attsreg, 'count' => $total, 'page' => $page
+        ]);
     }
 
      public function editClient(Request $request) {
+
          $this->validate($request, [
-                'master_id' => 'required|unique:master_clients',
                 'redclub_user_id' => '',
                 'name' => '',
                 'telephone_number' => '',
@@ -603,7 +517,7 @@ class AshopController extends Controller
     {
         $ashop = AshopTransaction::where('transaction_id', $id)->first();
 
-        $ins = ["Product" => "product_type",
+        $ins = ["Product Type" => "product_type",
                 "Nama Product" => "product_name",
                 "Nominal" => "nominal"];
         //dd($aclub_transaction);
@@ -615,7 +529,7 @@ class AshopController extends Controller
         $data = AshopTransaction::all();
 
         foreach ($data as $dat) {
-            $master = $dat->master->first();
+            $master = $dat->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Cat;
 use App\MasterClient;
+use App\Http\QueryModifier;
 
 class CATController extends Controller
 {
@@ -21,9 +22,19 @@ class CATController extends Controller
         return $newstring;
     }
 
-    public function getData()
-    {
-        $cats = Cat::all();
+    public function getTable(Request $request) {
+        // $keyword = $request['q'];
+
+        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
+        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
+        //         ->paginate(15);
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $cats = $this->getData();
+        $record_count = CAT::count();
+        $cats = CAT::orderBy('created_at', 'desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($cats as $cat) {
             $master = $cat->master;
@@ -38,23 +49,6 @@ class CATController extends Controller
             $cat->line_id = $master->line_id;
             $cat->whatsapp = $master->whatsapp;
         }
-
-        return $cats;
-    }
-
-    public function getTable(Request $request) {
-        // $keyword = $request['q'];
-
-        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
-        //         ->paginate(15);
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $cats = $this->getData();
-        $record_count = count($cats);
-        $cats = $cats->forPage(1, $record_amount);
         // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
         // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
@@ -227,9 +221,8 @@ class CATController extends Controller
         // $json_filter = json_encode($example_filter);
         // $json_sort = json_encode($example_sort);
         // test
-
         $attsMaster = [
-                        "master_id",
+                        "user_id",
                         "name",
                         "email",
                         "telephone_number",
@@ -261,23 +254,10 @@ class CATController extends Controller
         $record_amount = 15;
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * "; 
-        $query = $query."FROM master_clients "; 
-        $query = $query."INNER JOIN cats ";
-        $query = $query."ON cats.master_id = master_clients.master_id ";
-    
-
-        // add subquery of filter
-        $query = $this->addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
-        // add semicolon
-        $query = $query.";";
-
-        // retrieve result
-        $list_old = DB::select($query);
-
+        $query = QueryModifier::queryView('CAT', $json_filter, $json_sort);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
+        
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);        
 
@@ -293,77 +273,6 @@ class CATController extends Controller
                         'count' => $page_count
                     ]);
         // return $list;
-    }
- 
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
-
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date', "DP_date", "payment_date", "tanggal_opening_class", 
-                "tanggal_end_class", "tanggal_ujian"])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-
-        if (empty($sort)) {
-            return $query;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
-        }
-        $query = $query.$subquery;
-        return $query;
     }
 
     public function clientDetail($id) {
@@ -450,9 +359,9 @@ class CATController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'nomor_induk' => 'required',
+                'sales_name' => '',
                 'batch' => '',
-                'sales_name' => ''
+                'sumber_data' => ''
             ]);
         $cat = Cat::where('user_id',$request->user_id)->first();
         //Inisialisasi array error
@@ -462,7 +371,7 @@ class CATController extends Controller
             $cat->user_id = $request->user_id;
             $cat->nomor_induk = $request->nomor_induk;
             $cat->batch = $request->batch;
-            $cat->sales_name = $request->sales_name;
+            $cat->sumber_data = $request->sumber_data;
 
             $cat->update();
         } catch(\Illuminate\Database\QueryException $ex){
@@ -564,7 +473,7 @@ class CATController extends Controller
         $data = Cat::all();
 
         foreach ($data as $dat) {
-            $master = $dat->master->first();
+            $master = $dat->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;

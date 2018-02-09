@@ -5,7 +5,7 @@ $factory->define(App\GreenProspectProgress::class, function (Faker\Generator $fa
         'green_id' => $faker->unique()->randomElement(App\GreenProspectClient::pluck('green_id')->toArray()),
         'date' => $faker->dateTimeBetween($startDate = "now", $endDate = "30 days")->format('Y-m-d'),
         'sales_name' =>  $faker->name,
-        'status' => $faker->randomElement(['GOAL-BUY', 'GOAL-JOIN','NO ANSWER', 'NO GOAL', 'IN PROGRESS']), 
+        'status' => $faker->randomElement(['GOAL-BUY', 'GOAL-JOIN','NO ANSWER', 'TIDAK GOAL', 'DALAM PROGRESS']), 
         'nama_product' => $faker->randomElement(['UOB','CAT','A-CLUB','MRG']), 
         'nominal' => $faker->randomNumber($nbDigits = 2)*10000,
         'keterangan' => '-',

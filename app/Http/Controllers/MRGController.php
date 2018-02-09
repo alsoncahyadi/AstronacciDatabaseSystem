@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\Http\QueryModifier;
 use App\Mrg;
 use App\MrgAccount;
 use App\MasterClient;
@@ -20,11 +21,21 @@ class MRGController extends Controller
            return null;
         }
         return $newstring;
-    }
+    }    
 
-    public function getData()
-    {
-        $mrgs = MRG::all();
+    public function getTable(Request $request) {
+        // $keyword = $request['q'];
+
+        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
+        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
+        //         ->paginate(15);
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $mrgs = $this->getData();
+        $record_count = MRG::count();
+        $mrgs = MRG::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($mrgs as $mrg) {
             $master = $mrg->master;
@@ -54,22 +65,6 @@ class MRGController extends Controller
             }
         }
 
-        return $mrgs;
-    }
-
-    public function getTable(Request $request) {
-        // $keyword = $request['q'];
-
-        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
-        //         ->paginate(15);
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $mrgs = $this->getData();
-        $record_count = count($mrgs);
-        $mrgs = $mrgs->forPage(1, $record_amount);
         // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
         // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
 
@@ -239,33 +234,10 @@ class MRGController extends Controller
 
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * ";
-        $query = $query."FROM  ";
-        $query = $query."master_clients  ";
-        $query = $query."INNER JOIN mrgs ON master_clients.master_id = mrgs.master_id  ";
-        $query = $query."LEFT JOIN (SELECT  accounts_number, T1.master_id, account_type,  ";
-        $query = $query."            sales_name, T1.created_at, updated_at, created_by, updated_by ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT master_id, max(created_at) as created_at  ";
-        $query = $query."                    FROM mrg_accounts ";
-        $query = $query."                    GROUP BY master_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM mrg_accounts) as T2  ";
-        $query = $query."                    ON T1.master_id = T2.master_id  ";
-        $query = $query."                    AND T1.created_at = T2.created_at) as last_transaction  ";
-        $query = $query."ON master_clients.master_id = last_transaction.master_id ";
-
-        // add subquery of filter
-        $query = $this->addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
-        // add semicolon
-        $query = $query.";";
+        $query = QueryModifier::queryView('MRG', $json_filter, $json_sort);
 
         // retrieve result
-        $list_old = DB::select($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
         $page_count = ceil($record_count/$record_amount);
@@ -281,76 +253,6 @@ class MRGController extends Controller
                         'count' => $page_count
                     ]);
         // return $list;
-    }
- 
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
-
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-
-        if (empty($sort)) {
-            return $query;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
-        }
-        $query = $query.$subquery;
-        return $query;
     }
 
     public function clientDetail($id, Request $request) {
@@ -371,16 +273,7 @@ class MRGController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $query = "SELECT * FROM mrg_accounts ";
-        $query = $query."WHERE (master_id = ".$mrg->master_id.") ";
-        $query = $query."AND ";
-        $query = $query."( ";
-        $query = $query."accounts_number like '%".$keyword."%' ";
-        $query = $query."OR ";
-        $query = $query."account_type like '%".$keyword."%' "; 
-        $query = $query."OR ";
-        $query = $query."sales_name like '%".$keyword."%' ";       
-        $query = $query.") ";
+        $query = QueryModifier::queryMRGClientDetailSearch($mrg->master_id, $keyword);
 
         // dd($query);
 
@@ -590,12 +483,12 @@ class MRGController extends Controller
         $data = MrgAccount::all();
 
         foreach ($data as $dat) {
-            $mrg = $dat->mrg->first();
+            $mrg = $dat->mrg;
 
             $dat->sumber_data = $mrg->sumber_data;
             $dat->join_date = $mrg->join_date;
 
-            $master = $mrg->master->first();
+            $master = $mrg->master;
 
             $dat->redclub_user_id = $master->redclub_user_id;
             $dat->redclub_password = $master->redclub_password;

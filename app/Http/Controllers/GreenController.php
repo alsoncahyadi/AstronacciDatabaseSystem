@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Input;
 use Excel;
 use App\GreenProspectClient;
 use App\GreenProspectProgress;
+use App\Http\QueryModifier;
 use DB;
 
 class GreenController extends Controller
@@ -19,46 +20,16 @@ class GreenController extends Controller
            return null;
         }
         return $newstring;
-    }
+    }    
 
-    // public function getTable() {
-    //     $clients = GreenProspectClient::paginate(15);
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
 
-    //     $heads = ["Green ID",
-    //                 "Name",
-    //                 "Date",
-    //                 "Phone",
-    //                 "Email",
-    //                 "Interest",
-    //                 "Pemberi",
-    //                 "Sumber Data",
-    //                 "Keterangan Perintah"];
-
-    //     $ins = ["Name",
-    //                 "Date",
-    //                 "Phone",
-    //                 "Email",
-    //                 "Interest",
-    //                 "Pemberi",
-    //                 "Sumber Data",
-    //                 "Keterangan Perintah"];
-
-    //     $atts = ["green_id",
-    //                 "name",
-    //                 "date",
-    //                 "phone",
-    //                 "email",
-    //                 "interest",
-    //                 "pemberi",
-    //                 "sumber_data",
-    //                 "keterangan_perintah"];
-
-    //     return view('content/table', ['route' => 'green', 'clients' => $clients, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins]);
-    // }
-
-    public function getData()
-    {
-        $greens = GreenProspectClient::all();
+        // $greens = $this->getData();
+        $record_count = GreenProspectClient::count();
+        $greens = GreenProspectClient::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($greens as $green) {
             $progress = $green->progresses()->orderBy('created_at','desc')->first();
@@ -73,18 +44,6 @@ class GreenController extends Controller
             }
             
         }
-
-        return $greens;
-    }
-
-    public function getTable(Request $request) {
-        $page = 0;
-        $page = $request['page']-1;
-        $record_amount = 15;
-
-        $greens = $this->getData();
-        $record_count = count($greens);
-        $greens = $greens->forPage(1, $record_amount);
 
         $page_count = ceil($record_count/$record_amount);
 
@@ -223,33 +182,9 @@ class GreenController extends Controller
 
 
         // add 'select' of query
-        $query = "";
-        $query = $query."SELECT * ";
-        $query = $query."FROM green_prospect_clients ";
-        $query = $query."LEFT JOIN (SELECT  ";
-        $query = $query."            progress_id, T1.green_id as green_id, date, sales_name,  ";
-        $query = $query."            status, nama_product, nominal, keterangan, created_at, updated_at ";
-        $query = $query."            FROM  ";
-        $query = $query."                ( SELECT green_id, max(created_by) as created_by  ";
-        $query = $query."                    FROM green_prospect_progresses  ";
-        $query = $query."                    GROUP BY green_id) as T1  ";
-        $query = $query."            INNER JOIN  ";
-        $query = $query."                ( SELECT * ";
-        $query = $query."                   FROM green_prospect_progresses) as T2  ";
-        $query = $query."                    ON T1.green_id = T2.green_id  ";
-        $query = $query."                    AND T1.created_by = T2.created_by) as last_transaction  ";
-        $query = $query."ON green_prospect_clients.green_id = last_transaction.green_id";
-
-        // add subquery of filter
-
-        $query = $this->addFilterSubquery($query, $json_filter);
-        // add subquery of sort
-        $query = $this->addSortSubquery($query, $json_sort);
-        // add semicolon
-        $query = $query.";";
-
-        // retrieve result
-        $list_old = DB::select($query);    
+        $query = QueryModifier::queryView('Green', $json_filter, $json_sort);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
 
         $record_count = count($list_old);
@@ -266,77 +201,7 @@ class GreenController extends Controller
         // return $list;
     }
  
-    // RETURN : STRING QUERY FOR FILTER IN SQL 
-    // NOTE : WITHOUT SEMICOLON
-    public function addFilterSubquery($query, $json_filter) {
-        $filter = json_decode($json_filter, true);
-
-        if (empty($filter)) {
-            return $query;
-        }
-
-        // add 'where' of query
-        $query = $query.' WHERE ';        
-        $is_first = true;
-        foreach ($filter as $key_filter => $values_filter) {
-            if (!$is_first) {
-                $query = $query." and ";
-            }
-            $idx_filter = 0;
-            $query = $query.'(';
-
-            if (in_array($key_filter, ['birthdate','payment_date'])) {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query."MONTH(".$key_filter.")"." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }   
-                 }
-            } else {
-                $idx_value = 0;
-                foreach ($values_filter as $value_filter) {
-                    $query = $query.$key_filter." = '".$value_filter."'";
-                    $idx_value += 1;
-                    if ($idx_value != count($values_filter)) {
-                        $query = $query." or ";
-                    }
-                 }
-            }
-            $query = $query.')';
-            $is_first = false;
-        }   
-
-        // get result
-        return $query;
-    }
-
-    public function addSortSubquery($query, $json_sort) {
-        $sort = json_decode($json_sort, true);
-
-        if (empty($sort)) {
-            return $query;
-        }
-        
-        $subquery = " ORDER BY ";
-        $idx_sort = 0;
-        foreach ($sort as $key_sort => $value_sort) {
-            if ($value_sort == true) {
-                $subquery = $subquery.$key_sort." ASC";            
-            } else {
-                $subquery = $subquery.$key_sort." DESC";                            
-            }
-            $idx_sort += 1;
-            if ($idx_sort != count($sort)) {
-                $subquery = $subquery.", ";
-            }
-        }
-        $query = $query.$subquery;
-        return $query;
-    }
-
-    public function clientDetail($id) {
+    public function clientDetail($id, Request $request) {
         //Select seluruh data client $id yang ditampilkan di detail
         $green = GreenProspectClient::where('green_id', $id)->first();
 
@@ -351,9 +216,21 @@ class GreenController extends Controller
                 "Keterangan Perintah"   => "keterangan_perintah"];
 
         $heads = $ins;
+        
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
 
-        $clientsreg = $green->progresses()->get();
+        $clientsreg_old = $green->progresses()->orderBy('created_at','desc');
+        $total = count($clientsreg_old->get());
+        $total = ceil($total / $record_amount);
+        $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();
 
+        $page = $page + 1;
+
+        if ($page < 1) {
+            $page = 1;
+        }
         // form progress
         $insreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
         
@@ -363,7 +240,11 @@ class GreenController extends Controller
         //attribute sql account
         $attsreg = ["date", "sales_name", "status", "nama_product", "nominal", "keterangan"];
 
-        return view('profile/profile', ['route'=>'Green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg]);
+        return view('profile/profile', ['route'=>'Green', 'client'=>$green, 
+                'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
+                'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 
+                'attsreg'=>$attsreg, 'count'=>$total, 'page'=>$page
+            ]);
     }
 
      public function clientTrans($id,$trans) {
@@ -639,7 +520,7 @@ class GreenController extends Controller
         $data = GreenProspectProgress::all();
 
         foreach ($data as $dat) {
-            $client = $dat->client->first();
+            $client = $dat->client;
 
             $dat->green_id = $client->green_id;
             $dat->date = $client->date;

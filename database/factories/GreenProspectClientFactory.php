@@ -6,11 +6,11 @@ $factory->define(App\GreenProspectClient::class, function (Faker\Generator $fake
         'name' => $faker->name,
         'phone' => $faker->phoneNumber,
         'email' => $faker->unique()->safeEmail,
-        'interest' => 'Interest'.$faker->randomNumber($nbDigits = 2),
+        'interest' => 'Interest '.$faker->randomNumber($nbDigits = 2),
         'pemberi' => $faker->name,
         'sumber_data' => $faker->name,
-        'keterangan_perintah' => 'keterangan_perintah'.$faker->randomNumber($nbDigits = 2),
+        'keterangan_perintah' => 'keterangan perintah no. '.$faker->randomNumber($nbDigits = 2),
         'created_by' => 999,
-        'updated_by' => 999,      
+        'updated_by' => 999,
     ];
 });

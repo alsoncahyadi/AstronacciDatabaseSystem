@@ -187,8 +187,8 @@ class MockupController extends Controller
     public function addCAT(Request $request) {
         $this->validate($request, [
             'master_id' => 'required',
-            'user_id_cat' => 'required|unique:cats',
-            'nomer_induk' => 'required|unique:cats',
+            'user_id_cat' => 'required|unique:cats,user_id',
+            'nomer_induk' => 'required|unique:cats,nomor_induk',
             'batch' => '',
             'sales_cat' => '',
             'sumber_data_cat' => '',
@@ -225,7 +225,7 @@ class MockupController extends Controller
     public function addUOB(Request $request) {
         $this->validate($request, [
             'master_id' => 'required',
-            'kode_client' => 'required|unique:uobs',
+            'kode_client' => 'required|unique:uobs,client_id',
             'sales_uob' => '',
             'sumber_data_uob' => '',
             'tanggal_join_uob' => 'date',
@@ -272,7 +272,7 @@ class MockupController extends Controller
             'master_id' => 'required',
             'sumber_data_mrg' => '',
             'tanggal_join_mrg' => 'date',
-            "account_number" => 'required|unique:mrg_accounts|string:20', 
+            "account_number" => 'required|unique:mrg_accounts,accounts_number|string:20', 
             "account_type" => 'string:20', 
             "sales_mrg" => ''
         ]);
@@ -313,7 +313,7 @@ class MockupController extends Controller
 
     public function addAClub(Request $request) {
         $this->validate($request, [
-            'user_id_aclub' => 'required|unique:aclub_members|string:50',
+            'user_id_aclub' => 'required|unique:aclub_members,user_id|string:50',
             'payment_date' => 'date',
             'sales_aclub' => '',
             'kode' => '',

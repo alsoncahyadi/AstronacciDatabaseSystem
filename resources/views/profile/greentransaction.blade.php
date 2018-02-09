@@ -67,8 +67,7 @@
         </div>
         <!-- /.col-lg-12 -->
     </div>
-    </div>
-    
+    </div>    
     <div class="panel panel-default" style="margin:15px">
         <div class="panel-heading">
             <i class="fa fa-child fa-fw"></i> Transaction Detail 
