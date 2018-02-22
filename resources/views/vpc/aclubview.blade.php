@@ -177,10 +177,13 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
+				<div class="col-md-5 row" style="width:38%; max-width: 390px;">
 					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
-					<div class="col-md-4">
+					<div class="col-md-5">
 						<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
+					</div>
+					<div class="col-md-4">
+						<button onclick="templateFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Template </button>
 					</div>
 					<div class="col-md-3" style="width:23%;">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
@@ -419,6 +422,10 @@
 
 	function downloadFx() {
 		window.location.href = "/export/aclub";
+	}
+
+	function templateFx() {
+		window.location.href = "/template/aclub";
 	}
 
 	function sortAndFilter(page) {

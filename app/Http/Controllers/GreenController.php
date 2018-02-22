@@ -433,56 +433,6 @@ class GreenController extends Controller
         
         return redirect()->back()->withErrors($err);
     }
-
-    public function importExcel() {
-        $err = []; //Inisialisasi array error
-        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
-            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
-            $data = Excel::load($path, function($reader) { //Load excel
-            })->get();
-            if(!empty($data) && $data->count()){
-                $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->no_hp) === null) {
-                        $msg = "No HP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
-                //Jika tidak ada error, import dengan cara insert satu per satu
-                if (empty($err)) {
-                    foreach ($data as $key => $value) {
-                        //Mengubah yes atau no menjadi boolean
-                        $aclub = strtolower($value->share_to_aclub) == "yes" ? 1 : 0;
-                        $mrg = strtolower($value->share_to_mrg) == "yes" ? 1 : 0;
-                        $cat = strtolower($value->share_to_cat) == "yes" ? 1 : 0;
-                        $uob = strtolower($value->share_to_uob) == "yes" ? 1 : 0;
-                        try { 
-                            DB::select("call input_green(?,?,?,?,?,?,?,?,?,?)", [$value->nama, $value->no_hp, $value->keterangan_perintah, $value->sumber, $value->progress, $value->sales, $aclub, $mrg, $cat, $uob]);
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
-                          $err[] = $ex->getMessage();
-                        }
-                    }
-                    if (empty($err)) { //message jika tidak ada error saat import
-                        $msg = "Excel successfully imported";
-                        $err[] = $msg;
-                    }
-                }
-            }
-        } else {
-            $msg = "No file supplied";
-            $err[] = $msg;
-        }
-
-        return redirect()->back()->withErrors([$err]);
-    }
 	
 	public function assignClient (Request $request) {
 		if (isset($request['assbut'])){
@@ -569,5 +519,75 @@ class GreenController extends Controller
                 $sheet->fromArray($array);
             });
         })->export('xls');
+    }
+
+    public function importExcel() {
+        //Inisialisasi array error
+        $err = [];
+        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
+            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
+            $data = Excel::load($path, function($reader) { //Load excel
+            })->get();
+            if(!empty($data) && $data->count()){
+                $i = 1;
+                //Cek apakah ada error
+                foreach ($data as $key => $value) {
+                    $i++;
+                    // if (($value->master_id) === null) {
+                    //     $msg = "Master ID empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sumber_data) === null) {
+                    //     $msg = "Sumber Data empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->keterangan) === null) {
+                    //     $msg = "Keterangan empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                } //end validasi
+
+                //Jika tidak ada error, import dengan cara insert satu per satu
+                if (empty($err)) {
+                    foreach ($data as $key => $value) {
+                        try {
+                             // check whether master client exist or not
+                            if (GreenProspectClient::find($value->green_id) == null) {
+                                $client = new \App\GreenProspectClient;
+
+                                $client_attributes = $client->getAttributesImport();
+
+                                foreach ($client_attributes as $client_attribute => $import) {
+                                    $client->$client_attribute = $value->$import;
+                                }
+
+                                $client->save();
+                            }
+
+                            $progress = new \App\GreenProspectProgress;
+
+                            $progress_attributes = $progress->getAttributesImport();
+
+                                foreach ($progress_attributes as $progress_attribute => $import) {
+                                    $progress->$progress_attribute = $value->$import;
+                                }
+
+                            $progress->save();
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
+                          $err[] = $ex->getMessage();
+                        }
+                    }
+                    if (empty($err)) { //message jika tidak ada error saat import
+                        $msg = "Excel successfully imported";
+                        $err[] = $msg;
+                    }
+                }
+            }
+        } else {
+            $msg = "No file supplied";
+            $err[] = $msg;
+        }
+        return redirect()->back()->withErrors([$err]);
     }
 }

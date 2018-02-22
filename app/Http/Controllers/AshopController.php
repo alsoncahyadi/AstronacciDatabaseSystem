@@ -550,6 +550,76 @@ class AshopController extends Controller
         return view('content/ashoptranseditform', ['route'=>'AShop', 'client'=>$ashop, 'ins'=>$ins]);
     }
 
+    public function importExcel() {
+        $err = []; //Inisialisasi array error
+        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
+            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
+            $data = Excel::load($path, function($reader) { //Load excel
+            })->get();
+            if(!empty($data) && $data->count()){
+                $i = 1;
+
+                //Cek apakah ada error
+                foreach ($data as $key => $value) {
+                    $i++;
+                    // if (($value->master_id) === null) {
+                    //     $msg = "Master ID empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sumber_data) === null) {
+                    //     $msg = "Sumber Data empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->join_date) === null) {
+                    //     $msg = "Tanggal Join empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                } //end validasi
+
+                //Jika tidak ada error, import dengan cara insert satu per satu
+                if (empty($err)) {
+                    foreach ($data as $key => $value) {
+                        try {
+                             if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
+
+                                $master_attributes = $master->getAttributesImport();
+
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    $master->$master_attribute = $value->$import;
+                                }
+
+                                $master->save();
+                            }
+
+                            $ashop = new \App\AshopTransaction;
+
+                            $ashop_attributes = $ashop->getAttributesImport();
+
+                            foreach ($ashop_attributes as $ashop_attribute => $import) {
+                                $ashop->$ashop_attribute = $value->$import;
+                            }
+
+                            $ashop->save();
+                        } catch(\Illuminate\Database\QueryException $ex){
+                          echo ($ex->getMessage());
+                          $err[] = $ex->getMessage();
+                        }
+                    }
+                    if (empty($err)) { //message jika tidak ada error saat import
+                        $msg = "Excel successfully imported";
+                        $err[] = $msg;
+                    }
+                }
+            }
+        } else {
+            $msg = "No file supplied";
+            $err[] = $msg;
+        }
+
+        return redirect()->back()->withErrors([$err]);
+    }
+
     public function exportExcel() {
         $data = AshopTransaction::all();
 
@@ -592,9 +662,7 @@ class AshopController extends Controller
                 "Facebook" => "facebook",
                 "Product Type" => "product_type",
                 "Product Name" => "product_name",
-                "Nominal" => "nominal",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Nominal" => "nominal"
                     ];
         foreach ($data as $dat) {
             $arr = [];

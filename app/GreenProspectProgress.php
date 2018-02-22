@@ -11,20 +11,16 @@ class GreenProspectProgress extends Model
 
     protected $primaryKey = 'progress_id';
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = ["green_id" => "green_id",
+                                "date" => "date",
+                                "sales_name" => "sales_name",
+                                "status" => "status",
+                                "nama_product" => "nama_product",
+                                "nominal" => "nominal",
+                                "keterangan" => "keterangan"];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }
 
     public function client() {
