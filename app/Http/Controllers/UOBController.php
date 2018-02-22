@@ -22,6 +22,72 @@ class UOBController extends Controller
         return $newstring;
     }
 
+    private function getFilterDate($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table('uobs')->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+        $joined = DB::table('master_clients')
+                    ->join('uobs', 'uobs.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
     public function getTable(Request $request) {
         $page = 0;
         $page = $request['page']-1;
@@ -107,17 +173,7 @@ class UOBController extends Controller
                 "rdi_bank"
                 ];
 
-        //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
+        //Filter        
 
         $joined = DB::table('master_clients')
                     ->join('uobs', 'uobs.master_id', '=', 'master_clients.master_id');
@@ -127,6 +183,7 @@ class UOBController extends Controller
         $filter_sumber = DB::table('uobs')->select('sumber_data')->distinct()->get();
         $filter_sales = DB::table('uobs')->select('sales_name')->distinct()->get();
         $filter_status = DB::table('uobs')->select('status')->distinct()->get();
+        
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -140,15 +197,20 @@ class UOBController extends Controller
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
 
+        $filter_rdidate = $this->getFilterDate('tanggal_rdi_done');
+        $filter_topdate = $this->getFilterDate('tanggal_top_up');
+        $filter_tradedate = $this->getFilterDate('tanggal_trading');        
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
+
         $filterable = [
             "Kota" => $filter_cities,
             "Gender" => $filter_gender,
             "Sumber" => $filter_sumber,
             "Sales" => $filter_sales,
             "Status" => $filter_status,
-            "Tanggal RDI" => $filter_date,
-            "Tanggal Top Up" => $filter_date,
-            "Tanggal Trading" => $filter_date
+            "Tanggal RDI" => $filter_rdidate,
+            "Tanggal Top Up" => $filter_topdate,
+            "Tanggal Trading" => $filter_tradedate
             ];
 
         //sort

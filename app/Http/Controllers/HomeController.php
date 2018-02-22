@@ -154,7 +154,7 @@ class HomeController extends Controller
                         $msg = "Nama empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->telepon) === null) {
+                    if (($value->telephone) === null) {
                         $msg = "Telepon empty on line ".$i;
                         $err[] = $msg;
                     }
@@ -178,7 +178,7 @@ class HomeController extends Controller
                         $msg = "Provinsi empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->gender) === null) {
+                    if (($value->jenis_kelamin) === null) {
                         $msg = "Gender empty on line ".$i;
                         $err[] = $msg;
                     }
@@ -206,20 +206,11 @@ class HomeController extends Controller
                         try {
                             $master = new \App\MasterClient;
 
-                            $master->redclub_user_id = $value->user_id_redclub;
-                            $master->redclub_password = $value->password_redclub;
-                            $master->name = $value->nama;
-                            $master->telephone_number = $value->telepon;
-                            $master->email = $value->email;
-                            $master->birthdate = $value->tanggal_lahir;
-                            $master->address = $value->alamat;
-                            $master->city = $value->kota;
-                            $master->province = $value->provinsi;
-                            $master->gender = $value->gender;
-                            $master->line_id = $value->line_id;
-                            $master->bbm = $value->bbm;
-                            $master->whatsapp = $value->whatsapp;
-                            $master->facebook = $value->facebook;
+                            $master_attributes = $master->getAttributesImport();
+
+                            foreach ($master_attributes as $master_attribute => $import) {
+                                $master->$master_attribute = $value->$import;
+                            }
 
                             $master->save();
                         } catch(\Illuminate\Database\QueryException $ex){
@@ -242,12 +233,14 @@ class HomeController extends Controller
     }
 
     public function exportExcel() {
-        $data = MasterClient::all();
+        $query = QueryModifier::queryMasterExport();
+
+        $data = collect(DB::select($query));
         $array = [];
         $heads = [
           "Master ID" => "master_id",
-          "Red Club User ID" => "redclub_user_id",
-          "Red Club Password" => "redclub_password",
+          "User ID Redclub" => "redclub_user_id",
+          "Password Redclub" => "redclub_password",
           "Nama" => "name",
           "Telephone" => "telephone_number",
           "Email" => "email",
@@ -259,12 +252,16 @@ class HomeController extends Controller
           "Line ID" => "line_id",
           "BBM" => "bbm",
           "WhatsApp" => "whatsapp",
-          "Facebook" => "facebook"
+          "Facebook" => "facebook",
+          "A-Club Stocks" => "stock",
+          "A-Club Futures" => "future",
+          "CAT" => "cat",
+          "MRG Premiere" => "mrg",
+          "UOB KayHian" => "uob"
         ];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
-                //echo $key . " " . $value . "<br>";
                 $arr[$key] = $dat->$value;
             }
             $array[] = $arr;

@@ -11,20 +11,18 @@ class GreenProspectClient extends Model
 
     protected $primaryKey = 'green_id';
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = ["green_id" => "green_id",
+                                "date" => "date",
+                                "name" => "name",
+                                "phone" => "phone",
+                                "email" => "email",
+                                "interest" => "interest",
+                                "pemberi" => "pemberi",
+                                "sumber_data" => "sumber_data",
+                                "keterangan_perintah" => "keterangan_perintah"];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }
 
     public function progresses() {

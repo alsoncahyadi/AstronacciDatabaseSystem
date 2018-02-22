@@ -94,7 +94,7 @@
             left:0;
             pointer-events: none;
         }
-        .clone .collumn-select {
+        .clone .collumn-select, .clone .birthday-column  {
             pointer-events: auto !important;
         }
         .clone th, .clone td {
@@ -159,9 +159,11 @@
                 <div class="modal-body">
                     @foreach($filter_birthdates as $filter_birthdate)
                     <div class="checkbox">
+                        @foreach($filter_birthdate as $f)
                         <label>
-                            <input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
+                            <input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($f))}}"> {{ $f }}
                         </label>
+                        @endforeach
                     </div>
                     @endforeach
                 </div>
@@ -246,7 +248,7 @@
                                 <!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
                                 @foreach ($headsMaster as $headMaster)
                                     @if ($headMaster == 'Tanggal Lahir')
-                                    <th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }}
+                                    <th class="fixed-side birthday-column" scope="col" style="min-width: 130px;"> {{ $headMaster }}
                                     <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" href="#tgllahir"><i class="fa fa-caret-down"></i></button>
                                     @else
                                         <th class="fixed-side" scope="col"> {{ $headMaster }} 

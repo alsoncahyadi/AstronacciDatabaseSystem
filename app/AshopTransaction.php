@@ -14,20 +14,15 @@ class AshopTransaction extends Model
     protected $appends = [  'name',
                             'email'];
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = [ "transaction_id" => "transaction_id",
+                                    "master_id" => "master_id",
+                                    "product_type" => "product_type",
+                                    "product_name" => "product_name",
+                                    "nominal" => "nominal",
+                                    ];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }                        
 
     public function master() {

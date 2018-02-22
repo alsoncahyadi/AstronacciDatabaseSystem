@@ -23,6 +23,73 @@ class MRGController extends Controller
         return $newstring;
     }    
 
+    private function getFilterDate($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table('mrgs')->select($column)->distinct()->get();        
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {             
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+                    ->join('mrgs', 'mrgs.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
     public function getTable(Request $request) {
         // $keyword = $request['q'];
 
@@ -117,19 +184,6 @@ class MRGController extends Controller
                 ];
 
         //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
-
-        // $this->getFilteredAndSortedTable('test');
 
         $joined = DB::table('master_clients')
                     ->join('mrgs', 'mrgs.master_id', '=', 'master_clients.master_id');
@@ -140,6 +194,7 @@ class MRGController extends Controller
         $filter_sales = DB::table('mrg_accounts')->select('sales_name')->distinct()->get();
         // $filter_accounts = DB::table('mrg_accounts')->select('accounts_number')->distinct()->get();
         $filter_type = DB::table('mrg_accounts')->select('account_type')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -153,12 +208,15 @@ class MRGController extends Controller
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
 
+        $filter_joindate = $this->getFilterDate('join_date');
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
+
         $filterable = [
             "Kota" => $filter_cities,
             "Gender" => $filter_gender,
             "Sumber" => $filter_sumber,
             "Sales" => $filter_sales,
-            "Tanggal Join" => $filter_date,
+            "Tanggal Join" => $filter_joindate,
             "Type" => $filter_type
             ];
 
@@ -443,7 +501,7 @@ class MRGController extends Controller
                         $msg = "Sumber Data empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->tanggal_join) === null) {
+                    if (($value->join_date) === null) {
                         $msg = "Tanggal Join empty on line ".$i;
                         $err[] = $msg;
                     }
@@ -453,13 +511,40 @@ class MRGController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try {
-                            $mrg = new \App\Mrg;
+                             if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
 
-                            $mrg->master_id = $value->master_id;
-                            $mrg->sumber_data = $value->sumber_data;
-                            $mrg->join_date = $value->tanggal_join;
+                                $master_attributes = $master->getAttributesImport();
 
-                            $mrg->save();
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    $master->$master_attribute = $value->$import;
+                                }
+
+                                $master->save();
+                            }
+
+                            // check whether aclub information exist or not
+                            if (MRG::find($value->master_id) == null) {
+                                $mrg = new \App\MRG;
+
+                                $mrg_attributes = $mrg->getAttributesImport();
+
+                                foreach ($mrg_attributes as $mrg_attribute => $import) {
+                                    $mrg->$mrg_attribute = $value->$import;
+                                }
+
+                                $mrg->save();
+                            }
+
+                            $mrg_account = new \App\MrgAccount;
+
+                            $mrg_account_attributes = $mrg_account->getAttributesImport();
+
+                            foreach ($mrg_account_attributes as $mrg_account_attribute => $import) {
+                                $mrg_account->$mrg_account_attribute = $value->$import;
+                            }
+
+                            $mrg_account->save();
                         } catch(\Illuminate\Database\QueryException $ex){
                           echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
@@ -526,9 +611,7 @@ class MRGController extends Controller
                     "WhatsApp" => "whatsapp",
                     "Facebook" => "facebook",
                     "Sumber Data" => "sumber_data",
-                    "Join Date" => "join_date",
-                    "Created At" => "created_at",
-                    "Updated At" => "updated_at"
+                    "Join Date" => "join_date"
                     ];
         foreach ($data as $dat) {
             $arr = [];

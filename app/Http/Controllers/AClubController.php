@@ -27,6 +27,73 @@ class AClubController extends Controller
         return $newstring;
     }
 
+    private function getFilterDate($table, $column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table($table)->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
     public function getTable(Request $request) {
         // $keyword = $request['q'];
 
@@ -207,6 +274,7 @@ class AClubController extends Controller
         $filter_sales = DB::table('aclub_transactions')->select('sales_name')->distinct()->get();
         $filter_kode = DB::table('aclub_transactions')->select('kode')->distinct()->get();
         $filter_status = DB::table('aclub_transactions')->select('status')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -220,6 +288,10 @@ class AClubController extends Controller
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
 
+        $filter_paydate = $this->getFilterDate('aclub_transactions', 'payment_date');
+        // tambahin yang lain ya nik hehe
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
+
         $filterable = [
             "Kota" => $filter_cities,
             "Gender" => $filter_gender,
@@ -228,7 +300,7 @@ class AClubController extends Controller
             "Kode" => $filter_kode,
             "Status" => $filter_status,
             "Start Date" => $filter_date,
-            "Payment Date" => $filter_date,
+            "Payment Date" => $filter_paydate,
             "Masa Tenggang" => $filter_date
             ];
 
@@ -985,5 +1057,56 @@ class AClubController extends Controller
       } else {
         echo("Failed, insufficient information");
       }
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Keterangan" => "keterangan",
+                    "User ID" => "user_id",
+                    "Group" => "group",
+                    "Payment Date" => "payment_date",
+                    "Kode" => "kode",
+                    "Status" => "status",
+                    "Nominal" => "nominal",
+                    "Start Date" => "start_date",
+                    "Expired Date" => "expired_date",
+                    "Masa Tenggang" => "masa_tenggang",
+                    "Yellow Zone" => "yellow_zone",
+                    "Red Zone" => "red_zone",
+                    "Sales Name" => "sales_name"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'asc')->first()->master_id;
+                $arr[$head] = $count_master_id;
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateAClub', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

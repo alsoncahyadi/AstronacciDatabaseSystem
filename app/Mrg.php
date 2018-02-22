@@ -11,20 +11,12 @@ class Mrg extends Model
 
     protected $primaryKey = 'master_id';
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = [ "master_id" => "master_id",
+                                    "sumber_data" => "sumber_data",
+                                    "join_date" => "join_date"];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }
 
     public function master() {

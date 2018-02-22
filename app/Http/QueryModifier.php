@@ -93,6 +93,15 @@ class QueryModifier {
              IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Future'), 1, 0) as future 
              FROM master_clients";
 
+    private static $query_view_master_all = "SELECT *,
+             IF (master_clients.master_id IN (SELECT master_id FROM cats), 1, 0) as cat,
+             IF (master_clients.master_id IN (SELECT master_id FROM mrgs), 1, 0) as mrg, 
+             IF (master_clients.master_id IN (SELECT master_id FROM uobs), 1, 0) as uob,
+             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Stock'), 1, 0) as stock,
+             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Future'), 1, 0) as future 
+             FROM master_clients";
+
+
     public static function queryView($viewName, $json_filter, $json_sort) {
         if ($viewName == 'CAT') { 
             $query_text = self::$query_view_CAT;
@@ -224,6 +233,10 @@ class QueryModifier {
         WHERE (master_id = ".$master_id.") AND ( accounts_number like '%".$keyword."%' 
                         OR account_type like '%".$keyword."%' OR sales_name like '%".$keyword."%')";
         return $query;        
+    }
+
+    public static function queryMasterExport() {
+        return self::$query_view_master_all;
     }
 } 
 
