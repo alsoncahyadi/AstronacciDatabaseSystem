@@ -82,13 +82,6 @@
                                                 <option>Event</option>
                                                 <option>Other</option>
                                             </select>
-                                            @elseif ($key == "Nama Product")
-                                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $key))}}">
-                                                <option>A-CLUB</option>
-                                                <option>UOB</option>
-                                                <option>MRG</option>
-                                                <option>CAT</option>
-                                            </select>
                                             @else
                                                 <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
                                             @endif

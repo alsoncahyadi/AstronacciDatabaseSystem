@@ -206,7 +206,7 @@
                                 <option>TIDAK GOAL</option>
                                 <option>DALAM PROSES</option>
                             </select>
-                            @elseif ($atr == "Nama Product")
+                            @elseif (($atr == "Nama Product") and ($route == 'Green'))
                             <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                 <option>A-Club</option>
                                 <option>UOB</option>
