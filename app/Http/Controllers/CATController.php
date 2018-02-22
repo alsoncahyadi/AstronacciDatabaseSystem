@@ -54,6 +54,41 @@ class CATController extends Controller
         return $filter_dpdate;
     }
 
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+            ->join('cats', 'cats.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
     public function getTable(Request $request) {
         // $keyword = $request['q'];
 
@@ -120,7 +155,6 @@ class CATController extends Controller
                 "End Class" => "tanggal_end_class", //date
                 "Ujian" => "tanggal_ujian" //date
                 ];
-        
 
         //Nama attribute pada sql
         $atts = [
@@ -140,21 +174,26 @@ class CATController extends Controller
                 "tanggal_ujian"
                 ];
 
-        //Filter
+        // //Filter
         $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
+        // $array_month = array();
+        // foreach ($master_clients as $master_client) {
+        //     array_push($array_month, date('m', strtotime($master_client->birthdate)));
+        // }
+        // $filter_birthdates = array_unique($array_month);
+        // sort($filter_birthdates);
+        // foreach ($filter_birthdates as $key => $filter_birthdate) {
+        //     // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
+        //     $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
+        // }
 
         $joined = DB::table('master_clients')
                     ->join('cats', 'cats.master_id', '=', 'master_clients.master_id');
+
+
+        // $filter_birthdates = $joined->select('birthdate')->distinct()->get();
+        // dd($filter_birthdates);
+
 
         $filter_cities = $joined->select('city')->distinct()->get();
         $filter_gender = $joined->select('gender')->distinct()->get();
@@ -179,6 +218,9 @@ class CATController extends Controller
         $filter_dpdate = $this->getFilterDate('DP_date');
         $filter_paydate = $this->getFilterDate('payment_date');
         $filter_opendate = $this->getFilterDate('tanggal_opening_class');
+        $filter_closedate = $this->getFilterDate('tanggal_end_class');
+        $filter_ujidate = $this->getFilterDate('tanggal_ujian');
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
 
         $filterable = [
             "Kota" => $filter_cities,
@@ -187,12 +229,12 @@ class CATController extends Controller
             "Sales" => $filter_sales,
             "Batch" => $filter_batch,
             "Status" => $filter_status,
-            "Tanggal Lahir" => $filter_date,
+            "Tanggal Lahir" => $filter_birthdates,
             "DP Date" => $filter_dpdate,
             "Payment Date" => $filter_paydate,
             "Opening Class" => $filter_opendate,
-            "End Class" => $filter_date,
-            "Ujian" => $filter_date
+            "End Class" => $filter_closedate,
+            "Ujian" => $filter_ujidate
             ];
 
         //sort
@@ -229,10 +271,8 @@ class CATController extends Controller
                         'filter_date' => $filter_date,
                         'filterable' => $filterable,
                         'sortables' => $sortables,
-                        'count' => $page_count,
-                        'filter_dpdate' => $filter_dpdate,
-                        'filter_paydate' => $filter_paydate,
-                        'filter_opendate' => $filter_opendate
+                        'count' => $page_count,                        
+                        'filter_birthdates' => $filter_birthdates
                     ]);
 
         $filterable = [
