@@ -479,39 +479,51 @@ class CATController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->user_id) === null) {
-                        $msg = "User ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->batch) === null) {
-                        $msg = "Batch empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sales) === null) {
-                        $msg = "Sales empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
+                    // if (($value->user_id) === null) {
+                    //     $msg = "User ID empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->master_id) === null) {
+                    //     $msg = "Master ID empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->batch) === null) {
+                    //     $msg = "Batch empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sales) === null) {
+                    //     $msg = "Sales empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sumber_data) === null) {
+                    //     $msg = "Sumber Data empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
                 } //end validasi
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try {
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
+
+                                $master_attributes = $master->getAttributesImport();
+
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    $master->$master_attribute = $value->$import;
+                                }
+
+                                $master->save();
+                            }
+
                             $cat = new \App\Cat;
 
-                            $cat->user_id = $value->user_id;
-                            $cat->master_id = $value->master_id;
-                            $cat->batch = $value->batch;
-                            $cat->sales_name = $value->sales;
-                            $cat->sumber_data = $value->sumber_data;
+                            $cat_attributes = $cat->getAttributesImport();
+
+                            foreach ($cat_attributes as $cat_attribute => $import) {
+                                $cat->$cat_attribute = $value->$import;
+                            }
 
                             $cat->save();
                         } catch(\Illuminate\Database\QueryException $ex){

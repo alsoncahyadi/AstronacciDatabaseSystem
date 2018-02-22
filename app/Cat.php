@@ -11,20 +11,25 @@ class Cat extends Model
 
     protected $primaryKey = 'user_id';
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = [ "user_id" => "user_id",
+                                    "nomor_induk" => "nomor_induk",
+                                    "master_id" => "master_id",
+                                    "batch" => "batch",
+                                    "sales_name" => "sales",
+                                    "sumber_data" => "sumber_data",
+                                    "DP_date" => "dp_date",
+                                    "DP_nominal" => "dp_nominal",
+                                    "payment_date" => "payment_date",
+                                    "payment_nominal" => "payment_nominal",
+                                    "tanggal_opening_class" => "tanggal_opening_class",
+                                    "tanggal_end_class" => "tanggal_end_class",
+                                    "tanggal_ujian" => "tanggal_ujian",
+                                    "status" => "status",
+                                    "keterangan" => "keterangan"
+                                ];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }
 
     public function master() {
