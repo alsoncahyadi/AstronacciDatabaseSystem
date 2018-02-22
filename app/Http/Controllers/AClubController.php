@@ -986,4 +986,55 @@ class AClubController extends Controller
         echo("Failed, insufficient information");
       }
     }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Keterangan" => "keterangan",
+                    "User ID" => "user_id",
+                    "Group" => "group",
+                    "Payment Date" => "payment_date",
+                    "Kode" => "kode",
+                    "Status" => "status",
+                    "Nominal" => "nominal",
+                    "Start Date" => "start_date",
+                    "Expired Date" => "expired_date",
+                    "Masa Tenggang" => "masa_tenggang",
+                    "Yellow Zone" => "yellow_zone",
+                    "Red Zone" => "red_zone",
+                    "Sales Name" => "sales_name"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'asc')->first()->master_id;
+                $arr[$head] = $count_master_id;
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateAClub', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
 }

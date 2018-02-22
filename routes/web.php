@@ -816,6 +816,14 @@ Route::post('/AShop/filter', [
     'roles' => ['0', '1'],
     ]);
 
+Route::post('/AShop/import', [
+    'uses' => 'AshopController@importExcel',
+    'as' => 'AShop.import',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '2'],
+    ]);
+
+
 //Assignment Routes
 Route::get('/assign', [
     'uses' => 'AssignmentController@getTable',
@@ -904,6 +912,13 @@ Route::get('/export/cat', [
 Route::get('/export/aclub', [
     'uses' => 'AClubController@exportExcel',
     'as' => 'aclubexport',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/aclub', [
+    'uses' => 'AClubController@templateExcel',
+    'as' => 'aclubtemplate',
     'middleware' => ['auth', 'roles'],
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
