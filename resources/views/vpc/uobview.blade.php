@@ -159,9 +159,11 @@
                 <div class="modal-body">
                     @foreach($filter_birthdates as $filter_birthdate)
                     <div class="checkbox">
+                        @foreach($filter_birthdate as $f)
                         <label>
-                            <input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
+                            <input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($f))}}"> {{ $f }}
                         </label>
+                        @endforeach
                     </div>
                     @endforeach
                 </div>
