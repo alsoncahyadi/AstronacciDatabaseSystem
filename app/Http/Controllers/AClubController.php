@@ -795,15 +795,55 @@ class AClubController extends Controller
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
-                        echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
                         try {
-                            $aclubInfo = new \App\AclubInformation;
+                             // check whether master client exist or not
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
 
-                            $aclubInfo->master_id = $value->master_id;
-                            $aclubInfo->sumber_data = $value->sumber_data;
-                            $aclubInfo->keterangan = $value->keterangan;
+                                $master_attributes = $master->getAttributesImport();
 
-                            $aclubInfo->save();
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    $master->$master_attribute = $value->$import;
+                                }
+
+                                $master->save();
+                            }
+
+                            // check whether aclub information exist or not
+                            if (AclubInformation::find($value->master_id) == null) {
+                                $aclub_info = new \App\AclubInformation;
+
+                                $aclub_info_attributes = $aclub_info->getAttributesImport();
+
+                                foreach ($aclub_info_attributes as $aclub_info_attribute => $import) {
+                                    $aclub_info->$aclub_info_attribute = $value->$import;
+                                }
+
+                                $aclub_info->save();
+                            }
+
+                            // check whether aclub member exist or not
+                            if (AclubMember::find($value->user_id) == null) {
+                                $aclub_member = new \App\AclubMember;
+
+                                $aclub_member_attributes = $aclub_member->getAttributesImport();
+
+                                foreach ($aclub_member_attributes as $aclub_member_attribute => $import) {
+                                    $aclub_member->$aclub_member_attribute = $value->$import;
+                                }
+
+                                $aclub_member->save();
+                            }
+
+                            $aclub_trans = new \App\AclubTransaction;
+
+                            $aclub_trans_attributes = $aclub_trans->getAttributesImport();
+
+                                foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
+                                    $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                }
+
+                            $aclub_trans->save();
                         } catch(\Illuminate\Database\QueryException $ex){
                           echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
@@ -830,6 +870,7 @@ class AClubController extends Controller
 
             $data->master_id = $member->master_id;
             $data->group = $member->group;
+            $data->user_id = $member->user_id;
 
             $info = $member->aclubInformation;
 
@@ -854,8 +895,7 @@ class AClubController extends Controller
             $data->facebook = $master->facebook;
         }
         $array = [];
-        $heads = ["Transaction ID" => "transaction_id",
-                    "Master ID" => "master_id",
+        $heads = ["Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",
@@ -872,6 +912,7 @@ class AClubController extends Controller
                     "Facebook" => "facebook",
                     "Sumber Data" => "sumber_data",
                     "Keterangan" => "keterangan",
+                    "User ID" => "user_id",
                     "Group" => "group",
                     "Payment Date" => "payment_date",
                     "Kode" => "kode",
@@ -882,9 +923,7 @@ class AClubController extends Controller
                     "Masa Tenggang" => "masa_tenggang",
                     "Yellow Zone" => "yellow_zone",
                     "Red Zone" => "red_zone",
-                    "Sales Name" => "sales_name",
-                    "Created At" => "created_at",
-                    "Updated At" => "updated_at"];
+                    "Sales Name" => "sales_name"];
         foreach ($datas as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {

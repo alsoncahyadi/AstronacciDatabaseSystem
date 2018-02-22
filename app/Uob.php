@@ -11,6 +11,22 @@ class Uob extends Model
 
     protected $primaryKey = 'client_id';
 
+    public function getAllAttributes()
+    {
+        $columns = \Schema::getColumnListing($this->table);
+
+        $attributes = $this->getAttributes();
+
+        foreach ($columns as $column)
+        {
+            if (!array_key_exists($column, $attributes))
+            {
+                $attributes[$column] = null;
+            }
+        }
+        return $attributes;
+    }
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }

@@ -13,6 +13,26 @@ class MasterClient extends Model
 
     protected $appends = ['month_birthdate'];
 
+    protected $attributImport = [ "master_id" => "master_id",
+                                    "redclub_user_id" => "user_id_redclub",
+                                    "redclub_password" => "password_redclub",
+                                    "name" => "nama",
+                                    "telephone_number" => "telephone", 
+                                    "email" => "email",
+                                    "birthdate" => "tanggal_lahir",
+                                    "address" => "alamat",
+                                    "city" => "kota",
+                                    "province" => "provinsi",
+                                    "gender" => "gender",
+                                    "line_id" => "line_id",
+                                    "bbm" => "bbm",
+                                    "whatsapp" => "whatsapp",
+                                    "facebook" => "facebook"];
+
+    public function getAttributesImport() {
+        return $this->attributImport;
+    }
+
     public function mrg() {
         return $this->hasOne('App\Mrg', 'master_id', 'master_id');
     }
