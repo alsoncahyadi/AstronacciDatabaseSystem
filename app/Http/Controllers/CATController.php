@@ -174,26 +174,10 @@ class CATController extends Controller
                 "tanggal_ujian"
                 ];
 
-        // //Filter
-        $master_clients = MasterClient::all();
-        // $array_month = array();
-        // foreach ($master_clients as $master_client) {
-        //     array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        // }
-        // $filter_birthdates = array_unique($array_month);
-        // sort($filter_birthdates);
-        // foreach ($filter_birthdates as $key => $filter_birthdate) {
-        //     // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-        //     $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        // }
+        // //Filter        
 
         $joined = DB::table('master_clients')
                     ->join('cats', 'cats.master_id', '=', 'master_clients.master_id');
-
-
-        // $filter_birthdates = $joined->select('birthdate')->distinct()->get();
-        // dd($filter_birthdates);
-
 
         $filter_cities = $joined->select('city')->distinct()->get();
         $filter_gender = $joined->select('gender')->distinct()->get();

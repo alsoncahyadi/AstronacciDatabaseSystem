@@ -24,6 +24,41 @@ class AshopController extends Controller
         return $newstring;
     }
 
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+                    ->join('ashop_transactions', 'ashop_transactions.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
     public function getData()
     {
         // add 'select' of query
@@ -81,19 +116,6 @@ class AshopController extends Controller
                 ];
 
         //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
-
-        // $this->getFilteredAndSortedTable('test');
 
         $joined = DB::table('master_clients')
                     ->join('ashop_transactions', 'ashop_transactions.master_id', '=', 'master_clients.master_id');
@@ -102,6 +124,7 @@ class AshopController extends Controller
         $filter_gender = $joined->select('gender')->distinct()->get();
         $filter_product_type = DB::table('ashop_transactions')->select('product_type')->distinct()->get();
         $filter_product_name = DB::table('ashop_transactions')->select('product_name')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -114,6 +137,8 @@ class AshopController extends Controller
         '9'=>['0'=>'October'],
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
+
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
 
         $filterable = [
             "Kota" => $filter_cities,
