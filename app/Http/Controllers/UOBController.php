@@ -173,17 +173,7 @@ class UOBController extends Controller
                 "rdi_bank"
                 ];
 
-        //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
+        //Filter        
 
         $joined = DB::table('master_clients')
                     ->join('uobs', 'uobs.master_id', '=', 'master_clients.master_id');
