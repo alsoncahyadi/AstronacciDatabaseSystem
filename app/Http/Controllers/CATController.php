@@ -178,7 +178,7 @@ class CATController extends Controller
         
         $filter_dpdate = $this->getFilterDate('DP_date');
         $filter_paydate = $this->getFilterDate('payment_date');
-
+        $filter_opendate = $this->getFilterDate('tanggal_opening_class');
 
         $filterable = [
             "Kota" => $filter_cities,
@@ -190,7 +190,7 @@ class CATController extends Controller
             "Tanggal Lahir" => $filter_date,
             "DP Date" => $filter_dpdate,
             "Payment Date" => $filter_paydate,
-            "Opening Class" => $filter_date,
+            "Opening Class" => $filter_opendate,
             "End Class" => $filter_date,
             "Ujian" => $filter_date
             ];
@@ -231,7 +231,8 @@ class CATController extends Controller
                         'sortables' => $sortables,
                         'count' => $page_count,
                         'filter_dpdate' => $filter_dpdate,
-                        'filter_paydate' => $filter_paydate
+                        'filter_paydate' => $filter_paydate,
+                        'filter_opendate' => $filter_opendate
                     ]);
 
         $filterable = [
