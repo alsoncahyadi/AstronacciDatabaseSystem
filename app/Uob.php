@@ -11,20 +11,32 @@ class Uob extends Model
 
     protected $primaryKey = 'client_id';
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = [ "master_id" => "master_id",
+                                    "client_id" => "kode_client",
+                                    "sales_name" => "sales",
+                                    "sumber_data" => "sumber_data",
+                                    "join_date" => "tanggal_join",
+                                    "nomor_ktp" => "nomor_ktp",
+                                    "tanggal_expired_ktp" => "expired_ktp",
+                                    "nomor_npwp" => "nomor_npwp",
+                                    "alamat_surat" => "alamat_surat_menyurat",
+                                    "saudara_tidak_serumah" => "saudara_tidak_serumah",
+                                    "nama_ibu_kandung" => "nama_ibu_kandung",
+                                    "bank_pribadi" => "bank_pribadi",
+                                    "nomor_rekening_pribadi" => "nomor_rekening_pribadi",
+                                    "tanggal_rdi_done" => "tanggal_rdi_done",
+                                    "rdi_bank" => "rdi_bank",
+                                    "nomor_rdi" => "nomor_rdi",
+                                    "tanggal_top_up" => "tanggal_top_up",
+                                    "nominal_top_up" => "nominal_top_up",
+                                    "tanggal_trading" => "tanggal_trading",
+                                    "status" => "status",
+                                    "trading_via" => "trading_via",
+                                    "keterangan" => "keterangan"
+                                ];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }
 
     public function master() {

@@ -402,70 +402,77 @@ class UOBController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->kode_client) === null) {
-                        $msg = "Kode Client empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sales) === null) {
-                        $msg = "Sales empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->tanggal_join) === null) {
-                        $msg = "Tanggal Join empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->nomer_ktp) === null) {
-                        $msg = "Nomer KTP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->expired_ktp) === null) {
-                        $msg = "Expired KTP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->nomer_npwp) === null) {
-                        $msg = "Nomer NPWP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat_surat) === null) {
-                        $msg = "Alamat Surat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->saudara_tidak_serumah) === null) {
-                        $msg = "Saudara Tidak Serumah empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->ibu_kandung) === null) {
-                        $msg = "Ibu Kandung empty on line ".$i;
-                        $err[] = $msg;
-                    }
+                    // if (($value->kode_client) === null) {
+                    //     $msg = "Kode Client empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->master_id) === null) {
+                    //     $msg = "Master ID empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sales) === null) {
+                    //     $msg = "Sales empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sumber_data) === null) {
+                    //     $msg = "Sumber Data empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->tanggal_join) === null) {
+                    //     $msg = "Tanggal Join empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->nomer_ktp) === null) {
+                    //     $msg = "Nomer KTP empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->expired_ktp) === null) {
+                    //     $msg = "Expired KTP empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->nomer_npwp) === null) {
+                    //     $msg = "Nomer NPWP empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->alamat_surat) === null) {
+                    //     $msg = "Alamat Surat empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->saudara_tidak_serumah) === null) {
+                    //     $msg = "Saudara Tidak Serumah empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->ibu_kandung) === null) {
+                    //     $msg = "Ibu Kandung empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
 
                 } //end validasi
+                // dd($err);
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try {
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
+
+                                $master_attributes = $master->getAttributesImport();
+
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    $master->$master_attribute = $value->$import;
+                                }
+
+                                $master->save();
+                            }
+
                             $uob = new \App\Uob;
 
-                            $uob->client_id = $value->kode_client;
-                            $uob->master_id = $value->master_id;
-                            $uob->sales_name = $value->sales;
-                            $uob->sumber_data = $value->sumber_data;
-                            $uob->join_date = $value->tanggal_join;
-                            $uob->nomor_ktp = $value->nomer_ktp;
-                            $uob->tanggal_expired_ktp = $value->expired_ktp;
-                            $uob->nomor_npwp = $value->nomer_npwp;
-                            $uob->alamat_surat = $value->alamat_surat;
-                            $uob->saudara_tidak_serumah = $value->saudara_tidak_serumah;
-                            $uob->nama_ibu_kandung = $value->ibu_kandung;
+                            $uob_attributes = $uob->getAttributesImport();
+
+                            foreach ($uob_attributes as $uob_attribute => $import) {
+                                $uob->$uob_attribute = $value->$import;
+                            }
 
                             $uob->save();
                         } catch(\Illuminate\Database\QueryException $ex){
