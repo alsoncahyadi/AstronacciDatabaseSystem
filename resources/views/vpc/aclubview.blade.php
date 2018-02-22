@@ -94,7 +94,7 @@
 			left:0;
 			pointer-events: none;
 		}
-		.clone .collumn-select {
+		.clone .collumn-select, .clone .birthday-column {
 			pointer-events: auto !important;
 		}
 		.clone th, .clone td {
@@ -255,7 +255,7 @@
 
 								@foreach ($headsMaster as $headMaster)
 									@if ($headMaster == 'Tanggal Lahir')
-									<th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }} 
+									<th class="fixed-side birthday-column" scope="col" style="min-width: 130px;"> {{ $headMaster }} 
 									<button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" href="#tgllahir"><i class="fa fa-caret-down"></i></button>
 
 										
@@ -361,12 +361,11 @@
 </body>
 </html>
 <script type="text/javascript">
-	$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');  
-	$( "#selectAll" ).change(function() {
-		$(".selectable").prop( "checked", $( "#selectAll" ).is(":checked"));
-	});
-	$( ".clone #selectAll" ).change(function() {
-		$(".selectable").prop( "checked", $( ".clone #selectAll" ).is(":checked"));
+	$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone');
+	$( ".clone #selectAll" ).attr("id", "selectAll_btn");
+	$( ".clone #selectAll_btn" ).change(function() {
+		$(".selectable").prop( "checked", $( "#selectAll_btn" ).is(":checked"));
+		console.log('in1');
 	});
 
 	var arrFilter = [];
@@ -456,7 +455,11 @@
 			$("#tbody").html(response);
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
-
+			$( ".clone #selectAll" ).attr("id", "selectAll_btn");
+			$( ".clone #selectAll_btn" ).change(function() {
+				$(".selectable").prop( "checked", $( "#selectAll_btn" ).is(":checked"));
+				console.log('in1');
+			});
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 			$("#pagenum").attr({"max" : count_page});
@@ -514,7 +517,11 @@
 			$("#tbody").html(response);
 			$(".clone").remove();
 			$(".main-table").clone(true).appendTo('#table-scroll').addClass('clone'); 
-			
+			$( ".clone #selectAll" ).attr("id", "selectAll_btn");
+			$( ".clone #selectAll_btn" ).change(function() {
+				$(".selectable").prop( "checked", $( "#selectAll_btn" ).is(":checked"));
+				console.log('in1');
+			});
 			var count_page = $("#hidden_page_count").val();
 			$("#page_count").html(count_page);
 	    });
