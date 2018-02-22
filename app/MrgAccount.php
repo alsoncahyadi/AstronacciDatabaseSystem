@@ -11,20 +11,13 @@ class MrgAccount extends Model
 
     protected $primaryKey = 'accounts_number';
 
-    public function getAllAttributes()
-    {
-        $columns = \Schema::getColumnListing($this->table);
+    protected $attributImport = [ "accounts_number" => "account_number",
+                                    "master_id" => "master_id",
+                                    "account_type" => "account_type",
+                                    "sales_name" => "sales_name"];
 
-        $attributes = $this->getAttributes();
-
-        foreach ($columns as $column)
-        {
-            if (!array_key_exists($column, $attributes))
-            {
-                $attributes[$column] = null;
-            }
-        }
-        return $attributes;
+    public function getAttributesImport() {
+        return $this->attributImport;
     }
 
     public function mrg() {

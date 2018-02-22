@@ -443,7 +443,7 @@ class MRGController extends Controller
                         $msg = "Sumber Data empty on line ".$i;
                         $err[] = $msg;
                     }
-                    if (($value->tanggal_join) === null) {
+                    if (($value->join_date) === null) {
                         $msg = "Tanggal Join empty on line ".$i;
                         $err[] = $msg;
                     }
@@ -453,13 +453,40 @@ class MRGController extends Controller
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
                         try {
-                            $mrg = new \App\Mrg;
+                             if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
 
-                            $mrg->master_id = $value->master_id;
-                            $mrg->sumber_data = $value->sumber_data;
-                            $mrg->join_date = $value->tanggal_join;
+                                $master_attributes = $master->getAttributesImport();
 
-                            $mrg->save();
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    $master->$master_attribute = $value->$import;
+                                }
+
+                                $master->save();
+                            }
+
+                            // check whether aclub information exist or not
+                            if (MRG::find($value->master_id) == null) {
+                                $mrg = new \App\MRG;
+
+                                $mrg_attributes = $mrg->getAttributesImport();
+
+                                foreach ($mrg_attributes as $mrg_attribute => $import) {
+                                    $mrg->$mrg_attribute = $value->$import;
+                                }
+
+                                $mrg->save();
+                            }
+
+                            $mrg_account = new \App\MrgAccount;
+
+                            $mrg_account_attributes = $mrg_account->getAttributesImport();
+
+                            foreach ($mrg_account_attributes as $mrg_account_attribute => $import) {
+                                $mrg_account->$mrg_account_attribute = $value->$import;
+                            }
+
+                            $mrg_account->save();
                         } catch(\Illuminate\Database\QueryException $ex){
                           echo ($ex->getMessage());
                           $err[] = $ex->getMessage();
@@ -526,9 +553,7 @@ class MRGController extends Controller
                     "WhatsApp" => "whatsapp",
                     "Facebook" => "facebook",
                     "Sumber Data" => "sumber_data",
-                    "Join Date" => "join_date",
-                    "Created At" => "created_at",
-                    "Updated At" => "updated_at"
+                    "Join Date" => "join_date"
                     ];
         foreach ($data as $dat) {
             $arr = [];

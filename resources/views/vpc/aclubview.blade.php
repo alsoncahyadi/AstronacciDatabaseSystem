@@ -197,14 +197,15 @@
 					</div>
 				</div>
 				<div id="import" style="display:none">
-				<div class="panel panel-default" style="padding:15px">
-					<div class="panel-body">
-						<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-							<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-							<input type="file" name="import_file" />
-							<br>
-							<button class="btn btn-primary">Import .xls File</button>
-						</form>
+					<div class="panel panel-default" style="padding:15px">
+						<div class="panel-body">
+							<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+								<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+								<input type="file" name="import_file" />
+								<br>
+								<button class="btn btn-primary">Import .xls File</button>
+							</form>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-6 row" style="float: right;">
