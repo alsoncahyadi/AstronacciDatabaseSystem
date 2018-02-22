@@ -22,6 +22,38 @@ class CATController extends Controller
         return $newstring;
     }
 
+    private function getFilterDate($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table('cats')->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
     public function getTable(Request $request) {
         // $keyword = $request['q'];
 
@@ -68,7 +100,7 @@ class CATController extends Controller
                         "name",
                         "email",
                         "telephone_number",
-                        "birthdate"
+                        "birthdate" //date
                     ];
 
         //Judul kolom yang ditampilkan pada tabel
@@ -80,13 +112,13 @@ class CATController extends Controller
                 "WhatsApp" => "whatsapp",
                 "Sumber" => "sumber_data",
                 "Sales" => "sales_name",
-                "DP Date" => "DP_date",
-                "Payment Date" => "payment_date",
+                "DP Date" => "DP_date", //date
+                "Payment Date" => "payment_date", //date
                 "Batch" => "batch",
                 "Status" => "status",
-                "Opening Class" => "tanggal_opening_class",
-                "End Class" => "tanggal_end_class",
-                "Ujian" => "tanggal_ujian"
+                "Opening Class" => "tanggal_opening_class", //date
+                "End Class" => "tanggal_end_class", //date
+                "Ujian" => "tanggal_ujian" //date
                 ];
         
 
@@ -130,6 +162,7 @@ class CATController extends Controller
         $filter_sales = DB::table('cats')->select('sales_name')->distinct()->get();
         $filter_batch = DB::table('cats')->select('batch')->distinct()->get();
         $filter_status = DB::table('cats')->select('status')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
                 '1'=>['0'=>'February'], 
                 '2'=>['0'=>'March'], 
@@ -141,7 +174,11 @@ class CATController extends Controller
                 '8'=>['0'=>'September'],
                 '9'=>['0'=>'October'],
                 '10'=>['0'=>'November'],
-                '11'=>['0'=>'December']];
+                '11'=>['0'=>'December']];        
+        
+        $filter_dpdate = $this->getFilterDate('DP_date');
+        $filter_paydate = $this->getFilterDate('payment_date');
+
 
         $filterable = [
             "Kota" => $filter_cities,
@@ -151,8 +188,8 @@ class CATController extends Controller
             "Batch" => $filter_batch,
             "Status" => $filter_status,
             "Tanggal Lahir" => $filter_date,
-            "DP Date" => $filter_date,
-            "Payment Date" => $filter_date,
+            "DP Date" => $filter_dpdate,
+            "Payment Date" => $filter_paydate,
             "Opening Class" => $filter_date,
             "End Class" => $filter_date,
             "Ujian" => $filter_date
@@ -192,7 +229,9 @@ class CATController extends Controller
                         'filter_date' => $filter_date,
                         'filterable' => $filterable,
                         'sortables' => $sortables,
-                        'count' => $page_count
+                        'count' => $page_count,
+                        'filter_dpdate' => $filter_dpdate,
+                        'filter_paydate' => $filter_paydate
                     ]);
 
         $filterable = [
