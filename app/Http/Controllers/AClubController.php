@@ -289,6 +289,8 @@ class AClubController extends Controller
         '11'=>['0'=>'December']];
 
         $filter_paydate = $this->getFilterDate('aclub_transactions', 'payment_date');
+        $filter_startdate = $this->getFilterDate('aclub_transactions', 'start_date');
+        $filter_masadate = $this->getFilterDate('aclub_transactions', 'masa_tenggang');
         // tambahin yang lain ya nik hehe
         $filter_birthdates = $this->getFilterDateBirth('birthdate');
 
@@ -299,9 +301,9 @@ class AClubController extends Controller
             "Sales" => $filter_sales,
             "Kode" => $filter_kode,
             "Status" => $filter_status,
-            "Start Date" => $filter_date,
+            "Start Date" => $filter_startdate,
             "Payment Date" => $filter_paydate,
-            "Masa Tenggang" => $filter_date
+            "Masa Tenggang" => $filter_masadate
             ];
 
         //sort
