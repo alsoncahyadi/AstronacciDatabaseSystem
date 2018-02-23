@@ -935,37 +935,86 @@ class AClubController extends Controller
     }
 
     public function exportExcel() {
-        $datas = AclubTransaction::all();
+        $data = collect([]);
 
-        foreach ($datas as $data) {
-            $member = $data->aclubMember;
+        $members = AclubMember::all();
 
-            $data->master_id = $member->master_id;
-            $data->group = $member->group;
-            $data->user_id = $member->user_id;
+        foreach ($members as $member) {
+            $transactions = $member->aclubTransactions()->get();
 
-            $info = $member->aclubInformation;
+            if ($transactions->first() != null) {
+                foreach ($transactions as $transaction) {
+                    $object = $transaction;
 
-            $data->sumber_data = $info->sumber_data;
-            $data->keterangan = $info->keterangan;
+                    $object->master_id = $member->master_id;
+                    $object->group = $member->group;
+                    $object->user_id = $member->user_id;
 
-            $master = $member->master;
+                    $info = $member->aclubInformation;
 
-            $data->redclub_user_id = $master->redclub_user_id;
-            $data->redclub_password = $master->redclub_password;
-            $data->name = $master->name;
-            $data->telephone_number = $master->telephone_number;
-            $data->email = $master->email;
-            $data->birthdate = $master->birthdate;
-            $data->address = $master->address;
-            $data->city = $master->city;
-            $data->province = $master->province;
-            $data->gender = $master->gender;
-            $data->line_id = $master->line_id;
-            $data->bbm = $master->bbm;
-            $data->whatsapp = $master->whatsapp;
-            $data->facebook = $master->facebook;
+                    $object->sumber_data = $info->sumber_data;
+                    $object->keterangan = $info->keterangan;
+
+                    $master = $member->master;
+
+                    $object->redclub_user_id = $master->redclub_user_id;
+                    $object->redclub_password = $master->redclub_password;
+                    $object->name = $master->name;
+                    $object->telephone_number = $master->telephone_number;
+                    $object->email = $master->email;
+                    $object->birthdate = $master->birthdate;
+                    $object->address = $master->address;
+                    $object->city = $master->city;
+                    $object->province = $master->province;
+                    $object->gender = $master->gender;
+                    $object->line_id = $master->line_id;
+                    $object->bbm = $master->bbm;
+                    $object->whatsapp = $master->whatsapp;
+                    $object->facebook = $master->facebook;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->master_id = $member->master_id;
+                $object->group = $member->group;
+
+                $info = $member->aclubInformation;
+
+                $object->sumber_data = $info->sumber_data;
+                $object->keterangan = $info->keterangan;
+
+                $master = $member->master;
+
+                $object->redclub_user_id = $master->redclub_user_id;
+                $object->redclub_password = $master->redclub_password;
+                $object->name = $master->name;
+                $object->telephone_number = $master->telephone_number;
+                $object->email = $master->email;
+                $object->birthdate = $master->birthdate;
+                $object->address = $master->address;
+                $object->city = $master->city;
+                $object->province = $master->province;
+                $object->gender = $master->gender;
+                $object->line_id = $master->line_id;
+                $object->bbm = $master->bbm;
+                $object->whatsapp = $master->whatsapp;
+                $object->facebook = $master->facebook;
+
+                $trans = new \App\AclubTransaction();
+                $trans_attributes = $trans->getAttributesImport();
+
+                foreach ($trans_attributes as $trans_attribute) {
+                    $object->$trans_attribute = null;
+                }
+
+                $object->user_id = $member->user_id;
+
+                $data->push($object);
+            }
         }
+
         $array = [];
         $heads = ["Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
@@ -996,7 +1045,7 @@ class AClubController extends Controller
                     "Yellow Zone" => "yellow_zone",
                     "Red Zone" => "red_zone",
                     "Sales Name" => "sales_name"];
-        foreach ($datas as $dat) {
+        foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
                 //echo $key . " " . $value . "<br>";
