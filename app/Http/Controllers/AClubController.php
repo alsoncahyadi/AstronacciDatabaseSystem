@@ -250,20 +250,7 @@ class AClubController extends Controller
                 "red_zone"
                 ];
 
-        //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
-
-        // $this->getFilteredAndSortedTable('test');
+        //Filter        
 
         $joined = DB::table('master_clients')
                     ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
