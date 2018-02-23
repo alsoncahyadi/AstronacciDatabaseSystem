@@ -467,20 +467,53 @@ class GreenController extends Controller
     }
 
     public function exportExcel() {
-        $data = GreenProspectProgress::all();
+        $data = collect([]);
 
-        foreach ($data as $dat) {
-            $client = $dat->client;
+        $clients = GreenProspectClient::all();
 
-            $dat->green_id = $client->green_id;
-            $dat->date = $client->date;
-            $dat->name = $client->name;
-            $dat->phone = $client->phone;
-            $dat->email = $client->email;
-            $dat->interest = $client->interest;
-            $dat->pemberi = $client->pemberi;
-            $dat->sumber_data = $client->sumber_data;
-            $dat->keterangan_perintah = $client->keterangan_perintah;
+        foreach ($clients as $client) {
+            $progresses = $client->progresses()->get();
+
+            if ($progresses->first() != null) {
+                foreach ($progresses as $progress) {
+                    $object = $progress;
+
+                    $object->green_id = $client->green_id;
+                    $object->date = $client->date;
+                    $object->name = $client->name;
+                    $object->phone = $client->phone;
+                    $object->email = $client->email;
+                    $object->interest = $client->interest;
+                    $object->pemberi = $client->pemberi;
+                    $object->sumber_data = $client->sumber_data;
+                    $object->keterangan_perintah = $client->keterangan_perintah;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->date = $client->date;
+                $object->name = $client->name;
+                $object->phone = $client->phone;
+                $object->email = $client->email;
+                $object->interest = $client->interest;
+                $object->pemberi = $client->pemberi;
+                $object->sumber_data = $client->sumber_data;
+                $object->keterangan_perintah = $client->keterangan_perintah;
+
+                $progress = new \App\GreenProspectProgress();
+                $progress_attributes = $progress->getAttributesImport();
+
+                foreach ($progress_attributes as $progress_attribute) {
+                    $object->$progress_attribute = null;
+                }
+
+                $object->progress_id = null;
+                $object->green_id = $client->green_id;
+
+                $data->push($object);
+            }
         }
 
         $array = [];
@@ -499,9 +532,7 @@ class GreenController extends Controller
                 "Status" => "status",
                 "Nama Product" => "nama_product",
                 "Nominal" => "nominal",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Keterangan" => "keterangan"
                     ];
         foreach ($data as $dat) {
             $arr = [];

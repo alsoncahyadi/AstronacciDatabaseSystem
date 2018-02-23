@@ -565,31 +565,75 @@ class MRGController extends Controller
     }
 
     public function exportExcel() {
-        $data = MrgAccount::all();
+        $data = collect([]);
 
-        foreach ($data as $dat) {
-            $mrg = $dat->mrg;
+        $mrgs = Mrg::all();
 
-            $dat->sumber_data = $mrg->sumber_data;
-            $dat->join_date = $mrg->join_date;
+        foreach ($mrgs as $mrg) {
+            $accounts = $mrg->accounts()->get();
 
-            $master = $mrg->master;
+            if ($accounts->first() != null) {
+                foreach ($accounts as $account) {
+                    $object = $account;
 
-            $dat->redclub_user_id = $master->redclub_user_id;
-            $dat->redclub_password = $master->redclub_password;
-            $dat->name = $master->name;
-            $dat->telephone_number = $master->telephone_number;
-            $dat->email = $master->email;
-            $dat->birthdate = $master->birthdate;
-            $dat->address = $master->address;
-            $dat->city = $master->city;
-            $dat->province = $master->province;
-            $dat->gender = $master->gender;
-            $dat->line_id = $master->line_id;
-            $dat->bbm = $master->bbm;
-            $dat->whatsapp = $master->whatsapp;
-            $dat->facebook = $master->facebook;
+                    $object->sumber_data = $mrg->sumber_data;
+                    $object->join_date = $mrg->join_date;
+
+                    $master = $mrg->master;
+
+                    $object->redclub_user_id = $master->redclub_user_id;
+                    $object->redclub_password = $master->redclub_password;
+                    $object->name = $master->name;
+                    $object->telephone_number = $master->telephone_number;
+                    $object->email = $master->email;
+                    $object->birthdate = $master->birthdate;
+                    $object->address = $master->address;
+                    $object->city = $master->city;
+                    $object->province = $master->province;
+                    $object->gender = $master->gender;
+                    $object->line_id = $master->line_id;
+                    $object->bbm = $master->bbm;
+                    $object->whatsapp = $master->whatsapp;
+                    $object->facebook = $master->facebook;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->sumber_data = $mrg->sumber_data;
+                $object->join_date = $mrg->join_date;
+
+                $master = $mrg->master;
+
+                $object->redclub_user_id = $master->redclub_user_id;
+                $object->redclub_password = $master->redclub_password;
+                $object->name = $master->name;
+                $object->telephone_number = $master->telephone_number;
+                $object->email = $master->email;
+                $object->birthdate = $master->birthdate;
+                $object->address = $master->address;
+                $object->city = $master->city;
+                $object->province = $master->province;
+                $object->gender = $master->gender;
+                $object->line_id = $master->line_id;
+                $object->bbm = $master->bbm;
+                $object->whatsapp = $master->whatsapp;
+                $object->facebook = $master->facebook;
+
+                $account = new \App\MrgAccount();
+                $account_attributes = $account->getAttributesImport();
+
+                foreach ($account_attributes as $account_attribute => $key) {
+                    $object->$account_attribute = null;
+                }
+
+                $object->master_id = $master->master_id;
+
+                $data->push($object);
+            }
         }
+
         $array = [];
         $heads = [
                     "Account Number" => "accounts_number",

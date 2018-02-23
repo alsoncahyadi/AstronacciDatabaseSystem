@@ -508,6 +508,6 @@
 	}
 
 	function downloadFx() {
-		window.location.href = "/export/master";
+		window.location.href = "/export/mrg";
 	}
 </script>
