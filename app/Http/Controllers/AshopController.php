@@ -9,6 +9,7 @@ use DB;
 use App\AshopTransaction;
 use App\MasterClient;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 
 class AshopController extends Controller
 {
@@ -578,7 +579,9 @@ class AshopController extends Controller
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
+                    $line = 1;
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
                              if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
@@ -601,14 +604,17 @@ class AshopController extends Controller
                             }
 
                             $ashop->save();
-                        } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
+                    } else {
+                        dd($err);
                     }
                 }
             }

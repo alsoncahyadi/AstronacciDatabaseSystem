@@ -12,6 +12,7 @@ use App\AclubMember;
 use App\AclubTransaction;
 use App\MasterClient;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -853,9 +854,12 @@ class AClubController extends Controller
                     }
                 } //end validasi
 
+
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
+                    $line = 1;
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
                              // check whether master client exist or not
                             if (MasterClient::find($value->master_id) == null) {
@@ -876,7 +880,7 @@ class AClubController extends Controller
 
                                 $aclub_info_attributes = $aclub_info->getAttributesImport();
 
-                                foreach ($aclub_info_attributes as $aclub_info_attribute => $import) {
+                                foreach     ($aclub_info_attributes as $aclub_info_attribute => $import) {
                                     $aclub_info->$aclub_info_attribute = $value->$import;
                                 }
 
@@ -903,16 +907,19 @@ class AClubController extends Controller
                                 foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
                                     $aclub_trans->$aclub_trans_attribute = $value->$import;
                                 }
-
                             $aclub_trans->save();
-                        } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
+                    } else {
+                        dd($err);
                     }
                 }
             }

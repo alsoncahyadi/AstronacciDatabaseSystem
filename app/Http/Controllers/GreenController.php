@@ -8,6 +8,7 @@ use Excel;
 use App\GreenProspectClient;
 use App\GreenProspectProgress;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 use DB;
 
 class GreenController extends Controller
@@ -577,10 +578,11 @@ class GreenController extends Controller
                     //     $err[] = $msg;
                     // }
                 } //end validasi
-
+                $line = 1;
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
                              // check whether master client exist or not
                             if (GreenProspectClient::find($value->green_id) == null) {
@@ -604,14 +606,17 @@ class GreenController extends Controller
                                 }
 
                             $progress->save();
-                        } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
+                    } else {
+                        dd($err);
                     }
                 }
             }
