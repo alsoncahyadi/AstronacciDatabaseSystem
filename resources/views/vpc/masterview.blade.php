@@ -91,7 +91,6 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<i class="fa fa-child fa-fw"></i> Members &nbsp;
-			<a id="importb" onclick="importex()" class="btn btn-default">Import Excel File</a>
 			<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
 			<button onclick="templateFx()" class="btn btn-default"><i class="fa fa-download"></i> &nbsp Template </button>
 			<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
@@ -259,12 +258,32 @@
 						<tbody id="tbody">@include('vpc/mastertable')</tbody>
 					</table>
 				</div>
-				<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
-				<div class="col-xs-6" style="margin-left: 200px">
-					Page
-					<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{ (isset($count) ? $count : "" )}}">
-					/<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
-					<button id="page_number">Go</button>
+				<div class="row">
+					<div class="col-md-7">
+						<div id="pageController" style="margin-left: 25px;">
+							Page
+							<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
+							/<label id="page_count">{{$count}}</label>
+							<button id="page_number">Go</button>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<button onclick="downloadFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Download </button>
+						<button onclick="templateFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Template </button>
+						<a id="importb" onclick="importex()" class="btn btn-default" style="float:right">Import Excel File</a>
+						<div id="import" style="display:none">
+							<div class="panel panel-default" style="padding:15px">
+								<div class="panel-body">
+									<form method="post" action="{{route('master.import')}}" enctype="multipart/form-data">
+										<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+										<input type="file" name="import_file" />
+										<br>
+										<button class="btn btn-primary">Import .xls File</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
