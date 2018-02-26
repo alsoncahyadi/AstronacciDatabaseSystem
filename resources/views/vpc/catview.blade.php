@@ -177,62 +177,47 @@
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
 			<div class="row">
-				<div class="col-md-4 row" style="width:38%; max-width: 390px;">
-					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
-					<div class="col-md-4">
-						<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
-					</div>
-					<div class="col-md-3" style="width:23%;">
-						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
-					</div>
-					<div class="col-md-2" style="width:10%; max-width: 180px;">
-						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
-					</div>
-				</div>
-				<div id="import" style="display:none">
-					<div class="panel panel-default" style="padding:15px">
-						<div class="panel-body">
-							<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-								<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-								<input type="file" name="import_file" />
-								<br>
-								<button class="btn btn-primary">Import .xls File</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-6 row" style="float: right;">
-					<div class="col-md-1" style="white-space: nowrap; padding-left: 0px; max-width: 505px;">Sort by:</div>
-					<!--SORT PARAMS -->
-					<div class="col-md-3">
-						<select class="sort form-control no-spin" name="sort1">
-							<option value=""> <option>
-							@foreach ($sortables as $sortable => $value)
-								<option value="{{ $value }}">{{ $sortable }}</option>
-							@endforeach
-						</select>
-					</div>
-					<div class="col-md-3">
-						<select class="sort form-control no-spin" name="sort2">
-							<option value=""> <option>
-							@foreach ($sortables as $sortable => $value)
-								<option value="{{ $value }}">{{ $sortable }}</option>
-							@endforeach
-						</select>
-					</div>
-					<div class="col-md-3">
-						<select class="sort form-control no-spin" name="sort3">
-							<option value=""> <option>
-							@foreach ($sortables as $sortable => $value)
-								<option value="{{ $value }}">{{ $sortable }}</option>
-							@endforeach
-						</select>
-					</div>
-					<div class="col-md-1" style="width:2%;">
-						<button id="sort-button" class="btn btn-default">Sort</button>
-					</div>
-				</div>
-			</div>
+                <div class="col-md-6 row">
+                    <div class="col-md-7">
+                        <a id="importb" onclick="importex()" class="btn btn-default">Import Excel File</a>
+                        <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>&nbsp;
+                        <i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;display:none"></i>
+                    </div>
+                    <div class="col-md-5">
+                    </div>
+                </div>
+                <div class="col-md-6 row" style="float: right;">
+                    <div class="col-md-1" style="white-space: nowrap; padding-left: 0px;">Sort by:</div>
+                    <!--SORT PARAMS -->
+                    <div class="col-md-3">
+                        <select class="sort form-control no-spin" name="sort1">
+                            <option value=""> <option>
+                            @foreach ($sortables as $sortable => $value)
+                                <option value="{{ $value }}">{{ $sortable }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="sort form-control no-spin" name="sort2">
+                            <option value=""> <option>
+                            @foreach ($sortables as $sortable => $value)
+                                <option value="{{ $value }}">{{ $sortable }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="sort form-control no-spin" name="sort3">
+                            <option value=""> <option>
+                            @foreach ($sortables as $sortable => $value)
+                                <option value="{{ $value }}">{{ $sortable }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-1" style="width:2%;">
+                        <button id="sort-button" class="btn btn-default">Sort</button>
+                    </div>
+                </div>
+            </div>
 		</div>
 
 		<div class="panel-body">
@@ -309,12 +294,21 @@
 				</div>
 			</div>
 		</div>
-		<div id="pageController" style="margin-left: 2px; margin-top: 12px;">
-			Page
-			<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
-			/<label id="page_count">{{$count}}</label>
-			<button id="page_number">Go</button>
-		</div>
+		<br>
+        <div class="row">
+            <div class="col-md-8">
+                <div id="pageController" style="margin-left: 2px;">
+                    Page
+                    <input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
+                    /<label id="page_count">{{$count}}</label>
+                    <button id="page_number">Go</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button onclick="downloadFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Download </button>
+                <button onclick="templateFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Template </button>
+            </div>
+        </div>
 	</div>
 </div>
 
