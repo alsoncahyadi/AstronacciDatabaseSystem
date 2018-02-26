@@ -90,29 +90,11 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading vpchead">
-			<div class="row">
-				<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
-					<div id="import" style="display:none">
-						<div class="panel panel-default" style="padding:15px">
-							<div class="panel-body">
-								<form method="post" action="{{route('master.import')}}" enctype="multipart/form-data">
-									<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-									<input type="file" name="import_file" />
-									<br>
-									<button class="btn btn-primary">Import .xls File</button>
-								</form>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
-					</div>
-				<div class="col-md-4">
-					<i class="fa fa-child fa-fw"></i> Members &nbsp;
-					<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
-					<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
-				</div>
-			</div>
+			<i class="fa fa-child fa-fw"></i> Members &nbsp;
+			<a id="importb" onclick="importex()" class="btn btn-default">Import Excel File</a>
+			<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
+			<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
+			<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 		</div>
 
 		<div class="panel-body">
