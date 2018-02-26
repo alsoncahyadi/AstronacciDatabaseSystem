@@ -560,23 +560,6 @@ class GreenController extends Controller
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
-                $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    // if (($value->master_id) === null) {
-                    //     $msg = "Master ID empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sumber_data) === null) {
-                    //     $msg = "Sumber Data empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->keterangan) === null) {
-                    //     $msg = "Keterangan empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                } //end validasi
                 $line = 1;
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
@@ -584,27 +567,43 @@ class GreenController extends Controller
                         $line += 1;
                         try {
                              // check whether master client exist or not
+                            $is_client_has_attributes = False;
                             if (GreenProspectClient::find($value->green_id) == null) {
                                 $client = new \App\GreenProspectClient;
 
                                 $client_attributes = $client->getAttributesImport();
 
                                 foreach ($client_attributes as $client_attribute => $import) {
-                                    $client->$client_attribute = $value->$import;
-                                }
+                                    if ($value->$import != null) {
+                                        $client->$client_attribute = $value->$import;
+                                        $is_client_has_attributes = True;
+                                    }
 
-                                $client->save();
+                                }
+                                if ($is_client_has_attributes) {
+                                    $client->save();
+                                }
+                            }
+                            if (GreenProspectClient::find($value->green_id) == null) {
+                                $value->green_id = $client->green_id;
                             }
 
+                            $is_progress_has_attributes = False;
                             $progress = new \App\GreenProspectProgress;
-
                             $progress_attributes = $progress->getAttributesImport();
-
-                                foreach ($progress_attributes as $progress_attribute => $import) {
-                                    $progress->$progress_attribute = $value->$import;
+                            
+                            foreach ($progress_attributes as $progress_attribute => $import) {
+                                if ($value->$import != null) {
+                                    $progress->$progress_attribute = $value->$import;  
+                                    $is_progress_has_attributes = True;
                                 }
+                            }
 
-                            $progress->save();
+                            if ($is_progress_has_attributes) {  
+                                $progress->save();
+                            }
+
+
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
                           $raw_msg = $ex->getMessage(); # SQL STATE MENTAH

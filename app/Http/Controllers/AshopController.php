@@ -583,27 +583,40 @@ class AshopController extends Controller
                     foreach ($data as $key => $value) {
                         $line += 1;
                         try {
-                             if (MasterClient::find($value->master_id) == null) {
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
                             }
+                            if (($value->master_id) != null) {
+                                $is_ashop_has_attributes = False;
+                                $ashop = new \App\AshopTransaction;
 
-                            $ashop = new \App\AshopTransaction;
+                                $ashop_attributes = $ashop->getAttributesImport();
 
-                            $ashop_attributes = $ashop->getAttributesImport();
+                                foreach ($ashop_attributes as $ashop_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $ashop->$ashop_attribute = $value->$import;
+                                        $is_ashop_has_attributes = True;
+                                    }
+                                }
 
-                            foreach ($ashop_attributes as $ashop_attribute => $import) {
-                                $ashop->$ashop_attribute = $value->$import;
+                                if ($is_ashop_has_attributes) {
+                                    $ashop->save();
+                                }
                             }
-
-                            $ashop->save();
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
                           $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
