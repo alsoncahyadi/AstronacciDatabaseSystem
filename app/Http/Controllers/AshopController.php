@@ -687,4 +687,58 @@ class AshopController extends Controller
             });
         })->export('xls');
     }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+                "Transaction ID" => "transaction_id",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Product Type" => "product_type",
+                "Product Name" => "product_name",
+                "Nominal" => "nominal"
+                    ];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else if ($head == "Transaction ID") {
+                $count_trans_id = AshopTransaction::orderBy('transaction_id', 'desc')->first();
+                if ($count_trans_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_trans_id->transaction_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateAshop', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
 }

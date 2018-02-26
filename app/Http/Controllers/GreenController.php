@@ -519,7 +519,6 @@ class GreenController extends Controller
 
         $array = [];
         $heads = [
-                "Progress ID" => "progress_id",
                 "Green ID" => "green_id",
                 "Date" => "date",
                 "Name" => "name",
@@ -625,5 +624,43 @@ class GreenController extends Controller
             $err[] = $msg;
         }
         return redirect()->back()->withErrors([$err]);
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+                "Green ID" => "green_id",
+                "Date" => "date",
+                "Name" => "name",
+                "Phone" => "phone",
+                "Email" => "email",
+                "Interest" => "interest",
+                "Pemberi" => "pemberi",
+                "Sumber Data" => "sumber_data",
+                "Keterangan Perintah" => "keterangan_perintah",
+                "Sales Name" => "sales_name",
+                "Status" => "status",
+                "Nama Product" => "nama_product",
+                "Nominal" => "nominal",
+                "Keterangan" => "keterangan"
+                    ];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Green ID") {
+                $count_master_id = GreenProspectClient::orderBy('green_id', 'desc')->first()->green_id;
+                $arr[$head] = $count_master_id;
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateGreen', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

@@ -1146,8 +1146,12 @@ class AClubController extends Controller
         $arr = [];
         foreach ($heads as $head => $value) {
             if ($head == "Master ID") {
-                $count_master_id = MasterClient::orderBy('master_id', 'asc')->first()->master_id;
-                $arr[$head] = $count_master_id;
+                 $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
             } else {
                 $arr[$head] = null;
             }

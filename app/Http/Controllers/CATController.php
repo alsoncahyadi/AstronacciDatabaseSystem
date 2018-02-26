@@ -603,9 +603,7 @@ class CATController extends Controller
                 "Tanggal End Class" => "tanggal_end_class",
                 "Tanggal Ujian" => "tanggal_ujian",
                 "Status" => "status",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Keterangan" => "keterangan"
                     ];
         foreach ($data as $dat) {
             $arr = [];
@@ -618,6 +616,61 @@ class CATController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedCAT', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Batch" => "batch",
+                "Sales" => "sales",
+                "Sumber Data" => "sumber_data",
+                "DP Date" => "DP_date",
+                "DP Nominal" => "DP_nominal",
+                "Payment Date" => "payment_date",
+                "Payment Nominal" => "payment_nominal",
+                "Tanggal Opening Class" => "tanggal_opening_class",
+                "Tanggal End Class" => "tanggal_end_class",
+                "Tanggal Ujian" => "tanggal_ujian",
+                "Status" => "status",
+                "Keterangan" => "keterangan"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateCAT', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);
