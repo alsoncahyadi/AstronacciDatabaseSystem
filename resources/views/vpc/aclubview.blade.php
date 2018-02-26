@@ -180,7 +180,7 @@
 				<div class="col-md-6 row">
 					<div class="col-md-7">
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>&nbsp;
-						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;"></i>
+						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;display: none"></i>
 					</div>
 					<div class="col-md-5">
 						<div class="form-group input-group" style="margin-bottom: 0px">
@@ -359,6 +359,15 @@
 				</div>
 			</div>
 		</div>
+		@if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+				    @foreach ($errors->all() as $error)
+				        <li>{{ $error }}</li>
+				    @endforeach
+				</ul>
+			</div>
+		@endif
 	</div>
 </div>
 

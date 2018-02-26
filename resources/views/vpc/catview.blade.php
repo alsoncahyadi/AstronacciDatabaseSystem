@@ -179,7 +179,6 @@
 			<div class="row">
                 <div class="col-md-6 row">
                     <div class="col-md-7">
-                        <a id="importb" onclick="importex()" class="btn btn-default">Import Excel File</a>
                         <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>&nbsp;
                         <i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;display:none"></i>
                     </div>
@@ -322,6 +321,15 @@
 				</div>
             </div>
         </div>
+        @if ($errors->any())
+			<div class="alert alert-danger">
+				<ul>
+				    @foreach ($errors->all() as $error)
+				        <li>{{ $error }}</li>
+				    @endforeach
+				</ul>
+			</div>
+		@endif
 	</div>
 </div>
 
