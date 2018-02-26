@@ -923,6 +923,55 @@ Route::get('/template/aclub', [
     'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
+Route::get('/template/mrg', [
+    'uses' => 'MRGController@templateExcel',
+    'as' => 'mrgtemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/uob', [
+    'uses' => 'UOBController@templateExcel',
+    'as' => 'uobtemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/cat', [
+    'uses' => 'CATController@templateExcel',
+    'as' => 'cattemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/green', [
+    'uses' => 'GreenController@templateExcel',
+    'as' => 'greentemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/green', [
+    'uses' => 'GreenController@templateExcel',
+    'as' => 'greentemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/ashop', [
+    'uses' => 'AshopController@templateExcel',
+    'as' => 'ashoptemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
+Route::get('/template/master', [
+    'uses' => 'HomeController@templateExcel',
+    'as' => 'mastertemplate',
+    'middleware' => ['auth', 'roles'],
+    'roles' => ['0', '1', '2', '3', '4'],
+    ]);
+
 Route::get('/export/uob', [
     'uses' => 'UOBController@exportExcel',
     'as' => 'uobexport',

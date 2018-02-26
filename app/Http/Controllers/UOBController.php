@@ -519,27 +519,45 @@ class UOBController extends Controller
                     foreach ($data as $key => $value) {
                         $line += 1;
                         try {
+                            $is_master_have_attributes = False;
                             if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
                             }
 
-                            $uob = new \App\Uob;
 
-                            $uob_attributes = $uob->getAttributesImport();
+                            if (($value->master_id) != null) {
 
-                            foreach ($uob_attributes as $uob_attribute => $import) {
-                                $uob->$uob_attribute = $value->$import;
+                                $is_uob_has_attributes = False;
+
+                                $uob = new \App\Uob;
+
+                                $uob_attributes = $uob->getAttributesImport();
+
+                                foreach ($uob_attributes as $uob_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $uob->$uob_attribute = $value->$import;                                        
+                                        $is_uob_has_attributes = True;
+                                    }
+                                }
+
+                                if ($is_uob_has_attributes) {
+                                    $uob->save();
+                                }
                             }
-
-                            $uob->save();
+                            
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
                           $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
@@ -619,9 +637,7 @@ class UOBController extends Controller
           "Tanggal Trading" => 'tanggal_trading',
           "Status" => 'status',
           "Trading Via" => 'trading_via',
-          "Keterangan" => 'keterangan',
-          "Created At" => "created_at",
-        "Updated At" => "updated_at"
+          "Keterangan" => 'keterangan'
         ];
         foreach ($data as $dat) {
             $arr = [];
@@ -634,6 +650,69 @@ class UOBController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedUOB', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+        "Kode Client" => "client_id",
+          "Master ID" => "master_id",
+        "User ID Redclub" => "redclub_user_id",
+        "Password Redclub" => "redclub_password",
+        "Nama" => "name",
+        "Telephone" => "telephone_number",
+        "Email" => "email",
+        "Tanggal Lahir" => "birthdate",
+        "Alamat" => "address",
+        "Kota" => "city",
+        "Provinsi" => "province",
+        "Gender" => "gender",
+        "Line ID" => "line_id",
+        "BBM" => "bbm",
+        "WhatsApp" => "whatsapp",
+        "Facebook" => "facebook",
+          "Sales" => "sales_name",
+          "Sumber Data" => "sumber_data",
+          "Tanggal Join" => "join_date",
+          "Nomor KTP" => "nomor_ktp",
+          "Expired KTP" => "tanggal_expired_ktp",
+          "Nomor NPWP" => "nomor_npwp",
+          "Alamat Surat Menyurat" => "alamat_surat",
+          "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+          "Nama Ibu Kandung" => "nama_ibu_kandung",
+          "Bank Pribadi" => "bank_pribadi",
+          "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+          "Tanggal RDI Done" => 'tanggal_rdi_done',
+          "RDI Bank" => "rdi_bank",
+          "Nomor RDI" => 'nomor_rdi',
+          "Tanggal Top Up" => 'tanggal_top_up',
+          "Nominal Top Up" => 'nominal_top_up',
+          "Tanggal Trading" => 'tanggal_trading',
+          "Status" => 'status',
+          "Trading Via" => 'trading_via',
+          "Keterangan" => 'keterangan'];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateUOB', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);

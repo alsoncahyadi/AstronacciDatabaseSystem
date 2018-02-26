@@ -137,69 +137,6 @@ class HomeController extends Controller
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
-                $i = 1;
-
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->user_id_redclub) === null) {
-                        $msg = "User ID Redclub empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->password_redclub) === null) {
-                        $msg = "Password Redclub empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->telephone) === null) {
-                        $msg = "Telepon empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->tanggal_lahir) === null) {
-                        $msg = "Tanggal Lahir empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->kota) === null) {
-                        $msg = "Kota empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->provinsi) === null) {
-                        $msg = "Provinsi empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->jenis_kelamin) === null) {
-                        $msg = "Gender empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->line_id) === null) {
-                        $msg = "Line ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->bbm) === null) {
-                        $msg = "BBM empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->whatsapp) === null) {
-                        $msg = "Whatsapp empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->facebook) === null) {
-                        $msg = "Facebook empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
@@ -342,6 +279,47 @@ class HomeController extends Controller
         }
 
         return $filtered_clients;
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Master ID" => "master_id",
+          "User ID Redclub" => "redclub_user_id",
+          "Password Redclub" => "redclub_password",
+          "Nama" => "name",
+          "Telephone" => "telephone_number",
+          "Email" => "email",
+          "Tanggal Lahir" =>"birthdate",
+          "Alamat" => "address",
+          "Kota" => "city",
+          "Provinsi" => "province",
+          "Jenis Kelamin" => "gender",
+          "Line ID" => "line_id",
+          "BBM" => "bbm",
+          "WhatsApp" => "whatsapp",
+          "Facebook" => "facebook",];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateMaster', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 
     /**

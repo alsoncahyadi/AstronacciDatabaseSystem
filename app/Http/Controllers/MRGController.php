@@ -50,8 +50,10 @@ class MRGController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {             
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {
+            if ($m > 1) {
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -495,40 +497,67 @@ class MRGController extends Controller
                     foreach ($data as $key => $value) {
                         $line += 1;
                         try {
-                             if (MasterClient::find($value->master_id) == null) {
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
+
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
+
+                                $value->master_id = $master->master_id;
                             }
 
+
                             // check whether aclub information exist or not
-                            if (MRG::find($value->master_id) == null) {
-                                $mrg = new \App\MRG;
+                            $is_mrg_have_attributes = False;
+                            if (Mrg::find($value->master_id) == null) {
+                                $mrg = new \App\Mrg;
 
                                 $mrg_attributes = $mrg->getAttributesImport();
 
                                 foreach ($mrg_attributes as $mrg_attribute => $import) {
-                                    $mrg->$mrg_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $mrg->$mrg_attribute = $value->$import;
+                                        $is_mrg_have_attributes = True;
+                                    }
                                 }
 
-                                $mrg->save();
+                                if ($is_mrg_have_attributes) {
+                                    $mrg->save();
+                                }
                             }
+
+                            $is_mrg_account_have_attributes = False;
 
                             $mrg_account = new \App\MrgAccount;
 
                             $mrg_account_attributes = $mrg_account->getAttributesImport();
 
                             foreach ($mrg_account_attributes as $mrg_account_attribute => $import) {
-                                $mrg_account->$mrg_account_attribute = $value->$import;
+                                if ($value->$import != null) {
+                                    $mrg_account->$mrg_account_attribute = $value->$import;
+                                    $is_mrg_account_have_attributes = True;
+                                } else{
+                                    $mrg_account->$mrg_account_attribute = null;
+                                }
                             }
 
-                            $mrg_account->save();
+                            if ($is_mrg_account_have_attributes) {  
+                                $mrg_account->save();
+                                dd($mrg);
+                            }
+
 
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
@@ -670,5 +699,51 @@ class MRGController extends Controller
                 "Sales" => "sales_name"];
 
         return view('content/mrgeditform', ['route'=>'MRG', 'client'=>$mrg_account, 'ins'=>$ins]);
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Account Number" => "accounts_number",
+                    "Account Type" => "account_type",
+                    "Sales Name" => "sales_name",
+                    "Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Join Date" => "join_date"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateMRG', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

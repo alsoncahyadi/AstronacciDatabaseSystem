@@ -528,4 +528,8 @@
 	function downloadFx() {
 		window.location.href = "/export/cat";
 	}
+
+	function templateFx() {
+		window.location.href = "/template/cat";
+	}
 </script>

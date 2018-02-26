@@ -515,4 +515,8 @@
 	function downloadFx() {
 		window.location.href = "/export/mrg";
 	}
+
+	function templateFx() {
+		window.location.href = "/template/mrg";
+	}
 </script>

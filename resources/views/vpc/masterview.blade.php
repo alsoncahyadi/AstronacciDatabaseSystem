@@ -92,6 +92,7 @@
 		<div class="panel-heading vpchead">
 			<i class="fa fa-child fa-fw"></i> Members &nbsp;
 			<button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
+			<button onclick="templateFx()" class="btn btn-default"><i class="fa fa-download"></i> &nbsp Template </button>
 			<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
 			<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
 		</div>
@@ -394,5 +395,9 @@
 
 	function downloadFx() {
 		window.location.href = "/export/master";
+	}
+
+	function templateFx() {
+		window.location.href = "/template/master";
 	}
 </script>

@@ -49,8 +49,10 @@ class CATController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {            
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {
+            if ($m > 1) {
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -508,27 +510,43 @@ class CATController extends Controller
                     foreach ($data as $key => $value) {
                         $line += 1;
                         try {
+                            $is_master_have_attributes = False;
                             if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
                             }
 
-                            $cat = new \App\Cat;
+                            if (($value->master_id) != null) {
 
-                            $cat_attributes = $cat->getAttributesImport();
+                                $is_cat_has_attributes = False;
 
-                            foreach ($cat_attributes as $cat_attribute => $import) {
-                                $cat->$cat_attribute = $value->$import;
+                                $cat = new \App\Cat;
+
+                                $cat_attributes = $cat->getAttributesImport();
+
+                                foreach ($cat_attributes as $cat_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $cat->$cat_attribute = $value->$import;
+                                        $is_cat_has_attributes = True;
+                                    }
+                                }
+
+                                if ($is_cat_has_attributes) {
+                                    $cat->save();
+                                }
                             }
-
-                            $cat->save();
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
                           $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
@@ -603,9 +621,7 @@ class CATController extends Controller
                 "Tanggal End Class" => "tanggal_end_class",
                 "Tanggal Ujian" => "tanggal_ujian",
                 "Status" => "status",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Keterangan" => "keterangan"
                     ];
         foreach ($data as $dat) {
             $arr = [];
@@ -618,6 +634,61 @@ class CATController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedCAT', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Batch" => "batch",
+                "Sales" => "sales",
+                "Sumber Data" => "sumber_data",
+                "DP Date" => "DP_date",
+                "DP Nominal" => "DP_nominal",
+                "Payment Date" => "payment_date",
+                "Payment Nominal" => "payment_nominal",
+                "Tanggal Opening Class" => "tanggal_opening_class",
+                "Tanggal End Class" => "tanggal_end_class",
+                "Tanggal Ujian" => "tanggal_ujian",
+                "Status" => "status",
+                "Keterangan" => "keterangan"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateCAT', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);

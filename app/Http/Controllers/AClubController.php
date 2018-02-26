@@ -905,12 +905,12 @@ class AClubController extends Controller
 
                             $aclub_trans_attributes = $aclub_trans->getAttributesImport();
 
-                                foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
-                                    if ($value->$import != null) {
-                                        $aclub_trans->$aclub_trans_attribute = $value->$import;
-                                        $is_trans_have_attributes = True;
-                                    }
+                            foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
+                                if ($value->$import != null) {
+                                    $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                    $is_trans_have_attributes = True;
                                 }
+                            }
 
                             if ($is_member_have_attributes) {  
                                 $aclub_trans->save();
@@ -1146,8 +1146,12 @@ class AClubController extends Controller
         $arr = [];
         foreach ($heads as $head => $value) {
             if ($head == "Master ID") {
-                $count_master_id = MasterClient::orderBy('master_id', 'asc')->first()->master_id;
-                $arr[$head] = $count_master_id;
+                 $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
             } else {
                 $arr[$head] = null;
             }

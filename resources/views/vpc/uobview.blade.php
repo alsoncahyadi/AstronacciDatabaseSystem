@@ -544,4 +544,8 @@
     function downloadFx() {
         window.location.href = "/export/uob";
     }
+
+    function templateFx() {
+        window.location.href = "/template/uob";
+    }
 </script>

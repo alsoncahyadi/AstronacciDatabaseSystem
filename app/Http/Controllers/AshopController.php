@@ -583,27 +583,40 @@ class AshopController extends Controller
                     foreach ($data as $key => $value) {
                         $line += 1;
                         try {
-                             if (MasterClient::find($value->master_id) == null) {
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
                             }
+                            if (($value->master_id) != null) {
+                                $is_ashop_has_attributes = False;
+                                $ashop = new \App\AshopTransaction;
 
-                            $ashop = new \App\AshopTransaction;
+                                $ashop_attributes = $ashop->getAttributesImport();
 
-                            $ashop_attributes = $ashop->getAttributesImport();
+                                foreach ($ashop_attributes as $ashop_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $ashop->$ashop_attribute = $value->$import;
+                                        $is_ashop_has_attributes = True;
+                                    }
+                                }
 
-                            foreach ($ashop_attributes as $ashop_attribute => $import) {
-                                $ashop->$ashop_attribute = $value->$import;
+                                if ($is_ashop_has_attributes) {
+                                    $ashop->save();
+                                }
                             }
-
-                            $ashop->save();
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
                           $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
@@ -681,6 +694,60 @@ class AshopController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedAShop', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+                "Transaction ID" => "transaction_id",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Product Type" => "product_type",
+                "Product Name" => "product_name",
+                "Nominal" => "nominal"
+                    ];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else if ($head == "Transaction ID") {
+                $count_trans_id = AshopTransaction::orderBy('transaction_id', 'desc')->first();
+                if ($count_trans_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_trans_id->transaction_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateAshop', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);
