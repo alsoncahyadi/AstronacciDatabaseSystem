@@ -314,7 +314,7 @@
 				<div id="import" style="display:none">
 					<div class="panel panel-default" style="padding:15px;">
 						<div class="panel-body">
-							<form method="post" action="{{route('master.import')}}" enctype="multipart/form-data">
+							<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
 								<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
 								<input type="file" name="import_file" />
 								<br>
