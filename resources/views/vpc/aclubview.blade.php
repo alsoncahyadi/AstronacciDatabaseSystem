@@ -179,9 +179,8 @@
 			<div class="row">
 				<div class="col-md-6 row">
 					<div class="col-md-7">
-						<a id="importb" onclick="importex()" class="btn btn-default">Import Excel File</a>
 						<a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>&nbsp;
-						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;display: none"></i>
+						<i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;"></i>
 					</div>
 					<div class="col-md-5">
 						<div class="form-group input-group" style="margin-bottom: 0px">
@@ -334,7 +333,7 @@
 		</div>
 		<br>
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-7">
 				<div id="pageController" style="margin-left: 2px;">
 					Page
 					<input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
@@ -342,9 +341,22 @@
 					<button id="page_number">Go</button>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-5">
 				<button onclick="downloadFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Download </button>
 				<button onclick="templateFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Template </button>
+				<a id="importb" onclick="importex()" class="btn btn-default" style="float:right">Import Excel File</a>
+				<div id="import" style="display:none">
+					<div class="panel panel-default" style="padding:15px;">
+						<div class="panel-body">
+							<form method="post" action="{{route('master.import')}}" enctype="multipart/form-data">
+								<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+								<input type="file" name="import_file" />
+								<br>
+								<button class="btn btn-primary">Import .xls File</button>
+							</form>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
