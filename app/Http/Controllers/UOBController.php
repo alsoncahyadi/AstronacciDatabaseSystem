@@ -519,27 +519,45 @@ class UOBController extends Controller
                     foreach ($data as $key => $value) {
                         $line += 1;
                         try {
+                            $is_master_have_attributes = False;
                             if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
                             }
 
-                            $uob = new \App\Uob;
 
-                            $uob_attributes = $uob->getAttributesImport();
+                            if (($value->master_id) != null) {
 
-                            foreach ($uob_attributes as $uob_attribute => $import) {
-                                $uob->$uob_attribute = $value->$import;
+                                $is_uob_has_attributes = False;
+
+                                $uob = new \App\Uob;
+
+                                $uob_attributes = $uob->getAttributesImport();
+
+                                foreach ($uob_attributes as $uob_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $uob->$uob_attribute = $value->$import;                                        
+                                        $is_uob_has_attributes = True;
+                                    }
+                                }
+
+                                if ($is_uob_has_attributes) {
+                                    $uob->save();
+                                }
                             }
-
-                            $uob->save();
+                            
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
                           $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
