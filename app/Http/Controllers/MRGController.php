@@ -489,25 +489,6 @@ class MRGController extends Controller
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
-                $i = 1;
-
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->join_date) === null) {
-                        $msg = "Tanggal Join empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 $line = 1;
                 if (empty($err)) {
