@@ -593,9 +593,15 @@ class GreenController extends Controller
                             $progress_attributes = $progress->getAttributesImport();
                             
                             foreach ($progress_attributes as $progress_attribute => $import) {
-                                if ($value->$import != null) {
-                                    $progress->$progress_attribute = $value->$import;  
-                                    $is_progress_has_attributes = True;
+                                if ($import != 'green_id') {
+                                    if ($value->$import != null) {
+                                        $progress->$progress_attribute = $value->$import;  
+                                        $is_progress_has_attributes = True;
+                                    }
+                                } else {
+                                    if ($value->$import != null) {
+                                        $progress->$progress_attribute = $value->$import;
+                                    } 
                                 }
                             }
 

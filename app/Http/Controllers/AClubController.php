@@ -906,13 +906,20 @@ class AClubController extends Controller
                             $aclub_trans_attributes = $aclub_trans->getAttributesImport();
 
                             foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
-                                if ($value->$import != null) {
-                                    $aclub_trans->$aclub_trans_attribute = $value->$import;
-                                    $is_trans_have_attributes = True;
+                                if ($import != 'user_id') {
+                                    if ($value->$import != null) {
+                                        $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                        $is_trans_have_attributes = True;
+                                    } 
+                                } else {
+                                    if ($value->$import != null) {
+                                        $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                    } 
                                 }
+                                
                             }
 
-                            if ($is_member_have_attributes) {  
+                            if ($is_trans_have_attributes) {  
                                 $aclub_trans->save();
                             }
 
