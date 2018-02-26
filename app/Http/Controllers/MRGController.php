@@ -548,14 +548,13 @@ class MRGController extends Controller
                                 if ($value->$import != null) {
                                     $mrg_account->$mrg_account_attribute = $value->$import;
                                     $is_mrg_account_have_attributes = True;
-                                } else{
+                                } else {
                                     $mrg_account->$mrg_account_attribute = null;
                                 }
                             }
 
-                            if ($is_mrg_account_have_attributes) {  
+                            if (($is_mrg_account_have_attributes) && ($value->accounts_number != null)){  
                                 $mrg_account->save();
-                                dd($mrg);
                             }
 
 
