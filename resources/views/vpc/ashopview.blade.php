@@ -518,4 +518,8 @@
     function downloadFx() {
         window.location.href = "/export/ashop";
     }
+
+    function templateFx() {
+        window.location.href = "/template/ashop";
+    }
 </script>

@@ -469,4 +469,8 @@
 	function downloadFx() {
 		window.location.href = "/export/green";
 	}
+
+	function templateFx() {
+		window.location.href = "/template/green";
+	}
 </script>
