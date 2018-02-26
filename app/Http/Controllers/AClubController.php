@@ -835,26 +835,8 @@ class AClubController extends Controller
             $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
+
             if(!empty($data) && $data->count()){
-                $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->keterangan) === null) {
-                        $msg = "Keterangan empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
-
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     $line = 1;
@@ -862,52 +844,77 @@ class AClubController extends Controller
                         $line += 1;
                         try {
                              // check whether master client exist or not
+                            $is_master_have_attributes = False;
                             if (MasterClient::find($value->master_id) == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
 
                                 foreach ($master_attributes as $master_attribute => $import) {
-                                    $master->$master_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    }
                                 }
 
-                                $master->save();
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
                             }
 
                             // check whether aclub information exist or not
+                            $is_info_have_attributes = False;
                             if (AclubInformation::find($value->master_id) == null) {
                                 $aclub_info = new \App\AclubInformation;
 
                                 $aclub_info_attributes = $aclub_info->getAttributesImport();
 
-                                foreach     ($aclub_info_attributes as $aclub_info_attribute => $import) {
-                                    $aclub_info->$aclub_info_attribute = $value->$import;
+                                foreach ($aclub_info_attributes as $aclub_info_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $aclub_info->$aclub_info_attribute = $value->$import;
+                                        $is_info_have_attributes = True;
+                                    }
                                 }
 
-                                $aclub_info->save();
+                                if ($is_info_have_attributes) {
+                                    $aclub_info->save();
+                                }
                             }
 
                             // check whether aclub member exist or not
+                            $is_member_have_attributes = False;
                             if (AclubMember::find($value->user_id) == null) {
                                 $aclub_member = new \App\AclubMember;
 
                                 $aclub_member_attributes = $aclub_member->getAttributesImport();
 
                                 foreach ($aclub_member_attributes as $aclub_member_attribute => $import) {
-                                    $aclub_member->$aclub_member_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $aclub_member->$aclub_member_attribute = $value->$import;
+                                        $is_member_have_attributes = True;
+                                    }
                                 }
 
-                                $aclub_member->save();
+                                if ($is_member_have_attributes) {
+                                    $aclub_member->save();
+                                }
                             }
 
+                            $is_trans_have_attributes = False;
                             $aclub_trans = new \App\AclubTransaction;
 
                             $aclub_trans_attributes = $aclub_trans->getAttributesImport();
 
                                 foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
-                                    $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                    if ($value->$import != null) {
+                                        $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                        $is_trans_have_attributes = True;
+                                    }
                                 }
-                            $aclub_trans->save();
+
+                            if ($is_member_have_attributes) {  
+                                $aclub_trans->save();
+                            }
 
                         } catch(\Illuminate\Database\QueryException $ex) {
                           # echo ($ex->getMessage());
