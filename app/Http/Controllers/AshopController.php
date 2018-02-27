@@ -9,6 +9,7 @@ use DB;
 use App\AshopTransaction;
 use App\MasterClient;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 
 class AshopController extends Controller
 {
@@ -22,6 +23,41 @@ class AshopController extends Controller
 
         //echo "masuk sini";
         return $newstring;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+                    ->join('ashop_transactions', 'ashop_transactions.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
     }
 
     public function getData()
@@ -81,19 +117,6 @@ class AshopController extends Controller
                 ];
 
         //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
-
-        // $this->getFilteredAndSortedTable('test');
 
         $joined = DB::table('master_clients')
                     ->join('ashop_transactions', 'ashop_transactions.master_id', '=', 'master_clients.master_id');
@@ -102,6 +125,7 @@ class AshopController extends Controller
         $filter_gender = $joined->select('gender')->distinct()->get();
         $filter_product_type = DB::table('ashop_transactions')->select('product_type')->distinct()->get();
         $filter_product_name = DB::table('ashop_transactions')->select('product_name')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -114,6 +138,8 @@ class AshopController extends Controller
         '9'=>['0'=>'October'],
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
+
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
 
         $filterable = [
             "Kota" => $filter_cities,
@@ -525,6 +551,79 @@ class AshopController extends Controller
         return view('content/ashoptranseditform', ['route'=>'AShop', 'client'=>$ashop, 'ins'=>$ins]);
     }
 
+    public function importExcel() {
+        $err = []; //Inisialisasi array error
+        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
+            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
+            $data = Excel::load($path, function($reader) { //Load excel
+            })->get();
+            if(!empty($data) && $data->count()){
+                $i = 1;
+
+                //Jika tidak ada error, import dengan cara insert satu per satu
+                if (empty($err)) {
+                    $line = 1;
+                    foreach ($data as $key => $value) {
+                        $line += 1;
+                        try {
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
+
+                                $master_attributes = $master->getAttributesImport();
+
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
+                                    }
+                                }
+
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
+                            }
+                            if (($value->master_id) != null) {
+                                $is_ashop_has_attributes = False;
+                                $ashop = new \App\AshopTransaction;
+
+                                $ashop_attributes = $ashop->getAttributesImport();
+
+                                foreach ($ashop_attributes as $ashop_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $ashop->$ashop_attribute = $value->$import;
+                                        $is_ashop_has_attributes = True;
+                                    } else {
+                                        $ashop->$ashop_attribute = null;
+                                    }
+                                }
+
+                                if ($is_ashop_has_attributes) {
+                                    $ashop->save();
+                                }
+                            }
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
+                        }
+                    }
+                    if (empty($err)) { //message jika tidak ada error saat import
+                        $msg = "Excel successfully imported";
+                        $err[] = $msg;
+                    }
+                }
+            }
+        } else {
+            $msg = "No file supplied";
+            $err[] = $msg;
+        }
+
+        return redirect()->back()->withErrors([$err]);
+    }
+
     public function exportExcel() {
         $data = AshopTransaction::all();
 
@@ -567,9 +666,7 @@ class AshopController extends Controller
                 "Facebook" => "facebook",
                 "Product Type" => "product_type",
                 "Product Name" => "product_name",
-                "Nominal" => "nominal",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Nominal" => "nominal"
                     ];
         foreach ($data as $dat) {
             $arr = [];
@@ -582,6 +679,60 @@ class AshopController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedAShop', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+                "Transaction ID" => "transaction_id",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Product Type" => "product_type",
+                "Product Name" => "product_name",
+                "Nominal" => "nominal"
+                    ];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else if ($head == "Transaction ID") {
+                $count_trans_id = AshopTransaction::orderBy('transaction_id', 'desc')->first();
+                if ($count_trans_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_trans_id->transaction_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateAshop', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);

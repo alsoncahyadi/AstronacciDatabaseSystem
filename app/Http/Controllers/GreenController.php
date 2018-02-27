@@ -8,6 +8,7 @@ use Excel;
 use App\GreenProspectClient;
 use App\GreenProspectProgress;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 use DB;
 
 class GreenController extends Controller
@@ -302,7 +303,7 @@ class GreenController extends Controller
     public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'date' => 'date',
+                'date_client' => 'date',
                 'name' => '',
                 'phone' => '',
                 'email' => 'required|email',
@@ -310,7 +311,7 @@ class GreenController extends Controller
                 'pemberi' => '',
                 'sumber_data' => '',
                 'keterangan_perintah' => '',
-                'date' => '',
+                'date_progress' => 'date',
                 'sales_name' => '',
                 'status' => '',
                 'nama_product' => '',
@@ -323,7 +324,7 @@ class GreenController extends Controller
         $err = [];
         $green = new \App\GreenProspectClient();
 
-        $green->date = $request->date;
+        $green->date = $request->date_client;
         $green->name = $request->name;
         $green->phone = $request->phone;
         $green->email = $request->email;
@@ -337,7 +338,7 @@ class GreenController extends Controller
         $green_progress = new \App\GreenProspectProgress();
 
         $green_progress->green_id = $green->green_id;
-        $green_progress->date = $request->date;
+        $green_progress->date = $request->date_progress;
         $green_progress->sales_name = $request->sales_name;
         $green_progress->status = $request->status;
         $green_progress->nama_product = $request->nama_product;
@@ -433,56 +434,6 @@ class GreenController extends Controller
         
         return redirect()->back()->withErrors($err);
     }
-
-    public function importExcel() {
-        $err = []; //Inisialisasi array error
-        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
-            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
-            $data = Excel::load($path, function($reader) { //Load excel
-            })->get();
-            if(!empty($data) && $data->count()){
-                $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->no_hp) === null) {
-                        $msg = "No HP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
-                //Jika tidak ada error, import dengan cara insert satu per satu
-                if (empty($err)) {
-                    foreach ($data as $key => $value) {
-                        //Mengubah yes atau no menjadi boolean
-                        $aclub = strtolower($value->share_to_aclub) == "yes" ? 1 : 0;
-                        $mrg = strtolower($value->share_to_mrg) == "yes" ? 1 : 0;
-                        $cat = strtolower($value->share_to_cat) == "yes" ? 1 : 0;
-                        $uob = strtolower($value->share_to_uob) == "yes" ? 1 : 0;
-                        try { 
-                            DB::select("call input_green(?,?,?,?,?,?,?,?,?,?)", [$value->nama, $value->no_hp, $value->keterangan_perintah, $value->sumber, $value->progress, $value->sales, $aclub, $mrg, $cat, $uob]);
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
-                          $err[] = $ex->getMessage();
-                        }
-                    }
-                    if (empty($err)) { //message jika tidak ada error saat import
-                        $msg = "Excel successfully imported";
-                        $err[] = $msg;
-                    }
-                }
-            }
-        } else {
-            $msg = "No file supplied";
-            $err[] = $msg;
-        }
-
-        return redirect()->back()->withErrors([$err]);
-    }
 	
 	public function assignClient (Request $request) {
 		if (isset($request['assbut'])){
@@ -517,27 +468,59 @@ class GreenController extends Controller
     }
 
     public function exportExcel() {
-        $data = GreenProspectProgress::all();
+        $data = collect([]);
 
-        foreach ($data as $dat) {
-            $client = $dat->client;
+        $clients = GreenProspectClient::all();
 
-            $dat->green_id = $client->green_id;
-            $dat->date = $client->date;
-            $dat->name = $client->name;
-            $dat->phone = $client->phone;
-            $dat->email = $client->email;
-            $dat->interest = $client->interest;
-            $dat->pemberi = $client->pemberi;
-            $dat->sumber_data = $client->sumber_data;
-            $dat->keterangan_perintah = $client->keterangan_perintah;
+        foreach ($clients as $client) {
+            $progresses = $client->progresses()->get();
+
+            if ($progresses->first() != null) {
+                foreach ($progresses as $progress) {
+                    $object = $progress;
+
+                    $object->green_id = $client->green_id;
+                    $object->date_progress = $client->date;
+                    $object->name = $client->name;
+                    $object->phone = $client->phone;
+                    $object->email = $client->email;
+                    $object->interest = $client->interest;
+                    $object->pemberi = $client->pemberi;
+                    $object->sumber_data = $client->sumber_data;
+                    $object->keterangan_perintah = $client->keterangan_perintah;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->date_progress = $client->date;
+                $object->name = $client->name;
+                $object->phone = $client->phone;
+                $object->email = $client->email;
+                $object->interest = $client->interest;
+                $object->pemberi = $client->pemberi;
+                $object->sumber_data = $client->sumber_data;
+                $object->keterangan_perintah = $client->keterangan_perintah;
+
+                $progress = new \App\GreenProspectProgress();
+                $progress_attributes = $progress->getAttributesImport();
+
+                foreach ($progress_attributes as $progress_attribute) {
+                    $object->$progress_attribute = null;
+                }
+
+                $object->progress_id = null;
+                $object->green_id = $client->green_id;
+
+                $data->push($object);
+            }
         }
 
         $array = [];
         $heads = [
-                "Progress ID" => "progress_id",
                 "Green ID" => "green_id",
-                "Date" => "date",
+                "Date Client" => "date",
                 "Name" => "name",
                 "Phone" => "phone",
                 "Email" => "email",
@@ -545,13 +528,12 @@ class GreenController extends Controller
                 "Pemberi" => "pemberi",
                 "Sumber Data" => "sumber_data",
                 "Keterangan Perintah" => "keterangan_perintah",
+                "Date Progress" => "date_progress",
                 "Sales Name" => "sales_name",
                 "Status" => "status",
                 "Nama Product" => "nama_product",
                 "Nominal" => "nominal",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Keterangan" => "keterangan"
                     ];
         foreach ($data as $dat) {
             $arr = [];
@@ -564,6 +546,128 @@ class GreenController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedGreen', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function importExcel() {
+        //Inisialisasi array error
+        $err = [];
+        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
+            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
+            $data = Excel::load($path, function($reader) { //Load excel
+            })->get();
+            if(!empty($data) && $data->count()){
+                $line = 1;
+                //Jika tidak ada error, import dengan cara insert satu per satu
+                if (empty($err)) {
+                    foreach ($data as $key => $value) {
+                        $line += 1;
+                        try {
+                             // check whether master client exist or not
+                            $is_client_has_attributes = False;
+                            if (GreenProspectClient::find($value->green_id) == null) {
+                                $client = new \App\GreenProspectClient;
+
+                                $client_attributes = $client->getAttributesImport();
+
+                                foreach ($client_attributes as $client_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $client->$client_attribute = $value->$import;
+                                        $is_client_has_attributes = True;
+                                    } else {
+                                        $client->$client_attribute = null;
+                                    }
+
+                                }
+                                if ($is_client_has_attributes) {
+                                    $client->save();
+                                }
+                            }
+                            if (GreenProspectClient::find($value->green_id) == null) {
+                                $value->green_id = $client->green_id;
+                            }
+
+                            $is_progress_has_attributes = False;
+                            $progress = new \App\GreenProspectProgress;
+                            $progress_attributes = $progress->getAttributesImport();
+                            
+                            foreach ($progress_attributes as $progress_attribute => $import) {
+                                if ($import != 'green_id') {
+                                    if ($value->$import != null) {
+                                        $progress->$progress_attribute = $value->$import;  
+                                        $is_progress_has_attributes = True;
+                                    } else {
+                                        $progress->$progress_attribute = null;
+                                    }
+                                } else {
+                                    if ($value->$import != null) {
+                                        $progress->$progress_attribute = $value->$import;
+                                    } else {
+                                        $progress->$progress_attribute = null;
+                                    }
+                                }
+                            }
+
+                            if ($is_progress_has_attributes) {  
+                                $progress->save();
+                            }
+
+
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
+                        }
+                    }
+                    if (empty($err)) { //message jika tidak ada error saat import
+                        $msg = "Excel successfully imported";
+                        $err[] = $msg;
+                    }
+                }
+            }
+        } else {
+            $msg = "No file supplied";
+            $err[] = $msg;
+        }
+        return redirect()->back()->withErrors([$err]);
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+                "Green ID" => "green_id",
+                "Date Client" => "date",
+                "Name" => "name",
+                "Phone" => "phone",
+                "Email" => "email",
+                "Interest" => "interest",
+                "Pemberi" => "pemberi",
+                "Sumber Data" => "sumber_data",
+                "Keterangan Perintah" => "keterangan_perintah",
+                "Date Progress" => "date",
+                "Sales Name" => "sales_name",
+                "Status" => "status",
+                "Nama Product" => "nama_product",
+                "Nominal" => "nominal",
+                "Keterangan" => "keterangan"
+                    ];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Green ID") {
+                $count_master_id = GreenProspectClient::orderBy('green_id', 'desc')->first()->green_id;
+                $arr[$head] = $count_master_id;
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateGreen', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);

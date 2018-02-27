@@ -11,6 +11,15 @@ class MrgAccount extends Model
 
     protected $primaryKey = 'accounts_number';
 
+    protected $attributImport = [ "accounts_number" => "account_number",
+                                    "master_id" => "master_id",
+                                    "account_type" => "account_type",
+                                    "sales_name" => "sales_name"];
+
+    public function getAttributesImport() {
+        return $this->attributImport;
+    }
+
     public function mrg() {
         return $this->belongsTo('App\Mrg', 'master_id', 'master_id');
     }

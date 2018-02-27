@@ -94,7 +94,7 @@
             left:0;
             pointer-events: none;
         }
-        .clone .collumn-select {
+        .clone .collumn-select, .clone .birthday-column  {
             pointer-events: auto !important;
         }
         .clone th, .clone td {
@@ -159,9 +159,11 @@
                 <div class="modal-body">
                     @foreach($filter_birthdates as $filter_birthdate)
                     <div class="checkbox">
+                        @foreach($filter_birthdate as $f)
                         <label>
-                            <input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($filter_birthdate))}}"> {{ $filter_birthdate }}
+                            <input type="checkbox" class="check-filter" data-type="birthdate" value="{{date('m', strtotime($f))}}"> {{ $f }}
                         </label>
+                        @endforeach
                     </div>
                     @endforeach
                 </div>
@@ -175,21 +177,16 @@
     <div class="panel panel-default">
         <div class="panel-heading vpchead">
             <div class="row">
-                <div class="col-md-4 row">
-                    <div class="col-md-4">
-                        <button onclick="downloadFx()" class="btn btn-default" style=""><i class="fa fa-download"></i> &nbsp Download </button>
+                <div class="col-md-6 row">
+                    <div class="col-md-7">
+                        <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>&nbsp;
+                        <i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;display:none"></i>
                     </div>
-                    <div class="col-md-3" style="width:23%;">
-                        <a href="{{route('home')}}"><button type="button" class="btn btn-default">Back</button></a>
+                    <div class="col-md-5">
                     </div>
-                    <div class="col-md-2" style="width:10%; max-width: 180px;">
-                        <i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px; display: none;"></i>
-                    </div>
-                </div>
-                <div class="col-md-2">
                 </div>
                 <div class="col-md-6 row" style="float: right;">
-                    <div class="col-md-1" style="white-space: nowrap; padding-left: 0px; max-width: 505px;">Sort by:</div>
+                    <div class="col-md-1" style="white-space: nowrap; padding-left: 0px;">Sort by:</div>
                     <!--SORT PARAMS -->
                     <div class="col-md-3">
                         <select class="sort form-control no-spin" name="sort1">
@@ -215,7 +212,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1" style="width:2%;">
                         <button id="sort-button" class="btn btn-default">Sort</button>
                     </div>
                 </div>
@@ -234,7 +231,7 @@
                                 <!-- Mendapatkan judul setiap kolom pada tabel dari variabel heads -->
                                 @foreach ($headsMaster as $headMaster)
                                     @if ($headMaster == 'Tanggal Lahir')
-                                    <th class="fixed-side" scope="col" style="min-width: 130px;"> {{ $headMaster }}
+                                    <th class="fixed-side birthday-column" scope="col" style="min-width: 130px;"> {{ $headMaster }}
                                     <button id="bt{{$idx}}" class="btn btn-default btn-xs dd" data-toggle="modal" href="#tgllahir"><i class="fa fa-caret-down"></i></button>
                                     @else
                                         <th class="fixed-side" scope="col"> {{ $headMaster }} 
@@ -297,12 +294,42 @@
             </div>
 
         </div>
-        <div id="pageController" style="margin-left: 2px; margin-top: 12px;">
-            Page
-            <input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
-            /<label id="page_count">{{$count}}</label>
-            <button id="page_number">Go</button>
+        <br>
+        <div class="row">
+            <div class="col-md-8">
+                <div id="pageController" style="margin-left: 2px;">
+                    Page
+                    <input id="pagenum" type="number" name="pagenum" value="1" min="1" max="{{$count}}">
+                    /<label id="page_count">{{$count}}</label>
+                    <button id="page_number">Go</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button onclick="downloadFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Download </button>
+                <button onclick="templateFx()" class="btn btn-default" style="float:right"><i class="fa fa-download"></i> &nbsp Template </button>
+                <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion" href="#collapse" style="float:right">Import Excel File</a>
+                <br><br>
+                <div id="collapse" class="panel-collapse collapse">
+                    <div class="well" style="float:right">
+                        <form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+                            <input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+                            <input type="file" name="import_file" />
+                            <br>
+                            <button class="btn btn-primary">Import .xls File</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
 </div>
 
@@ -523,5 +550,9 @@
 
     function downloadFx() {
         window.location.href = "/export/uob";
+    }
+
+    function templateFx() {
+        window.location.href = "/template/uob";
     }
 </script>

@@ -14,6 +14,17 @@ class AshopTransaction extends Model
     protected $appends = [  'name',
                             'email'];
 
+    protected $attributImport = [ "transaction_id" => "transaction_id",
+                                    "master_id" => "master_id",
+                                    "product_type" => "product_type",
+                                    "product_name" => "product_name",
+                                    "nominal" => "nominal",
+                                    ];
+
+    public function getAttributesImport() {
+        return $this->attributImport;
+    }                        
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }

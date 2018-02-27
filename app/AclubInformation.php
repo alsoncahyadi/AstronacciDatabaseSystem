@@ -11,6 +11,14 @@ class AclubInformation extends Model
 
     protected $primaryKey = 'master_id';
 
+    protected $attributImport = [ "master_id" => "master_id",
+                                    "sumber_data" => "sumber_data",
+                                    "keterangan" => "keterangan"];
+
+    public function getAttributesImport() {
+        return $this->attributImport;
+    }
+
     public function master() {
         return $this->belongsTo('App\MasterClient', 'master_id', 'master_id');
     }

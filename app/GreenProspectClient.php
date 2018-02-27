@@ -11,6 +11,20 @@ class GreenProspectClient extends Model
 
     protected $primaryKey = 'green_id';
 
+    protected $attributImport = ["green_id" => "green_id",
+                                "date" => "date_client",
+                                "name" => "name",
+                                "phone" => "phone",
+                                "email" => "email",
+                                "interest" => "interest",
+                                "pemberi" => "pemberi",
+                                "sumber_data" => "sumber_data",
+                                "keterangan_perintah" => "keterangan_perintah"];
+
+    public function getAttributesImport() {
+        return $this->attributImport;
+    }
+
     public function progresses() {
         return $this->hasMany('App\GreenProspectProgress', 'green_id', 'green_id');
     }

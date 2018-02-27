@@ -11,6 +11,18 @@ class GreenProspectProgress extends Model
 
     protected $primaryKey = 'progress_id';
 
+    protected $attributImport = ["green_id" => "green_id",
+                                "date" => "date_progress",
+                                "sales_name" => "sales_name",
+                                "status" => "status",
+                                "nama_product" => "nama_product",
+                                "nominal" => "nominal",
+                                "keterangan" => "keterangan"];
+
+    public function getAttributesImport() {
+        return $this->attributImport;
+    }
+
     public function client() {
         return $this->belongsTo('App\GreenProspectClient', 'green_id', 'green_id');
     }

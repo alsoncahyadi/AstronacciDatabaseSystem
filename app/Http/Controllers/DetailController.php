@@ -168,7 +168,11 @@ class DetailController extends Controller
         $client_cat = Cat::where('master_id', $id)->first();
 
         if ($client_cat == null) {
-            $client_cat = Cat::first();
+            $client_cat = new \App\Cat();
+
+            $client_cat->user_id = 'dummy';
+            $client_cat->nomor_induk = 'dummy';
+            $client_cat->master_id = MasterClient::first()->master_id;
         }
 
         $ins_cat = [
@@ -212,7 +216,10 @@ class DetailController extends Controller
         $client_uob = Uob::where('master_id', $id)->first();
 
         if ($client_uob == null) {
-            $client_uob = Uob::first();
+            $client_uob = new \App\Uob();
+
+            $client_uob->client_id = 'dummy';
+            $client_uob->master_id = MasterClient::first()->master_id;
         }
 
         $ins_uob = [
@@ -270,7 +277,9 @@ class DetailController extends Controller
         $client_mrg = Mrg::where('master_id', $id)->first();
 
         if ($client_mrg == null) {
-            $client_mrg = Mrg::first();
+            $client_mrg = new \App\Mrg();
+
+            $client_mrg->master_id = MasterClient::first()->master_id;
         }
 
         $ins_mrg = ["Sumber Data MRG" => "sumber_data",
@@ -292,7 +301,9 @@ class DetailController extends Controller
         $client_aclub = AclubInformation::find($id);
 
         if ($client_aclub == null) {
-            $client_aclub = AclubInformation::first();
+            $client_aclub = new \App\AclubInformation();
+
+            $client_aclub->master_id = MasterClient::first()->master_id;
         }
 
         $aclub_master = $client_aclub->master;

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
+use App\Http\QueryExceptionMapping;
 
 class HomeController extends Controller
 {
@@ -82,7 +83,7 @@ class HomeController extends Controller
 
         $heads = ["Green ID",
                     "Name",
-                    "Date",
+                    "Date Client",
                     "Phone",
                     "Email",
                     "Interest",
@@ -91,14 +92,14 @@ class HomeController extends Controller
                     "Keterangan Perintah"];
 
         $ins = ["Name",
-                    "Date",
+                    "Date Client",
                     "Phone",
                     "Email",
                     "Interest",
                     "Pemberi",
                     "Sumber Data",
                     "Keterangan Perintah",
-                    "Date",
+                    "Date Progress",
                     "Sales Name",
                     "Status",
                     "Nama Product",
@@ -107,14 +108,14 @@ class HomeController extends Controller
 
         $atts = ["green_id",
                     "name",
-                    "date",
+                    "date_client",
                     "phone",
                     "email",
                     "interest",
                     "pemberi",
                     "sumber_data",
                     "keterangan_perintah",
-                    "date",
+                    "date_progress",
                     "sales_name",
                     "status",
                     "nama_product",
@@ -137,94 +138,30 @@ class HomeController extends Controller
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
-                $i = 1;
-
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->user_id_redclub) === null) {
-                        $msg = "User ID Redclub empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->password_redclub) === null) {
-                        $msg = "Password Redclub empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->telepon) === null) {
-                        $msg = "Telepon empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->tanggal_lahir) === null) {
-                        $msg = "Tanggal Lahir empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->kota) === null) {
-                        $msg = "Kota empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->provinsi) === null) {
-                        $msg = "Provinsi empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->gender) === null) {
-                        $msg = "Gender empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->line_id) === null) {
-                        $msg = "Line ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->bbm) === null) {
-                        $msg = "BBM empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->whatsapp) === null) {
-                        $msg = "Whatsapp empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->facebook) === null) {
-                        $msg = "Facebook empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
+                    $line = 1;
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
                             $master = new \App\MasterClient;
 
-                            $master->redclub_user_id = $value->user_id_redclub;
-                            $master->redclub_password = $value->password_redclub;
-                            $master->name = $value->nama;
-                            $master->telephone_number = $value->telepon;
-                            $master->email = $value->email;
-                            $master->birthdate = $value->tanggal_lahir;
-                            $master->address = $value->alamat;
-                            $master->city = $value->kota;
-                            $master->province = $value->provinsi;
-                            $master->gender = $value->gender;
-                            $master->line_id = $value->line_id;
-                            $master->bbm = $value->bbm;
-                            $master->whatsapp = $value->whatsapp;
-                            $master->facebook = $value->facebook;
+                            $master_attributes = $master->getAttributesImport();
+
+                            foreach ($master_attributes as $master_attribute => $import) {
+                                if ($value->$import != null) {
+                                    $master->$master_attribute = $value->$import;  
+                                } else {
+                                    $master->$master_attribute = null;
+                                }
+                                
+                            }
 
                             $master->save();
                         } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
@@ -242,12 +179,14 @@ class HomeController extends Controller
     }
 
     public function exportExcel() {
-        $data = MasterClient::all();
+        $query = QueryModifier::queryMasterExport();
+
+        $data = collect(DB::select($query));
         $array = [];
         $heads = [
           "Master ID" => "master_id",
-          "Red Club User ID" => "redclub_user_id",
-          "Red Club Password" => "redclub_password",
+          "User ID Redclub" => "redclub_user_id",
+          "Password Redclub" => "redclub_password",
           "Nama" => "name",
           "Telephone" => "telephone_number",
           "Email" => "email",
@@ -255,16 +194,20 @@ class HomeController extends Controller
           "Alamat" => "address",
           "Kota" => "city",
           "Provinsi" => "province",
-          "Jenis Kelamin" => "gender",
+          "Gender" => "gender",
           "Line ID" => "line_id",
           "BBM" => "bbm",
           "WhatsApp" => "whatsapp",
-          "Facebook" => "facebook"
+          "Facebook" => "facebook",
+          "A-Club Stocks" => "stock",
+          "A-Club Futures" => "future",
+          "CAT" => "cat",
+          "MRG Premiere" => "mrg",
+          "UOB KayHian" => "uob"
         ];
         foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
-                //echo $key . " " . $value . "<br>";
                 $arr[$key] = $dat->$value;
             }
             $array[] = $arr;
@@ -345,6 +288,47 @@ class HomeController extends Controller
         }
 
         return $filtered_clients;
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Master ID" => "master_id",
+          "User ID Redclub" => "redclub_user_id",
+          "Password Redclub" => "redclub_password",
+          "Nama" => "name",
+          "Telephone" => "telephone_number",
+          "Email" => "email",
+          "Tanggal Lahir" =>"birthdate",
+          "Alamat" => "address",
+          "Kota" => "city",
+          "Provinsi" => "province",
+          "Gender" => "gender",
+          "Line ID" => "line_id",
+          "BBM" => "bbm",
+          "WhatsApp" => "whatsapp",
+          "Facebook" => "facebook",];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateMaster', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 use App\Mrg;
 use App\MrgAccount;
 use App\MasterClient;
@@ -22,6 +23,75 @@ class MRGController extends Controller
         }
         return $newstring;
     }    
+
+    private function getFilterDate($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table('mrgs')->select($column)->distinct()->get();        
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {
+            if ($m > 1) {
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+                    ->join('mrgs', 'mrgs.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
 
     public function getTable(Request $request) {
         // $keyword = $request['q'];
@@ -117,19 +187,6 @@ class MRGController extends Controller
                 ];
 
         //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
-
-        // $this->getFilteredAndSortedTable('test');
 
         $joined = DB::table('master_clients')
                     ->join('mrgs', 'mrgs.master_id', '=', 'master_clients.master_id');
@@ -140,6 +197,7 @@ class MRGController extends Controller
         $filter_sales = DB::table('mrg_accounts')->select('sales_name')->distinct()->get();
         // $filter_accounts = DB::table('mrg_accounts')->select('accounts_number')->distinct()->get();
         $filter_type = DB::table('mrg_accounts')->select('account_type')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -153,12 +211,15 @@ class MRGController extends Controller
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
 
+        $filter_joindate = $this->getFilterDate('join_date');
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
+
         $filterable = [
             "Kota" => $filter_cities,
             "Gender" => $filter_gender,
             "Sumber" => $filter_sumber,
             "Sales" => $filter_sales,
-            "Tanggal Join" => $filter_date,
+            "Tanggal Join" => $filter_joindate,
             "Type" => $filter_type
             ];
 
@@ -430,39 +491,83 @@ class MRGController extends Controller
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
             if(!empty($data) && $data->count()){
-                $i = 1;
-
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->tanggal_join) === null) {
-                        $msg = "Tanggal Join empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
-
                 //Jika tidak ada error, import dengan cara insert satu per satu
+                $line = 1;
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
-                            $mrg = new \App\Mrg;
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
 
-                            $mrg->master_id = $value->master_id;
-                            $mrg->sumber_data = $value->sumber_data;
-                            $mrg->join_date = $value->tanggal_join;
+                                $master = new \App\MasterClient;
 
-                            $mrg->save();
-                        } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                                $master_attributes = $master->getAttributesImport();
+
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
+                                    }
+                                }
+
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
+
+                                $value->master_id = $master->master_id;
+                            }
+
+
+                            // check whether aclub information exist or not
+                            $is_mrg_have_attributes = False;
+                            if (Mrg::find($value->master_id) == null) {
+                                $mrg = new \App\Mrg;
+
+                                $mrg_attributes = $mrg->getAttributesImport();
+
+                                foreach ($mrg_attributes as $mrg_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $mrg->$mrg_attribute = $value->$import;
+                                        $is_mrg_have_attributes = True;
+                                    } else {
+                                        $mrg->$mrg_attribute = null;
+                                    }
+                                }
+
+                                if ($is_mrg_have_attributes) {
+                                    $mrg->save();
+                                }
+                            }
+
+                            $is_mrg_account_have_attributes = False;
+
+                            $mrg_account = new \App\MrgAccount;
+
+                            $mrg_account_attributes = $mrg_account->getAttributesImport();
+
+                            foreach ($mrg_account_attributes as $mrg_account_attribute => $import) {
+                                if ($value->$import != null) {
+                                    $mrg_account->$mrg_account_attribute = $value->$import;
+                                    if ($import != "accounts_number") {
+                                        $is_mrg_account_have_attributes = True;
+                                    }
+                                } else {
+                                    $mrg_account->$mrg_account_attribute = null;
+                                }
+                            }
+
+                            if ($is_mrg_account_have_attributes){  
+                                $mrg_account->save();
+                            }
+
+
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
@@ -480,31 +585,75 @@ class MRGController extends Controller
     }
 
     public function exportExcel() {
-        $data = MrgAccount::all();
+        $data = collect([]);
 
-        foreach ($data as $dat) {
-            $mrg = $dat->mrg;
+        $mrgs = Mrg::all();
 
-            $dat->sumber_data = $mrg->sumber_data;
-            $dat->join_date = $mrg->join_date;
+        foreach ($mrgs as $mrg) {
+            $accounts = $mrg->accounts()->get();
 
-            $master = $mrg->master;
+            if ($accounts->first() != null) {
+                foreach ($accounts as $account) {
+                    $object = $account;
 
-            $dat->redclub_user_id = $master->redclub_user_id;
-            $dat->redclub_password = $master->redclub_password;
-            $dat->name = $master->name;
-            $dat->telephone_number = $master->telephone_number;
-            $dat->email = $master->email;
-            $dat->birthdate = $master->birthdate;
-            $dat->address = $master->address;
-            $dat->city = $master->city;
-            $dat->province = $master->province;
-            $dat->gender = $master->gender;
-            $dat->line_id = $master->line_id;
-            $dat->bbm = $master->bbm;
-            $dat->whatsapp = $master->whatsapp;
-            $dat->facebook = $master->facebook;
+                    $object->sumber_data = $mrg->sumber_data;
+                    $object->join_date = $mrg->join_date;
+
+                    $master = $mrg->master;
+
+                    $object->redclub_user_id = $master->redclub_user_id;
+                    $object->redclub_password = $master->redclub_password;
+                    $object->name = $master->name;
+                    $object->telephone_number = $master->telephone_number;
+                    $object->email = $master->email;
+                    $object->birthdate = $master->birthdate;
+                    $object->address = $master->address;
+                    $object->city = $master->city;
+                    $object->province = $master->province;
+                    $object->gender = $master->gender;
+                    $object->line_id = $master->line_id;
+                    $object->bbm = $master->bbm;
+                    $object->whatsapp = $master->whatsapp;
+                    $object->facebook = $master->facebook;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->sumber_data = $mrg->sumber_data;
+                $object->join_date = $mrg->join_date;
+
+                $master = $mrg->master;
+
+                $object->redclub_user_id = $master->redclub_user_id;
+                $object->redclub_password = $master->redclub_password;
+                $object->name = $master->name;
+                $object->telephone_number = $master->telephone_number;
+                $object->email = $master->email;
+                $object->birthdate = $master->birthdate;
+                $object->address = $master->address;
+                $object->city = $master->city;
+                $object->province = $master->province;
+                $object->gender = $master->gender;
+                $object->line_id = $master->line_id;
+                $object->bbm = $master->bbm;
+                $object->whatsapp = $master->whatsapp;
+                $object->facebook = $master->facebook;
+
+                $account = new \App\MrgAccount();
+                $account_attributes = $account->getAttributesImport();
+
+                foreach ($account_attributes as $account_attribute => $key) {
+                    $object->$account_attribute = null;
+                }
+
+                $object->master_id = $master->master_id;
+
+                $data->push($object);
+            }
         }
+
         $array = [];
         $heads = [
                     "Account Number" => "accounts_number",
@@ -526,9 +675,7 @@ class MRGController extends Controller
                     "WhatsApp" => "whatsapp",
                     "Facebook" => "facebook",
                     "Sumber Data" => "sumber_data",
-                    "Join Date" => "join_date",
-                    "Created At" => "created_at",
-                    "Updated At" => "updated_at"
+                    "Join Date" => "join_date"
                     ];
         foreach ($data as $dat) {
             $arr = [];
@@ -555,5 +702,51 @@ class MRGController extends Controller
                 "Sales" => "sales_name"];
 
         return view('content/mrgeditform', ['route'=>'MRG', 'client'=>$mrg_account, 'ins'=>$ins]);
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Account Number" => "accounts_number",
+                    "Account Type" => "account_type",
+                    "Sales Name" => "sales_name",
+                    "Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Join Date" => "join_date"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateMRG', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

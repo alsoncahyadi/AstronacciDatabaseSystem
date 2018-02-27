@@ -9,6 +9,7 @@ use Excel;
 use App\Cat;
 use App\MasterClient;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 
 class CATController extends Controller
 {
@@ -20,6 +21,75 @@ class CATController extends Controller
            return null;
         }
         return $newstring;
+    }
+
+    private function getFilterDate($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table('cats')->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {
+            if ($m > 1) {
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+            ->join('cats', 'cats.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
     }
 
     public function getTable(Request $request) {
@@ -68,7 +138,7 @@ class CATController extends Controller
                         "name",
                         "email",
                         "telephone_number",
-                        "birthdate"
+                        "birthdate" //date
                     ];
 
         //Judul kolom yang ditampilkan pada tabel
@@ -80,15 +150,14 @@ class CATController extends Controller
                 "WhatsApp" => "whatsapp",
                 "Sumber" => "sumber_data",
                 "Sales" => "sales_name",
-                "DP Date" => "DP_date",
-                "Payment Date" => "payment_date",
+                "DP Date" => "DP_date", //date
+                "Payment Date" => "payment_date", //date
                 "Batch" => "batch",
                 "Status" => "status",
-                "Opening Class" => "tanggal_opening_class",
-                "End Class" => "tanggal_end_class",
-                "Ujian" => "tanggal_ujian"
+                "Opening Class" => "tanggal_opening_class", //date
+                "End Class" => "tanggal_end_class", //date
+                "Ujian" => "tanggal_ujian" //date
                 ];
-        
 
         //Nama attribute pada sql
         $atts = [
@@ -108,18 +177,7 @@ class CATController extends Controller
                 "tanggal_ujian"
                 ];
 
-        //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
+        // //Filter        
 
         $joined = DB::table('master_clients')
                     ->join('cats', 'cats.master_id', '=', 'master_clients.master_id');
@@ -130,6 +188,7 @@ class CATController extends Controller
         $filter_sales = DB::table('cats')->select('sales_name')->distinct()->get();
         $filter_batch = DB::table('cats')->select('batch')->distinct()->get();
         $filter_status = DB::table('cats')->select('status')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
                 '1'=>['0'=>'February'], 
                 '2'=>['0'=>'March'], 
@@ -141,7 +200,14 @@ class CATController extends Controller
                 '8'=>['0'=>'September'],
                 '9'=>['0'=>'October'],
                 '10'=>['0'=>'November'],
-                '11'=>['0'=>'December']];
+                '11'=>['0'=>'December']];        
+        
+        $filter_dpdate = $this->getFilterDate('DP_date');
+        $filter_paydate = $this->getFilterDate('payment_date');
+        $filter_opendate = $this->getFilterDate('tanggal_opening_class');
+        $filter_closedate = $this->getFilterDate('tanggal_end_class');
+        $filter_ujidate = $this->getFilterDate('tanggal_ujian');
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
 
         $filterable = [
             "Kota" => $filter_cities,
@@ -150,12 +216,12 @@ class CATController extends Controller
             "Sales" => $filter_sales,
             "Batch" => $filter_batch,
             "Status" => $filter_status,
-            "Tanggal Lahir" => $filter_date,
-            "DP Date" => $filter_date,
-            "Payment Date" => $filter_date,
-            "Opening Class" => $filter_date,
-            "End Class" => $filter_date,
-            "Ujian" => $filter_date
+            "Tanggal Lahir" => $filter_birthdates,
+            "DP Date" => $filter_dpdate,
+            "Payment Date" => $filter_paydate,
+            "Opening Class" => $filter_opendate,
+            "End Class" => $filter_closedate,
+            "Ujian" => $filter_ujidate
             ];
 
         //sort
@@ -192,7 +258,8 @@ class CATController extends Controller
                         'filter_date' => $filter_date,
                         'filterable' => $filterable,
                         'sortables' => $sortables,
-                        'count' => $page_count
+                        'count' => $page_count,                        
+                        'filter_birthdates' => $filter_birthdates
                     ]);
 
         $filterable = [
@@ -412,47 +479,58 @@ class CATController extends Controller
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->user_id) === null) {
-                        $msg = "User ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->batch) === null) {
-                        $msg = "Batch empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sales) === null) {
-                        $msg = "Sales empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
+                $line = 1;
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
-                            $cat = new \App\Cat;
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
 
-                            $cat->user_id = $value->user_id;
-                            $cat->master_id = $value->master_id;
-                            $cat->batch = $value->batch;
-                            $cat->sales_name = $value->sales;
-                            $cat->sumber_data = $value->sumber_data;
+                                $master_attributes = $master->getAttributesImport();
 
-                            $cat->save();
-                        } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
+                                    }
+                                }
+
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
+                            }
+
+                            if (($value->master_id) != null) {
+
+                                $is_cat_has_attributes = False;
+
+                                $cat = new \App\Cat;
+
+                                $cat_attributes = $cat->getAttributesImport();
+
+                                foreach ($cat_attributes as $cat_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $cat->$cat_attribute = $value->$import;
+                                        $is_cat_has_attributes = True;
+                                    } else {
+                                        $cat->$cat_attribute = null;
+                                    }
+                                }
+
+                                if ($is_cat_has_attributes) {
+                                    $cat->save();
+                                }
+                            }
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
@@ -521,9 +599,7 @@ class CATController extends Controller
                 "Tanggal End Class" => "tanggal_end_class",
                 "Tanggal Ujian" => "tanggal_ujian",
                 "Status" => "status",
-                "Keterangan" => "keterangan",
-                "Created At" => "created_at",
-                "Updated At" => "updated_at"
+                "Keterangan" => "keterangan"
                     ];
         foreach ($data as $dat) {
             $arr = [];
@@ -536,6 +612,61 @@ class CATController extends Controller
         //print_r($array);
         //$array = ['a' => 'b'];
         return Excel::create('ExportedCAT', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["User ID" => "user_id",
+                "Nomor Induk" => "nomor_induk",
+                "Master ID" => "master_id",
+                "User ID Redclub" => "redclub_user_id",
+                "Password Redclub" => "redclub_password",
+                "Nama" => "name",
+                "Telephone" => "telephone_number",
+                "Email" => "email",
+                "Tanggal Lahir" => "birthdate",
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Provinsi" => "province",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "BBM" => "bbm",
+                "WhatsApp" => "whatsapp",
+                "Facebook" => "facebook",
+                "Batch" => "batch",
+                "Sales" => "sales",
+                "Sumber Data" => "sumber_data",
+                "DP Date" => "DP_date",
+                "DP Nominal" => "DP_nominal",
+                "Payment Date" => "payment_date",
+                "Payment Nominal" => "payment_nominal",
+                "Tanggal Opening Class" => "tanggal_opening_class",
+                "Tanggal End Class" => "tanggal_end_class",
+                "Tanggal Ujian" => "tanggal_ujian",
+                "Status" => "status",
+                "Keterangan" => "keterangan"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateCAT', function($excel) use ($array) {
             $excel->sheet('Sheet1', function($sheet) use ($array)
             {
                 $sheet->fromArray($array);

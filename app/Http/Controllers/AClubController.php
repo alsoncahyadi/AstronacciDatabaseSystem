@@ -12,6 +12,7 @@ use App\AclubMember;
 use App\AclubTransaction;
 use App\MasterClient;
 use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -25,6 +26,73 @@ class AClubController extends Controller
            return null;
         }
         return $newstring;
+    }
+
+    private function getFilterDate($table, $column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $fdpdate = DB::table($table)->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+
+        $joined = DB::table('master_clients')
+                    ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
     }
 
     public function getTable(Request $request) {
@@ -183,20 +251,7 @@ class AClubController extends Controller
                 "red_zone"
                 ];
 
-        //Filter
-        $master_clients = MasterClient::all();
-        $array_month = array();
-        foreach ($master_clients as $master_client) {
-            array_push($array_month, date('m', strtotime($master_client->birthdate)));
-        }
-        $filter_birthdates = array_unique($array_month);
-        sort($filter_birthdates);
-        foreach ($filter_birthdates as $key => $filter_birthdate) {
-            // dd(date('F', mktime(0, 0, 0, $filter_birthdate, 10)));
-            $filter_birthdates[$key] = date('F', mktime(0, 0, 0, $filter_birthdate, 10));
-        }
-
-        // $this->getFilteredAndSortedTable('test');
+        //Filter        
 
         $joined = DB::table('master_clients')
                     ->join('aclub_members', 'aclub_members.master_id', '=', 'master_clients.master_id');
@@ -207,6 +262,7 @@ class AClubController extends Controller
         $filter_sales = DB::table('aclub_transactions')->select('sales_name')->distinct()->get();
         $filter_kode = DB::table('aclub_transactions')->select('kode')->distinct()->get();
         $filter_status = DB::table('aclub_transactions')->select('status')->distinct()->get();
+
         $filter_date = ['0'=>['0'=>'January'], 
         '1'=>['0'=>'February'], 
         '2'=>['0'=>'March'], 
@@ -220,6 +276,12 @@ class AClubController extends Controller
         '10'=>['0'=>'November'],
         '11'=>['0'=>'December']];
 
+        $filter_paydate = $this->getFilterDate('aclub_transactions', 'payment_date');
+        $filter_startdate = $this->getFilterDate('aclub_transactions', 'start_date');
+        $filter_masadate = $this->getFilterDate('aclub_transactions', 'masa_tenggang');
+        // tambahin yang lain ya nik hehe
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
+
         $filterable = [
             "Kota" => $filter_cities,
             "Gender" => $filter_gender,
@@ -227,9 +289,9 @@ class AClubController extends Controller
             "Sales" => $filter_sales,
             "Kode" => $filter_kode,
             "Status" => $filter_status,
-            "Start Date" => $filter_date,
-            "Payment Date" => $filter_date,
-            "Masa Tenggang" => $filter_date
+            "Start Date" => $filter_startdate,
+            "Payment Date" => $filter_paydate,
+            "Masa Tenggang" => $filter_masadate
             ];
 
         //sort
@@ -773,40 +835,108 @@ class AClubController extends Controller
             $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
-            if(!empty($data) && $data->count()){
-                $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->master_id) === null) {
-                        $msg = "Master ID empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->sumber_data) === null) {
-                        $msg = "Sumber Data empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->keterangan) === null) {
-                        $msg = "Keterangan empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
 
+            if(!empty($data) && $data->count()){
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
+                    $line = 1;
                     foreach ($data as $key => $value) {
-                        echo $value->account . ' ' . $value->nama . ' ' . $value->tanggal_join . ' ' . $value->alamat . ' ' . $value->kota . ' ' . $value->telepon . ' ' . $value->email . ' ' . $value->type . ' ' . $value->sales . ' ' . "<br/>";
+                        $line += 1;
                         try {
-                            $aclubInfo = new \App\AclubInformation;
+                             // check whether master client exist or not
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
 
-                            $aclubInfo->master_id = $value->master_id;
-                            $aclubInfo->sumber_data = $value->sumber_data;
-                            $aclubInfo->keterangan = $value->keterangan;
+                                $master_attributes = $master->getAttributesImport();
 
-                            $aclubInfo->save();
-                        } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
+                                    }
+                                }
+
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
+                            }
+
+                            // check whether aclub information exist or not
+                            $is_info_have_attributes = False;
+                            if (AclubInformation::find($value->master_id) == null) {
+                                $aclub_info = new \App\AclubInformation;
+
+                                $aclub_info_attributes = $aclub_info->getAttributesImport();
+
+                                foreach ($aclub_info_attributes as $aclub_info_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $aclub_info->$aclub_info_attribute = $value->$import;
+                                        $is_info_have_attributes = True;
+                                    } else {
+                                        $aclub_info->$aclub_info_attribute = null;
+                                    }
+                                }
+
+                                if ($is_info_have_attributes) {
+                                    $aclub_info->save();
+                                }
+                            }
+
+                            // check whether aclub member exist or not
+                            $is_member_have_attributes = False;
+                            if (AclubMember::find($value->user_id) == null) {
+                                $aclub_member = new \App\AclubMember;
+
+                                $aclub_member_attributes = $aclub_member->getAttributesImport();
+
+                                foreach ($aclub_member_attributes as $aclub_member_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $aclub_member->$aclub_member_attribute = $value->$import;
+                                        $is_member_have_attributes = True;
+                                    } else {
+                                        $aclub_member->$aclub_member_attribute = null;
+                                    }
+                                }
+
+                                if ($is_member_have_attributes) {
+                                    $aclub_member->save();
+                                }
+                            }
+
+                            $is_trans_have_attributes = False;
+                            $aclub_trans = new \App\AclubTransaction;
+
+                            $aclub_trans_attributes = $aclub_trans->getAttributesImport();
+
+                            foreach ($aclub_trans_attributes as $aclub_trans_attribute => $import) {
+                                if ($import != 'user_id') {
+                                    if ($value->$import != null) {
+                                        $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                        $is_trans_have_attributes = True;
+                                    } else {
+                                        $aclub_trans->$aclub_trans_attribute = null;
+                                    }
+                                } else {
+                                    if ($value->$import != null) {
+                                        $aclub_trans->$aclub_trans_attribute = $value->$import;
+                                    } else {
+                                        $aclub_trans->$aclub_trans_attribute = null;
+                                    }
+                                }
+                                
+                            }
+
+                            if ($is_trans_have_attributes) {  
+                                $aclub_trans->save();
+                            }
+
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
@@ -823,39 +953,88 @@ class AClubController extends Controller
     }
 
     public function exportExcel() {
-        $datas = AclubTransaction::all();
+        $data = collect([]);
 
-        foreach ($datas as $data) {
-            $member = $data->aclubMember;
+        $members = AclubMember::all();
 
-            $data->master_id = $member->master_id;
-            $data->group = $member->group;
+        foreach ($members as $member) {
+            $transactions = $member->aclubTransactions()->get();
 
-            $info = $member->aclubInformation;
+            if ($transactions->first() != null) {
+                foreach ($transactions as $transaction) {
+                    $object = $transaction;
 
-            $data->sumber_data = $info->sumber_data;
-            $data->keterangan = $info->keterangan;
+                    $object->master_id = $member->master_id;
+                    $object->group = $member->group;
+                    $object->user_id = $member->user_id;
 
-            $master = $member->master;
+                    $info = $member->aclubInformation;
 
-            $data->redclub_user_id = $master->redclub_user_id;
-            $data->redclub_password = $master->redclub_password;
-            $data->name = $master->name;
-            $data->telephone_number = $master->telephone_number;
-            $data->email = $master->email;
-            $data->birthdate = $master->birthdate;
-            $data->address = $master->address;
-            $data->city = $master->city;
-            $data->province = $master->province;
-            $data->gender = $master->gender;
-            $data->line_id = $master->line_id;
-            $data->bbm = $master->bbm;
-            $data->whatsapp = $master->whatsapp;
-            $data->facebook = $master->facebook;
+                    $object->sumber_data = $info->sumber_data;
+                    $object->keterangan = $info->keterangan;
+
+                    $master = $member->master;
+
+                    $object->redclub_user_id = $master->redclub_user_id;
+                    $object->redclub_password = $master->redclub_password;
+                    $object->name = $master->name;
+                    $object->telephone_number = $master->telephone_number;
+                    $object->email = $master->email;
+                    $object->birthdate = $master->birthdate;
+                    $object->address = $master->address;
+                    $object->city = $master->city;
+                    $object->province = $master->province;
+                    $object->gender = $master->gender;
+                    $object->line_id = $master->line_id;
+                    $object->bbm = $master->bbm;
+                    $object->whatsapp = $master->whatsapp;
+                    $object->facebook = $master->facebook;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->master_id = $member->master_id;
+                $object->group = $member->group;
+
+                $info = $member->aclubInformation;
+
+                $object->sumber_data = $info->sumber_data;
+                $object->keterangan = $info->keterangan;
+
+                $master = $member->master;
+
+                $object->redclub_user_id = $master->redclub_user_id;
+                $object->redclub_password = $master->redclub_password;
+                $object->name = $master->name;
+                $object->telephone_number = $master->telephone_number;
+                $object->email = $master->email;
+                $object->birthdate = $master->birthdate;
+                $object->address = $master->address;
+                $object->city = $master->city;
+                $object->province = $master->province;
+                $object->gender = $master->gender;
+                $object->line_id = $master->line_id;
+                $object->bbm = $master->bbm;
+                $object->whatsapp = $master->whatsapp;
+                $object->facebook = $master->facebook;
+
+                $trans = new \App\AclubTransaction();
+                $trans_attributes = $trans->getAttributesImport();
+
+                foreach ($trans_attributes as $trans_attribute) {
+                    $object->$trans_attribute = null;
+                }
+
+                $object->user_id = $member->user_id;
+
+                $data->push($object);
+            }
         }
+
         $array = [];
-        $heads = ["Transaction ID" => "transaction_id",
-                    "Master ID" => "master_id",
+        $heads = ["Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",
@@ -872,6 +1051,7 @@ class AClubController extends Controller
                     "Facebook" => "facebook",
                     "Sumber Data" => "sumber_data",
                     "Keterangan" => "keterangan",
+                    "User ID" => "user_id",
                     "Group" => "group",
                     "Payment Date" => "payment_date",
                     "Kode" => "kode",
@@ -882,10 +1062,8 @@ class AClubController extends Controller
                     "Masa Tenggang" => "masa_tenggang",
                     "Yellow Zone" => "yellow_zone",
                     "Red Zone" => "red_zone",
-                    "Sales Name" => "sales_name",
-                    "Created At" => "created_at",
-                    "Updated At" => "updated_at"];
-        foreach ($datas as $dat) {
+                    "Sales Name" => "sales_name"];
+        foreach ($data as $dat) {
             $arr = [];
             foreach ($heads as $key => $value) {
                 //echo $key . " " . $value . "<br>";
@@ -946,5 +1124,60 @@ class AClubController extends Controller
       } else {
         echo("Failed, insufficient information");
       }
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = ["Master ID" => "master_id",
+                    "User ID Redclub" => "redclub_user_id",
+                    "Password Redclub" => "redclub_password",
+                    "Nama" => "name",
+                    "Telephone" => "telephone_number",
+                    "Email" => "email",
+                    "Tanggal Lahir" => "birthdate",
+                    "Alamat" => "address",
+                    "Kota" => "city",
+                    "Provinsi" => "province",
+                    "Gender" => "gender",
+                    "Line ID" => "line_id",
+                    "BBM" => "bbm",
+                    "WhatsApp" => "whatsapp",
+                    "Facebook" => "facebook",
+                    "Sumber Data" => "sumber_data",
+                    "Keterangan" => "keterangan",
+                    "User ID" => "user_id",
+                    "Group" => "group",
+                    "Payment Date" => "payment_date",
+                    "Kode" => "kode",
+                    "Status" => "status",
+                    "Nominal" => "nominal",
+                    "Start Date" => "start_date",
+                    "Expired Date" => "expired_date",
+                    "Masa Tenggang" => "masa_tenggang",
+                    "Yellow Zone" => "yellow_zone",
+                    "Red Zone" => "red_zone",
+                    "Sales Name" => "sales_name"];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                 $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateAClub', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }
