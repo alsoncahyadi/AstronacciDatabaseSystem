@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
+use App\Http\QueryExceptionMapping;
 
 class HomeController extends Controller
 {
@@ -82,7 +83,7 @@ class HomeController extends Controller
 
         $heads = ["Green ID",
                     "Name",
-                    "Date",
+                    "Date Client",
                     "Phone",
                     "Email",
                     "Interest",
@@ -91,14 +92,14 @@ class HomeController extends Controller
                     "Keterangan Perintah"];
 
         $ins = ["Name",
-                    "Date",
+                    "Date Client",
                     "Phone",
                     "Email",
                     "Interest",
                     "Pemberi",
                     "Sumber Data",
                     "Keterangan Perintah",
-                    "Date",
+                    "Date Progress",
                     "Sales Name",
                     "Status",
                     "Nama Product",
@@ -107,14 +108,14 @@ class HomeController extends Controller
 
         $atts = ["green_id",
                     "name",
-                    "date",
+                    "date_client",
                     "phone",
                     "email",
                     "interest",
                     "pemberi",
                     "sumber_data",
                     "keterangan_perintah",
-                    "date",
+                    "date_progress",
                     "sales_name",
                     "status",
                     "nama_product",
@@ -139,20 +140,28 @@ class HomeController extends Controller
             if(!empty($data) && $data->count()){
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
+                    $line = 1;
                     foreach ($data as $key => $value) {
+                        $line += 1;
                         try {
                             $master = new \App\MasterClient;
 
                             $master_attributes = $master->getAttributesImport();
 
                             foreach ($master_attributes as $master_attribute => $import) {
-                                $master->$master_attribute = $value->$import;
+                                if ($value->$import != null) {
+                                    $master->$master_attribute = $value->$import;  
+                                } else {
+                                    $master->$master_attribute = null;
+                                }
+                                
                             }
 
                             $master->save();
                         } catch(\Illuminate\Database\QueryException $ex){
-                          echo ($ex->getMessage());
-                          $err[] = $ex->getMessage();
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
@@ -185,7 +194,7 @@ class HomeController extends Controller
           "Alamat" => "address",
           "Kota" => "city",
           "Provinsi" => "province",
-          "Jenis Kelamin" => "gender",
+          "Gender" => "gender",
           "Line ID" => "line_id",
           "BBM" => "bbm",
           "WhatsApp" => "whatsapp",
@@ -293,7 +302,7 @@ class HomeController extends Controller
           "Alamat" => "address",
           "Kota" => "city",
           "Provinsi" => "province",
-          "Jenis Kelamin" => "gender",
+          "Gender" => "gender",
           "Line ID" => "line_id",
           "BBM" => "bbm",
           "WhatsApp" => "whatsapp",

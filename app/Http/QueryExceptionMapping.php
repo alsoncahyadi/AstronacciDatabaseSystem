@@ -16,7 +16,8 @@ class QueryExceptionMapping {
             $friendly_message = $raw_exception;
         }
 
-        return collect(array('msg' => $friendly_message, 'ex'=> $raw_exception, 'line' => $line));
+        return $friendly_message;
+        // return collect(array('msg' => $friendly_message, 'ex'=> $raw_exception, 'line' => $line));
     }
 } 
 

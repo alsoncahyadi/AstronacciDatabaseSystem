@@ -529,6 +529,8 @@ class UOBController extends Controller
                                     if ($value->$import != null) {
                                         $master->$master_attribute = $value->$import;
                                         $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
                                     }
                                 }
 
@@ -550,6 +552,8 @@ class UOBController extends Controller
                                     if ($value->$import != null) {
                                         $uob->$uob_attribute = $value->$import;                                        
                                         $is_uob_has_attributes = True;
+                                    } else {
+                                        $uob->$uob_attribute = null;
                                     }
                                 }
 
@@ -567,8 +571,6 @@ class UOBController extends Controller
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
-                    } else {
-                        dd($err);
                     }
                 }
             }

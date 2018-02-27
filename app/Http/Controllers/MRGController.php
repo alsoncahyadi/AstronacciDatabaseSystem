@@ -508,6 +508,8 @@ class MRGController extends Controller
                                     if ($value->$import != null) {
                                         $master->$master_attribute = $value->$import;
                                         $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
                                     }
                                 }
 
@@ -530,6 +532,8 @@ class MRGController extends Controller
                                     if ($value->$import != null) {
                                         $mrg->$mrg_attribute = $value->$import;
                                         $is_mrg_have_attributes = True;
+                                    } else {
+                                        $mrg->$mrg_attribute = null;
                                     }
                                 }
 
@@ -547,13 +551,15 @@ class MRGController extends Controller
                             foreach ($mrg_account_attributes as $mrg_account_attribute => $import) {
                                 if ($value->$import != null) {
                                     $mrg_account->$mrg_account_attribute = $value->$import;
-                                    $is_mrg_account_have_attributes = True;
+                                    if ($import != "accounts_number") {
+                                        $is_mrg_account_have_attributes = True;
+                                    }
                                 } else {
                                     $mrg_account->$mrg_account_attribute = null;
                                 }
                             }
 
-                            if (($is_mrg_account_have_attributes) && ($value->accounts_number != null)){  
+                            if ($is_mrg_account_have_attributes){  
                                 $mrg_account->save();
                             }
 
@@ -567,8 +573,6 @@ class MRGController extends Controller
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
-                    } else {
-                        dd($err);
                     }
                 }
             }

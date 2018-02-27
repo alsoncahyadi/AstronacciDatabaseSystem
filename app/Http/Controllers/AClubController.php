@@ -854,6 +854,8 @@ class AClubController extends Controller
                                     if ($value->$import != null) {
                                         $master->$master_attribute = $value->$import;
                                         $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
                                     }
                                 }
 
@@ -873,6 +875,8 @@ class AClubController extends Controller
                                     if ($value->$import != null) {
                                         $aclub_info->$aclub_info_attribute = $value->$import;
                                         $is_info_have_attributes = True;
+                                    } else {
+                                        $aclub_info->$aclub_info_attribute = null;
                                     }
                                 }
 
@@ -892,6 +896,8 @@ class AClubController extends Controller
                                     if ($value->$import != null) {
                                         $aclub_member->$aclub_member_attribute = $value->$import;
                                         $is_member_have_attributes = True;
+                                    } else {
+                                        $aclub_member->$aclub_member_attribute = null;
                                     }
                                 }
 
@@ -910,11 +916,15 @@ class AClubController extends Controller
                                     if ($value->$import != null) {
                                         $aclub_trans->$aclub_trans_attribute = $value->$import;
                                         $is_trans_have_attributes = True;
-                                    } 
+                                    } else {
+                                        $aclub_trans->$aclub_trans_attribute = null;
+                                    }
                                 } else {
                                     if ($value->$import != null) {
                                         $aclub_trans->$aclub_trans_attribute = $value->$import;
-                                    } 
+                                    } else {
+                                        $aclub_trans->$aclub_trans_attribute = null;
+                                    }
                                 }
                                 
                             }
@@ -932,8 +942,6 @@ class AClubController extends Controller
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
-                    } else {
-                        dd($err);
                     }
                 }
             }
