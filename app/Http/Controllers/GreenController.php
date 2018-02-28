@@ -303,7 +303,7 @@ class GreenController extends Controller
     public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'date' => 'date',
+                'date_client' => 'date',
                 'name' => '',
                 'phone' => '',
                 'email' => 'required|email',
@@ -311,7 +311,7 @@ class GreenController extends Controller
                 'pemberi' => '',
                 'sumber_data' => '',
                 'keterangan_perintah' => '',
-                'date' => '',
+                'date_progress' => 'date',
                 'sales_name' => '',
                 'status' => '',
                 'nama_product' => '',
@@ -324,7 +324,7 @@ class GreenController extends Controller
         $err = [];
         $green = new \App\GreenProspectClient();
 
-        $green->date = $request->date;
+        $green->date = $request->date_client;
         $green->name = $request->name;
         $green->phone = $request->phone;
         $green->email = $request->email;
@@ -338,7 +338,7 @@ class GreenController extends Controller
         $green_progress = new \App\GreenProspectProgress();
 
         $green_progress->green_id = $green->green_id;
-        $green_progress->date = $request->date;
+        $green_progress->date = $request->date_progress;
         $green_progress->sales_name = $request->sales_name;
         $green_progress->status = $request->status;
         $green_progress->nama_product = $request->nama_product;
@@ -480,7 +480,7 @@ class GreenController extends Controller
                     $object = $progress;
 
                     $object->green_id = $client->green_id;
-                    $object->date = $client->date;
+                    $object->date_progress = $client->date;
                     $object->name = $client->name;
                     $object->phone = $client->phone;
                     $object->email = $client->email;
@@ -494,7 +494,7 @@ class GreenController extends Controller
             } else {
                 $object = new \stdClass();
 
-                $object->date = $client->date;
+                $object->date_progress = $client->date;
                 $object->name = $client->name;
                 $object->phone = $client->phone;
                 $object->email = $client->email;
@@ -520,7 +520,7 @@ class GreenController extends Controller
         $array = [];
         $heads = [
                 "Green ID" => "green_id",
-                "Date" => "date",
+                "Date Client" => "date",
                 "Name" => "name",
                 "Phone" => "phone",
                 "Email" => "email",
@@ -528,6 +528,7 @@ class GreenController extends Controller
                 "Pemberi" => "pemberi",
                 "Sumber Data" => "sumber_data",
                 "Keterangan Perintah" => "keterangan_perintah",
+                "Date Progress" => "date_progress",
                 "Sales Name" => "sales_name",
                 "Status" => "status",
                 "Nama Product" => "nama_product",
@@ -577,6 +578,8 @@ class GreenController extends Controller
                                     if ($value->$import != null) {
                                         $client->$client_attribute = $value->$import;
                                         $is_client_has_attributes = True;
+                                    } else {
+                                        $client->$client_attribute = null;
                                     }
 
                                 }
@@ -597,11 +600,15 @@ class GreenController extends Controller
                                     if ($value->$import != null) {
                                         $progress->$progress_attribute = $value->$import;  
                                         $is_progress_has_attributes = True;
+                                    } else {
+                                        $progress->$progress_attribute = null;
                                     }
                                 } else {
                                     if ($value->$import != null) {
                                         $progress->$progress_attribute = $value->$import;
-                                    } 
+                                    } else {
+                                        $progress->$progress_attribute = null;
+                                    }
                                 }
                             }
 
@@ -619,8 +626,6 @@ class GreenController extends Controller
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
-                    } else {
-                        dd($err);
                     }
                 }
             }
@@ -635,7 +640,7 @@ class GreenController extends Controller
         $array = [];
         $heads = [
                 "Green ID" => "green_id",
-                "Date" => "date",
+                "Date Client" => "date",
                 "Name" => "name",
                 "Phone" => "phone",
                 "Email" => "email",
@@ -643,6 +648,7 @@ class GreenController extends Controller
                 "Pemberi" => "pemberi",
                 "Sumber Data" => "sumber_data",
                 "Keterangan Perintah" => "keterangan_perintah",
+                "Date Progress" => "date",
                 "Sales Name" => "sales_name",
                 "Status" => "status",
                 "Nama Product" => "nama_product",

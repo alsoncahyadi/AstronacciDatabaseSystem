@@ -560,23 +560,6 @@ class AshopController extends Controller
             if(!empty($data) && $data->count()){
                 $i = 1;
 
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    // if (($value->master_id) === null) {
-                    //     $msg = "Master ID empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sumber_data) === null) {
-                    //     $msg = "Sumber Data empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->join_date) === null) {
-                    //     $msg = "Tanggal Join empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                } //end validasi
-
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 if (empty($err)) {
                     $line = 1;
@@ -593,6 +576,8 @@ class AshopController extends Controller
                                     if ($value->$import != null) {
                                         $master->$master_attribute = $value->$import;
                                         $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
                                     }
                                 }
 
@@ -610,6 +595,8 @@ class AshopController extends Controller
                                     if ($value->$import != null) {
                                         $ashop->$ashop_attribute = $value->$import;
                                         $is_ashop_has_attributes = True;
+                                    } else {
+                                        $ashop->$ashop_attribute = null;
                                     }
                                 }
 
@@ -626,8 +613,6 @@ class AshopController extends Controller
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
-                    } else {
-                        dd($err);
                     }
                 }
             }

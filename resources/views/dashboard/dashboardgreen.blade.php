@@ -34,7 +34,7 @@
                             @foreach ($ins as $atr)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
-                                    @if ($atr == 'Date')
+                                    @if (($atr == 'Date Client') || ($atr == 'Date Progress'))
                                         <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                     @elseif ($atr == "Product Type")
                                         <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">

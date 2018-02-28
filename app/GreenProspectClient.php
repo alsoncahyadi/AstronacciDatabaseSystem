@@ -12,7 +12,7 @@ class GreenProspectClient extends Model
     protected $primaryKey = 'green_id';
 
     protected $attributImport = ["green_id" => "green_id",
-                                "date" => "date",
+                                "date" => "date_client",
                                 "name" => "name",
                                 "phone" => "phone",
                                 "email" => "email",

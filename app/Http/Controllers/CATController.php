@@ -479,30 +479,6 @@ class CATController extends Controller
             })->get();
             if(!empty($data) && $data->count()){
                 $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    // if (($value->user_id) === null) {
-                    //     $msg = "User ID empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->master_id) === null) {
-                    //     $msg = "Master ID empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->batch) === null) {
-                    //     $msg = "Batch empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sales) === null) {
-                    //     $msg = "Sales empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sumber_data) === null) {
-                    //     $msg = "Sumber Data empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                } //end validasi
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
                 $line = 1;
@@ -520,6 +496,8 @@ class CATController extends Controller
                                     if ($value->$import != null) {
                                         $master->$master_attribute = $value->$import;
                                         $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
                                     }
                                 }
 
@@ -540,6 +518,8 @@ class CATController extends Controller
                                     if ($value->$import != null) {
                                         $cat->$cat_attribute = $value->$import;
                                         $is_cat_has_attributes = True;
+                                    } else {
+                                        $cat->$cat_attribute = null;
                                     }
                                 }
 
@@ -556,8 +536,6 @@ class CATController extends Controller
                     if (empty($err)) { //message jika tidak ada error saat import
                         $msg = "Excel successfully imported";
                         $err[] = $msg;
-                    } else {
-                        dd($err);
                     }
                 }
             }
