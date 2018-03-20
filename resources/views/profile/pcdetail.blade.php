@@ -107,6 +107,14 @@
                                         <option>M</option>
                                         <option>F</option>
                                     </select>
+                                @elseif ($key == 'Provinsi')
+                                    <select class="form-control" name="{{$value}}" id="prov" value="{{$client_master->$value}}">
+
+                                    </select>
+                                @elseif ($key == 'Kota') 
+                                    <select class="form-control" name="{{$value}}" id="kota" value="{{$client_master->$value}}">
+
+                                    </select>
                                 @else
                                     <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}">
                                 @endif
@@ -636,6 +644,30 @@
     }
     // ======================================================================================================
 
+    /*var prov = {
+        "Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
+        "Bali" : ["Denpasar"],
+        "Bangka Belitung" : ["Pangkalpinang"],
+    };
+    var provKeys = Object.keys(prov);
+    var select = document.getElementById('prov');
+    var selectKota = document.getElementById('kota');
+    for(var i=0; i< provKeys.length; i++)
+    {
+      select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
+    }
+    for(var i=0; i< prov["Aceh"].length; i++)
+    {
+      selectKota.options[i] = new Option(prov["Aceh"][i], prov["Aceh"][i]);  //new Option("Text", "Value")
+    }
+    $('#prov').on('change', function() {
+      $("#kota").empty();
+      var temp = this.value;
+      for(var i=0; i< prov[temp].length; i++)
+        {
+          selectKota.options[i] = new Option(prov[temp][i], prov[temp][i]);  //new Option("Text", "Value")
+        }
+    })*/
 	</script>
 </body>
 </html>
