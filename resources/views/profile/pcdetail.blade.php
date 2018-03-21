@@ -122,7 +122,7 @@
                         @endforeach
                         
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
                     <button type="reset" class="btn btn-default">Reset</button>
                     <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                 </form>
@@ -347,7 +347,7 @@
                                 @endforeach
                                 <br>
                                 <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
-                                <input type="submit" class="btn btn-primary" value="Edit">
+                                <input type="submit" class="btn btn-primary" value="Add">
                                 <button type="reset" class="btn btn-default">Reset Form</button>
                             </form>
                         </div>

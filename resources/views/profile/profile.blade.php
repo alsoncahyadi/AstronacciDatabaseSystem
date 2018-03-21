@@ -146,7 +146,7 @@
                                     @endforeach
                             
                         </div>
-                        <button type="submit" class="btn btn-default">Submit</button>
+                        <button type="submit" class="btn btn-default">Edit</button>
                         <button type="reset" class="btn btn-default">Reset</button>
                         <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                         @if (($route != "Green") and ($route != 'assigngreen') and ($route != 'assigngrow') and ($route != 'assignredclub'))

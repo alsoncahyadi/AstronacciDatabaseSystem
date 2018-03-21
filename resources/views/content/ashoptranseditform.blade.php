@@ -76,11 +76,37 @@
                                             <label>{{$key}}</label>
                                             @if ($key == "Product Type")
                                             <select class="form-control" name="{{strtolower(str_replace(' ', '_', $key))}}">
-                                                <option>Video</option>
-                                                <option>E-Book</option>
-                                                <option>Seasonal Report</option>
-                                                <option>Event</option>
-                                                <option>Other</option>
+                                                @if ($client->$value == 'Video')
+                                                    <option selected="selected">Video</option>
+                                                    <option>E-Book</option>
+                                                    <option>Seasonal Report</option>
+                                                    <option>Event</option>
+                                                    <option>Other</option>
+                                                @elseif ($client->$value == 'E-Book')
+                                                    <option>Video</option>
+                                                    <option selected="selected">E-Book</option>
+                                                    <option>Seasonal Report</option>
+                                                    <option>Event</option>
+                                                    <option>Other</option>
+                                                @elseif ($client->$value == 'Seasonal Report')
+                                                    <option>Video</option>
+                                                    <option>E-Book</option>
+                                                    <option selected="selected">Seasonal Report</option>
+                                                    <option>Event</option>
+                                                    <option>Other</option>
+                                                @elseif ($client->$value == 'Event')
+                                                    <option>Video</option>
+                                                    <option>E-Book</option>
+                                                    <option>Seasonal Report</option>
+                                                    <option selected="selected">Event</option>
+                                                    <option>Other</option>
+                                                @elseif ($client->$value == 'Other')
+                                                    <option>Video</option>
+                                                    <option>E-Book</option>
+                                                    <option>Seasonal Report</option>
+                                                    <option>Event</option>
+                                                    <optionselected="selected">Other</option>
+                                                @endif              
                                             </select>
                                             @else
                                                 <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
