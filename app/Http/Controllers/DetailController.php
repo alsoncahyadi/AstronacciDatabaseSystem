@@ -41,8 +41,8 @@ class DetailController extends Controller
                 "Email" => "email",
                 "Tanggal Lahir" => "birthdate",
                 "Alamat" => "address",
-                "Kota" => "city",
                 "Provinsi" => "province",
+                "Kota" => "city",
                 "Gender" => "gender",
                 "Line ID" => "line_id",
                 "BBM" => "bbm",
@@ -57,8 +57,8 @@ class DetailController extends Controller
                 "Email" => "email",
                 "Tanggal Lahir" => "birthdate",
                 "Alamat" => "address",
-                "Kota" => "city",
                 "Provinsi" => "province",
+                "Kota" => "city",
                 "Gender" => "gender",
                 "Line ID" => "line_id",
                 "BBM" => "bbm",
@@ -88,8 +88,8 @@ class DetailController extends Controller
                 'email' => 'required|email',
                 'birthdate' => 'date',
                 'address' => '',
-                'city' => '',
                 'province' => '',
+                'city' => '',
                 'gender' => '',
                 'line_id' => '',
                 'bbm' => '',
@@ -107,8 +107,8 @@ class DetailController extends Controller
             $master->email = $request->email;
             $master->birthdate = $request->birthdate;
             $master->address = $request->address;
-            $master->city = $request->city;
             $master->province = $request->province;
+            $master->city = $request->city;
             $master->gender = $request->gender;
             $master->line_id = $request->line_id;
             $master->bbm = $request->bbm;
@@ -140,8 +140,8 @@ class DetailController extends Controller
                 "Email" => "email",
                 "Tanggal Lahir" => "birthdate",
                 "Alamat" => "address",
-                "Kota" => "city",
                 "Provinsi" => "province",
+                "Kota" => "city",
                 "Gender" => "gender",
                 "Line ID" => "line_id",
                 "BBM" => "bbm",
@@ -156,8 +156,8 @@ class DetailController extends Controller
                 "Email" => "email",
                 "Tanggal Lahir" => "birthdate",
                 "Alamat" => "address",
-                "Kota" => "city",
                 "Provinsi" => "province",
+                "Kota" => "city",
                 "Gender" => "gender",
                 "Line ID" => "line_id",
                 "BBM" => "bbm",
