@@ -656,6 +656,13 @@
     }
     // ======================================================================================================
 
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this PC?'))
+            return true;
+        else
+            return false;
+    }
+
     var prov = {
         "Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
         "Bali" : ["Denpasar"],
