@@ -530,10 +530,10 @@
 	
 </div>
 <script type="text/javascript">
-    window.setInterval(function(){
+    var updateInterval = window.setInterval(function(){
     updateMax()
     }, 500);
-    window.setInterval(function(){
+    var updateIntervalA = window.setInterval(function(){
     updateMaxA()
     }, 500);
 	$(document).ready(function(){
@@ -621,14 +621,24 @@
         document.getElementById("redzone").stepUp(3);
     });
     function updateMax() {
-        var page = document.getElementById('hidden_page_count').value;
-        document.getElementById('page_count').innerHTML = page;
-        document.getElementById('pagenum').max = page;
+        try {
+            var page = document.getElementById('hidden_page_count').value;
+            document.getElementById('page_count').innerHTML = page;
+            document.getElementById('pagenum').max = page;
+        }
+        catch(err) {
+            //clearInterval(updateInterval);
+        }
     }
     function updateMaxA() {
-        var page = document.getElementById('hidden_page_countA').value;
-        document.getElementById('page_countA').innerHTML = page;
-        document.getElementById('pagenumA').max = page;
+        try {
+            var page = document.getElementById('hidden_page_countA').value;
+            document.getElementById('page_countA').innerHTML = page;
+            document.getElementById('pagenumA').max = page;
+        }
+        catch(err) {
+            //clearInterval(updateIntervalA);
+        }
     }
 
     function searchPage() {
@@ -645,6 +655,13 @@
         updateMaxA()
     }
     // ======================================================================================================
+
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this PC?'))
+            return true;
+        else
+            return false;
+    }
 
     var prov = {
         "Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
@@ -686,17 +703,21 @@
     var selectKota = document.getElementById('kota');
     var currentProv = document.getElementById('currentProv').value;
     var currentCity = document.getElementById('currentCity').value;
-    for(var i=0; i< provKeys.length; i++)
+    select.options[0] = new Option(currentProv, currentProv);
+    selectKota.options[0] = new Option(currentCity, currentCity);
+    for(var i=1; i<=provKeys.length; i++)
     {
       select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
     }
-    for(var i=0; i< prov[currentProv].length; i++)
-    {
-      selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+    if ( provKeys.includes(currentProv) ){
+        for(var i=1; i<=prov[currentProv].length; i++)
+            {
+              selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+            }
     }
     document.getElementById("prov").value = currentProv;
     document.getElementById("kota").value = currentCity;
-    $('#prov').on('change', function() {
+    $('#prov').on('click', function() {
       $("#kota").empty();
       var temp = this.value;
       for(var i=0; i< prov[temp].length; i++)

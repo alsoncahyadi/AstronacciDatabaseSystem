@@ -71,7 +71,7 @@
 					<label>Profit Center</label>
 					<select id="pc" class="form-control">
 						<option>-</option>
-						<option>A-Club</option>
+						<option>A-CLUB</option>
 						<option>MRG</option>
 						<option>UOB</option>
 						<option>CAT</option>
@@ -223,7 +223,8 @@
 
 			var arrayLength = fullnames.length;
 			for (var i = 0; i < arrayLength; i++) {
-				if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
+				if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length) ||
+				inputString.toLowerCase() == emails[i].toLowerCase().substring(0,inputString.length) ){
 					joinName += ' <li class="list-group-item" onclick="exec(' + ids[i] + ', \'' + fullnames[i] + '\')" style="cursor:pointer;">' 
 					+ fullnames[i] + '<br><p style="font-style:italic; color:gray">'
 					+ emails[i] + '</p></li>';
@@ -290,7 +291,7 @@
 				if (document.getElementById('isacl') !== null){
 					if (document.getElementById("isacl").innerHTML == 1) {
 						document.getElementById("hahaha").style.display = "inline";
-						document.getElementById("hahaha").innerHTML = "This user has been registered to A-Club profit center.";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to A-CLUB profit center.";
 					} else {		
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("aclub").style.display = "inline";
