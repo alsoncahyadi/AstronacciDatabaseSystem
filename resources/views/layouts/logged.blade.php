@@ -76,7 +76,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html"><img src="{{ URL::asset('images/logo.png') }}"/></a>
+                <a class="navbar-brand" href="{{route ('home')}}"><img src="{{ URL::asset('images/logo.png') }}"/></a>
             </div>
             <!-- /.navbar-header -->
 

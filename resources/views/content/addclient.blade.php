@@ -223,7 +223,8 @@
 
 			var arrayLength = fullnames.length;
 			for (var i = 0; i < arrayLength; i++) {
-				if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length)){
+				if (inputString.toLowerCase() == fullnames[i].toLowerCase().substring(0,inputString.length) ||
+				inputString.toLowerCase() == emails[i].toLowerCase().substring(0,inputString.length) ){
 					joinName += ' <li class="list-group-item" onclick="exec(' + ids[i] + ', \'' + fullnames[i] + '\')" style="cursor:pointer;">' 
 					+ fullnames[i] + '<br><p style="font-style:italic; color:gray">'
 					+ emails[i] + '</p></li>';
