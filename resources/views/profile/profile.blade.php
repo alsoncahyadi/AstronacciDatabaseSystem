@@ -104,7 +104,7 @@
 				<div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
                     
-                        @foreach ($heads as $key => $value)
+                        @foreach ($ins as $key => [$value,$req])
                             <div class="col-lg-2" style="height:30px">
                                 <label>{{$key}}</label>
                             </div>
@@ -129,9 +129,9 @@
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
-                                    @foreach ($ins as $key => $value)
+                                    @foreach ($ins as $key => [$value,$req])
                                         <div style="height:60px">
-                                            <label>{{$key}}</label>
+                                            <label>{{$key}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                             @if ($key == "Tanggal Lahir")
                                                 <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client->$value}}"> 
                                             @elseif ($key == "Jenis Kelamin")
@@ -140,7 +140,7 @@
                                                     <option>F</option>
                                                 </select>
                                             @else
-                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}">
+                                                <input class="form-control" value="{{$client->$value}}" name="{{$value}}" <?php if ($req) : ?> required <?php endif; ?>>
                                             @endif
                                         </div>
                                     @endforeach
@@ -187,7 +187,7 @@
                 <div class="panel-body">
                     <form method="post" action="{{route($route . '.inserttrans')}}">
                         <input name="user_id" type="hidden" value="{{$client->$userid}}">
-                        @foreach ($insreg as $atr)
+                        @foreach ($insreg as $atr =>$req)
                         <div class="form-group">
                             <label>{{$atr}}</label>
                             @if ($atr == "Product Type")

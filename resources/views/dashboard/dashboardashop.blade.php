@@ -30,11 +30,11 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel panel-default" style="padding:15px" >
                         <form method="post" action="{{route('AShop.insert')}}">
-                            @foreach ($ins as $atr)
+                            @foreach ($ins as $atr=>$req)
                                 <div class="form-group">
-                                    <label>{{$atr}}</label>
+                                    <label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                     @if ($atr == 'Tanggal Lahir')
-                                        <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                        <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}" >
                                     @elseif ($atr == "Gender")
                                         <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                             <option>M</option>
@@ -49,7 +49,7 @@
                                             <option>Other</option>
                                         </select>
                                     @else
-                                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" <?php if ($req) : ?> required <?php endif; ?>>
                                     @endif
                                 </div>
                             @endforeach
