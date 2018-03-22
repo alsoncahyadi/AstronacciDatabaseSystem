@@ -71,7 +71,7 @@
 					<label>Profit Center</label>
 					<select id="pc" class="form-control">
 						<option>-</option>
-						<option>A-Club</option>
+						<option>A-CLUB</option>
 						<option>MRG</option>
 						<option>UOB</option>
 						<option>CAT</option>
@@ -290,7 +290,7 @@
 				if (document.getElementById('isacl') !== null){
 					if (document.getElementById("isacl").innerHTML == 1) {
 						document.getElementById("hahaha").style.display = "inline";
-						document.getElementById("hahaha").innerHTML = "This user has been registered to A-Club profit center.";
+						document.getElementById("hahaha").innerHTML = "This user has been registered to A-CLUB profit center.";
 					} else {		
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("aclub").style.display = "inline";

@@ -119,22 +119,22 @@
                                             @elseif ($key == "Nama Product")
                                                 <select class="form-control" value="{{$client->$value}}" name="{{$value}}">
                                                 @if ($client->$value == "A-Club")
-                                                        <option selected="selected">A-Club</option>
+                                                        <option selected="selected">A-CLUB</option>
                                                         <option>UOB</option>
                                                         <option>MRG</option>
                                                         <option>CAT</option>
                                                     @elseif ($client->$value == "UOB")
-                                                        <option>A-Club</option>
+                                                        <option>A-CLUB</option>
                                                         <option selected="selected">UOB</option>
                                                         <option>MRG</option>
                                                         <option>CAT</option>
                                                     @elseif ($client->$value == "MRG")
-                                                        <option>A-Club</option>
+                                                        <option>A-CLUB</option>
                                                         <option>UOB</option>
                                                         <option selected="selected">MRG</option>
                                                         <option>CAT</option>
                                                     @elseif ($client->$value == "CAT")
-                                                        <option>A-Club</option>
+                                                        <option>A-CLUB</option>
                                                         <option>UOB</option>
                                                         <option>MRG</option>
                                                         <option selected="selected">CAT</option>

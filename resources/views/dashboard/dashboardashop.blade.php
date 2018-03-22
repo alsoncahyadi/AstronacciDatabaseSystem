@@ -6,7 +6,7 @@
     <div id="non-tab">
         <div class="panel panel-default">
             <div class="panel-heading">
-                View A-Shop Client
+                View A-SHOP Client
             </div>
             <div class="panel-body">
                 <form>
@@ -63,7 +63,7 @@
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                View A-Shop
+                View A-SHOP
             </div>
             <div class="panel-body">
                 <a href="{{route('AShop')}}" class="btn btn-primary">A-SHOP</a>
