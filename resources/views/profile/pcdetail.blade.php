@@ -530,10 +530,10 @@
 	
 </div>
 <script type="text/javascript">
-    window.setInterval(function(){
+    var updateInterval = window.setInterval(function(){
     updateMax()
     }, 500);
-    window.setInterval(function(){
+    var updateIntervalA = window.setInterval(function(){
     updateMaxA()
     }, 500);
 	$(document).ready(function(){
@@ -621,14 +621,24 @@
         document.getElementById("redzone").stepUp(3);
     });
     function updateMax() {
-        var page = document.getElementById('hidden_page_count').value;
-        document.getElementById('page_count').innerHTML = page;
-        document.getElementById('pagenum').max = page;
+        try {
+            var page = document.getElementById('hidden_page_count').value;
+            document.getElementById('page_count').innerHTML = page;
+            document.getElementById('pagenum').max = page;
+        }
+        catch(err) {
+            //clearInterval(updateInterval);
+        }
     }
     function updateMaxA() {
-        var page = document.getElementById('hidden_page_countA').value;
-        document.getElementById('page_countA').innerHTML = page;
-        document.getElementById('pagenumA').max = page;
+        try {
+            var page = document.getElementById('hidden_page_countA').value;
+            document.getElementById('page_countA').innerHTML = page;
+            document.getElementById('pagenumA').max = page;
+        }
+        catch(err) {
+            //clearInterval(updateIntervalA);
+        }
     }
 
     function searchPage() {
