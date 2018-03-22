@@ -87,8 +87,9 @@ class CATController extends Controller
         }
         sort($month);
         foreach ($month as $m) {
-            if ($m >= 1){             
-            array_push($filter_dpdate, $filter_date[$m-1]);
+            if ($m >= 1){        
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
