@@ -298,9 +298,9 @@ class AshopController extends Controller
             $page = 1;
         }
         //form transaction
-        $insreg = [ "Product Type",
-                    "Nama Product",
-                    "Nominal"
+        $insreg = [ "Product Type" => 0,
+                    "Nama Product" => 0,
+                    "Nominal" => 0
                     ];
 
         //transaction
@@ -469,9 +469,9 @@ class AshopController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Transaction ID",
-                    "Product Type",
-                    "Product Name",
+        $insreg = ["Transaction ID" => 0,
+                    "Product Type" => 0,
+                    "Product Name" => 0,
                     "Nominal"
                     ];
 

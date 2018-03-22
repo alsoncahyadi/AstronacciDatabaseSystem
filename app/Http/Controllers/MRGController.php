@@ -328,7 +328,9 @@ class MRGController extends Controller
         $heads = $ins;
 
         // form transaction
-        $insreg = ["Account Number", "Account Type", "Sales Name"];
+        $insreg = ["Account Number" => 0,
+                    "Account Type" => 0,
+                    "Sales Name" => 0];
 
         $keyword = $request['q'];
 
