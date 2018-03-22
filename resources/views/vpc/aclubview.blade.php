@@ -291,31 +291,7 @@
 
 									  </div>
 									</div>
-
-
-
-									<!-- <div class="modal fade" role="dialog" id="dd{{$idx}}">
-										<form id="formCities" action="#" method="post">
-											<label>Filter</label>
-											<div class="panel panel-default filter-selection">
-											@foreach ($filterable[$head] as $filter)
-												<div class="checkbox">
-													<label>
-														@foreach ($filter as $f)						
-														@if (!MonthDropdownValidator::is_month($f))
-														<input input HARUSNYA BUKAN BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{$f}}">
-														{{ $f }}
-														@else
-														<input HARUSNYA BULAN {{$f}} class="check-filter" data-type="{{$value}}" type="checkbox" value="{{date('m', strtotime($f))}}">
-														{{ $f }}
-														@endif
-														@endforeach
-													</label>
-												</div>											
-											@endforeach
-											</div>
-										</form>
-									</div>				 -->			
+		
 								@endif
 								</th>
 								<?php $idx = $idx + 1; ?>

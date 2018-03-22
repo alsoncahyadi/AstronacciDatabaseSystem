@@ -10,6 +10,7 @@ use App\MasterClient;
 use App\Cat;
 use App\Mrg;
 use App\AclubInformation;
+use App\AlubTransactions;
 use App\Uob;
 
 class DetailController extends Controller
@@ -133,20 +134,20 @@ class DetailController extends Controller
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins_master = [
-                "User ID Redclub" => "redclub_user_id",
-                "Password Redclub" => "redclub_password",
-                "Nama" => "name",
-                "Telephone" => "telephone_number",
-                "Email" => "email",
-                "Tanggal Lahir" => "birthdate",
-                "Alamat" => "address",
-                "Provinsi" => "province",
-                "Kota" => "city",
-                "Gender" => "gender",
-                "Line ID" => "line_id",
-                "BBM" => "bbm",
-                "WhatsApp" => "whatsapp",
-                "Facebook" => "facebook"];
+                "User ID Redclub" => ["redclub_user_id", 0],
+                "Password Redclub" => ["redclub_password", 0],
+                "Nama" => ["name", 0],
+                "Telephone" => ["telephone_number",0],
+                "Email" => ["email",1],
+                "Tanggal Lahir" => ["birthdate",0],
+                "Alamat" => ["address",0],
+                "Provinsi" => ["province",0],
+                "Kota" => ["city",0],
+                "Gender" => ["gender",0],
+                "Line ID" => ["line_id",0],
+                "BBM" => ["bbm",0],
+                "WhatsApp" => ["whatsapp",0],
+                "Facebook" => ["facebook",0]];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads_master = ["Master ID"=> "master_id",
                 "User ID Redclub" => "redclub_user_id",
@@ -298,7 +299,7 @@ class DetailController extends Controller
                         "Sales Name" => "sales_name"];
 
         //ACLUB
-        $client_aclub = AclubInformation::find($id);
+        $client_aclub = AclubInformation::find($id)->first();
 
         if ($client_aclub == null) {
             $client_aclub = new \App\AclubInformation();
@@ -316,15 +317,27 @@ class DetailController extends Controller
                 "Sumber Data" => "sumber_data", 
                 "Keterangan" => "keterangan"];
 
-        $clientsreg_aclub= $aclub_master->aclubMembers()->get();
+        // $clientsreg_aclub= $aclub_master->aclubMembers()->get();
+        $clientsreg_aclub = $aclub_master->aclubMembers()->first()->aclubTransactions()->get();
+        $client_aclub->user_id = $clientsreg_aclub[0]->user_id;
+        $headsreg_aclub = [ "Payment Date",
+                            "Kode",
+                            "Status",
+                            "Nominal",
+                            "Start Date",
+                            "Expired Date",
+                            "Masa Tenggang"];
+        $attsreg_aclub = ["payment_date", 
+                          "kode", 
+                          "status", 
+                          "nominal", 
+                          "start_date", 
+                          "expired_date", 
+                          "masa_tenggang"];
 
-        $headsreg_aclub = ["User ID",
-                    "Group"];
+        // dd($clientsreg_aclub);
 
-        $attsreg_aclub = ["user_id", "group"];
-
-        $insreg_aclub = ["User ID" => "user_id",
-                    "Group" => "group",
+        $insreg_aclub = [
                     "Sales Name" => "sales_name",
                     "Payment Date" => "payment_date",
                     "Kode" => "kode",

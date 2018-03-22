@@ -54,8 +54,10 @@ class AshopController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {            
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {     
+            if ($m > 0) {       
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -296,9 +298,9 @@ class AshopController extends Controller
             $page = 1;
         }
         //form transaction
-        $insreg = [ "Product Type",
-                    "Nama Product",
-                    "Nominal"
+        $insreg = [ "Product Type" => 0,
+                    "Nama Product" => 0,
+                    "Nominal" => 0
                     ];
 
         //transaction
@@ -467,9 +469,9 @@ class AshopController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Transaction ID",
-                    "Product Type",
-                    "Product Name",
+        $insreg = ["Transaction ID" => 0,
+                    "Product Type" => 0,
+                    "Product Name" => 0,
                     "Nominal"
                     ];
 
@@ -567,7 +569,9 @@ class AshopController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -583,8 +587,14 @@ class AshopController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->$master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
+
+                            $value->master_id = $master_id;
+
                             if (($value->master_id) != null) {
                                 $is_ashop_has_attributes = False;
                                 $ashop = new \App\AshopTransaction;
@@ -649,7 +659,6 @@ class AshopController extends Controller
         $array = [];
         $heads = [
                 "Transaction ID" => "transaction_id",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
@@ -690,7 +699,6 @@ class AshopController extends Controller
         $array = [];
         $heads = [
                 "Transaction ID" => "transaction_id",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",

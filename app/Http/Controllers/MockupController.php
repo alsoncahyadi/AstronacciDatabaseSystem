@@ -18,26 +18,25 @@ class MockupController extends Controller
         $clients = MasterClient::all();
 
         //Form master client
-        $ins = ["User ID Redclub",
-                "Password Redclub",
-                "Telepon",
-                "Email",
-                "Tanggal Lahir",
-                "Alamat",
-                "Provinsi",
-                "Kota",
-                "Gender",
-                "Line ID",
-                "BBM",
-                "Whatsapp",
-                "Facebook"];
+        $ins = ["User ID Redclub" => 0,
+                "Password Redclub" => 0,
+                "Telepon" => 0,
+                "Email" => 1,
+                "Tanggal Lahir" => 0,
+                "Alamat" => 0,
+                "Provinsi" => 0,
+                "Kota" => 0,
+                "Gender" => 0,
+                "Line ID" => 0,
+                "BBM" => 0,
+                "Whatsapp" => 0,
+                "Facebook" => 0];
 
         //ACLUB exclusive form
         $aclubforms = ["User ID",
                         "Payment Date",
                         "Sumber Data",
                         "Sales",
-                        "Group",
                         "Kode",
                         "Status",
                         "Nominal",
@@ -49,39 +48,39 @@ class MockupController extends Controller
                         "Keterangan"];
 
         //UOB exclusive form
-        $uobforms = ["Kode Client", 
-                "Sales", 
-                "Tanggal Join", 
-                "Nomer KTP", 
-                "Expired KTP", 
-                "Nomer NPWP", 
-                "Alamat Surat", 
-                "Saudara Tidak Serumah", 
-                "Ibu Kandung",
-                "Bank Pribadi",
-                "Nomer Rekening Pribadi",
-                "Sumber Data",
-                "Keterangan"];
+        $uobforms = ["Kode Client" => 1,
+                "Sales" => 0,
+                "Tanggal Join" => 0, 
+                "Nomer KTP" => 0, 
+                "Expired KTP" => 0, 
+                "Nomer NPWP" => 0, 
+                "Alamat Surat" => 0, 
+                "Saudara Tidak Serumah" => 0, 
+                "Ibu Kandung" => 0,
+                "Bank Pribadi" => 0,
+                "Nomer Rekening Pribadi" => 0,
+                "Sumber Data" => 0,
+                "Keterangan" => 0];
 
         //MRG exclusive form
-        $mrgforms = ["Sales",
-                    "Tanggal Join", 
-                    "Account Number", 
-                    "Account Type", 
-                    "Sumber Data"
+        $mrgforms = ["Sales" => 0,
+                    "Tanggal Join" => 0,
+                    "Account Number" => 1,
+                    "Account Type" => 0,
+                    "Sumber Data" => 0
                     ];
         
         //CAT exclusive form
-        $catforms = ["User ID", 
-                    "Batch", 
-                    "Nomer Induk", 
-                    "Sales", 
-                    "Sumber Data",
-                    "DP Date",
-                    "DP Nominal",
-                    "Opening Class",
-                    "Status",
-                    "Keterangan"];
+        $catforms = ["User ID" => 1, 
+                    "Batch" => 0, 
+                    "Nomer Induk" => 1, 
+                    "Sales" => 0, 
+                    "Sumber Data" => 0,
+                    "DP Date" => 0,
+                    "DP Nominal" => 0,
+                    "Opening Class" => 0,
+                    "Status" => 0,
+                    "Keterangan" => 0];
        
         return view('content/addclient', 
             ['clients' => $clients, 
@@ -144,7 +143,7 @@ class MockupController extends Controller
            'redclub_user_id' => '',
             'name' => '',
             'telephone_number' => '',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:master_clients',
             'birthdate' => 'date',
             'address' => '',
             'city' => '',
@@ -326,22 +325,9 @@ class MockupController extends Controller
             'red_zone' => 'date',
             'sumber_data_aclub' => '',
             'keterangan_aclub' => '',
-            'group' => ''
         ]);
 
         $errors = [];
-
-        $aclubMember = new \App\AclubMember;
-
-        if ($request->master == 0) {
-            $aclubMember->master_id = $this->id;
-        } else {
-            $aclubMember->master_id = $request->master_id;
-        }
-        $aclubMember->user_id = $request->user_id_aclub;
-        $aclubMember->group = $request->group;
-
-        $aclubMember->save();
 
         $aclubInfo = new \App\AclubInformation;
         if ($request->master == 0) {
@@ -353,6 +339,17 @@ class MockupController extends Controller
         $aclubInfo->keterangan = $request->keterangan_aclub;
 
         $aclubInfo->save();
+
+        $aclubMember = new \App\AclubMember;
+
+        if ($request->master == 0) {
+            $aclubMember->master_id = $this->id;
+        } else {
+            $aclubMember->master_id = $request->master_id;
+        }
+        $aclubMember->user_id = $request->user_id_aclub;
+
+        $aclubMember->save();
 
         $aclubTrans = new \App\AclubTransaction;
         $aclubTrans->user_id = $request->user_id_aclub;

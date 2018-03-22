@@ -20,7 +20,6 @@ class AclubMemberTableSeeder extends Seeder
         $magic_seed = new App\AclubMember;
         $magic_seed->user_id = 999999;
         $magic_seed->master_id = 999999;
-        $magic_seed->group = 'Stock';
         $magic_seed->created_by = 999;
         $magic_seed->updated_by = 999;
         $magic_seed->save();

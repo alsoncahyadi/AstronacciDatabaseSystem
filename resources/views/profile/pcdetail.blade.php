@@ -97,28 +97,29 @@
                 <form role="form" method="post" action="{{route('detail.edit')}}">
                     <div class="form-group">
                         <input name="user_id" type="hidden" value="{{$client_master->master_id}}">
-                        @foreach ($ins_master as $key => $value)
+                        @foreach ($ins_master as $key => $req)
+                            <?php $value = $req[0]?>
                             <div style="height:60px">
-                                <label>{{$key}}</label>
+                                <label>{{$key}} <?php if ($req[1]) : ?><span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                 @if ($key == "Tanggal Lahir")
-                                    <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_master->$value}}"> 
+                                    <input class="form-control no-spin" type="date" name="{{$req[0]}}" value="{{$client_master->$value}}"> 
                                 @elseif ($key == "Gender")
-                                    <select class="form-control" name="{{$value}}" value="{{$client_master->$value}}">
+                                    <select class="form-control" name="{{$req[0]}}" value="{{$client_master->$value}}">
                                         <option>M</option>
                                         <option>F</option>
                                     </select>
                                 @elseif ($key == 'Provinsi')
                                     <input type="hidden" name="prov" id="currentProv" value="{{$client_master->$value}}">
-                                    <select class="form-control" name="{{$value}}" id="prov" value="{{$client_master->$value}}">
+                                    <select class="form-control" name="{{$req[0]}}" id="prov" value="{{$client_master->$value}}">
 
                                     </select>
                                 @elseif ($key == 'Kota') 
                                     <input type="hidden" name="kota" id="currentCity" value="{{$client_master->$value}}">
-                                    <select class="form-control" name="{{$value}}" id="kota" value="{{$client_master->$value}}">
+                                    <select class="form-control" name="{{$req[0]}}" id="kota" value="{{$client_master->$value}}">
 
                                     </select>
                                 @else
-                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}">
+                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$req[0]}}" <?php if ($req[1]) : ?> required <?php endif; ?>>
                                 @endif
                             </div>
                         @endforeach
@@ -211,11 +212,11 @@
                         @endforeach
                     </div><br>
 
-                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Member</a>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Transaction</a>
                     <div id="addaclubtrans" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
-                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                            <form method="post" action="{{route('AClub.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_aclub->user_id}}">
                                 @foreach ($insreg_aclub as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>
@@ -530,10 +531,10 @@
 	
 </div>
 <script type="text/javascript">
-    window.setInterval(function(){
+    var updateInterval = window.setInterval(function(){
     updateMax()
     }, 500);
-    window.setInterval(function(){
+    var updateIntervalA = window.setInterval(function(){
     updateMaxA()
     }, 500);
 	$(document).ready(function(){
@@ -621,14 +622,24 @@
         document.getElementById("redzone").stepUp(3);
     });
     function updateMax() {
-        var page = document.getElementById('hidden_page_count').value;
-        document.getElementById('page_count').innerHTML = page;
-        document.getElementById('pagenum').max = page;
+        try {
+            var page = document.getElementById('hidden_page_count').value;
+            document.getElementById('page_count').innerHTML = page;
+            document.getElementById('pagenum').max = page;
+        }
+        catch(err) {
+            //clearInterval(updateInterval);
+        }
     }
     function updateMaxA() {
-        var page = document.getElementById('hidden_page_countA').value;
-        document.getElementById('page_countA').innerHTML = page;
-        document.getElementById('pagenumA').max = page;
+        try {
+            var page = document.getElementById('hidden_page_countA').value;
+            document.getElementById('page_countA').innerHTML = page;
+            document.getElementById('pagenumA').max = page;
+        }
+        catch(err) {
+            //clearInterval(updateIntervalA);
+        }
     }
 
     function searchPage() {
@@ -645,6 +656,13 @@
         updateMaxA()
     }
     // ======================================================================================================
+
+    function del(){
+        if (confirm('Data will be lost permanently. Are you sure you want to delete this PC?'))
+            return true;
+        else
+            return false;
+    }
 
     var prov = {
         "Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
@@ -686,17 +704,21 @@
     var selectKota = document.getElementById('kota');
     var currentProv = document.getElementById('currentProv').value;
     var currentCity = document.getElementById('currentCity').value;
-    for(var i=0; i< provKeys.length; i++)
+    select.options[0] = new Option(currentProv, currentProv);
+    selectKota.options[0] = new Option(currentCity, currentCity);
+    for(var i=1; i<=provKeys.length; i++)
     {
       select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
     }
-    for(var i=0; i< prov[currentProv].length; i++)
-    {
-      selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+    if ( provKeys.includes(currentProv) ){
+        for(var i=1; i<=prov[currentProv].length; i++)
+            {
+              selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+            }
     }
     document.getElementById("prov").value = currentProv;
     document.getElementById("kota").value = currentCity;
-    $('#prov').on('change', function() {
+    $('#prov').on('click', function() {
       $("#kota").empty();
       var temp = this.value;
       for(var i=0; i< prov[temp].length; i++)

@@ -208,7 +208,7 @@
                             </select>
                             @elseif (($atr == "Nama Product") and ($route == 'Green'))
                             <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
-                                <option>A-Club</option>
+                                <option>A-CLUB</option>
                                 <option>UOB</option>
                                 <option>MRG</option>
                                 <option>CAT</option>

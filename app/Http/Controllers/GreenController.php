@@ -233,7 +233,12 @@ class GreenController extends Controller
             $page = 1;
         }
         // form progress
-        $insreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
+        $insreg = ["Date" => 0, 
+                    "Sales" => 0, 
+                    "Status" => 0, 
+                    "Nama Product" => 0, 
+                    "Nominal" => 0, 
+                    "Keterangan" => 0];
         
         // kolom account
         $headsreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
