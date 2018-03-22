@@ -480,18 +480,18 @@ class AClubController extends Controller
         $headsreg = ["User ID",
                     "Group"];
 
-        $insreg = ["User ID",
-                    "Group",
-                    "Sales Name",
-                    "Payment Date",
-                    "Kode",
-                    "Status",
-                    "Nominal",
-                    "Start Date",
-                    "Expired Date",
-                    "Masa Tenggang",
-                    "Red Zone",
-                    "Yellow Zone"];
+        $insreg = ["User ID" => 1,
+                    "Group" => 0,
+                    "Sales Name" => 0,
+                    "Payment Date" => 0,
+                    "Kode" => 0,
+                    "Status" => 0,
+                    "Nominal" => 0,
+                    "Start Date" => 0,
+                    "Expired Date" => 0,
+                    "Masa Tenggang" => 0,
+                    "Red Zone" => 0,
+                    "Yellow Zone" => 0];
 
         $attsreg = ["user_id", "group"];
 
@@ -587,16 +587,16 @@ class AClubController extends Controller
                     "Start Date"
                     ];
 
-        $insreg = [ "Payment Date",
-                    "Kode",
-                    "Status",
-                    "Nominal",
-                    "Sales Name",
-                    "Start Date",
-                    "Expired Date",
-                    "Masa Tenggang",
-                    "Yellow Zone",
-                    "Red Zone"];
+        $insreg = [ "Payment Date" => 0,
+                    "Kode" => 0,
+                    "Status" => 0,
+                    "Nominal" => 0,
+                    "Sales Name" => 0,
+                    "Start Date" => 0,
+                    "Expired Date" => 0,
+                    "Masa Tenggang" => 0,
+                    "Yellow Zone" => 0,
+                    "Red Zone" => 0];
 
         $attsreg = ["payment_date_1",
                     "kode",
@@ -686,16 +686,16 @@ class AClubController extends Controller
                         "Yellow Zone" => "yellow_zone",
                         "Red Zone" => "red_zone"];
 
-        $insreg = [     "Payment Date",
-                        "Kode",
-                        "Status",
-                        "Nominal",
-                        "Sales Name",
-                        "Start Date",
-                        "Expired Date",
-                        "Masa Tenggang",
-                        "Yellow Zone",
-                        "Red Zone"];
+        $insreg = [     "Payment Date" => 0,
+                        "Kode" => 0,
+                        "Status" => 0,
+                        "Nominal" => 0,
+                        "Sales Name" => 0,
+                        "Start Date" => 0,
+                        "Expired Date" => 0,
+                        "Masa Tenggang" => 0,
+                        "Yellow Zone" => 0,
+                        "Red Zone" => 0];
 
         $attsreg = ["payment_date",
                     "kode",
