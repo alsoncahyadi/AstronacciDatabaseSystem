@@ -139,6 +139,16 @@
                                                     <option>M</option>
                                                     <option>F</option>
                                                 </select>
+                                             @elseif ($key == 'Provinsi')
+                                                <input type="hidden" name="prov" id="currentProv" value="{{$client->$value}}">
+                                                <select class="form-control" name="{{$value}}" id="prov" value="{{$client->$value}}">
+
+                                                </select>
+                                            @elseif ($key == 'Kota') 
+                                                <input type="hidden" name="kota" id="currentCity" value="{{$client->$value}}">
+                                                <select class="form-control" name="{{$value}}" id="kota" value="{{$client->$value}}">
+
+                                                </select>
                                             @else
                                                 <input class="form-control" value="{{$client->$value}}" name="{{$value}}" <?php if ($req) : ?> required <?php endif; ?>>
                                             @endif
@@ -338,6 +348,70 @@
             return false;
         }
 	}
+
+    var prov = {
+        "Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
+        "Bali" : ["Denpasar"],
+        "Bangka Belitung" : ["Pangkalpinang"],
+        "Banten" : ["Cilegon", "Serang", "Tangerang Selatan", "Tangerang"],
+        "Bengkulu" : ["Bengkulu"],
+        "Gorontalo" : ["Gorontalo"],
+        "Jakarta" : ["Jakarta Barat", "Jakarta Pusat", "Jakarta Selatan", "Jakarta Timur", "Jakarta Utara"],
+        "Jambi" : ["Sungai Penuh", "Jambi"],
+        "Jawa Barat" : ["Bandung", "Bekasi", "Bogor", "Cimahi", "Cirebon", "Depok", "Sukabumi", "Tasikmalaya", "Banjar"],
+        "Jawa Tengah" : ["Magelang", "Pekalongan", "Purwokerto", "Salatiga", "Semarang", "Surakarta", "Tegal"],
+        "Jawa Timur" : ["Batu", "Blitar", "Kediri", "Madiun", "Malang", "Mojokerto", "Pasuruan", "Probolinggo", "Surabaya"],
+        "Kalimantan Barat" : ["Pontianak", "Singkawang"],
+        "Kalimantan Selatan" : ["Banjarbaru", "Banjarmasin"],
+        "Kalimantan Tengah" : ["Palangkaraya"],
+        "Kalimatan Timur" : ["Balikpapan", "Bontang", "Samarinda"],
+        "Kalimantan Utara" : ["Tarakan"],
+        "Kepulauan Riau" : ["Batam", "Tanjungpinang"],
+        "Lampung" : ["Bandar Lampung", "Metro"],
+        "Maluku Utara" : ["Ternate", "Kepulauan Tidore"],
+        "Maluku" : ["Ambon", "Tual"],
+        "Nusa Tenggara Barat" : ["Bima", "Mataram"],
+        "Nusa Tenggara Timur" : ["Kupang"],
+        "Papua Barat" : ["Sorong"],
+        "Papua" : ["Jayapura"],
+        "Riau" : ["Dumai", "Pekanbaru"],
+        "Sulawesi Selatan" : ["Makassar", "Palopo", "Parepare"],
+        "Sulawesi Tengah" : ["Palu"],
+        "Sulawesi Tenggara" : ["Bau-Bau", "Kendari"],
+        "Sulawesi Utara" : ["Bitung", "Kotamobagu", "Manado", "Tomohon"],
+        "Sumatera Barat" : ["Bukittinggi", "Padang", "Padangpanjang", "Pariaman", "Payakumbuh", "Sawahlunto", "Solok"],
+        "Sumatera Selatan" : ["Lubuklinggau", "Pagaralam", "Palembang", "Prabumulih"],
+        "Sumatera Utara" : ["Binjai", "Medan", "Padang Sidempuan", "Pematangsiantar", "Sibolga", "Tanjungbalai", "Tebingtinggi"],
+        "Yogyakarta" : ["Yogyakarta"],
+    };
+    var provKeys = Object.keys(prov);
+    var select = document.getElementById('prov');
+    var selectKota = document.getElementById('kota');
+    var currentProv = document.getElementById('currentProv').value;
+    var currentCity = document.getElementById('currentCity').value;
+    select.options[0] = new Option(currentProv, currentProv);
+    selectKota.options[0] = new Option(currentCity, currentCity);
+    for(var i=1; i<=provKeys.length; i++)
+    {
+      select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
+    }
+    if ( provKeys.includes(currentProv) ){
+        for(var i=1; i<=prov[currentProv].length; i++)
+            {
+              selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+            }
+    }
+    document.getElementById("prov").value = currentProv;
+    document.getElementById("kota").value = currentCity;
+    $('#prov').on('click', function() {
+      $("#kota").empty();
+      var temp = this.value;
+      for(var i=0; i< prov[temp].length; i++)
+        {
+          selectKota.options[i] = new Option(prov[temp][i], prov[temp][i]);  //new Option("Text", "Value")
+        }
+    })
+
 </script>
 
 
