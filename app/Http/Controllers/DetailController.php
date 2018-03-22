@@ -133,20 +133,20 @@ class DetailController extends Controller
 
         //Nama atribut form yang ditampilkan dan nama pada SQL
         $ins_master = [
-                "User ID Redclub" => "redclub_user_id",
-                "Password Redclub" => "redclub_password",
-                "Nama" => "name",
-                "Telephone" => "telephone_number",
-                "Email" => "email",
-                "Tanggal Lahir" => "birthdate",
-                "Alamat" => "address",
-                "Provinsi" => "province",
-                "Kota" => "city",
-                "Gender" => "gender",
-                "Line ID" => "line_id",
-                "BBM" => "bbm",
-                "WhatsApp" => "whatsapp",
-                "Facebook" => "facebook"];
+                "User ID Redclub" => ["redclub_user_id", 0],
+                "Password Redclub" => ["redclub_password", 0],
+                "Nama" => ["name", 0],
+                "Telephone" => ["telephone_number",0],
+                "Email" => ["email",1],
+                "Tanggal Lahir" => ["birthdate",0],
+                "Alamat" => ["address",0],
+                "Provinsi" => ["province",0],
+                "Kota" => ["city",0],
+                "Gender" => ["gender",0],
+                "Line ID" => ["line_id",0],
+                "BBM" => ["bbm",0],
+                "WhatsApp" => ["whatsapp",0],
+                "Facebook" => ["facebook",0]];
         //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
         $heads_master = ["Master ID"=> "master_id",
                 "User ID Redclub" => "redclub_user_id",

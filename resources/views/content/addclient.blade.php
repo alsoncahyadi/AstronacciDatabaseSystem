@@ -30,13 +30,13 @@
 
 
 			<div id="addcli" style="display: none">
-				@foreach ($ins as $atr)
+				@foreach ($ins as $atr => $req)
 				<?php
 					$str_id = $atr;
 					$str_id = str_replace(' ', '', $str_id);
 				?>
 				<div class="form-group" id="{{$str_id}}">				
-					<label>{{$atr}}</label>
+					<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
 					<?php if ($str_id == 'Gender') : ?>
 							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 								<option>M</option>
@@ -47,7 +47,7 @@
 					<?php elseif (($str_id == 'NoHP') || ($str_id == 'NoTelepon')) : ?>
 							<input class="form-control no-spin" type="number" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 					<?php elseif ($str_id == 'Provinsi') : ?>
-							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}" id="prov">
+							<select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}" id="prov" >
 
 							</select>
 					<?php elseif ($str_id == 'Kota') : ?>
@@ -55,7 +55,9 @@
 
 							</select>
 					<?php else : ?>
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
+								<?php if ($req) : ?> required <?php endif; ?>
+								>
 					<?php endif; ?>
 				</div>
 				@endforeach
@@ -80,11 +82,11 @@
 				<br>
 				<div class="form-group">
 				<div id="aclub" style="display: none;">					
-					@foreach ($aclub as $atr)
+					@foreach ($aclub as $atr => $req)
 					<div class="form-group">				
-						<label>{{$atr}}</label>
+						<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
 						@if (($atr == "Keterangan") || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
+							<input class="form-control <?php if ($req) : ?> aclubrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
 
 
 						@elseif ($atr == "Group")
@@ -120,7 +122,7 @@
 						@elseif ($atr == "Red Zone")
 							<input class="form-control no-spin" type="date" id="redzone" name="{{strtolower(str_replace(' ', '_', $atr))}}" readonly>
 						@else
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" <?php if ($req) : ?> required <?php endif; ?>>
 						@endif
 					</div>
 					@endforeach
@@ -129,11 +131,11 @@
 					
 				</script>
 				<div id="mrg" style="display: none;">
-					@foreach ($mrg as $atr)
+					@foreach ($mrg as $atr => $req)
 					<div class="form-group">
-						<label>{{$atr}}</label>
+						<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
 						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
+							<input class="form-control <?php if ($req) : ?> mrgrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}" >
 
 						@elseif ($atr == "Tanggal Join")
 							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr)).'_mrg'}}">
@@ -145,39 +147,39 @@
 								<option>Signature</option>
 							</select>
 						@else
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							<input class="form-control <?php if ($req) : ?> mrgrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" >
 						@endif
 					</div>
 					@endforeach
 				</div>
 				<div id="uob" style="display: none;">
 					<input type="hidden" name="uob" value="1">
-					@foreach ($uob as $atr)
+					@foreach ($uob as $atr => $req)
 					<div class="form-group">				
-						<label>{{$atr}}</label>
+						<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
 						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
+							<input class="form-control <?php if ($req) : ?> uobrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
 						@elseif ($atr == "Tanggal Join")
 							<input class="form-control no-spin" type="date" id="startdate" name="{{strtolower(str_replace(' ', '_', $atr)).'_uob'}}">
 						@elseif ($atr == "Expired KTP")
 							<input class="form-control no-spin" type="date" id="expiredktp" name="{{strtolower(str_replace(' ', '_', $atr))}}">	
 						@else
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							<input class="form-control <?php if ($req) : ?> uobrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
 						@endif
 					</div>
 					@endforeach
 				</div>
 				<div id="cat" style="display: none;">
 					<input type="hidden" name="cat" value="1">
-					@foreach ($cat as $atr)
+					@foreach ($cat as $atr => $req)
 					<div class="form-group">				
-						<label>{{$atr}}</label>
+						<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
 						@if (($atr == "Keterangan") || (($atr == "Status")) || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales") || ($atr == "Tanggal Join"))
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
+							<input class="form-control <?php if ($req) : ?> catrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_cat'}}">
 						@elseif (($atr == "DP Date") || ($atr == "Opening Class"))
 							<input class="form-control no-spin" type="date" id="dpdate" name="{{strtolower(str_replace(' ', '_', $atr))}}">	
 						@else
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+							<input class="form-control <?php if ($req) : ?> catrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" >
 						@endif
 					</div>
 					@endforeach
@@ -296,11 +298,20 @@
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("aclub").style.display = "inline";
 						document.getElementById("flag").value = 'aclub';
+						document.querySelector('.aclubrequired').required = true;
+						document.querySelector('.uobrequired').required = false;
+						document.querySelector('.mrgrequired').required = false;
+						document.querySelector('.catrequired').required = false;
+
 					}
 				} else {		
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("aclub").style.display = "inline";
 					document.getElementById("flag").value = 'aclub';
+					document.querySelector('.aclubrequired').required = true;
+					document.querySelector('.uobrequired').required = false;
+					document.querySelector('.mrgrequired').required = false;
+					document.querySelector('.catrequired').required = false;
 				}
 			} else if ($( "#pc option:checked" ).val() == "UOB"){
 				if (document.getElementById('isuob') !== null){
@@ -311,11 +322,19 @@
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("uob").style.display = "inline";
 						document.getElementById("flag").value = 'uob';
+						document.querySelector('.aclubrequired').required = false;
+						document.querySelector('.uobrequired').required = true;
+						document.querySelector('.mrgrequired').required = false;
+						document.querySelector('.catrequired').required = false;
 					}
 				} else {
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("uob").style.display = "inline";
 					document.getElementById("flag").value = 'uob';
+					document.querySelector('.aclubrequired').required = false;
+					document.querySelector('.uobrequired').required = true;
+					document.querySelector('.mrgrequired').required = false;
+					document.querySelector('.catrequired').required = false;
 				}
 			} else if ($( "#pc option:checked" ).val() == "MRG"){
 				if (document.getElementById('ismrg') !== null){
@@ -326,11 +345,19 @@
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("mrg").style.display = "inline";
 						document.getElementById("flag").value = 'mrg';
+						document.querySelector('.aclubrequired').required = false;
+						document.querySelector('.uobrequired').required = false;
+						document.querySelector('.mrgrequired').required = true;
+						document.querySelector('.catrequired').required = false;
 					}
 				} else {
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("mrg").style.display = "inline";
 					document.getElementById("flag").value = 'mrg';
+					document.querySelector('.aclubrequired').required = false;
+					document.querySelector('.uobrequired').required = false;
+					document.querySelector('.mrgrequired').required = true;
+					document.querySelector('.catrequired').required = false;
 				}
 			} else if ($( "#pc option:checked" ).val() == "CAT"){
 				if (document.getElementById('iscat') !== null){
@@ -341,11 +368,19 @@
 						document.getElementById("insert_button").disabled = false;
 						document.getElementById("cat").style.display = "inline";
 						document.getElementById("flag").value = 'cat';
+						document.querySelector('.aclubrequired').required = false;
+						document.querySelector('.uobrequired').required = false;
+						document.querySelector('.mrgrequired').required = false;
+						document.querySelector('.catrequired').required = true;
 					}
 				} else {
 					document.getElementById("insert_button").disabled = false;
 					document.getElementById("cat").style.display = "inline";
 					document.getElementById("flag").value = 'cat';
+					document.querySelector('.aclubrequired').required = false;
+					document.querySelector('.uobrequired').required = false;
+					document.querySelector('.mrgrequired').required = false;
+					document.querySelector('.catrequired').required = true;
 				}
 			}
 			

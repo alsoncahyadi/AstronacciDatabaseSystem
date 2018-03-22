@@ -97,9 +97,9 @@
                 <form role="form" method="post" action="{{route('detail.edit')}}">
                     <div class="form-group">
                         <input name="user_id" type="hidden" value="{{$client_master->master_id}}">
-                        @foreach ($ins_master as $key => $value)
+                        @foreach ($ins_master as $key => [$value,$req])
                             <div style="height:60px">
-                                <label>{{$key}}</label>
+                                <label>{{$key}} <?php if ($req) : ?><span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                 @if ($key == "Tanggal Lahir")
                                     <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_master->$value}}"> 
                                 @elseif ($key == "Gender")
@@ -118,7 +118,7 @@
 
                                     </select>
                                 @else
-                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}">
+                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}" <?php if ($req) : ?> required <?php endif; ?>>
                                 @endif
                             </div>
                         @endforeach
