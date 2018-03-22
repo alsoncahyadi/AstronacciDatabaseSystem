@@ -567,7 +567,9 @@ class AshopController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -583,8 +585,14 @@ class AshopController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->$master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
+
+                            $value->master_id = $master_id;
+
                             if (($value->master_id) != null) {
                                 $is_ashop_has_attributes = False;
                                 $ashop = new \App\AshopTransaction;
@@ -649,7 +657,6 @@ class AshopController extends Controller
         $array = [];
         $heads = [
                 "Transaction ID" => "transaction_id",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
@@ -690,7 +697,6 @@ class AshopController extends Controller
         $array = [];
         $heads = [
                 "Transaction ID" => "transaction_id",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",

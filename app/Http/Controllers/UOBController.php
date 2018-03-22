@@ -465,51 +465,6 @@ class UOBController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    // if (($value->kode_client) === null) {
-                    //     $msg = "Kode Client empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->master_id) === null) {
-                    //     $msg = "Master ID empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sales) === null) {
-                    //     $msg = "Sales empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sumber_data) === null) {
-                    //     $msg = "Sumber Data empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->tanggal_join) === null) {
-                    //     $msg = "Tanggal Join empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->nomer_ktp) === null) {
-                    //     $msg = "Nomer KTP empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->expired_ktp) === null) {
-                    //     $msg = "Expired KTP empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->nomer_npwp) === null) {
-                    //     $msg = "Nomer NPWP empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->alamat_surat) === null) {
-                    //     $msg = "Alamat Surat empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->saudara_tidak_serumah) === null) {
-                    //     $msg = "Saudara Tidak Serumah empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->ibu_kandung) === null) {
-                    //     $msg = "Ibu Kandung empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-
                 } //end validasi
                 // dd($err);
 
@@ -520,7 +475,9 @@ class UOBController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -536,9 +493,13 @@ class UOBController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
 
+                            $value->master_id = $master_id;
 
                             if (($value->master_id) != null) {
 
@@ -605,7 +566,6 @@ class UOBController extends Controller
         $array = [];
         $heads = [
           "Kode Client" => "client_id",
-          "Master ID" => "master_id",
         "User ID Redclub" => "redclub_user_id",
         "Password Redclub" => "redclub_password",
         "Nama" => "name",
@@ -663,7 +623,6 @@ class UOBController extends Controller
         $array = [];
         $heads = [
         "Kode Client" => "client_id",
-          "Master ID" => "master_id",
         "User ID Redclub" => "redclub_user_id",
         "Password Redclub" => "redclub_password",
         "Nama" => "name",

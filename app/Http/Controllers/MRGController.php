@@ -498,7 +498,9 @@ class MRGController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
 
                                 $master = new \App\MasterClient;
 
@@ -515,15 +517,16 @@ class MRGController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->master_id;
                                 }
-
-                                $value->master_id = $master->master_id;
+                            } else {
+                                $master_id = $master->master_id;
                             }
-
+                            $value->master_id = $master_id;
 
                             // check whether aclub information exist or not
                             $is_mrg_have_attributes = False;
-                            if (Mrg::find($value->master_id) == null) {
+                            if (Mrg::find($master_id) == null) {
                                 $mrg = new \App\Mrg;
 
                                 $mrg_attributes = $mrg->getAttributesImport();
@@ -659,7 +662,6 @@ class MRGController extends Controller
                     "Account Number" => "accounts_number",
                     "Account Type" => "account_type",
                     "Sales Name" => "sales_name",
-                    "Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",
@@ -709,7 +711,6 @@ class MRGController extends Controller
         $heads = ["Account Number" => "accounts_number",
                     "Account Type" => "account_type",
                     "Sales Name" => "sales_name",
-                    "Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",

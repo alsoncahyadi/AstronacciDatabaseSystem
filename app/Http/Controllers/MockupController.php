@@ -331,6 +331,17 @@ class MockupController extends Controller
 
         $errors = [];
 
+        $aclubInfo = new \App\AclubInformation;
+        if ($request->master == 0) {
+            $aclubInfo->master_id = $this->id;
+        } else {
+            $aclubInfo->master_id = $request->master_id;
+        }
+        $aclubInfo->sumber_data = $request->sumber_data_aclub;
+        $aclubInfo->keterangan = $request->keterangan_aclub;
+
+        $aclubInfo->save();
+
         $aclubMember = new \App\AclubMember;
 
         if ($request->master == 0) {
@@ -342,17 +353,6 @@ class MockupController extends Controller
         $aclubMember->group = $request->group;
 
         $aclubMember->save();
-
-        $aclubInfo = new \App\AclubInformation;
-        if ($request->master == 0) {
-            $aclubInfo->master_id = $this->id;
-        } else {
-            $aclubInfo->master_id = $request->master_id;
-        }
-        $aclubInfo->sumber_data = $request->sumber_data_aclub;
-        $aclubInfo->keterangan = $request->keterangan_aclub;
-
-        $aclubInfo->save();
 
         $aclubTrans = new \App\AclubTransaction;
         $aclubTrans->user_id = $request->user_id_aclub;

@@ -845,7 +845,9 @@ class AClubController extends Controller
                         try {
                              // check whether master client exist or not
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -861,13 +863,17 @@ class AClubController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->$master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
 
                             // check whether aclub information exist or not
                             $is_info_have_attributes = False;
-                            if (AclubInformation::find($value->master_id) == null) {
+                            if (AclubInformation::find($master_id) == null) {
                                 $aclub_info = new \App\AclubInformation;
+                                $value->master_id = $master_id;
 
                                 $aclub_info_attributes = $aclub_info->getAttributesImport();
 
@@ -882,6 +888,22 @@ class AClubController extends Controller
 
                                 if ($is_info_have_attributes) {
                                     $aclub_info->save();
+                                }
+                            } else {
+                                $aclub_info = AclubInformation::find($master_id);
+
+                                $aclub_info_attributes = $aclub_info->getAttributesImport();
+                                foreach ($aclub_info_attributes as $aclub_info_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $aclub_info->$aclub_info_attribute = $value->$import;
+                                        $is_info_have_attributes = True;
+                                    } else {
+                                        $aclub_info->$aclub_info_attribute = null;
+                                    }
+                                }
+                                $aclub_info->master_id = $master_id;
+                                if ($is_info_have_attributes) {
+                                    $aclub_info->update();
                                 }
                             }
 
@@ -964,7 +986,6 @@ class AClubController extends Controller
                 foreach ($transactions as $transaction) {
                     $object = $transaction;
 
-                    $object->master_id = $member->master_id;
                     $object->group = $member->group;
                     $object->user_id = $member->user_id;
 
@@ -995,7 +1016,6 @@ class AClubController extends Controller
             } else {
                 $object = new \stdClass();
 
-                $object->master_id = $member->master_id;
                 $object->group = $member->group;
 
                 $info = $member->aclubInformation;
@@ -1034,8 +1054,7 @@ class AClubController extends Controller
         }
 
         $array = [];
-        $heads = ["Master ID" => "master_id",
-                    "User ID Redclub" => "redclub_user_id",
+        $heads = ["User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",
                     "Telephone" => "telephone_number",
@@ -1128,8 +1147,7 @@ class AClubController extends Controller
 
     public function templateExcel() {
         $array = [];
-        $heads = ["Master ID" => "master_id",
-                    "User ID Redclub" => "redclub_user_id",
+        $heads = ["User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",
                     "Telephone" => "telephone_number",

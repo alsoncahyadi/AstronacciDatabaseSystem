@@ -487,7 +487,9 @@ class CATController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -503,8 +505,13 @@ class CATController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
+
+                            $value->master_id = $master_id;
 
                             if (($value->master_id) != null) {
 
@@ -573,7 +580,6 @@ class CATController extends Controller
         $heads = [
                 "User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
@@ -623,7 +629,6 @@ class CATController extends Controller
         $array = [];
         $heads = ["User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
