@@ -340,17 +340,17 @@ class UOBController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Bank Pribadi" => "bank_pribadi",
-                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
-                        "Tanggal RDI Done" => 'tanggal_rdi_done',
-                        "RDI Bank" => "rdi_bank",
-                        "Nomor RDI" => 'nomor_rdi',
-                        "Tanggal Top Up" => 'tanggal_top_up',
-                        "Nominal Top Up" => 'nominal_top_up',
-                        "Tanggal Trading" => 'tanggal_trading',
-                        "Status" => 'status',
-                        "Trading Via" => 'trading_via',
-                        "Keterangan" => 'keterangan'];
+        $insreg = ["Bank Pribadi" => 0,
+                        "Nomor Rekening Pribadi" => 0,
+                        "Tanggal RDI Done" => 0,
+                        "RDI Bank" => 0,
+                        "Nomor RDI" => 0,
+                        "Tanggal Top Up" => 0,
+                        "Nominal Top Up" => 0,
+                        "Tanggal Trading" => 0,
+                        "Status" => 0,
+                        "Trading Via" => 0,
+                        "Keterangan" => 0];
 
         //judul + sql transaction
         $headsreg = [  "Bank Pribadi" => "bank_pribadi",
