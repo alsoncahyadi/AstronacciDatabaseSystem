@@ -356,16 +356,16 @@ class CATController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = [ "Nomer Induk" => 1,
-                    "DP Date" => 0,
-                    "DP Nominal" => 0,
-                    "Payment Date" => 0,
-                    "Payment Nominal" => 0,
-                    "Opening Class" => 0,
-                    "End Class" => 0,
-                    "Ujian" => 0,
-                    "Status" => 0,
-                    "Keterangan" => 0
+        $insreg = [ "Nomer Induk" => ["nomor_induk", 1],
+                    "DP Date" => ["DP_date", 0],
+                    "DP Nominal" => ["DP_nominal", 0],
+                    "Payment Date" => ["payment_date", 0],
+                    "Payment Nominal" => ["payment_nominal", 0],
+                    "Opening Class" => ["tanggal_opening_class", 0],
+                    "End Class" => ["tanggal_end_class", 0],
+                    "Ujian" => ["tanggal_ujian", 0],
+                    "Status" => ["status", 0],
+                    "Keterangan" => ["keterangan", 0]
                     ];
 
         //transaction
