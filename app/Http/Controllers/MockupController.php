@@ -37,7 +37,6 @@ class MockupController extends Controller
                         "Payment Date",
                         "Sumber Data",
                         "Sales",
-                        "Group",
                         "Kode",
                         "Status",
                         "Nominal",
@@ -326,7 +325,6 @@ class MockupController extends Controller
             'red_zone' => 'date',
             'sumber_data_aclub' => '',
             'keterangan_aclub' => '',
-            'group' => ''
         ]);
 
         $errors = [];
@@ -350,7 +348,6 @@ class MockupController extends Controller
             $aclubMember->master_id = $request->master_id;
         }
         $aclubMember->user_id = $request->user_id_aclub;
-        $aclubMember->group = $request->group;
 
         $aclubMember->save();
 

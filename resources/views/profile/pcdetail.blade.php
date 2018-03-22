@@ -211,11 +211,11 @@
                         @endforeach
                     </div><br>
 
-                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Member</a>
+                    <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addaclubtrans">Add New Transaction</a>
                     <div id="addaclubtrans" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <form method="post" action="{{route('AClub.insertmembers')}}">
-                                <input name="master_id" type="hidden" value="{{$client_aclub->master_id}}">
+                            <form method="post" action="{{route('AClub.inserttrans')}}">
+                                <input name="user_id" type="hidden" value="{{$client_aclub->user_id}}">
                                 @foreach ($insreg_aclub as $atr => $value)
                                 <div class="form-group">
                                     <label>{{$atr}}</label>

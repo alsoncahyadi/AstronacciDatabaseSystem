@@ -444,6 +444,8 @@ class AClubController extends Controller
 
         $aclub_information = AclubInformation::find($id);
 
+        $aclub_members = AclubMember::where('master_id', $id)->first();
+
         // aclub_master adalah aclub_master nya
         $aclub_master = $aclub_information->master;
 
@@ -459,29 +461,33 @@ class AClubController extends Controller
         $page = $request['page']-1;
         $record_amount = 5;
 
-        $query = QueryModifier::queryAClubClientDetailSearch($aclub_master->master_id, $keyword);
+        $query = QueryModifier::queryGetTransactions($aclub_members->user_id);
 
-        $aclub_members_old = DB::select($query);
+        $aclub_transactions = DB::select($query);
 
-        // $aclub_members_old = $aclub_master->aclubMembers()
-        //                     ->where('user_id', 'like', "%{$keyword}%")
-        //                     ->orWhere('aclub_members.group', 'like', "%{$keyword}%")->get();
-
-        // dd($aclub_members_old);
-                    
-        $total = count($aclub_members_old);
+        $total = count($aclub_transactions);
         $total = ceil($total / $record_amount);
 
-        $aclub_members = collect(array_slice($aclub_members_old, $page*$record_amount, $record_amount));
+        $aclub_transactions = collect(array_slice($aclub_transactions, $page*$record_amount, $record_amount));
+        // $headsreg = ["User ID"];
+        // $attsreg = ["user_id"];
+        $headsreg = [ "Payment Date",
+                       "Kode",
+                       "Status",
+                       "Nominal",
+                       "Start Date",
+                       "Expired Date",
+                       "Masa Tenggang"];
+        $attsreg = ["payment_date", 
+                    "kode", 
+                    "status", 
+                    "nominal", 
+                    "start_date", 
+                    "expired_date", 
+                    "masa_tenggang"];
 
-        // $aclub_members = $aclub_members_old->skip($record_amount*$page)->take($record_amount)->get();
-        // dd($aclub_members);
-
-        $headsreg = ["User ID",
-                    "Group"];
 
         $insreg = ["User ID",
-                    "Group",
                     "Sales Name",
                     "Payment Date",
                     "Kode",
@@ -493,12 +499,11 @@ class AClubController extends Controller
                     "Red Zone",
                     "Yellow Zone"];
 
-        $attsreg = ["user_id", "group"];
 
         // yang ditampilin di page member cuman aclub_information dan aclub_members aja
 
-        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_information, 
-                    'clientsreg'=>$aclub_members, 'heads'=>$heads, 'ins'=>$ins, 
+        return view('profile/transtable', ['route'=>'AClub', 'client'=>$aclub_members, 
+                    'clientsreg'=>$aclub_transactions, 'heads'=>$heads, 'ins'=>$ins, 
                     'insreg'=>$insreg, 'headsreg'=>$headsreg, 'attsreg'=>$attsreg,
                     'count'=>$total
                 ]);
@@ -508,7 +513,6 @@ class AClubController extends Controller
         $this->validate($request, [
                 'user_id' => 'required|unique:aclub_members',
                 'master_id' => 'required',
-                'group' => 'required'
             ]);
 
         $aclub_member = new \App\AclubMember();
@@ -517,7 +521,6 @@ class AClubController extends Controller
 
         $aclub_member->user_id = $request->user_id;
         $aclub_member->master_id = $request->master_id;
-        $aclub_member->group = $request->group;
 
         $aclub_member->save();
 
@@ -573,11 +576,9 @@ class AClubController extends Controller
         
 
         $heads = [  "User ID" => "user_id",
-                    "Master ID" => "master_id",
-                    "Group" => "group"];
+                    "Master ID" => "master_id"];
 
-        $ins =  [   "Sales Name" => "sales_name",
-                    "Group" => "group"];
+        $ins =  [   "Sales Name" => "sales_name"];
 
         $headsreg = [ "Payment Date",
                     "Kode",
@@ -620,14 +621,11 @@ class AClubController extends Controller
 
     public function editMember(Request $request) {
         $this->validate($request, [
-                'group' => 'required'
             ]);
 
         $err = [];
         try {
             $aclub_member = AclubMember::find($request->user_id);
-
-            $aclub_member->group = $request->group;
 
             $aclub_member->update();
         } catch(\Illuminate\Database\QueryException $ex){
@@ -714,7 +712,6 @@ class AClubController extends Controller
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'master_id' => 'required',
                 'sumber_data' => '',
                 'keterangan' => ''
             ]);
@@ -723,10 +720,9 @@ class AClubController extends Controller
         try {
             $aclub = AclubInformation::find($request->master_id);
 
-            $aclub->master_id = $request->master_id;
             $aclub->sumber_data = $request->sumber_data;
             $aclub->keterangan = $request->keterangan;
-
+            
             $aclub->update();
         } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
@@ -812,13 +808,6 @@ class AClubController extends Controller
             $aclub_trans->red_zone = $request->red_zone;
             
             $aclub_member = $aclub_trans->aclubMember;
-            if (substr($aclub_trans->kode, -2, 1) == "S") {
-                $aclub_member->group = "Stock";
-            } else if (substr($aclub_trans->kode, -2, 1) == "F") {
-                $aclub_member->group = "Future";
-            }  else if (substr($aclub_trans->kode, -2, 1) == "R") {
-                $aclub_member->group = "RD";
-            }
 
             $aclub_trans->update();
             $aclub_member->update();
@@ -990,7 +979,6 @@ class AClubController extends Controller
                 foreach ($transactions as $transaction) {
                     $object = $transaction;
 
-                    $object->group = $member->group;
                     $object->user_id = $member->user_id;
 
                     $info = $member->aclubInformation;
@@ -1019,8 +1007,6 @@ class AClubController extends Controller
                 }
             } else {
                 $object = new \stdClass();
-
-                $object->group = $member->group;
 
                 $info = $member->aclubInformation;
 
@@ -1075,7 +1061,6 @@ class AClubController extends Controller
                     "Sumber Data" => "sumber_data",
                     "Keterangan" => "keterangan",
                     "User ID" => "user_id",
-                    "Group" => "group",
                     "Payment Date" => "payment_date",
                     "Kode" => "kode",
                     "Status" => "status",
@@ -1107,7 +1092,7 @@ class AClubController extends Controller
     public function updateMember($id) {
         $aclub_member = AclubMember::where('user_id', $id)->first();
 
-        $ins = [ "Group" => "group"];
+        $ins = [];
 
         return view('content/aclubmembereditform', ['route'=>'AClub', 'client'=>$aclub_member, 'ins'=>$ins]);
     }
@@ -1168,7 +1153,6 @@ class AClubController extends Controller
                     "Sumber Data" => "sumber_data",
                     "Keterangan" => "keterangan",
                     "User ID" => "user_id",
-                    "Group" => "group",
                     "Payment Date" => "payment_date",
                     "Kode" => "kode",
                     "Status" => "status",

@@ -88,8 +88,7 @@
 
 
 						@elseif ($atr == "Group")
-							<input class="form-control no-spin" type="text" id="group" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="Stock"readonly>
-
+							<input type="hidden" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="-">
 
 						@elseif ($atr == "Kode")
 							<select class="form-control" id="kode" name="{{strtolower(str_replace(' ', '_', $atr))}}">
@@ -406,14 +405,6 @@
 		document.getElementById("redzone").value = document.getElementById("masatenggang").value;
 		document.getElementById("yellowzone").stepDown(3);
 		document.getElementById("redzone").stepUp(3);
-
-		if (document.getElementById("kode").value == "SS" || document.getElementById("kode").value == "SG" || document.getElementById("kode").value == "SP") {
-			document.getElementById("group").value = "Stock";
-		} else if (document.getElementById("kode").value == "FS" || document.getElementById("kode").value == "FG" || document.getElementById("kode").value == "FP") {
-			document.getElementById("group").value = "Future";
-		} else if (document.getElementById("kode").value == "RD") {
-			document.getElementById("group").value = "RD";
-		} 		
 	});
 
 	$( "#masatenggang" ).change(function() {

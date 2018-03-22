@@ -14,6 +14,7 @@ class QueryModifier {
                                       INNER JOIN uobs 
                                       ON uobs.master_id = master_clients.master_id";
 
+
     private static $query_view_AClub = 
         "SELECT *, 
         (masa_tenggang-expired_date) as bonus, 
@@ -89,16 +90,24 @@ class QueryModifier {
              IF (master_clients.master_id IN (SELECT master_id FROM cats), 1, 0) as cat,
              IF (master_clients.master_id IN (SELECT master_id FROM mrgs), 1, 0) as mrg, 
              IF (master_clients.master_id IN (SELECT master_id FROM uobs), 1, 0) as uob,
-             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Stock'), 1, 0) as stock,
-             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Future'), 1, 0) as future 
+             IF (master_clients.master_id IN (SELECT DISTINCT master_id FROM aclub_members
+                                              INNER JOIN aclub_transactions ON aclub_members.user_id = aclub_transactions.user_id 
+                                              where LEFT(kode, 1) = 'S'), 1, 0) as stock,
+             IF (master_clients.master_id IN (SELECT master_id from aclub_members 
+                                              inner join aclub_transactions on aclub_members.user_id = aclub_transactions.user_id 
+                                              where LEFT(kode, 1) = 'F'), 1, 0) as future 
              FROM master_clients";
 
     private static $query_view_master_all = "SELECT *,
              IF (master_clients.master_id IN (SELECT master_id FROM cats), 1, 0) as cat,
              IF (master_clients.master_id IN (SELECT master_id FROM mrgs), 1, 0) as mrg, 
              IF (master_clients.master_id IN (SELECT master_id FROM uobs), 1, 0) as uob,
-             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Stock'), 1, 0) as stock,
-             IF (master_clients.master_id IN (SELECT master_id FROM aclub_members WHERE aclub_members.group = 'Future'), 1, 0) as future 
+             IF (master_clients.master_id IN (SELECT DISTINCT master_id FROM aclub_members
+                                              INNER JOIN aclub_transactions ON aclub_members.user_id = aclub_transactions.user_id 
+                                              where LEFT(kode, 1) = 'S'), 1, 0) as stock,
+             IF (master_clients.master_id IN (SELECT master_id from aclub_members 
+                                              inner join aclub_transactions on aclub_members.user_id = aclub_transactions.user_id 
+                                              where LEFT(kode, 1) = 'F'), 1, 0) as future 
              FROM master_clients";
 
 
@@ -224,7 +233,7 @@ class QueryModifier {
 
     public static function queryAClubClientDetailSearch($master_id, $keyword) {
         $query = "SELECT * FROM aclub_members WHERE (master_id = ".$master_id.")
-        AND ( user_id like '%".$keyword."%' OR aclub_members.group like '%".$keyword."%' ) ";
+        AND ( user_id like '%".$keyword."%') ";
         return $query;
     }
 
@@ -237,6 +246,11 @@ class QueryModifier {
 
     public static function queryMasterExport() {
         return self::$query_view_master_all;
+    }
+
+    public static function queryGetTransactions($user_id) {
+        $query = "SELECT * FROM aclub_transactions WHERE user_id = ".$user_id." ORDER BY created_at DESC;";
+        return $query;
     }
 } 
 

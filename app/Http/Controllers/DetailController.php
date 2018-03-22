@@ -10,6 +10,7 @@ use App\MasterClient;
 use App\Cat;
 use App\Mrg;
 use App\AclubInformation;
+use App\AlubTransactions;
 use App\Uob;
 
 class DetailController extends Controller
@@ -298,7 +299,7 @@ class DetailController extends Controller
                         "Sales Name" => "sales_name"];
 
         //ACLUB
-        $client_aclub = AclubInformation::find($id);
+        $client_aclub = AclubInformation::find($id)->first();
 
         if ($client_aclub == null) {
             $client_aclub = new \App\AclubInformation();
@@ -316,15 +317,27 @@ class DetailController extends Controller
                 "Sumber Data" => "sumber_data", 
                 "Keterangan" => "keterangan"];
 
-        $clientsreg_aclub= $aclub_master->aclubMembers()->get();
+        // $clientsreg_aclub= $aclub_master->aclubMembers()->get();
+        $clientsreg_aclub = $aclub_master->aclubMembers()->first()->aclubTransactions()->get();
+        $client_aclub->user_id = $clientsreg_aclub[0]->user_id;
+        $headsreg_aclub = [ "Payment Date",
+                            "Kode",
+                            "Status",
+                            "Nominal",
+                            "Start Date",
+                            "Expired Date",
+                            "Masa Tenggang"];
+        $attsreg_aclub = ["payment_date", 
+                          "kode", 
+                          "status", 
+                          "nominal", 
+                          "start_date", 
+                          "expired_date", 
+                          "masa_tenggang"];
 
-        $headsreg_aclub = ["User ID",
-                    "Group"];
+        // dd($clientsreg_aclub);
 
-        $attsreg_aclub = ["user_id", "group"];
-
-        $insreg_aclub = ["User ID" => "user_id",
-                    "Group" => "group",
+        $insreg_aclub = [
                     "Sales Name" => "sales_name",
                     "Payment Date" => "payment_date",
                     "Kode" => "kode",
