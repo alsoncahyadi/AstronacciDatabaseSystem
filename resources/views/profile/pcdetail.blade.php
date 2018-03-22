@@ -686,17 +686,20 @@
     var selectKota = document.getElementById('kota');
     var currentProv = document.getElementById('currentProv').value;
     var currentCity = document.getElementById('currentCity').value;
-    for(var i=0; i< provKeys.length; i++)
+    select.options[0] = new Option(currentProv, currentProv);
+    selectKota.options[0] = new Option(currentCity, currentCity);
+    for(var i=1; i<=provKeys.length; i++)
     {
       select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
     }
-    for(var i=0; i< prov[currentProv].length; i++)
+    for(var i=1; i<=prov[currentProv].length; i++)
     {
       selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
     }
     document.getElementById("prov").value = currentProv;
     document.getElementById("kota").value = currentCity;
     $('#prov').on('change', function() {
+      console.log("fuk");
       $("#kota").empty();
       var temp = this.value;
       for(var i=0; i< prov[temp].length; i++)
