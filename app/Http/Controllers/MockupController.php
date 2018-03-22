@@ -144,7 +144,7 @@ class MockupController extends Controller
            'redclub_user_id' => '',
             'name' => '',
             'telephone_number' => '',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:master_clients',
             'birthdate' => 'date',
             'address' => '',
             'city' => '',
