@@ -702,14 +702,15 @@
     {
       select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
     }
-    for(var i=1; i<=prov[currentProv].length; i++)
-    {
-      selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+    if ( provKeys.includes(currentProv) ){
+        for(var i=1; i<=prov[currentProv].length; i++)
+            {
+              selectKota.options[i] = new Option(prov[currentProv][i], prov[currentProv][i]);  //new Option("Text", "Value")
+            }
     }
     document.getElementById("prov").value = currentProv;
     document.getElementById("kota").value = currentCity;
-    $('#prov').on('change', function() {
-      console.log("fuk");
+    $('#prov').on('click', function() {
       $("#kota").empty();
       var temp = this.value;
       for(var i=0; i< prov[temp].length; i++)
