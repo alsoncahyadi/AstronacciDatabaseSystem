@@ -98,27 +98,28 @@
                     <div class="form-group">
                         <input name="user_id" type="hidden" value="{{$client_master->master_id}}">
                         @foreach ($ins_master as $key => $req)
+                            <?php $value = $req[0]?>
                             <div style="height:60px">
                                 <label>{{$key}} <?php if ($req[1]) : ?><span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                 @if ($key == "Tanggal Lahir")
-                                    <input class="form-control no-spin" type="date" name="{{$value}}" value="{{$client_master->$value}}"> 
+                                    <input class="form-control no-spin" type="date" name="{{$req[0]}}" value="{{$client_master->$value}}"> 
                                 @elseif ($key == "Gender")
-                                    <select class="form-control" name="{{$value}}" value="{{$client_master->$value}}">
+                                    <select class="form-control" name="{{$req[0]}}" value="{{$client_master->$value}}">
                                         <option>M</option>
                                         <option>F</option>
                                     </select>
                                 @elseif ($key == 'Provinsi')
                                     <input type="hidden" name="prov" id="currentProv" value="{{$client_master->$value}}">
-                                    <select class="form-control" name="{{$value}}" id="prov" value="{{$client_master->$value}}">
+                                    <select class="form-control" name="{{$req[0]}}" id="prov" value="{{$client_master->$value}}">
 
                                     </select>
                                 @elseif ($key == 'Kota') 
                                     <input type="hidden" name="kota" id="currentCity" value="{{$client_master->$value}}">
-                                    <select class="form-control" name="{{$value}}" id="kota" value="{{$client_master->$value}}">
+                                    <select class="form-control" name="{{$req[0]}}" id="kota" value="{{$client_master->$value}}">
 
                                     </select>
                                 @else
-                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$value}}" <?php if ($req[1]) : ?> required <?php endif; ?>>
+                                    <input class="form-control" value="{{$client_master->$value}}" name="{{$req[0]}}" <?php if ($req[1]) : ?> required <?php endif; ?>>
                                 @endif
                             </div>
                         @endforeach
