@@ -100,100 +100,32 @@ class AClubController extends Controller
     }
 
     public function getTable(Request $request) {
-        // $keyword = $request['q'];
-
-        // $aclub_info = AclubInformation::where('sumber_data', 'like', "%{$keyword}%")
-        //         ->orWhere('keterangan', 'like', "%{$keyword}%")
-        //         ->paginate(15);
         $page = 0;
-        $page = $request['page']-1;
         $record_amount = 15;
 
-        // $aclub_members = $this->getData();
-        $record_count = AclubMember::count();
-        $aclub_members = AclubMember::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();        
+        // add 'select' of query
+        $query = QueryModifier::queryView('AClub', null, null);
 
-        foreach ($aclub_members as $aclub_member) {
-            $master = $aclub_member->master;
-            $aclub_member->redclub_user_id = $master->redclub_user_id;
-            $aclub_member->redclub_password = $master->redclub_password;
-            $aclub_member->name = $master->name;
-            $aclub_member->telephone_number = $master->telephone_number;
-            $aclub_member->email = $master->email;
-            $aclub_member->birthdate = $master->birthdate;
-            $aclub_member->address = $master->address;
-            $aclub_member->city = $master->city;
-            $aclub_member->province = $master->province;
-            $aclub_member->gender = $master->gender;
-            $aclub_member->line_id = $master->line_id;
-            $aclub_member->bbm = $master->bbm;
-            $aclub_member->whatsapp = $master->whatsapp;
-            $aclub_member->facebook = $master->facebook;
+        // retrieve result
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);     
 
-            //data from aclub transaction
-            if ($aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first() != null) {
-                $last_transaction = $aclub_member->aclubTransactions()->orderBy('masa_tenggang','desc')->first();
-                $aclub_member->sales_name = $last_transaction->sales_name;
-                $aclub_member->payment_date = $last_transaction->payment_date->toDateString();
-                $aclub_member->kode = $last_transaction->kode;
-                $aclub_member->status = $last_transaction->status;
-                $aclub_member->start_date = $last_transaction->start_date->toDateString();
-                $aclub_member->expired_date = $last_transaction->expired_date;
-                $aclub_member->yellow_zone = $last_transaction->yellow_zone->toDateString();
-                $aclub_member->red_zone = $last_transaction->red_zone->toDateString();
-                $aclub_member->masa_tenggang = $last_transaction->masa_tenggang;
-                $aclub_member->transaction_id = $last_transaction->transaction_id;
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
 
-                $aclub_member->bonus = $aclub_member->masa_tenggang->diffInDays($aclub_member->expired_date);
-
-                $aclub_member->expired_date = $last_transaction->expired_date->toDateString();
-                $aclub_member->masa_tenggang = $last_transaction->masa_tenggang->toDateString();
-            } else {
-                $aclub_member->sales_name = null;
-                $aclub_member->payment_date = null;
-                $aclub_member->kode = null;
-                $aclub_member->status = null;
-                $aclub_member->start_date = null;
-                $aclub_member->expired_date = null;
-                $aclub_member->yellow_zone = null;
-                $aclub_member->red_zone = null;
-                $aclub_member->masa_tenggang = null;
-                $aclub_member->transaction_id = null;
-
-                $aclub_member->bonus = null;
-
-                $aclub_member->expired_date = null;
-                $aclub_member->masa_tenggang = null;
-            }
+        foreach ($list as $aclub_member) {
 
             $last_kode = substr($aclub_member->kode,-1);
             if ($last_kode == 'S') {
                 $aclub_member->bulan_member = 1;
             } else if($last_kode == 'G') {
                 $aclub_member->bulan_member = 6;
-            } else if ($last_kode == 'P') {
+            } else {
                 $aclub_member->bulan_member = 12;
-            } else {
-                $aclub_member->bulan_member = null;
             }
-
-            if ($aclub_member->masa_tenggang < Carbon::now()) {
-                $aclub_member->aktif = 'tidak aktif';
-            } else {
-                $aclub_member->aktif = 'aktif';
-            }
-
-            //data from aclub information
-            $aclub_info = $aclub_member->aclubInformation;
-            $aclub_member->sumber_data = $aclub_info->sumber_data;
         }
 
-        // $aclub_members = collect(array_slice($aclub_members, $page*$record_amount, $record_amount));
-        // $aclub_members = $aclub_members->skip($record_amount*$page)->take($record_amount);
-
-        // dd($aclub_members);
-        $page_count = ceil($record_count/$record_amount);
-
+        $aclub_members = $list;
         $headsMaster = [
                     "User ID",
                     "Nama",
@@ -412,7 +344,8 @@ class AClubController extends Controller
         $list_old = DB::select(DB::raw($query['text']), $query['variables']);
 
         $record_count = count($list_old);
-        $page_count = ceil($record_count/$record_amount);        
+        $page_count = ceil($record_count/$record_amount); 
+        // dd($list_old[0]);       
 
         $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
         foreach ($list as $aclub_member) {
@@ -863,12 +796,12 @@ class AClubController extends Controller
                             } else {
                                 $master_id = $master->master_id;
                             }
+                            $value->master_id = $master_id;
 
                             // check whether aclub information exist or not
                             $is_info_have_attributes = False;
                             if (AclubInformation::find($master_id) == null) {
                                 $aclub_info = new \App\AclubInformation;
-                                $value->master_id = $master_id;
 
                                 $aclub_info_attributes = $aclub_info->getAttributesImport();
 
