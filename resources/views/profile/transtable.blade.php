@@ -28,12 +28,14 @@
                         @foreach ($attsreg as $attreg)
                        @if ($route == 'AClub')
                        <input id="hidden_page_countA" type="hidden" value="{{$count}}">
-                            <td> <a target="_blank" href="{{route('AClub.member',['id' => $client->master_id, 'package' => $clientreg->user_id])}}">{{$clientreg->$attreg}} </a>
+                            <td> <a target="_blank" href="{{route('AClub.package',['id' => $client->master_id, 'member' => $client->user_id, 'package' => $clientreg->transaction_id])}}">{{$clientreg->$attreg}} </a>
                                 @if ($count_temp == 1)
                                     <div class="btn-hvr-container">
-                                        <form action="{{route('AClub.deletemember', ['id' => $clientreg->user_id])}}" method="post">
+                                         <a href="{{route('AClubtrans.edit', ['id' => $clientreg->transaction_id])}}" class="btn btn-primary hvr-btn">edit</a>
+                                        <form action="{{route('AClub.deletetrans', ['id' => $clientreg->transaction_id])}}" method="post" onsubmit="return del()">
                                             <input type="hidden" name="_method" value="DELETE" >
-                                            <input class="btn btn-primary hvr-btn" type="submit" onclick="del()" value="delete" >
+                                            <input type="hidden" name="clientdel" id="clientdel" value="{{$clientreg->transaction_id}}" >
+                                            <input class="btn btn-primary hvr-btn" type="submit" value="delete" >
                                             <input type="hidden" name="_token" value="<?php echo csrf_token() ?>">
                                         </form>
                                     </div>

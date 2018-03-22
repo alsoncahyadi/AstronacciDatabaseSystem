@@ -51,7 +51,7 @@ class MRGController extends Controller
         }
         sort($month);
         foreach ($month as $m) {
-            if ($m > 1) {
+            if ($m >= 1) {
                 array_push($filter_dpdate, $filter_date[$m-1]);
             }
         }
@@ -87,8 +87,10 @@ class MRGController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {            
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {
+            if ($m >= 1) {
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -326,7 +328,9 @@ class MRGController extends Controller
         $heads = $ins;
 
         // form transaction
-        $insreg = ["Account Number", "Account Type", "Sales Name"];
+        $insreg = ["Account Number" => 0,
+                    "Account Type" => 0,
+                    "Sales Name" => 0];
 
         $keyword = $request['q'];
 
@@ -498,7 +502,9 @@ class MRGController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
 
                                 $master = new \App\MasterClient;
 
@@ -515,15 +521,16 @@ class MRGController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->master_id;
                                 }
-
-                                $value->master_id = $master->master_id;
+                            } else {
+                                $master_id = $master->master_id;
                             }
-
+                            $value->master_id = $master_id;
 
                             // check whether aclub information exist or not
                             $is_mrg_have_attributes = False;
-                            if (Mrg::find($value->master_id) == null) {
+                            if (Mrg::find($master_id) == null) {
                                 $mrg = new \App\Mrg;
 
                                 $mrg_attributes = $mrg->getAttributesImport();
@@ -659,7 +666,6 @@ class MRGController extends Controller
                     "Account Number" => "accounts_number",
                     "Account Type" => "account_type",
                     "Sales Name" => "sales_name",
-                    "Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",
@@ -709,7 +715,6 @@ class MRGController extends Controller
         $heads = ["Account Number" => "accounts_number",
                     "Account Type" => "account_type",
                     "Sales Name" => "sales_name",
-                    "Master ID" => "master_id",
                     "User ID Redclub" => "redclub_user_id",
                     "Password Redclub" => "redclub_password",
                     "Nama" => "name",

@@ -49,8 +49,10 @@ class UOBController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {            
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {   
+            if ($m > 0) {         
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -83,8 +85,10 @@ class UOBController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {            
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {   
+            if ($m > 0) {         
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -336,17 +340,17 @@ class UOBController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = ["Bank Pribadi" => "bank_pribadi",
-                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
-                        "Tanggal RDI Done" => 'tanggal_rdi_done',
-                        "RDI Bank" => "rdi_bank",
-                        "Nomor RDI" => 'nomor_rdi',
-                        "Tanggal Top Up" => 'tanggal_top_up',
-                        "Nominal Top Up" => 'nominal_top_up',
-                        "Tanggal Trading" => 'tanggal_trading',
-                        "Status" => 'status',
-                        "Trading Via" => 'trading_via',
-                        "Keterangan" => 'keterangan'];
+        $insreg = ["Bank Pribadi" => ["bank_pribadi", 0],
+                        "Nomor Rekening Pribadi" => ["nomor_rekening_pribadi", 0],
+                        "Tanggal RDI Done" => ["tanggal_rdi_done", 0],
+                        "RDI Bank" => ["rdi_bank", 0],
+                        "Nomor RDI" => ["nomor_rdi", 0],
+                        "Tanggal Top Up" => ["tanggal_top_up", 0],
+                        "Nominal Top Up" => ["nominal_top_up", 0],
+                        "Tanggal Trading" => ["tanggal_trading", 0],
+                        "Status" => ["status", 0],
+                        "Trading Via" => ["trading_via", 0],
+                        "Keterangan" => ["keterangan", 0]];
 
         //judul + sql transaction
         $headsreg = [  "Bank Pribadi" => "bank_pribadi",
@@ -465,51 +469,6 @@ class UOBController extends Controller
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    // if (($value->kode_client) === null) {
-                    //     $msg = "Kode Client empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->master_id) === null) {
-                    //     $msg = "Master ID empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sales) === null) {
-                    //     $msg = "Sales empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->sumber_data) === null) {
-                    //     $msg = "Sumber Data empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->tanggal_join) === null) {
-                    //     $msg = "Tanggal Join empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->nomer_ktp) === null) {
-                    //     $msg = "Nomer KTP empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->expired_ktp) === null) {
-                    //     $msg = "Expired KTP empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->nomer_npwp) === null) {
-                    //     $msg = "Nomer NPWP empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->alamat_surat) === null) {
-                    //     $msg = "Alamat Surat empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->saudara_tidak_serumah) === null) {
-                    //     $msg = "Saudara Tidak Serumah empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-                    // if (($value->ibu_kandung) === null) {
-                    //     $msg = "Ibu Kandung empty on line ".$i;
-                    //     $err[] = $msg;
-                    // }
-
                 } //end validasi
                 // dd($err);
 
@@ -520,7 +479,9 @@ class UOBController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -536,9 +497,13 @@ class UOBController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
 
+                            $value->master_id = $master_id;
 
                             if (($value->master_id) != null) {
 
@@ -605,7 +570,6 @@ class UOBController extends Controller
         $array = [];
         $heads = [
           "Kode Client" => "client_id",
-          "Master ID" => "master_id",
         "User ID Redclub" => "redclub_user_id",
         "Password Redclub" => "redclub_password",
         "Nama" => "name",
@@ -663,7 +627,6 @@ class UOBController extends Controller
         $array = [];
         $heads = [
         "Kode Client" => "client_id",
-          "Master ID" => "master_id",
         "User ID Redclub" => "redclub_user_id",
         "Password Redclub" => "redclub_password",
         "Nama" => "name",

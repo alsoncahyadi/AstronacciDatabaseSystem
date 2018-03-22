@@ -50,7 +50,7 @@ class CATController extends Controller
         }
         sort($month);
         foreach ($month as $m) {
-            if ($m > 1) {
+            if ($m >= 1) {
                 array_push($filter_dpdate, $filter_date[$m-1]);
             }
         }
@@ -86,8 +86,10 @@ class CATController extends Controller
             }
         }
         sort($month);
-        foreach ($month as $m) {            
-            array_push($filter_dpdate, $filter_date[$m-1]);
+        foreach ($month as $m) {
+            if ($m >= 1){        
+                array_push($filter_dpdate, $filter_date[$m-1]);
+            }
         }
         return $filter_dpdate;
     }
@@ -354,16 +356,16 @@ class CATController extends Controller
         $heads = $ins;
 
         //form transaction
-        $insreg = [ "Nomer Induk" => 'nomor_induk',
-                    "DP Date" => 'DP_date',
-                    "DP Nominal" => 'DP_nominal',
-                    "Payment Date" => 'payment_date',
-                    "Payment Nominal" => 'payment_nominal',
-                    "Opening Class" => "tanggal_opening_class",
-                    "End Class" => 'tanggal_end_class',
-                    "Ujian" => 'tanggal_ujian',
-                    "Status" => 'status',
-                    "Keterangan" => 'keterangan'
+        $insreg = [ "Nomer Induk" => ["nomor_induk", 1],
+                    "DP Date" => ["DP_date", 0],
+                    "DP Nominal" => ["DP_nominal", 0],
+                    "Payment Date" => ["payment_date", 0],
+                    "Payment Nominal" => ["payment_nominal", 0],
+                    "Opening Class" => ["tanggal_opening_class", 0],
+                    "End Class" => ["tanggal_end_class", 0],
+                    "Ujian" => ["tanggal_ujian", 0],
+                    "Status" => ["status", 0],
+                    "Keterangan" => ["keterangan", 0]
                     ];
 
         //transaction
@@ -487,7 +489,9 @@ class CATController extends Controller
                         $line += 1;
                         try {
                             $is_master_have_attributes = False;
-                            if (MasterClient::find($value->master_id) == null) {
+                            $master_id = null;
+                            $master = MasterClient::where('email', $value->email)->first();
+                            if ($master == null) {
                                 $master = new \App\MasterClient;
 
                                 $master_attributes = $master->getAttributesImport();
@@ -503,8 +507,13 @@ class CATController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
+                                    $master_id = $master->master_id;
                                 }
+                            } else {
+                                $master_id = $master->master_id;
                             }
+
+                            $value->master_id = $master_id;
 
                             if (($value->master_id) != null) {
 
@@ -573,7 +582,6 @@ class CATController extends Controller
         $heads = [
                 "User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",
@@ -623,7 +631,6 @@ class CATController extends Controller
         $array = [];
         $heads = ["User ID" => "user_id",
                 "Nomor Induk" => "nomor_induk",
-                "Master ID" => "master_id",
                 "User ID Redclub" => "redclub_user_id",
                 "Password Redclub" => "redclub_password",
                 "Nama" => "name",

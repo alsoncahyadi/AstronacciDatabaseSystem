@@ -76,46 +76,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html"><img src="{{ URL::asset('images/logo.png') }}"/></a>
+                <a class="navbar-brand" href="{{route ('home')}}"><img src="{{ URL::asset('images/logo.png') }}"/></a>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell fa-fw" style="color:black;"></i> <i class="fa fa-caret-down" style="color:black;" ></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-calendar-o fa-fw"></i> Budi's Birthday
-                                    <span class="pull-right text-muted small"> Today</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>                        
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-tasks fa-fw"></i> New client assigned
-                                    <span class="pull-right text-muted small"> Today</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-tasks fa-fw"></i> New client assigned
-                                    <span class="pull-right text-muted small"> Yesterday</span>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-alerts -->
-                </li>
+                
                 <!-- /.dropdown -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -166,7 +132,7 @@
                      </ul>
                      @if (Auth::user()->hasAShop(Auth::user()->username))
                      <li>
-                        <a href="AShopDashboards" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                        <a href="AShopDashboards" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-SHOP<span class="fa arrow"></span></a>
                     </li>
                     @endif
 

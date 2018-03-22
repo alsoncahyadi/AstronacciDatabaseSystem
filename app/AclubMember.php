@@ -12,8 +12,7 @@ class AclubMember extends Model
     protected $primaryKey = 'user_id';
 
     protected $attributImport = ["user_id" => "user_id",
-                                "master_id" => "master_id",
-                                "group" => "group"];
+                                "master_id" => "master_id"];
 
     public function getAttributesImport() {
         return $this->attributImport;
