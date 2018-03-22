@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
 use DB;
-
+use App\Uob;
+use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
+use App\MasterClient;
 
 class UOBController extends Controller
 {
-    
+
     private function nullify($string)
     {
         $newstring = trim($string);
@@ -20,97 +23,433 @@ class UOBController extends Controller
         return $newstring;
     }
 
-    public function getTable() {
-		//Select seluruh tabel
-        $uobs = DB::select("call select_uob()");
-        //Daftar username sales
-        $salesusers = DB::select("SELECT sales_username FROM sales");
+    private function getFilterDate($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
 
-        //Data untuk insert
-        $ins = ["Client", "Nama", "Class", "Nomor", "Expired", "Alamat", "Kota", "Tanggal Lahir", "Kategori", "Bulan", "Email", "Telepon",  "Bank", "Nomor Rekening", "Jenis Kelamin", "RDI Niaga", "RDI BCA", "Trading via", "Source", "Sales"];
+        $fdpdate = DB::table('uobs')->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
+    private function getFilterDateBirth($column)
+    {
+        $filter_date = ['0'=>['0'=>'January'], 
+                '1'=>['0'=>'February'], 
+                '2'=>['0'=>'March'], 
+                '3'=>['0'=>'April'], 
+                '4'=>['0'=>'May'], 
+                '5'=>['0'=>'June'], 
+                '6'=>['0'=>'July'],
+                '7'=>['0'=>'August'],
+                '8'=>['0'=>'September'],
+                '9'=>['0'=>'October'],
+                '10'=>['0'=>'November'],
+                '11'=>['0'=>'December']];   
+        $joined = DB::table('master_clients')
+                    ->join('uobs', 'uobs.master_id', '=', 'master_clients.master_id');
+
+        $fdpdate = $joined->select($column)->distinct()->get();
+        $filter_dpdate = [];
+        $month = [];
+        foreach ($fdpdate as $dpdate) {
+            $dpdate = substr($dpdate->$column, 5, 2);
+            if (!in_array($dpdate, $month)){
+                // array_push($filter_dpdate, $filter_date[$dpdate-1]);
+                array_push($month, $dpdate);
+            }
+        }
+        sort($month);
+        foreach ($month as $m) {            
+            array_push($filter_dpdate, $filter_date[$m-1]);
+        }
+        return $filter_dpdate;
+    }
+
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+        // $uobs = $this->getData();
+        $record_count = Uob::count();
+        $uobs = Uob::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
+
+        foreach ($uobs as $uob) {
+            $master = $uob->master;
+            $uob->master_id = $master->master_id;
+            $uob->name = $master->name;
+            $uob->telephone_number = $master->telephone_number;
+            $uob->email = $master->email;
+            $uob->birthdate = $master->birthdate;
+            $uob->address = $master->address;
+            $uob->city = $master->city;
+            $uob->province = $master->province;
+            $uob->gender = $master->gender;
+            $uob->line_id = $master->line_id;
+            $uob->bbm = $master->bbm;
+            $uob->whatsapp = $master->whatsapp;
+            $uob->facebook = $master->facebook;
+        }
+
+        $page_count = ceil($record_count/$record_amount);
+
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
+                    "Email",
+                    "Telepon",
+                    "Tanggal Lahir"
+                ];
+
+        $attsMaster = [
+                        "client_id",
+                        "name",
+                        "email",
+                        "telephone_number",
+                        "birthdate"
+                    ];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["PC ID", "Client ID", "Nama", "Email", "No HP", "Tanggal Lahir", "Line ID", "BB Pin", "Twitter", "Address", "City", "Status Pernikahan", "Jenis Kelamin", "No Telepon", "Provinsi", "Facebook", "Class", "Nomor", "Expired", "Kategori", "Bulan", "Bank", "Nomor Rekening", "RDI Niaga", "RDI BCA", "Trading Via", "Source", "Sales", "Tanggal Ditambahkan"]; //kecuali is" an dan add_time
+        $heads = [
+                "Alamat" => "address",
+                "Kota" => "city",
+                "Gender" => "gender",
+                "Line ID" => "line_id",
+                "WhatsApp" => "whatsapp",
+                "Sumber" => "sumber_data",
+                "Sales" => "sales_name",
+                "Kode Client" => "client_id",
+                "Status" => "status",
+                "Nomor RDI" => "nomor_rdi",
+                "Tanggal RDI" => "tanggal_rdi_done",
+                "Tanggal Top Up" => "tanggal_top_up",
+                "Tanggal Trading" => "tanggal_trading",
+                "Bank" => "bank_pribadi",
+                "Nomor Rekening" => "nomor_rekening_pribadi",
+                "RDI Bank" => "rdi_bank"
+                ];
+        
 
         //Nama attribute pada sql
-        $atts = ["all_pc_id", "client_id", "fullname", "email", "no_hp", "birthdate", "line_id", "bb_pin", "twitter", "address", "city", "marital_status", "jenis_kelamin", "no_telp", "provinsi", "facebook", "class", "nomor", "expired_date", "kategori", "bulan", "bank", "nomor_rekening", "RDI_niaga", "RDI_BCA", "trading_via", "source", "sales_username", "add_time"];
+        $atts = [
+                "address",
+                "city",
+                "gender",
+                "line_id",
+                "whatsapp",
+                "sumber_data",
+                "sales_name",
+                "client_id",
+                "status",
+                "nomor_rdi",
+                "tanggal_rdi_done",
+                "tanggal_top_up",
+                "tanggal_trading",
+                "bank_pribadi",
+                "nomor_rekening_pribadi",
+                "rdi_bank"
+                ];
+
+        //Filter        
+
+        $joined = DB::table('master_clients')
+                    ->join('uobs', 'uobs.master_id', '=', 'master_clients.master_id');
+
+        $filter_cities = $joined->select('city')->distinct()->get();
+        $filter_gender = $joined->select('gender')->distinct()->get();
+        $filter_sumber = DB::table('uobs')->select('sumber_data')->distinct()->get();
+        $filter_sales = DB::table('uobs')->select('sales_name')->distinct()->get();
+        $filter_status = DB::table('uobs')->select('status')->distinct()->get();
+        
+        $filter_date = ['0'=>['0'=>'January'], 
+        '1'=>['0'=>'February'], 
+        '2'=>['0'=>'March'], 
+        '3'=>['0'=>'April'], 
+        '4'=>['0'=>'May'], 
+        '5'=>['0'=>'June'], 
+        '6'=>['0'=>'July'],
+        '7'=>['0'=>'August'],
+        '8'=>['0'=>'September'],
+        '9'=>['0'=>'October'],
+        '10'=>['0'=>'November'],
+        '11'=>['0'=>'December']];
+
+        $filter_rdidate = $this->getFilterDate('tanggal_rdi_done');
+        $filter_topdate = $this->getFilterDate('tanggal_top_up');
+        $filter_tradedate = $this->getFilterDate('tanggal_trading');        
+        $filter_birthdates = $this->getFilterDateBirth('birthdate');
+
+        $filterable = [
+            "Kota" => $filter_cities,
+            "Gender" => $filter_gender,
+            "Sumber" => $filter_sumber,
+            "Sales" => $filter_sales,
+            "Status" => $filter_status,
+            "Tanggal RDI" => $filter_rdidate,
+            "Tanggal Top Up" => $filter_topdate,
+            "Tanggal Trading" => $filter_tradedate
+            ];
+
+        //sort
+        $sortables = [
+            "Tanggal Lahir" => "birthdate",
+            "Kota" => "city",
+            "Gender" => "gender",
+            "Sumber" => "sumber_data",
+            "Sales" => "sales_name",
+            "Status" => "status",
+            "Tanggal RDI" => "tanggal_rdi_done",
+            "Tanggal Top Up" => "tanggal_top_up",
+            "Tanggal Trading" => "tanggal_trading"
+            ];
+
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'UOB', 'clients' => $uobs, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('vpc/uobview',
+                    [
+                        'route' => 'UOB',
+                        'clients' => $uobs,
+                        'heads'=>$heads, 'atts'=>$atts,
+                        'headsMaster' => $headsMaster,
+                        'attsMaster' => $attsMaster,
+                        'filter_birthdates' => $filter_birthdates,
+                        'filter_cities' => $filter_cities,
+                        'filter_gender' => $filter_gender,
+                        'filter_sumber' => $filter_sumber,
+                        'filter_sales' => $filter_sales,
+                        'filter_status' => $filter_status,
+                        'filter_date' => $filter_date,
+                        'filterable' => $filterable,
+                        'sortables' => $sortables,
+                        'count' => $page_count
+                    ]);
+    }
+
+    // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
+
+    public function getFilteredAndSortedTable(Request $request) {
+        // test
+        // $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
+        // $example_sort = array('email'=>false, 'name'=>true);
+
+        // $json_filter = json_encode($example_filter);
+        // $json_sort = json_encode($example_sort);
+        // test
+
+         $attsMaster = [
+                        "master_id",
+                        "name",
+                        "email",
+                        "telephone_number",
+                        "birthdate"
+                    ];
+
+        //Nama attribute pada sql
+        $atts = [
+                "address",
+                "city",
+                "gender",
+                "line_id",
+                "whatsapp",
+                "sumber_data",
+                "sales_name",
+                "client_id",
+                "status",
+                "nomor_rdi",
+                "tanggal_rdi_done",
+                "tanggal_top_up",
+                "tanggal_trading",
+                "bank_pribadi",
+                "nomor_rekening_pribadi",
+                "rdi_bank"
+                ];
+
+        $json_filter = $request['filters'];
+        $json_sort = $request['sorts'];
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+
+        // add 'select' of query
+        $query = QueryModifier::queryView('UOB', $json_filter, $json_sort);
+
+        // retrieve result
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);
+        
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
+
+        return view('vpc/uobtable', [
+                        'route' => 'UOB',
+                        'clients' => $list,
+                        'atts' => $atts,
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
+                    ]);
+        // return $list;
     }
 
     public function clientDetail($id) {
-        //Select seluruh data client $id yang ditampilkan di detail
-        $uob = DB::select("call select_detail_uob(?)", [$id]);
-        $uob = $uob[0];
-        $salesusers = DB::select("SELECT sales_username FROM sales");
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["Client ID" => "client_id", "Nama" => "fullname", "Email" => "email", "No HP" => "no_hp", "Tanggal Lahir" =>"birthdate", "Line ID" => "line_id", "BB Pin" => "bb_pin", "Twitter" => "twitter", "Alamat" => "address", "Kota" => "city", "Status Pernikahan" => "marital_status", "Jenis Kelamin" => "jenis_kelamin", "No Telepon" => "no_telp", "Provinsi" => "provinsi", "Facebook" => "facebook", "Class" => "class", "Nomor" => "nomor", "Expired" => "expired_date", "Kategori" => "kategori", "Bulan" => "bulan", "Bank" => "bank", "Nomor Rekening" => "nomor_rekening", "RDI Niaga" => "RDI_niaga", "RDI BCA" => "RDI_BCA", "Trading Via" => "trading_via", "Source" => "source", "Sales" => "sales_username", "Tanggal Ditambahkan" => "add_time"];
-        //Untuk input pada database, ditambahkan PC ID yang tidak ada pada form
-        $heads = ["PC ID" => "all_pc_id"] + $ins;
-        //Return view profile dengan parameter
-        return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        $uob = Uob::where('client_id', $id)->first();
+
+        //judul + sql
+        $ins= [
+                "Kode Client" => "client_id",
+                "Master ID" => "master_id",
+                "Sales" => "sales_name",
+                "Sumber Data" => "sumber_data",
+                "Tanggal Join" => "join_date",
+                "Nomor KTP" => "nomor_ktp",
+                "Expired KTP" => "tanggal_expired_ktp",
+                "Nomor NPWP" => "nomor_npwp",
+                "Alamat Surat Menyurat" => "alamat_surat",
+                "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+                "Nama Ibu Kandung" => "nama_ibu_kandung",
+            ];
+
+        $heads = $ins;
+
+        //form transaction
+        $insreg = ["Bank Pribadi" => "bank_pribadi",
+                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                        "Tanggal RDI Done" => 'tanggal_rdi_done',
+                        "RDI Bank" => "rdi_bank",
+                        "Nomor RDI" => 'nomor_rdi',
+                        "Tanggal Top Up" => 'tanggal_top_up',
+                        "Nominal Top Up" => 'nominal_top_up',
+                        "Tanggal Trading" => 'tanggal_trading',
+                        "Status" => 'status',
+                        "Trading Via" => 'trading_via',
+                        "Keterangan" => 'keterangan'];
+
+        //judul + sql transaction
+        $headsreg = [  "Bank Pribadi" => "bank_pribadi",
+                        "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+                        "Tanggal RDI Done" => 'tanggal_rdi_done',
+                        "RDI Bank" => "rdi_bank",
+                        "Nomor RDI" => 'nomor_rdi',
+                        "Tanggal Top Up" => 'tanggal_top_up',
+                        "Nominal Top Up" => 'nominal_top_up',
+                        "Tanggal Trading" => 'tanggal_trading',
+                        "Status" => 'status',
+                        "Trading Via" => 'trading_via',
+                        "Keterangan" => 'keterangan',
+                    ];
+
+        return view('profile/profile', ['route'=>'UOB', 'client'=>$uob, 'heads' => $heads, 'ins'=>$ins, 'insreg'=>$insreg, 'headsreg'=>$headsreg]);
+    }
+
+    public function addTrans(Request $request) {
+        $this->validate($request, [
+                'bank_pribadi' => '',
+                'nomor_rekening_pribadi' => 'string:50',
+                'tanggal_rdi_done' => 'date',
+                'rdi_bank' => 'string:20',
+                'nomor_rdi' => '',
+                'tanggal_top_up' => 'date',
+                'nominal_top_up' => 'integer',
+                'tanggal_trading' => 'date',
+                'status' => '',
+                'trading_via' => '',
+                'keterangan' => ''
+            ]);
+
+        $uob = Uob::where('client_id',$request->user_id)->first();
+
+        $err =[];
+
+        $uob->bank_pribadi = $request->bank_pribadi;
+        $uob->nomor_rekening_pribadi = $request->nomor_rekening_pribadi;
+        $uob->tanggal_rdi_done = $request->tanggal_rdi_done;
+        $uob->rdi_bank = $request->rdi_bank;
+        $uob->nomor_rdi = $request->nomor_rdi;
+        $uob->tanggal_top_up = $request->tanggal_top_up;
+        $uob->nominal_top_up = $request->nominal_top_up;
+        $uob->tanggal_trading = $request->tanggal_trading;
+        $uob->status = $request->status;
+        $uob->trading_via = $request->trading_via;
+        $uob->keterangan = $request->keterangan;
+
+        $uob->update();
+
+        return redirect()->back()->withErrors($err);
     }
 
     public function editClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'all_pc_id' => 'required',
                 'client_id' => 'required',
-                'fullname' => 'required',
-                'expired_date' => 'required',
-                'email' => 'email',
-                'no_hp' => 'required',
-                'address' => 'required',
+                'sales_uob' => '',
+                'sumber_data_uob' => '',
+                'tanggal_join_uob' => 'date',
+                'nomer_ktp' => 'string:20',
+                'expired_ktp' => 'date',
+                'nomer_npwp' => 'string:40',
+                'alamat_surat' => '',
+                'saudara_tidak_serumah' => '',
+                'ibu_kandung' => '',
             ]);
+
         //Inisialisasi array error
-        DB::beginTransaction();
         $err = [];
         try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut master client
-            DB::select("call edit_master_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->fullname, $this->nullify($request->email), $request->no_hp, $this->nullify($request->birthdate), $this->nullify($request->line_id), $this->nullify($request->bb_pin), $this->nullify($request->twitter), $request->address, $this->nullify($request->city), $this->nullify($request->marital_status), $this->nullify($request->jenis_kelamin), $this->nullify($request->no_telp), $this->nullify($request->provinsi), $this->nullify($request->facebook)]);
-            //Edit atribut UOB
-            DB::select("call edit_uob(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->all_pc_id, $request->client_id, $this->nullify($request->class), $this->nullify($request->nomor), $this->nullify($request->expired_date), $this->nullify($request->kategori), $this->nullify($request->bulan), $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->RDI_niaga), $this->nullify($request->RDI_BCA), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales_username)]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
-            $err[] = $ex->getMessage();
-        }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
-    }
+            $uob = UOB::where('client_id',$request->client_id)->first();
 
-    public function addClient(Request $request) {
-        //Validasi input
-        $this->validate($request, [
-                'client' => 'required',
-                'nama' => 'required',
-                'expired' => 'required',
-                'email' => 'email',
-                'telepon' => 'required',
-                'alamat' => 'required',
-            ]);
-        //Inisialisasi array error
-        $err = [];
-        DB::beginTransaction();
-		try {
-            //Input data ke SQL
-			DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->client,$request->nama,$this->nullify($request->class),$this->nullify($request->nomor),$request->expired,$request->alamat,$this->nullify($request->kota),$this->nullify($request->tanggal_lahir),$this->nullify($request->kategori), $this->nullify($request->bulan), $request->telepon, $request->email, $this->nullify($request->bank), $this->nullify($request->nomor_rekening), $this->nullify($request->jenis_kelamin), $this->nullify($request->rdi_niaga), $this->nullify($request->rdi_bca), $this->nullify($request->trading_via), $this->nullify($request->source), $this->nullify($request->sales)]);
-		}  catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $err =[];
+
+            $uob->client_id = $request->client_id;
+            $uob->sales_name = $request->sales_name;
+            $uob->sumber_data = $request->sumber_data;
+            $uob->join_date = $request->join_date;
+            $uob->nomor_ktp = $request->nomor_ktp;
+            $uob->tanggal_expired_ktp = $request->tanggal_expired_ktp;
+            $uob->nomor_npwp = $request->nomor_npwp;
+            $uob->alamat_surat = $request->alamat_surat;
+            $uob->saudara_tidak_serumah = $request->saudara_tidak_serumah;
+            $uob->nama_ibu_kandung = $request->nama_ibu_kandung;
+
+            $uob->update();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
         return redirect()->back()->withErrors($err);
     }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
-            DB::select("call delete_uob(?)", [$id]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
+            $cat = Uob::find($id);
+            $cat->delete();
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return back();
     }
 
     public function importExcel() {
@@ -119,45 +458,114 @@ class UOBController extends Controller
             $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
             $data = Excel::load($path, function($reader) { //Load excel
             })->get();
+
+
             if(!empty($data) && $data->count()){
                 $i = 1;
                 //Cek apakah ada error
                 foreach ($data as $key => $value) {
                     $i++;
-                    if (($value->client) === null) {
-                        $msg = "Client empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->expired) === null) {
-                        $msg = "Expired empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->email) === null) {
-                        $msg = "Email empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->telepon) === null) {
-                        $msg = "Telepon empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->alamat) === null) {
-                        $msg = "Alamat empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    
+                    // if (($value->kode_client) === null) {
+                    //     $msg = "Kode Client empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->master_id) === null) {
+                    //     $msg = "Master ID empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sales) === null) {
+                    //     $msg = "Sales empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->sumber_data) === null) {
+                    //     $msg = "Sumber Data empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->tanggal_join) === null) {
+                    //     $msg = "Tanggal Join empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->nomer_ktp) === null) {
+                    //     $msg = "Nomer KTP empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->expired_ktp) === null) {
+                    //     $msg = "Expired KTP empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->nomer_npwp) === null) {
+                    //     $msg = "Nomer NPWP empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->alamat_surat) === null) {
+                    //     $msg = "Alamat Surat empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->saudara_tidak_serumah) === null) {
+                    //     $msg = "Saudara Tidak Serumah empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+                    // if (($value->ibu_kandung) === null) {
+                    //     $msg = "Ibu Kandung empty on line ".$i;
+                    //     $err[] = $msg;
+                    // }
+
                 } //end validasi
+                // dd($err);
 
                 //Jika tidak ada error, import dengan cara insert satu per satu
+                $line = 1;
                 if (empty($err)) {
                     foreach ($data as $key => $value) {
-                        try { 
-                            DB::select("call inputUOB(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$value->client,$value->nama,$value->class,$value->nomor,$value->expired,$value->alamat,$value->kota,$value->tanggal_lahir,$value->kategori, $value->bulan, $value->telepon, $value->email, $value->bank, $value->nomor_rekening, $value->jenis_kelamin, $value->rdi_niaga, $value->rdi_bca, $value->trading_via, $value->source, $value->sales]);
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          $err[] = $ex->getMessage();
+                        $line += 1;
+                        try {
+                            $is_master_have_attributes = False;
+                            if (MasterClient::find($value->master_id) == null) {
+                                $master = new \App\MasterClient;
+
+                                $master_attributes = $master->getAttributesImport();
+
+                                foreach ($master_attributes as $master_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $master->$master_attribute = $value->$import;
+                                        $is_master_have_attributes = True;
+                                    } else {
+                                        $master->$master_attribute = null;
+                                    }
+                                }
+
+                                if ($is_master_have_attributes) {
+                                    $master->save();
+                                }
+                            }
+
+
+                            if (($value->master_id) != null) {
+
+                                $is_uob_has_attributes = False;
+
+                                $uob = new \App\Uob;
+
+                                $uob_attributes = $uob->getAttributesImport();
+
+                                foreach ($uob_attributes as $uob_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $uob->$uob_attribute = $value->$import;                                        
+                                        $is_uob_has_attributes = True;
+                                    } else {
+                                        $uob->$uob_attribute = null;
+                                    }
+                                }
+
+                                if ($is_uob_has_attributes) {
+                                    $uob->save();
+                                }
+                            }
+                            
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
                         }
                     }
                     if (empty($err)) { //message jika tidak ada error saat import
@@ -171,5 +579,146 @@ class UOBController extends Controller
             $err[] = $msg;
         }
         return redirect()->back()->withErrors([$err]);
+    }
+
+    public function exportExcel() {
+        $data = UOB::all();
+
+        foreach ($data as $dat) {
+            $master = $dat->master;
+
+            $dat->redclub_user_id = $master->redclub_user_id;
+            $dat->redclub_password = $master->redclub_password;
+            $dat->name = $master->name;
+            $dat->telephone_number = $master->telephone_number;
+            $dat->email = $master->email;
+            $dat->birthdate = $master->birthdate;
+            $dat->address = $master->address;
+            $dat->city = $master->city;
+            $dat->province = $master->province;
+            $dat->gender = $master->gender;
+            $dat->line_id = $master->line_id;
+            $dat->bbm = $master->bbm;
+            $dat->whatsapp = $master->whatsapp;
+            $dat->facebook = $master->facebook;
+        }
+        $array = [];
+        $heads = [
+          "Kode Client" => "client_id",
+          "Master ID" => "master_id",
+        "User ID Redclub" => "redclub_user_id",
+        "Password Redclub" => "redclub_password",
+        "Nama" => "name",
+        "Telephone" => "telephone_number",
+        "Email" => "email",
+        "Tanggal Lahir" => "birthdate",
+        "Alamat" => "address",
+        "Kota" => "city",
+        "Provinsi" => "province",
+        "Gender" => "gender",
+        "Line ID" => "line_id",
+        "BBM" => "bbm",
+        "WhatsApp" => "whatsapp",
+        "Facebook" => "facebook",
+          "Sales" => "sales_name",
+          "Sumber Data" => "sumber_data",
+          "Tanggal Join" => "join_date",
+          "Nomor KTP" => "nomor_ktp",
+          "Expired KTP" => "tanggal_expired_ktp",
+          "Nomor NPWP" => "nomor_npwp",
+          "Alamat Surat Menyurat" => "alamat_surat",
+          "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+          "Nama Ibu Kandung" => "nama_ibu_kandung",
+          "Bank Pribadi" => "bank_pribadi",
+          "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+          "Tanggal RDI Done" => 'tanggal_rdi_done',
+          "RDI Bank" => "rdi_bank",
+          "Nomor RDI" => 'nomor_rdi',
+          "Tanggal Top Up" => 'tanggal_top_up',
+          "Nominal Top Up" => 'nominal_top_up',
+          "Tanggal Trading" => 'tanggal_trading',
+          "Status" => 'status',
+          "Trading Via" => 'trading_via',
+          "Keterangan" => 'keterangan'
+        ];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedUOB', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+        "Kode Client" => "client_id",
+          "Master ID" => "master_id",
+        "User ID Redclub" => "redclub_user_id",
+        "Password Redclub" => "redclub_password",
+        "Nama" => "name",
+        "Telephone" => "telephone_number",
+        "Email" => "email",
+        "Tanggal Lahir" => "birthdate",
+        "Alamat" => "address",
+        "Kota" => "city",
+        "Provinsi" => "province",
+        "Gender" => "gender",
+        "Line ID" => "line_id",
+        "BBM" => "bbm",
+        "WhatsApp" => "whatsapp",
+        "Facebook" => "facebook",
+          "Sales" => "sales_name",
+          "Sumber Data" => "sumber_data",
+          "Tanggal Join" => "join_date",
+          "Nomor KTP" => "nomor_ktp",
+          "Expired KTP" => "tanggal_expired_ktp",
+          "Nomor NPWP" => "nomor_npwp",
+          "Alamat Surat Menyurat" => "alamat_surat",
+          "Saudara Tidak Serumah" => "saudara_tidak_serumah",
+          "Nama Ibu Kandung" => "nama_ibu_kandung",
+          "Bank Pribadi" => "bank_pribadi",
+          "Nomor Rekening Pribadi" => "nomor_rekening_pribadi",
+          "Tanggal RDI Done" => 'tanggal_rdi_done',
+          "RDI Bank" => "rdi_bank",
+          "Nomor RDI" => 'nomor_rdi',
+          "Tanggal Top Up" => 'tanggal_top_up',
+          "Nominal Top Up" => 'nominal_top_up',
+          "Tanggal Trading" => 'tanggal_trading',
+          "Status" => 'status',
+          "Trading Via" => 'trading_via',
+          "Keterangan" => 'keterangan'];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Master ID") {
+                $count_master_id = MasterClient::orderBy('master_id', 'desc')->first();
+                if ($count_master_id == null) {
+                    $arr[$head] = '1';
+                } else {
+                    $arr[$head] = $count_master_id->master_id;
+                }
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateUOB', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
     }
 }

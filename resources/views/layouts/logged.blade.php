@@ -25,13 +25,14 @@
 
     <!-- Custom Fonts -->
     <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-	
-	<link href="{{ URL::asset('css/styling.css') }}" rel="stylesheet">
-	
-	<link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
-	<link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
-	    <!-- Scripts -->
-	<!-- jQuery -->
+
+    <link href="{{ URL::asset('css/styling.css') }}" rel="stylesheet">
+
+    <link href="{{ URL::asset('css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('css/select.dataTables.min.css') }}" rel="stylesheet">
+    <!-- Scripts -->
+    <script src="{{ URL::asset('js/laravel.js') }}"></script>
+    <!-- jQuery -->
 
     <script src="{{ URL::asset('js/jquery/jquery.min.js') }}"></script>
 
@@ -47,9 +48,9 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="{{ URL::asset('js/sb-admin-2.js') }}"></script>
-	<script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
-	
-<!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
+    <script src="{{ URL::asset('js/datatables/js/jquery.dataTables.min.js') }}"></script>
+
+    <!--	<script src="{{ URL::asset('js/loader.js') }}"></script>	-->
 
     <script src="{{ URL::asset('js/astronacci.js') }}"></script>
 
@@ -124,18 +125,18 @@
                         <li><a href="{{ url('updatePassword')}}"><i class="fa fa-user fa-fw"></i> Change Password</a>
                         </li>
                         @if (Auth::user()->hasAnyRole(['0']))
-							<li>
-								<a href="{{ url('list') }}"><i class="fa fa-gear fa-fw"></i> User List</a>
-							</li>
+                        <li>
+                            <a href="{{ url('list') }}"><i class="fa fa-gear fa-fw"></i> User List</a>
+                        </li>
                         @endif
-						<li class="divider"></li>
+                        <li class="divider"></li>
                         <li><a href="{{ url('/logout') }}"
-                                onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();">
+                            onclick="event.preventDefault();
+                            document.getElementById('logout-form').submit();">
                             <i class="fa fa-sign-out fa-fw"></i> Logout</a>
-							<form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-								{{ csrf_field() }}
-							</form>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -145,102 +146,44 @@
             <!-- /.navbar-top-links -->
 
             <div class="navbar-default sidebar" role="navigation" style="width:15%">
-				@if (Auth::user()->hasAnyRole(['1']))
-					<script>load('{{route('AClub')}}')</script>
-				@elseif (Auth::user()->hasAnyRole(['2']))
-					<script>load('{{route('MRG')}}')</script>
-				@elseif (Auth::user()->hasAnyRole(['3']))
-					<script>load('{{route('CAT')}}')</script>
-				@elseif (Auth::user()->hasAnyRole(['4']))
-					<script>load('{{route('UOB')}}')</script>
-				@elseif (Auth::user()->hasAnyRole(['5']))
-					<script>load('{{route('sales')}}')</script>
-				@endif
+                @if (Auth::user()->hasAnyRole(['1']))
+                <script>load('{{route('AClub')}}')</script>
+                @elseif (Auth::user()->hasAnyRole(['2']))
+                <script>load('{{route('MRG')}}')</script>
+                @elseif (Auth::user()->hasAnyRole(['3']))
+                <script>load('{{route('CAT')}}')</script>
+                @elseif (Auth::user()->hasAnyRole(['4']))
+                <script>load('{{route('UOB')}}')</script>
+                @elseif (Auth::user()->hasAnyRole(['5']))
+                <script>load('{{route('sales')}}')</script>
+                @endif
                 <div class="sidebar-nav navbar-collapse">					
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111">
-						<ul class="nav">
-						<li>
-							<a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Dashboard {{Route::currentRouteName()}}<span class="fa arrow"></span></a>
-                        </li>
-						<ul class="nav nav-second-level">
-						@if(Route::currentRouteName() == 'home')
-							@if (Auth::user()->hasAnyRole(['0', '1']))
-                                <li>
-                                    <a onclick="load('{{route('AClub')}}')" href="#" style="color:white;">Admin A-Club</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['0', '2']))
-                                <li>
-                                    <a onclick="load('{{route('MRG')}}')" href="#" style="color:white;">Admin MRG</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['0', '4']))
-                                <li>
-                                    <a onclick="load('{{route('UOB')}}')" href="#" style="color:white;">Admin UOB</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['0', '3']))
-                                <li>
-                                    <a onclick="load('{{route('CAT')}}')" href="#" style="color:white;">Admin CAT</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
-                                <li>
-                                    <a onclick="load('{{route('green')}}')" href="#" style="color:white;">Green</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
-                                <li>
-                                    <a onclick="load('{{route('grow')}}')" href="#" style="color:white;">Grow</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['0', '1', '2', '3', '4']))
-                                <li>
-                                    <a onclick="load('{{route('RedClub')}}')" href="#" style="color:white;">Red Club</a>
-                                </li>
-							@endif
-							@if (Auth::user()->hasAnyRole(['5']))
-                                <li>
-                                    <a onclick="load('{{route('sales')}}')" href="#" style="color:white;">Sales</a>
-                                </li>
-							@endif	
-						@endif
-						</ul>
-						</ul>
-                        <li></li>
-						@if (Auth::user()->hasAShop(Auth::user()->username))
-                        <li>
-                            <a onclick="load('{{route('dashboard')}}')" href="dashboard" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
-                        </li>
-                            <ul class="nav nav-second-level">
-                                
-								@if(Route::currentRouteName() == 'home')
-                                <li>
-                                    <a onclick="load('{{route('product')}}')" href="#" style="color:white;">Product</a>
-                                </li>
-                                
-                                <li>
-                                    <a onclick="load('{{route('trans')}}')" href="#" style="color:white;">Transaction</a>
-                                </li>
-								@endif
-                            </ul>
-							<li></li>
-						@endif
+                      <ul class="nav">
+                          <li>
+                             <a href="dashboard" style="color:white;"><i class="fa fa-dashboard fa-fw"></i> Client Member <span class="fa arrow"></span></a>
+                         </li>
+                     </ul>
+                     @if (Auth::user()->hasAShop(Auth::user()->username))
+                     <li>
+                        <a href="AShopDashboards" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-Shop<span class="fa arrow"></span></a>
+                    </li>
+                    @endif
 
-                        <li id="t3">
-                            <a href="{{ url('assign') }}" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Assignment</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /.sidebar-collapse -->
+                    <li id="t3">
+                        <a href="GreenDashboard" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-		
-		<div id="page-wrapper" style="padding-bottom:10px; margin-left:15%">
-			<img src="{{ URL::asset('images/pojokatas.png') }}"style="position:absolute; top:95; right:0;"/>
-            @yield('content')
-		</div>
-    </div>
+            <!-- /.sidebar-collapse -->
+        </div>
+    </nav>
+
+    <div id="page-wrapper" style="padding-bottom:10px; margin-left:15%">
+     <img src="{{ URL::asset('images/pojokatas.png') }}"style="position:absolute; top:95; right:0;"/>
+     @yield('content')
+ </div>
+</div>
 
 </body>
 </html>

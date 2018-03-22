@@ -10,7 +10,7 @@
         {{-- Pagination Elements --}}
         @foreach ($elements as $element)
             {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
+            @if (is_string($element))                
                 <li class="disabled"><span>{{ $element }}</span></li>
             @endif
 
@@ -20,7 +20,7 @@
                     @if ($page == $paginator->currentPage())
                         <li class="active"><span>{{ $page }}</span></li>
                     @else
-                        <li><a href="{{ $url }}">{{ $page }}</a></li>
+                        <li><a onclick="load('{{ $url }}')" href="#">{{ $page }}</a></li>
                     @endif
                 @endforeach
             @endif

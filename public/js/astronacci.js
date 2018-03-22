@@ -1,13 +1,17 @@
- function load($pc) {
+ function load($pc, tab = "tab") {
     //Javascript untuk ajax request
     //Ajax digunakan untuk mengambil tabel/konten untk page tertentu
+
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = function() {    	
         if (this.readyState == 4 && this.status == 200) {
             //Konten yang diperoleh dari ajax dimasukkan ke dalam div tab
-            document.getElementById("tab").innerHTML = this.responseText;
+            document.getElementById(tab).innerHTML = this.responseText;
             $('#dataTables').DataTable({
-                responsive: true
+                responsive: true,
+                bInfo: false,
+                paging: false,
+                searching: false
             });
         }
     };
@@ -54,4 +58,3 @@ function importex(){
 		$("#import").hide();
 	}
 }
-

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Excel;
+use App\GreenProspectClient;
+use App\GreenProspectProgress;
+use App\Http\QueryModifier;
+use App\Http\QueryExceptionMapping;
 use DB;
 
 class GreenController extends Controller
@@ -17,184 +21,418 @@ class GreenController extends Controller
            return null;
         }
         return $newstring;
-    }
+    }    
 
-    public function getTable() {
-        //Select seluruh tabel
-        $greens = DB::select("SELECT * FROM green");
-		
-        //Daftar username sales
-		$salesusers = DB::select("SELECT sales_username FROM sales");
+    public function getTable(Request $request) {
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
 
-        //Data untuk insert
-        $ins = ["Nama", "No HP", "Keterangan Perintah", "Sumber", "Progress", "Sales", "Share to AClub", "Share to MRG", "Share to CAT", "Share to UOB"];
+        // $greens = $this->getData();
+        $record_count = GreenProspectClient::count();
+        $greens = GreenProspectClient::orderBy('created_at','desc')->skip($record_amount*$page)->take($record_amount)->get();
+
+        foreach ($greens as $green) {
+            $progress = $green->progresses()->orderBy('created_at','desc')->first();
+            if ($green->progresses()->orderBy('created_at','desc')->first() != null) {
+                $green->status = $progress->status;
+                $green->sales_name = $progress->sales_name;
+                $green->nama_product = $progress->nama_product;
+            } else {
+                $green->status = null;
+                $green->sales_name = null;
+                $green->nama_product = null;
+            }
+            
+        }
+
+        $page_count = ceil($record_count/$record_amount);
+
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
+                    "Email",
+                    "Telepon",
+                    "Interest"
+                ];
+
+        $attsMaster = [
+                        "green_id",
+                        "name",
+                        "email",
+                        "phone",
+                        "interest"
+                    ];
 
         //Judul kolom yang ditampilkan pada tabel
-        $heads = ["Green ID", "Nama", "No HP", "Keterangan Perintah", "Sumber", "Sales", "Progress", "AClub Stock", "AClub Future", "CAT", "MRG", "UOB", "Red Club", "Share To AClub", "Share To CAT", "Share to MRG", "Share to UOB", "Tanggal Ditambahkan"];
+        $heads = [
+                "Pemberi" => "pemberi",
+                "Perintah" => "keterangan_perintah",
+                "Status" => "status",
+                "Sales" => "sales_name",
+                "Nama Product" => "nama_product"
+                ];
+        
 
         //Nama attribute pada sql
-        $atts = ["green_id", "fullname", "no_hp", "keterangan_perintah", "sumber", "sales_username", "progress", "is_aclub_stock", "is_aclub_future", "is_cat", "is_mrg_premiere", "is_UOB", "is_red_club", "share_to_aclub", "share_to_cat", "share_to_mrg", "share_to_uob", "add_time"];
+        $atts = [
+                "pemberi",
+                "keterangan_perintah",
+                "status",
+                "sales_name",
+                "nama_product",
+                ];
 
-        //Mengganti is_PC dari boolean menjadi yes atau no, mengganti null menjadi '-'
-        foreach ($greens as $green) {
-            $green->is_UOB = $green->is_UOB ? "Yes" : "No";
-            $green->is_cat = $green->is_cat ? "Yes" : "No";
-            $green->is_mrg_premiere = $green->is_mrg_premiere ? "Yes" : "No";
-            $green->is_aclub_stock = $green->is_aclub_stock ? "Yes" : "No";
-            $green->is_aclub_future = $green->is_aclub_future ? "Yes" : "No";
-            $green->is_red_club = $green->is_red_club ? "Yes" : "No";
-            $green->share_to_aclub = $green->share_to_aclub ? "Yes" : "No";
-            $green->share_to_cat = $green->share_to_cat ? "Yes" : "No";
-            $green->share_to_mrg = $green->share_to_mrg ? "Yes" : "No";
-            $green->share_to_uob = $green->share_to_uob ? "Yes" : "No";
+        //Filter
+        $filter_sales = DB::table('green_prospect_progresses')->select('sales_name')->distinct()->get();
+        $filter_product = DB::table('green_prospect_progresses')->select('nama_product')->distinct()->get();
+        $filter_status = DB::table('green_prospect_progresses')->select('status')->distinct()->get();
+        $filter_date = ['0'=>['0'=>'January'], 
+        '1'=>['0'=>'February'], 
+        '2'=>['0'=>'March'], 
+        '3'=>['0'=>'April'], 
+        '4'=>['0'=>'May'], 
+        '5'=>['0'=>'June'], 
+        '6'=>['0'=>'July'],
+        '7'=>['0'=>'August'],
+        '8'=>['0'=>'September'],
+        '9'=>['0'=>'October'],
+        '10'=>['0'=>'November'],
+        '11'=>['0'=>'December']];
 
-            foreach ($atts as $att) {
-                if (!$green->$att) $green->$att = "-";
-            }
-        }
+        $filterable = [
+            "Status" => $filter_status,
+            "Sales" => $filter_sales,
+            "Nama Product" => $filter_product
+            ];
+
+        //sort
+        $sortables = [
+            "Status" => "status",
+            "Sales" => "sales_name",
+            "Nama Product" => "nama_product",
+            ];
+
         //Return view table dengan parameter
-        return view('content/table', ['route' => 'green', 'clients' => $greens, 'heads'=>$heads, 'atts'=>$atts, 'ins'=>$ins, 'sales'=>$salesusers]);
+        return view('vpc/greenview',
+                    [
+                        'route' => 'Green',
+                        'clients' => $greens,
+                        'heads'=>$heads, 'atts'=>$atts,
+                        'headsMaster' => $headsMaster,
+                        'attsMaster' => $attsMaster,
+                        'filter_sales' => $filter_sales,
+                        'filter_status' => $filter_status,
+                        'filter_product' => $filter_product,
+                        'filterable' => $filterable,
+                        'sortables' => $sortables,
+                        'count' => $page_count
+                    ]);
     }
 
-    public function clientDetail($id) {
+    // RETURN : LIST (COLLECTION) OF FILTERED AND SORTED TABLE LIST
+
+    public function getFilteredAndSortedTable(Request $request) {
+        // test
+        // $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
+        // $example_sort = array('email'=>false, 'name'=>true);
+
+        // $json_filter = json_encode($example_filter);
+        // $json_sort = json_encode($example_sort);
+        // test
+
+        $headsMaster = [
+                    "User ID",
+                    "Nama",
+                    "Email",
+                    "Telepon",
+                    "Interest"
+                ];
+
+        $attsMaster = [
+                        "green_id",
+                        "name",
+                        "email",
+                        "phone",
+                        "interest"
+                    ];
+        $heads = [
+                "Pemberi" => "pemberi",
+                "Perintah" => "keterangan_perintah",
+                "Status" => "status",
+                "Sales" => "sales_name",
+                "Nama Product" => "nama_product"
+                ];
+        
+
+        //Nama attribute pada sql
+        $atts = [
+                "pemberi",
+                "keterangan_perintah",
+                "status",
+                "sales_name",
+                "nama_product",
+                ];
+
+
+        $json_filter = $request['filters'];
+        $json_sort = $request['sorts'];
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 15;
+
+
+        // add 'select' of query
+        $query = QueryModifier::queryView('Green', $json_filter, $json_sort);
+        // dd($query);
+        $list_old = DB::select(DB::raw($query['text']), $query['variables']);
+        $list = collect(array_slice($list_old, $page*$record_amount, $record_amount));
+
+        $record_count = count($list_old);
+        $page_count = ceil($record_count/$record_amount);
+
+        return view('vpc/greentable',
+                    [
+                        'route' => 'Green',
+                        'clients' => $list,
+                        'atts' => $atts,
+                        'attsMaster' => $attsMaster,
+                        'count' => $page_count
+                    ]);
+        // return $list;
+    }
+ 
+    public function clientDetail($id, Request $request) {
         //Select seluruh data client $id yang ditampilkan di detail
-        $green = DB::select("SELECT * FROM green WHERE green_id = ?", [$id]);
-        $green = $green[0];
-        $salesusers = DB::select("SELECT sales_username FROM sales");
-        //Mengganti is_PC dan share_to dari boolean menjadi yes atau no
-        $green->is_UOB = $green->is_UOB ? "Yes" : "No";
-        $green->is_cat = $green->is_cat ? "Yes" : "No";
-        $green->is_mrg_premiere = $green->is_mrg_premiere ? "Yes" : "No";
-        $green->is_aclub_stock = $green->is_aclub_stock ? "Yes" : "No";
-        $green->is_aclub_future = $green->is_aclub_future ? "Yes" : "No";
-        $green->is_red_club = $green->is_red_club ? "Yes" : "No";
-        $green->share_to_aclub = $green->share_to_aclub ? "Yes" : "No";
-        $green->share_to_cat = $green->share_to_cat ? "Yes" : "No";
-        $green->share_to_mrg = $green->share_to_mrg ? "Yes" : "No";
-        $green->share_to_uob = $green->share_to_uob ? "Yes" : "No";
-        //Nama atribut form yang ditampilkan dan nama pada SQL
-        $ins = ["Green ID" => "green_id", "Nama" => "fullname", "No HP" => "no_hp", "Keterangan Perintah" =>"keterangan_perintah", "Sumber" => "sumber", "Sales" => "sales_username", "Progress" => "progress", "AClub Stock" => "is_aclub_stock", "AClub Future" => "is_aclub_future", "CAT" => "is_cat", "MRG" => "is_mrg_premiere", "UOB" => "is_UOB", "Red Club" => "is_red_club", "Share To AClub" => "share_to_aclub", "Share To CAT" => "share_to_cat", "Share to MRG" => "share_to_mrg", "Share to UOB" => "share_to_uob", "Tanggal Ditambahkan" => "add_time"];
+        $green = GreenProspectClient::where('green_id', $id)->first();
+
+        $ins= ["Green ID"               => "green_id",
+                "Date"                  => "date",
+                "Name"                  => "name",
+                "Phone"                 => "phone",
+                "Email"                 => "email",
+                "Interest"              => "interest",
+                "Pemberi"               => "pemberi",
+                "Sumber Data"           => "sumber_data",
+                "Keterangan Perintah"   => "keterangan_perintah"];
+
         $heads = $ins;
-        return view('profile/profile', ['route'=>'green', 'client'=>$green, 'heads'=>$heads, 'ins'=>$ins, 'sales'=>$salesusers]);
+        
+        $page = 0;
+        $page = $request['page']-1;
+        $record_amount = 5;
+
+        $clientsreg_old = $green->progresses()->orderBy('created_at','desc');
+        $total = count($clientsreg_old->get());
+        $total = ceil($total / $record_amount);
+        $clientsreg = $clientsreg_old->skip($record_amount*$page)->take($record_amount)->get();
+
+        $page = $page + 1;
+
+        if ($page < 1) {
+            $page = 1;
+        }
+        // form progress
+        $insreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
+        
+        // kolom account
+        $headsreg = ["Date", "Sales", "Status", "Nama Product", "Nominal", "Keterangan"];
+
+        //attribute sql account
+        $attsreg = ["date", "sales_name", "status", "nama_product", "nominal", "keterangan"];
+
+        return view('profile/profile', ['route'=>'Green', 'client'=>$green, 
+                'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
+                'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 
+                'attsreg'=>$attsreg, 'count'=>$total, 'page'=>$page
+            ]);
+    }
+
+     public function clientTrans($id,$trans) {
+        //Select seluruh data client $id yang ditampilkan di detail
+        $progress = GreenProspectProgress::where('progress_id', $trans)->first();
+
+        $ins= [     "Progress ID" => "progress_id",
+                    "Green ID" => "green_id",
+                    "Date" => "date",
+                    "Sales Name" => "sales_name",
+                    "Status" => "status",
+                    "Nama Product" => "nama_product",
+                    "Nominal" => "nominal",
+                    "Keterangan" => "keterangan",];
+
+        $heads = $ins;
+
+        return view('profile/greentransaction', ['route'=>'Green', 'client'=>$progress, 'heads'=>$heads, 'ins'=>$ins]);
     }
 
     public function editClient(Request $request) {
         //Validasi input
+
         $this->validate($request, [
                 'green_id' => 'required',
-                'fullname' => 'required',
-                'no_hp' => 'required'
+                'date' => 'date'
             ]);
         //Inisialisasi array error
-        DB::beginTransaction();
+
         $err = [];
-        //Mengubah jawaban yes atau no menjadi boolean
-        $isaclubstock = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
-        $isaclubfuture = strtolower($request->is_aclub_stock) == "yes" ? 1 : 0;
-        $ismrg = strtolower($request->is_mrg_premiere) == "yes" ? 1 : 0;
-        $iscat = strtolower($request->is_cat) == "yes" ? 1 : 0;
-        $isuob = strtolower($request->is_UOB) == "yes" ? 1 : 0;
-        $isred = strtolower($request->is_red_club) == "yes" ? 1 : 0;
-        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
-        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
-        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
-        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
         try {
-            //Untuk parameter yang tidak boleh null, digunakan nullify untuk menjadikan input empty string menjadi null
-            //Edit atribut Green
-            DB::select("call edit_green(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$request->green_id, $request->fullname, $request->no_hp, $this->nullify($request->keterangan_perintah), $this->nullify($request->sumber), $this->nullify($request->sales_username), $this->nullify($request->progress), $isaclubstock, $isaclubfuture, $iscat, $ismrg, $isuob, $isred, $aclub, $mrg, $cat, $uob]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            $green = GreenProspectClient::where('green_id',$request->green_id)->first();
+
+            $err =[];
+            // dd($request);
+            $green->date = $request->date;
+            $green->name = $request->name;
+            $green->phone = $request->phone;
+            $green->email = $request->email;
+            $green->interest = $request->interest;
+            $green->pemberi = $request->pemberi;
+            $green->sumber_data = $request->sumber_data;
+            $green->keterangan_perintah = $request->keterangan_perintah;
+            // dd($green);
+            $green->update();
+
+
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
+        
         return redirect()->back()->withErrors($err);
     }
 
     public function addClient(Request $request) {
         //Validasi input
         $this->validate($request, [
-                'nama' => 'required',
-                'no_hp' => 'required'
+                'date_client' => 'date',
+                'name' => '',
+                'phone' => '',
+                'email' => 'required|email',
+                'interest' => '',
+                'pemberi' => '',
+                'sumber_data' => '',
+                'keterangan_perintah' => '',
+                'date_progress' => 'date',
+                'sales_name' => '',
+                'status' => '',
+                'nama_product' => '',
+                'nominal' => '',
+                'keterangan' => ''
             ]);
+        //Inisialisasi array error
+        $err = [];
 
-        DB::beginTransaction();
-        //Mengubah jawaban yes atau no menjadi boolean
-        $aclub = strtolower($request->share_to_aclub) == "yes" ? 1 : 0;
-        $mrg = strtolower($request->share_to_mrg) == "yes" ? 1 : 0;
-        $cat = strtolower($request->share_to_cat) == "yes" ? 1 : 0;
-        $uob = strtolower($request->share_to_uob) == "yes" ? 1 : 0;
+        $err = [];
+        $green = new \App\GreenProspectClient();
+
+        $green->date = $request->date_client;
+        $green->name = $request->name;
+        $green->phone = $request->phone;
+        $green->email = $request->email;
+        $green->interest = $request->interest;
+        $green->pemberi = $request->pemberi;
+        $green->sumber_data = $request->sumber_data;
+        $green->keterangan_perintah = $request->keterangan_perintah;
+
+        $green->save();
+
+        $green_progress = new \App\GreenProspectProgress();
+
+        $green_progress->green_id = $green->green_id;
+        $green_progress->date = $request->date_progress;
+        $green_progress->sales_name = $request->sales_name;
+        $green_progress->status = $request->status;
+        $green_progress->nama_product = $request->nama_product;
+        $green_progress->nominal = $request->nominal;
+        $green_progress->keterangan = $request->keterangan;
+
+        $green_progress->save();
+
+        return redirect()->back()->withErrors($err);
+    }
+
+    public function editTrans(Request $request) {
+        //Validasi input
+
+        $this->validate($request, [
+            "date" => 'date', 
+            "sales_name" => '', 
+            "status" => '', 
+            "nama_product" => '', 
+            "nominal" => 'integer', 
+            "keterangan" => '', 
+            ]);
+        //Inisialisasi array error
+
+        $progress = GreenProspectProgress::where('progress_id',$request->user_id)->first();
         $err = [];
         try {
-            //Input data ke SQL
-            DB::select("call input_green(?,?,?,?,?,?,?,?,?,?)", [$request->nama, $request->no_hp, $request->keterangan_perintah, $request->sumber, $request->progress, $request->sales, $aclub, $mrg, $cat, $uob]);
-        } catch(\Illuminate\Database\QueryException $ex){ 
-            DB::rollback();
+            // dd($request);
+            $progress->date = $request->date;
+            $progress->sales_name = $request->sales_name;
+            $progress->status = $request->status;
+            $progress->nama_product = $request->nama_product;
+            $progress->nominal = $request->nominal;
+            $progress->keterangan = $request->keterangan;
+            // dd($green);
+            $progress->update();
+
+
+        } catch(\Illuminate\Database\QueryException $ex){
             $err[] = $ex->getMessage();
         }
-        DB::commit();
-        return redirect()->back()->withErrors($err);
-
+        
+        if(!empty($err)) {
+            return redirect()->back()->withErrors($err);
+        } else {
+            return redirect()->route('Green.detail', ['id' => $progress->green_id]);
+        }
     }
 
     public function deleteClient($id) {
         //Menghapus client dengan ID tertentu
         try {
-            DB::select("call delete_green(?)", [$id]);
+            $green = GreenProspectClient::where('green_id',$id)->first();
+            $green->delete();
         } catch(\Illuminate\Database\QueryException $ex){ 
             $err[] = $ex->getMessage();
         }
-        return redirect("home");
+        return redirect("Green");
+    }
+    
+    public function deleteTrans($id) {
+        //Menghapus client dengan ID tertentu
+        try {
+            $green = GreenProspectProgress::where('progress_id',$id)->first();
+            $green->delete();
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $err[] = $ex->getMessage();
+        }
+        return back();
     }
 
-    public function importExcel() {
-        $err = []; //Inisialisasi array error
-        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
-            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
-            $data = Excel::load($path, function($reader) { //Load excel
-            })->get();
-            if(!empty($data) && $data->count()){
-                $i = 1;
-                //Cek apakah ada error
-                foreach ($data as $key => $value) {
-                    $i++;
-                    if (($value->nama) === null) {
-                        $msg = "Nama empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                    if (($value->no_hp) === null) {
-                        $msg = "No HP empty on line ".$i;
-                        $err[] = $msg;
-                    }
-                } //end validasi
+    public function addTrans(Request $request) {
+        $this->validate($request, [
+                "user_id" => 'required',
+                "date" => 'date', 
+                "sales_name" => '', 
+                "status" => '', 
+                "nama_product" => '', 
+                "nominal" => 'integer', 
+                "keterangan" => ''
+            ]);
 
-                //Jika tidak ada error, import dengan cara insert satu per satu
-                if (empty($err)) {
-                    foreach ($data as $key => $value) {
-                        //Mengubah yes atau no menjadi boolean
-                        $aclub = strtolower($value->share_to_aclub) == "yes" ? 1 : 0;
-                        $mrg = strtolower($value->share_to_mrg) == "yes" ? 1 : 0;
-                        $cat = strtolower($value->share_to_cat) == "yes" ? 1 : 0;
-                        $uob = strtolower($value->share_to_uob) == "yes" ? 1 : 0;
-                        try { 
-                            DB::select("call input_green(?,?,?,?,?,?,?,?,?,?)", [$value->nama, $value->no_hp, $value->keterangan_perintah, $value->sumber, $value->progress, $value->sales, $aclub, $mrg, $cat, $uob]);
-                        } catch(\Illuminate\Database\QueryException $ex){ 
-                          echo ($ex->getMessage()); 
-                          $err[] = $ex->getMessage();
-                        }
-                    }
-                    if (empty($err)) { //message jika tidak ada error saat import
-                        $msg = "Excel successfully imported";
-                        $err[] = $msg;
-                    }
-                }
-            }
-        } else {
-            $msg = "No file supplied";
-            $err[] = $msg;
-        }
-
-        return redirect()->back()->withErrors([$err]);
+        $err = [];
+        $progress = new \App\GreenProspectProgress();
+        $progress->green_id = $request->user_id;
+        $progress->date = $request->date;
+        $progress->sales_name = $request->sales;
+        $progress->status = $request->status;
+        $progress->nama_product = $request->nama_product;
+        $progress->nominal = $request->nominal;
+        $progress->keterangan = $request->keterangan;
+        $progress->save();
+        
+        return redirect()->back()->withErrors($err);
     }
 	
 	public function assignClient (Request $request) {
@@ -214,4 +452,226 @@ class GreenController extends Controller
 			return redirect()->back()->withErrors([$err]);
 		}
 	}
+
+    public function updateTrans($id)
+    {
+        $progress = GreenProspectProgress::where('progress_id', $id)->first();
+
+        $ins= [     "Date" => "date",
+                    "Sales Name" => "sales_name",
+                    "Status" => "status",
+                    "Nama Product" => "nama_product",
+                    "Nominal" => "nominal",
+                    "Keterangan" => "keterangan",];
+
+        return view('content/greentranseditform', ['route'=>'Green', 'client'=>$progress, 'ins'=>$ins]);
+    }
+
+    public function exportExcel() {
+        $data = collect([]);
+
+        $clients = GreenProspectClient::all();
+
+        foreach ($clients as $client) {
+            $progresses = $client->progresses()->get();
+
+            if ($progresses->first() != null) {
+                foreach ($progresses as $progress) {
+                    $object = $progress;
+
+                    $object->green_id = $client->green_id;
+                    $object->date_progress = $client->date;
+                    $object->name = $client->name;
+                    $object->phone = $client->phone;
+                    $object->email = $client->email;
+                    $object->interest = $client->interest;
+                    $object->pemberi = $client->pemberi;
+                    $object->sumber_data = $client->sumber_data;
+                    $object->keterangan_perintah = $client->keterangan_perintah;
+
+                    $data->push($object);
+                }
+            } else {
+                $object = new \stdClass();
+
+                $object->date_progress = $client->date;
+                $object->name = $client->name;
+                $object->phone = $client->phone;
+                $object->email = $client->email;
+                $object->interest = $client->interest;
+                $object->pemberi = $client->pemberi;
+                $object->sumber_data = $client->sumber_data;
+                $object->keterangan_perintah = $client->keterangan_perintah;
+
+                $progress = new \App\GreenProspectProgress();
+                $progress_attributes = $progress->getAttributesImport();
+
+                foreach ($progress_attributes as $progress_attribute) {
+                    $object->$progress_attribute = null;
+                }
+
+                $object->progress_id = null;
+                $object->green_id = $client->green_id;
+
+                $data->push($object);
+            }
+        }
+
+        $array = [];
+        $heads = [
+                "Green ID" => "green_id",
+                "Date Client" => "date",
+                "Name" => "name",
+                "Phone" => "phone",
+                "Email" => "email",
+                "Interest" => "interest",
+                "Pemberi" => "pemberi",
+                "Sumber Data" => "sumber_data",
+                "Keterangan Perintah" => "keterangan_perintah",
+                "Date Progress" => "date_progress",
+                "Sales Name" => "sales_name",
+                "Status" => "status",
+                "Nama Product" => "nama_product",
+                "Nominal" => "nominal",
+                "Keterangan" => "keterangan"
+                    ];
+        foreach ($data as $dat) {
+            $arr = [];
+            foreach ($heads as $key => $value) {
+                //echo $key . " " . $value . "<br>";
+                $arr[$key] = $dat->$value;
+            }
+            $array[] = $arr;
+        }
+        //print_r($array);
+        //$array = ['a' => 'b'];
+        return Excel::create('ExportedGreen', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
+
+    public function importExcel() {
+        //Inisialisasi array error
+        $err = [];
+        if(Input::hasFile('import_file')){ //Mengecek apakah file diberikan
+            $path = Input::file('import_file')->getRealPath(); //Mendapatkan path
+            $data = Excel::load($path, function($reader) { //Load excel
+            })->get();
+            if(!empty($data) && $data->count()){
+                $line = 1;
+                //Jika tidak ada error, import dengan cara insert satu per satu
+                if (empty($err)) {
+                    foreach ($data as $key => $value) {
+                        $line += 1;
+                        try {
+                             // check whether master client exist or not
+                            $is_client_has_attributes = False;
+                            if (GreenProspectClient::find($value->green_id) == null) {
+                                $client = new \App\GreenProspectClient;
+
+                                $client_attributes = $client->getAttributesImport();
+
+                                foreach ($client_attributes as $client_attribute => $import) {
+                                    if ($value->$import != null) {
+                                        $client->$client_attribute = $value->$import;
+                                        $is_client_has_attributes = True;
+                                    } else {
+                                        $client->$client_attribute = null;
+                                    }
+
+                                }
+                                if ($is_client_has_attributes) {
+                                    $client->save();
+                                }
+                            }
+                            if (GreenProspectClient::find($value->green_id) == null) {
+                                $value->green_id = $client->green_id;
+                            }
+
+                            $is_progress_has_attributes = False;
+                            $progress = new \App\GreenProspectProgress;
+                            $progress_attributes = $progress->getAttributesImport();
+                            
+                            foreach ($progress_attributes as $progress_attribute => $import) {
+                                if ($import != 'green_id') {
+                                    if ($value->$import != null) {
+                                        $progress->$progress_attribute = $value->$import;  
+                                        $is_progress_has_attributes = True;
+                                    } else {
+                                        $progress->$progress_attribute = null;
+                                    }
+                                } else {
+                                    if ($value->$import != null) {
+                                        $progress->$progress_attribute = $value->$import;
+                                    } else {
+                                        $progress->$progress_attribute = null;
+                                    }
+                                }
+                            }
+
+                            if ($is_progress_has_attributes) {  
+                                $progress->save();
+                            }
+
+
+                        } catch(\Illuminate\Database\QueryException $ex) {
+                          # echo ($ex->getMessage());
+                          $raw_msg = $ex->getMessage(); # SQL STATE MENTAH
+                          $err[] = QueryExceptionMapping::mapQueryException($raw_msg, $line);
+                        }
+                    }
+                    if (empty($err)) { //message jika tidak ada error saat import
+                        $msg = "Excel successfully imported";
+                        $err[] = $msg;
+                    }
+                }
+            }
+        } else {
+            $msg = "No file supplied";
+            $err[] = $msg;
+        }
+        return redirect()->back()->withErrors([$err]);
+    }
+
+    public function templateExcel() {
+        $array = [];
+        $heads = [
+                "Green ID" => "green_id",
+                "Date Client" => "date",
+                "Name" => "name",
+                "Phone" => "phone",
+                "Email" => "email",
+                "Interest" => "interest",
+                "Pemberi" => "pemberi",
+                "Sumber Data" => "sumber_data",
+                "Keterangan Perintah" => "keterangan_perintah",
+                "Date Progress" => "date",
+                "Sales Name" => "sales_name",
+                "Status" => "status",
+                "Nama Product" => "nama_product",
+                "Nominal" => "nominal",
+                "Keterangan" => "keterangan"
+                    ];
+
+        $arr = [];
+        foreach ($heads as $head => $value) {
+            if ($head == "Green ID") {
+                $count_master_id = GreenProspectClient::orderBy('green_id', 'desc')->first()->green_id;
+                $arr[$head] = $count_master_id;
+            } else {
+                $arr[$head] = null;
+            }
+        }
+        $array[] = $arr;
+
+        return Excel::create('TemplateGreen', function($excel) use ($array) {
+            $excel->sheet('Sheet1', function($sheet) use ($array)
+            {
+                $sheet->fromArray($array);
+            });
+        })->export('xls');
+    }
 }

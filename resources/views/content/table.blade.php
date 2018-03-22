@@ -8,24 +8,33 @@
 	@if ($route != 'assign')
 		<div class="panel-group" id="accordion1">
 			<div class="panel">
-				@if($route == 'product')
-					@if(Auth::user()->hasAnyRole(['0']))
-						<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Product</a>
-						<br>
-						<br>
-					@endif
-				@elseif ($route == 'trans')
-					<!--<a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#addcli" style="width:175px;">Add New Transaction</a>-->
-					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Transaction</a>
-					<br>
-					<br>
-				@else
+                @if (($route == 'AShop') || ($route == 'green'))
 					<a id="addclib" onclick="addcli()" class="btn btn-primary">Add New Client</a>
-					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a> 
-					<br>
-				@endif
+                @else
+					<a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
+                @endif
 				<br>
-				<div id="addcli" style="display:none">
+			</div>
+	@endif
+
+    @if(($route != 'AShop') and ($route != 'green'))
+    		<div id="import" style="display:none">	
+        		<div class="panel panel-default" style="padding:15px">
+        			<div class="panel-body">
+        				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
+        					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
+        					<input type="file" name="import_file" />
+        					<br>
+        					<button class="btn btn-primary">Import .xls File</button>
+        				</form>
+        			</div>
+        		</div>
+    		</div>
+    @endif
+        </div>
+	
+            @if (($route == 'AShop') || ($route == 'green'))
+    			<div id="addcli" style="display:none">
 					<div class="panel panel-default" style="padding:15px" >
 						<form method="post" action="{{route($route . '.insert')}}">
 							@foreach ($ins as $atr)
@@ -63,25 +72,8 @@
 						</form>
 					</div>
 				</div>
-			</div>
-		@endif
-		<div id="import" style="display:none">
-		@if(($route != 'product') and ($route != 'trans') and ($route != 'assign'))	
-		<div class="panel panel-default" style="padding:15px">
-			<div class="panel-body">
-				<form method="post" action="{{route($route . '.import')}}" enctype="multipart/form-data">
-					<input type = "hidden" name = "_token" value = "<?php echo csrf_token() ?>">
-					<input type="file" name="import_file" />
-					<br>
-					<button class="btn btn-primary">Import .xls File</button>
-				</form>
-			</div>
-		</div>
-	@endif
-		</div>
-    </div>
-	
-	
+            @endif
+
 	<div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
@@ -99,6 +91,9 @@
 				
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                	<p>Search</p>
+             		<input id="searchkey" type="text"/>                		
+             		<button type="button" onclick="load('{{route($route)}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
 					<div style="overflow-x:scroll">
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables" style="font-size:80%;">
                         <thead>
@@ -131,12 +126,20 @@
 								</td>
 								@endif
 							@foreach ($atts as $att)
-                                @if ($route == 'green') <!-- Client Green diidentifikasi berdasarkan green_id (untuk dilihat detailnya) -->
-                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @if ($route == 'AClub') <!-- Client Green diidentifikasi berdasarkan green_id (untuk dilihat detailnya) -->
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
                                 @elseif ($route == 'RedClub') <!-- Client RedClub diidentifikasi berdasarkan username (untuk dilihat detailnya) -->
                                     <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->username])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
-                                @elseif (($route != 'product') and ($route != 'trans') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
-								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->all_pc_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'MRG')
+                                	<td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'green')
+								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->green_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'UOB')
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->client_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif (($route != 'product') and ($route != 'AShop') and ($route != 'assign')) <!-- Client PC diidentifikasi berdasarkan all_pc_id -->
+								    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->user_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
+                                @elseif ($route == 'AShop')
+                                    <td> <a target="_blank" href="{{route($route . '.detail', ['id' => $client->master_id])}}" style="text-decoration:none; color:black;">{{$client->$att}} </a></td>
 								@else
 									<td>{{$client->$att}}</td>
                                 @endif
@@ -153,7 +156,7 @@
 					</div>
 					{{ csrf_field() }}
 					
-					@if(($route == 'green')||($route == 'RedClub')||($route == 'grow'))
+					@if($route == 'RedClub')||($route == 'grow'))
 					<input type="hidden" name="username" value={{ Auth::user()->username }}>
 					<div style="float:right">
 						&nbsp &nbsp Prospect to:

@@ -27,7 +27,7 @@ body {
   background-color: black;
 }
 .nav .nav-second-level :hover {
-  background-color: red;
+  background-color: #000;
 }
 .navbar-top-links {
   margin-right: 0;
@@ -103,6 +103,64 @@ body {
 .sidebar .nav-third-level li a {
   padding-left: 52px;
 }
+
+#side-menu>li>a:focus, #side-menu>li>a:hover, #side-menu>.nav>li>a:hover, #side-menu>.nav>li>a:focus {
+  background-color: #000;
+}
+
+/* Form Add new client */
+.form-group {
+  width: 100%;
+}
+#ads_nama {
+  width: 100%;
+}
+#UserID {
+  width: 100%;
+}
+#NoHP {
+  width: 49.9%;
+}
+#NoTelepon {
+  width: 49%;
+}
+#Alamat {
+  width: 100%;
+}
+#Kota {
+  width: 49.9%;
+}
+#Provinsi {
+  width: 49%;
+}
+#Email {
+  width: 100%;
+}
+#TanggalLahir {
+  width: 49.9%;
+}
+#LineID {
+  width: 24.5%;
+}
+#PinBB {
+  width: 24.55%;
+}
+#Facebook {
+  width: 24.5%;
+}
+#Twitter {
+  width: 24.2%;
+}
+#JenisKelamin {
+  width: 49%;
+}
+.no-spin::-webkit-inner-spin-button, .no-spin::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+    -moz-appearance:textfield !important;
+}
+
+
 @media (min-width: 768px) {
   .sidebar {
     z-index: 1;
@@ -116,6 +174,26 @@ body {
     margin-left: auto;
   }
 }
+
+.hvr-btn {
+  display: inline-block;
+  float: right;
+  width: 80px;
+  height: 30px;
+  padding-top: 3px;
+  margin-top: -25px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+
+table.table-hover tr.gradeA td div.btn-hvr-container {
+  visibility: hidden;
+}
+
+table.table-hover tr.gradeA:hover td div.btn-hvr-container {
+  visibility: visible;
+}
+
 
 /*
 .btn-outline {
