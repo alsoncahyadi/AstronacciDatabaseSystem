@@ -287,7 +287,7 @@
 			document.getElementById("insert_button").disabled = true;
 			console.log("change");
 			//document.getElementById("hahaha").innerHTML = document.getElementById("ismrg").innerHTML;
-			if ($( "#pc option:checked" ).val() == "A-Club"){
+			if ($( "#pc option:checked" ).val() == "A-CLUB"){
 				if (document.getElementById('isacl') !== null){
 					if (document.getElementById("isacl").innerHTML == 1) {
 						document.getElementById("hahaha").style.display = "inline";
