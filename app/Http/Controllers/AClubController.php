@@ -411,14 +411,16 @@ class AClubController extends Controller
                        "Nominal",
                        "Start Date",
                        "Expired Date",
-                       "Masa Tenggang"];
+                       "Masa Tenggang", 
+                       "Sales"];
         $attsreg = ["payment_date", 
                     "kode", 
                     "status", 
                     "nominal", 
                     "start_date", 
                     "expired_date", 
-                    "masa_tenggang"];
+                    "masa_tenggang",
+                    "sales_name"];
 
 
 

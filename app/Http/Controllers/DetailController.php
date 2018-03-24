@@ -312,7 +312,8 @@ class DetailController extends Controller
 
         $heads_aclub = [ 
                 "Sumber Data" => "sumber_data", 
-                "Keterangan" => "keterangan"];
+                "Keterangan" => "keterangan",
+                "User ID" => "user_id"];
 
         // $clientsreg_aclub= $aclub_master->aclubMembers()->get();
         if ($client_aclub->aclubMembers()->first() == null) {
