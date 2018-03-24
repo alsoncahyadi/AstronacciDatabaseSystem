@@ -34,10 +34,18 @@
             </div>
             <div class="panel-body">
                 <a href="{{route('view')}}" class="btn btn-warning">MASTER</a>
-                <a href="{{route('AClub')}}" class="btn btn-primary">A-CLUB</a>
-                <a href="{{route('MRG')}}" class="btn btn-primary">MRG</a>
-                <a href="{{route('CAT')}}" class="btn btn-primary">CAT</a>
-                <a href="{{route('UOB')}}" class="btn btn-primary">UOB</a>
+                @if ((Auth::user()->hasAnyRole(['1'])) or (Auth::user()->hasAnyRole(['0'])))
+                    <a href="{{route('AClub')}}" class="btn btn-primary">A-CLUB</a>
+                @endif
+                @if ((Auth::user()->hasAnyRole(['2'])) or (Auth::user()->hasAnyRole(['0'])))
+                    <a href="{{route('MRG')}}" class="btn btn-primary">MRG</a>
+                @endif
+                @if ((Auth::user()->hasAnyRole(['3'])) or (Auth::user()->hasAnyRole(['0'])))
+                    <a href="{{route('CAT')}}" class="btn btn-primary">CAT</a>
+                @endif
+                @if ((Auth::user()->hasAnyRole(['4'])) or (Auth::user()->hasAnyRole(['0'])))
+                    <a href="{{route('UOB')}}" class="btn btn-primary">UOB</a>
+                @endif
             </div>
         </div>
         <!-- <a id="importb" onclick="importex()" class="btn btn-primary">Import Excel File</a>
