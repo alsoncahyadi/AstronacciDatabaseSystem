@@ -87,7 +87,7 @@ class RegisterController extends Controller
 			'a_shop_auth' => ($data['ashop']=='on' ? 1 : 0),
 			'role' => $data['role'],
 			'fullname' => $data['fullname'],
-			'no_hp' => $data['phonenum'],
+			'no_handphone' => $data['phonenum'],
         ]);
     }
 }

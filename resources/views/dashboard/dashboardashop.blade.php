@@ -30,11 +30,11 @@
                 <div id="addcli" class="panel-collapse collapse">
                     <div class="panel panel-default" style="padding:15px" >
                         <form method="post" action="{{route('AShop.insert')}}">
-                            @foreach ($ins as $atr)
+                            @foreach ($ins as $atr=>$req)
                                 <div class="form-group">
-                                    <label>{{$atr}}</label>
+                                    <label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                     @if ($atr == 'Tanggal Lahir')
-                                        <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                        <input class="form-control" no-spin" type="date" name="{{strtolower(str_replace(' ', '_', $atr))}}" >
                                     @elseif ($atr == "Gender")
                                         <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}">
                                             <option>M</option>
@@ -48,8 +48,16 @@
                                             <option>Event</option>
                                             <option>Other</option>
                                         </select>
+                                    @elseif ($atr == 'Provinsi')
+                                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}" id="prov" >
+
+                                            </select>
+                                    @elseif ($atr == 'Kota')
+                                            <select class="form-control" name="{{strtolower(str_replace(' ', '_', $atr))}}" id="kota">
+
+                                            </select>
                                     @else
-                                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}">
+                                        <input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" <?php if ($req) : ?> required <?php endif; ?>>
                                     @endif
                                 </div>
                             @endforeach
@@ -128,6 +136,64 @@
             return;
         document.getElementById("dropdown").innerHTML = "";
     });
+
+    var prov = {
+        "Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
+        "Bali" : ["Denpasar"],
+        "Bangka Belitung" : ["Pangkalpinang"],
+        "Banten" : ["Cilegon", "Serang", "Tangerang Selatan", "Tangerang"],
+        "Bengkulu" : ["Bengkulu"],
+        "Gorontalo" : ["Gorontalo"],
+        "Jakarta" : ["Jakarta Barat", "Jakarta Pusat", "Jakarta Selatan", "Jakarta Timur", "Jakarta Utara"],
+        "Jambi" : ["Sungai Penuh", "Jambi"],
+        "Jawa Barat" : ["Bandung", "Bekasi", "Bogor", "Cimahi", "Cirebon", "Depok", "Sukabumi", "Tasikmalaya", "Banjar"],
+        "Jawa Tengah" : ["Magelang", "Pekalongan", "Purwokerto", "Salatiga", "Semarang", "Surakarta", "Tegal"],
+        "Jawa Timur" : ["Batu", "Blitar", "Kediri", "Madiun", "Malang", "Mojokerto", "Pasuruan", "Probolinggo", "Surabaya"],
+        "Kalimantan Barat" : ["Pontianak", "Singkawang"],
+        "Kalimantan Selatan" : ["Banjarbaru", "Banjarmasin"],
+        "Kalimantan Tengah" : ["Palangkaraya"],
+        "Kalimatan Timur" : ["Balikpapan", "Bontang", "Samarinda"],
+        "Kalimantan Utara" : ["Tarakan"],
+        "Kepulauan Riau" : ["Batam", "Tanjungpinang"],
+        "Lampung" : ["Bandar Lampung", "Metro"],
+        "Maluku Utara" : ["Ternate", "Kepulauan Tidore"],
+        "Maluku" : ["Ambon", "Tual"],
+        "Nusa Tenggara Barat" : ["Bima", "Mataram"],
+        "Nusa Tenggara Timur" : ["Kupang"],
+        "Papua Barat" : ["Sorong"],
+        "Papua" : ["Jayapura"],
+        "Riau" : ["Dumai", "Pekanbaru"],
+        "Sulawesi Selatan" : ["Makassar", "Palopo", "Parepare"],
+        "Sulawesi Tengah" : ["Palu"],
+        "Sulawesi Tenggara" : ["Bau-Bau", "Kendari"],
+        "Sulawesi Utara" : ["Bitung", "Kotamobagu", "Manado", "Tomohon"],
+        "Sumatera Barat" : ["Bukittinggi", "Padang", "Padangpanjang", "Pariaman", "Payakumbuh", "Sawahlunto", "Solok"],
+        "Sumatera Selatan" : ["Lubuklinggau", "Pagaralam", "Palembang", "Prabumulih"],
+        "Sumatera Utara" : ["Binjai", "Medan", "Padang Sidempuan", "Pematangsiantar", "Sibolga", "Tanjungbalai", "Tebingtinggi"],
+        "Yogyakarta" : ["Yogyakarta"],
+    };
+    var provKeys = Object.keys(prov);
+    var select = document.getElementById('prov');
+    var selectKota = document.getElementById('kota');
+    for(var i=0; i< provKeys.length; i++)
+    {
+      select.options[i] = new Option(provKeys[i], provKeys[i]);  //new Option("Text", "Value")
+    }
+    for(var i=0; i< prov["Aceh"].length; i++)
+    {
+      selectKota.options[i] = new Option(prov["Aceh"][i], prov["Aceh"][i]);  //new Option("Text", "Value")
+    }
+    $('#prov').on('change', function() {
+      $("#kota").empty();
+      var temp = this.value;
+      for(var i=0; i< prov[temp].length; i++)
+        {
+          selectKota.options[i] = new Option(prov[temp][i], prov[temp][i]);  //new Option("Text", "Value")
+        }
+    })
+
+
+
 </script>
 
 @endsection

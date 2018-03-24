@@ -299,15 +299,15 @@ class DetailController extends Controller
                         "Sales Name" => "sales_name"];
 
         //ACLUB
-        $client_aclub = AclubInformation::find($id)->first();
+        $client_aclub = AclubInformation::find($id);
 
         if ($client_aclub == null) {
             $client_aclub = new \App\AclubInformation();
 
             $client_aclub->master_id = MasterClient::first()->master_id;
+        } else {
+            $client_aclub = $client_aclub->first();
         }
-
-        $aclub_master = $client_aclub->master;
 
         $ins_aclub = [
                 "Sumber Data" => "sumber_data", 
@@ -318,8 +318,15 @@ class DetailController extends Controller
                 "Keterangan" => "keterangan"];
 
         // $clientsreg_aclub= $aclub_master->aclubMembers()->get();
-        $clientsreg_aclub = $aclub_master->aclubMembers()->first()->aclubTransactions()->get();
-        $client_aclub->user_id = $clientsreg_aclub[0]->user_id;
+        if ($client_aclub->aclubMembers()->first() == null) {
+            $clientsreg_aclub = null;
+            $client_aclub->user_id = 'dummy';
+        } else {
+            $clientsreg_aclub = $client_aclub->aclubMembers()->first()->aclubTransactions()->get();
+            $client_aclub->user_id = $clientsreg_aclub[0]->user_id;    
+        }
+        
+        
         $headsreg_aclub = [ "Payment Date",
                             "Kode",
                             "Status",
