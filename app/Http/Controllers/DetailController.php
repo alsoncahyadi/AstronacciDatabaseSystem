@@ -237,7 +237,6 @@ class DetailController extends Controller
 
         $heads_uob = [
                 "Kode Client" => "client_id",
-                "Master ID" => "master_id",
                 "Sales" => "sales_name",
                 "Sumber Data" => "sumber_data",
                 "Tanggal Join" => "join_date",
