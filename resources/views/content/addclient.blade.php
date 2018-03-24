@@ -55,7 +55,7 @@
 
 							</select>
 					<?php else : ?>
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
+							<input class="form-control masterrequired" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
 								<?php if ($req) : ?> required <?php endif; ?>
 								>
 					<?php endif; ?>
@@ -261,20 +261,31 @@
 			return;
 		document.getElementById("dropdown").innerHTML = "";
 	});
-
+ 
 	function exec(id, name) {
+		var x = document.querySelectorAll('.masterrequired');
 		document.getElementById("dropdown").innerHTML = "";
 		if (id != -1){  //auto fill
+			console.log("falsify");
+			var i;
+			for (i = 0; i < x.length; i++) {
+			    x[i].required = false;
+			}
 			load('{{route('getClient')}}?id=' + id);
 			document.getElementById("addcli").style.display = "none";
 			document.getElementById("input").value = name;
 			document.getElementById("master").value = '1';
-			document.getElementById("master_id").value = id;
+			document.getElementById("master_id").value = id;	
 		} else { //add new client			
+			console.log("truefy");
 			document.getElementById("tab").innerHTML = "";
 			document.getElementById("addcli").style.display = "inline";
 			document.getElementById("master").value = '0';
 			document.getElementById("master_id").value = id;
+			var i;
+			for (i = 0; i < x.length; i++) {
+			    x[i].required = true;
+			}
 		}
 		document.getElementById("next").style.display = "inline";
 		window.scrollTo(0, 0);
