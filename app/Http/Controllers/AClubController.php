@@ -377,7 +377,8 @@ class AClubController extends Controller
 
         $aclub_information = AclubInformation::find($id);
 
-        $aclub_members = AclubMember::where('master_id', $id)->first();
+        $query_member = QueryModifier::queryGetAclubMember($id);
+        $aclub_members = collect(DB::select($query_member))->first();
 
         // aclub_master adalah aclub_master nya
         $aclub_master = $aclub_information->master;
@@ -606,7 +607,8 @@ class AClubController extends Controller
                     "Expired Date" => 'expired_date_1',
                     "Masa Tenggang" => 'masa_tenggang_1',
                     "Yellow Zone" => 'yellow_zone_1',
-                    "Red Zone" => 'red_zone_1'];
+                    "Red Zone" => 'red_zone_1',
+                    "Sales Name" => 'sales_name'];
 
         $ins = [      "Payment Date" => "payment_date",
                         "Kode" => "kode",
@@ -617,7 +619,8 @@ class AClubController extends Controller
                         "Expired Date" => "expired_date",
                         "Masa Tenggang" => "masa_tenggang",
                         "Yellow Zone" => "yellow_zone",
-                        "Red Zone" => "red_zone"];
+                        "Red Zone" => "red_zone",
+                        "Sales Name" => "sales_name"];
 
         $insreg = [     "Payment Date" => 0,
                         "Kode" => 0,
@@ -628,7 +631,8 @@ class AClubController extends Controller
                         "Expired Date" => 0,
                         "Masa Tenggang" => 0,
                         "Yellow Zone" => 0,
-                        "Red Zone" => 0];
+                        "Red Zone" => 0,
+                        "Sales Name" => 0];
 
         $attsreg = ["payment_date",
                     "kode",
@@ -639,7 +643,8 @@ class AClubController extends Controller
                     "expired_date",
                     "masa_tenggang",
                     "yellow_zone",
-                    "red_zone"];
+                    "red_zone",
+                    "sales_name"];
 //dd($aclub_transaction);
         return view('profile/aclubpackage', ['route'=>'AClub', 'client'=>$aclub_transaction, 'trans'=>$aclub_transaction, 'clientsreg'=>$aclub_transaction, 'attsreg'=>$attsreg, 'insreg'=>$insreg, 'ins'=>$ins, 'headsreg'=>$insreg, 'heads'=>$heads]);
     }
@@ -752,7 +757,7 @@ class AClubController extends Controller
         if(!empty($err)) {
             return redirect()->back()->withErrors($err);
         } else {
-            return redirect()->route('AClub.member', ['id' => $aclub_trans->aclubmember->first()->master_id, 'member' => $aclub_trans->user_id]);
+            return redirect()->route('detail', ['id' => $aclub_trans->aclubmember->first()->master_id]);
         }
     }
 

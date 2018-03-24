@@ -305,15 +305,13 @@ class DetailController extends Controller
             $client_aclub = new \App\AclubInformation();
 
             $client_aclub->master_id = MasterClient::first()->master_id;
-        } else {
-            $client_aclub = $client_aclub->first();
         }
 
         $ins_aclub = [
                 "Sumber Data" => "sumber_data", 
                 "Keterangan" => "keterangan"];
 
-        $heads_aclub = ["Master_id" => "master_id", 
+        $heads_aclub = [ 
                 "Sumber Data" => "sumber_data", 
                 "Keterangan" => "keterangan"];
 
