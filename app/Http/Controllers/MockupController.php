@@ -33,19 +33,19 @@ class MockupController extends Controller
                 "Facebook" => 0];
 
         //ACLUB exclusive form
-        $aclubforms = ["User ID",
-                        "Payment Date",
-                        "Sumber Data",
-                        "Sales",
-                        "Kode",
-                        "Status",
-                        "Nominal",
-                        "Start Date",
-                        "Expired Date",
-                        "Masa Tenggang",
-                        "Yellow Zone",
-                        "Red Zone",
-                        "Keterangan"];
+        $aclubforms = ["User ID" => 1,
+                        "Payment Date" => 0,
+                        "Sumber Data" => 0,
+                        "Sales" => 0,
+                        "Kode" => 0,
+                        "Status" => 0,
+                        "Nominal" => 0,
+                        "Start Date" => 0,
+                        "Expired Date" => 0,
+                        "Masa Tenggang" => 0,
+                        "Yellow Zone" => 0,
+                        "Red Zone" => 0,
+                        "Keterangan" => 0];
 
         //UOB exclusive form
         $uobforms = ["Kode Client" => 1,

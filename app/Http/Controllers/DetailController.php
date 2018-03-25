@@ -237,7 +237,6 @@ class DetailController extends Controller
 
         $heads_uob = [
                 "Kode Client" => "client_id",
-                "Master ID" => "master_id",
                 "Sales" => "sales_name",
                 "Sumber Data" => "sumber_data",
                 "Tanggal Join" => "join_date",
@@ -299,7 +298,7 @@ class DetailController extends Controller
                         "Sales Name" => "sales_name"];
 
         //ACLUB
-        $client_aclub = AclubInformation::find($id)->first();
+        $client_aclub = AclubInformation::find($id);
 
         if ($client_aclub == null) {
             $client_aclub = new \App\AclubInformation();
@@ -307,19 +306,25 @@ class DetailController extends Controller
             $client_aclub->master_id = MasterClient::first()->master_id;
         }
 
-        $aclub_master = $client_aclub->master;
-
         $ins_aclub = [
                 "Sumber Data" => "sumber_data", 
                 "Keterangan" => "keterangan"];
 
-        $heads_aclub = ["Master_id" => "master_id", 
+        $heads_aclub = [ 
                 "Sumber Data" => "sumber_data", 
-                "Keterangan" => "keterangan"];
+                "Keterangan" => "keterangan",
+                "User ID" => "user_id"];
 
         // $clientsreg_aclub= $aclub_master->aclubMembers()->get();
-        $clientsreg_aclub = $aclub_master->aclubMembers()->first()->aclubTransactions()->get();
-        $client_aclub->user_id = $clientsreg_aclub[0]->user_id;
+        if ($client_aclub->aclubMembers()->first() == null) {
+            $clientsreg_aclub = null;
+            $client_aclub->user_id = 'dummy';
+        } else {
+            $clientsreg_aclub = $client_aclub->aclubMembers()->first()->aclubTransactions()->get();
+            $client_aclub->user_id = $clientsreg_aclub[0]->user_id;    
+        }
+        
+        
         $headsreg_aclub = [ "Payment Date",
                             "Kode",
                             "Status",

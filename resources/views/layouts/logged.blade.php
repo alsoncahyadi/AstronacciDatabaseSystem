@@ -111,18 +111,7 @@
             </ul>
             <!-- /.navbar-top-links -->
 
-            <div class="navbar-default sidebar" role="navigation" style="width:15%">
-                @if (Auth::user()->hasAnyRole(['1']))
-                <script>load('{{route('AClub')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['2']))
-                <script>load('{{route('MRG')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['3']))
-                <script>load('{{route('CAT')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['4']))
-                <script>load('{{route('UOB')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['5']))
-                <script>load('{{route('sales')}}')</script>
-                @endif
+            <div class="navbar-default sidebar" role="navigation" style="width:15%">                
                 <div class="sidebar-nav navbar-collapse">					
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111">
                       <ul class="nav">

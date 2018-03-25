@@ -28,14 +28,14 @@ Route::get('/newMember', [
     'uses' => 'MockupController@index',
     'as' => 'mockup',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/insert', [
     'uses' => 'MockupController@addClient',
     'as' => 'insert',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::get('/adduser', [
@@ -51,7 +51,7 @@ Route::get('/addclient', [
     'uses' => 'MockupController@getClientInfo',
     'as' => 'getClient',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 /* to be uncommented
@@ -71,11 +71,12 @@ Route::get('/view', [
     'uses' => 'HomeController@masterTable',
     'as' => 'view',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/master/import', [
     'uses' => 'HomeController@importExcel',
+    'middleware' => ['auth'],
     'as' => 'master.import',
     ]);
 
@@ -89,7 +90,7 @@ Route::get('/dashboard', [
 Route::get('/AShop', [
     'uses' => 'HomeController@indexAShop',
     'as' => 'ashop',
-    'middleware' => 'auth'
+    'middleware' => ['auth', 'ashop'],
     ]);
 
 Route::get('/GreenDashboard', [
@@ -164,27 +165,27 @@ Route::get('/member/{id}', [
     'uses' => 'DetailController@allPCDetail',
     'as' => 'detail',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 Route::post('/member/edit', [
     'uses' => 'DetailController@editClient',
     'as' => 'detail.edit',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 Route::delete('/member/deleteclient/{id}', [
     'uses' => 'DetailController@deleteClient',
     'as' => 'detail.deleteclient',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1', '2', '3'],
+    'roles' => ['0', '1', '2', '3', '4'],
     ]);
 
 // CAT ROUTES
 Route::get('/CAT', [
     'uses' => 'CATController@getTable',
     'as' => 'CAT',
-	// 'middleware' => ['auth', 'roles'],
+	'middleware' => ['auth', 'roles'],
 	'roles' => ['0', '3'],
     ]);
 
@@ -249,7 +250,7 @@ Route::post('/CAT/filter', [
     'uses' => 'CATController@getFilteredAndSortedTable',
     'as' => 'CAT.filter',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
+    'roles' => ['0', '3'],
     ]);
 
 // MRG ROUTES
@@ -299,7 +300,7 @@ Route::post('/MRG/inserttrans', [
     'uses' => 'MRGController@addTrans',
     'as' => 'MRG.inserttrans',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '3'],
+    'roles' => ['0', '2'],
     ]);
 
 Route::get('/MRGexport', [
@@ -320,7 +321,7 @@ Route::get('/MRG/{id}/{account}', [
     'uses' => 'MRGController@clientDetailAccount',
     'as' => 'MRG.account',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
+    'roles' => ['0', '2'],
     ]);
 
 Route::delete('/MRG/deletetrans/{id}', [
@@ -341,7 +342,7 @@ Route::post('/MRG/filter', [
     'uses' => 'MRGController@getFilteredAndSortedTable',
     'as' => 'MRG.filter',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
+    'roles' => ['0', '2'],
     ]);
 
 //UOB ROUTES
@@ -391,14 +392,14 @@ Route::post('/UOB/inserttrans', [
     'uses' => 'UOBController@addTrans',
     'as' => 'UOB.inserttrans',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '3'],
+    'roles' => ['0', '4'],
     ]);
 
 Route::post('/UOB/filter', [
     'uses' => 'UOBController@getFilteredAndSortedTable',
     'as' => 'UOB.filter',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
+    'roles' => ['0', '4'],
     ]);
 
 //A-CLUB ROUTES
@@ -746,7 +747,7 @@ Route::post('/product/insert', [
 Route::get('/AShopDashboards', [
     'uses' => 'HomeController@indexAShop',
     'as' => 'AShop.dashboard',
-    'middleware' => 'auth'
+    'middleware' => ['auth', 'ashop'],
     ]);
 
 Route::get('/AShop/{id}', [
@@ -812,15 +813,13 @@ Route::get('/AShop/{id}/{package}', [
 Route::post('/AShop/filter', [
     'uses' => 'AshopController@getFilteredAndSortedTable',
     'as' => 'AShop.filter',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '1'],
+    'middleware' => ['auth', 'ashop'],
     ]);
 
 Route::post('/AShop/import', [
     'uses' => 'AshopController@importExcel',
     'as' => 'AShop.import',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0', '2'],
+    'middleware' => ['auth', 'ashop'],
     ]);
 
 

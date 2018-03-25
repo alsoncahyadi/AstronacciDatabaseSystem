@@ -250,21 +250,20 @@ class AshopController extends Controller
         $master = MasterClient::find($id);
 
         //judul + sql
-        $ins= ["Red Club User ID" => "redclub_user_id",
-          "Red Club Password" => "redclub_password",
-          "Nama" => "name",
-          "Telephone" => "telephone_number",
-          "Email" => "email",
-          "Tanggal Lahir" =>"birthdate",
-          "Alamat" => "address",
-          "Kota" => "city",
-          "Provinsi" => "province",
-          "Jenis Kelamin" => "gender",
-          "Line ID" => "line_id",
-          "BBM" => "bbm",
-          "WhatsApp" => "whatsapp",
-          "Facebook" => "facebook"
-                ];
+        $ins= ["Red Club User ID" => ["redclub_user_id",0],
+          "Red Club Password" => ["redclub_password",0],
+          "Nama" => ["name",1],
+          "Telephone" => ["telephone_number",1],
+          "Email" => ["email",1],
+          "Tanggal Lahir" =>["birthdate",0],
+          "Alamat" => ["address",1],
+          "Kota" => ["city",0],
+          "Provinsi" => ["province",0],
+          "Jenis Kelamin" => ["gender",0],
+          "Line ID" => ["line_id",0],
+          "BBM" => ["bbm",0],
+          "WhatsApp" => ["whatsapp",0],
+          "Facebook" => ["facebook",0]];
 
         $heads = ["Master ID" => "master_id",
           "Red Club User ID" => "redclub_user_id",
