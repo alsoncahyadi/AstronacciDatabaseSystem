@@ -124,10 +124,11 @@
                         <a href="AShopDashboards" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-SHOP<span class="fa arrow"></span></a>
                     </li>
                     @endif
-
+                    @if (Auth::user()->hasAnyRole(['0']))
                     <li id="t3">
                         <a href="GreenDashboard" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>
+                    @endif
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
