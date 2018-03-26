@@ -55,7 +55,7 @@
 
 							</select>
 					<?php else : ?>
-							<input class="form-control" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
+							<input class="form-control masterrequired" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
 								<?php if ($req) : ?> required <?php endif; ?>
 								>
 					<?php endif; ?>
@@ -73,17 +73,26 @@
 					<label>Profit Center</label>
 					<select id="pc" class="form-control">
 						<option>-</option>
-						<option>A-CLUB</option>
-						<option>MRG</option>
-						<option>UOB</option>
-						<option>CAT</option>
+						@if ((Auth::user()->hasAnyRole(['1'])) or (Auth::user()->hasAnyRole(['0'])))
+							<option>A-CLUB</option>
+						@endif
+						@if ((Auth::user()->hasAnyRole(['2'])) or (Auth::user()->hasAnyRole(['0'])))
+							<option>MRG</option>
+						@endif
+						@if ((Auth::user()->hasAnyRole(['4'])) or (Auth::user()->hasAnyRole(['0'])))
+							<option>UOB</option>
+						@endif
+						@if ((Auth::user()->hasAnyRole(['3'])) or (Auth::user()->hasAnyRole(['0'])))					
+							<option>CAT</option>
+						@endif
 					</select>
 				</div>
 				<br>
 				<div class="form-group">
 				<div id="aclub" style="display: none;">					
+				@if ((Auth::user()->hasAnyRole(['1'])) or (Auth::user()->hasAnyRole(['0'])))
 					@foreach ($aclub as $atr => $req)
-					<div class="form-group">				
+					<div class="form-group">
 						<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
 						@if (($atr == "Keterangan") || ($atr == "Sumber Data") || ($atr == "User ID") || ($atr == "Sales"))
 							<input class="form-control <?php if ($req) : ?> aclubrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr)).'_aclub'}}">
@@ -125,11 +134,13 @@
 						@endif
 					</div>
 					@endforeach
+				@endif
 				</div>
 				<script type="text/javascript">
 					
 				</script>
 				<div id="mrg" style="display: none;">
+				@if ((Auth::user()->hasAnyRole(['2'])) or (Auth::user()->hasAnyRole(['0'])))
 					@foreach ($mrg as $atr => $req)
 					<div class="form-group">
 						<label>{{$atr}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
@@ -150,8 +161,10 @@
 						@endif
 					</div>
 					@endforeach
+				@endif
 				</div>
 				<div id="uob" style="display: none;">
+				@if ((Auth::user()->hasAnyRole(['4'])) or (Auth::user()->hasAnyRole(['0'])))
 					<input type="hidden" name="uob" value="1">
 					@foreach ($uob as $atr => $req)
 					<div class="form-group">				
@@ -167,8 +180,10 @@
 						@endif
 					</div>
 					@endforeach
+				@endif
 				</div>
 				<div id="cat" style="display: none;">
+				@if ((Auth::user()->hasAnyRole(['3'])) or (Auth::user()->hasAnyRole(['0'])))
 					<input type="hidden" name="cat" value="1">
 					@foreach ($cat as $atr => $req)
 					<div class="form-group">				
@@ -182,6 +197,7 @@
 						@endif
 					</div>
 					@endforeach
+				@endif
 				</div>	
 				<p id="hahaha" style="display: none; padding-bottom: 50px"></p>
 				<br>
@@ -245,20 +261,31 @@
 			return;
 		document.getElementById("dropdown").innerHTML = "";
 	});
-
+ 
 	function exec(id, name) {
+		var x = document.querySelectorAll('.masterrequired');
 		document.getElementById("dropdown").innerHTML = "";
 		if (id != -1){  //auto fill
+			console.log("falsify");
+			var i;
+			for (i = 0; i < x.length; i++) {
+			    x[i].required = false;
+			}
 			load('{{route('getClient')}}?id=' + id);
 			document.getElementById("addcli").style.display = "none";
 			document.getElementById("input").value = name;
 			document.getElementById("master").value = '1';
-			document.getElementById("master_id").value = id;
+			document.getElementById("master_id").value = id;	
 		} else { //add new client			
+			console.log("truefy");
 			document.getElementById("tab").innerHTML = "";
 			document.getElementById("addcli").style.display = "inline";
 			document.getElementById("master").value = '0';
 			document.getElementById("master_id").value = id;
+			var i;
+			for (i = 0; i < x.length; i++) {
+			    x[i].required = true;
+			}
 		}
 		document.getElementById("next").style.display = "inline";
 		window.scrollTo(0, 0);

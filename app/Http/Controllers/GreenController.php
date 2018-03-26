@@ -206,15 +206,15 @@ class GreenController extends Controller
         //Select seluruh data client $id yang ditampilkan di detail
         $green = GreenProspectClient::where('green_id', $id)->first();
 
-        $ins= ["Green ID"               => "green_id",
-                "Date"                  => "date",
-                "Name"                  => "name",
-                "Phone"                 => "phone",
-                "Email"                 => "email",
-                "Interest"              => "interest",
-                "Pemberi"               => "pemberi",
-                "Sumber Data"           => "sumber_data",
-                "Keterangan Perintah"   => "keterangan_perintah"];
+        $ins= ["Green ID"               => ["green_id",0],
+                "Date"                  => ["date",0],
+                "Name"                  => ["name",1],
+                "Phone"                 => ["phone",1],
+                "Email"                 => ["email",1],
+                "Interest"              => ["interest",0],
+                "Pemberi"               => ["pemberi",0],
+                "Sumber Data"           => ["sumber_data",1],
+                "Keterangan Perintah"   => ["keterangan_perintah",0]];
 
         $heads = $ins;
         

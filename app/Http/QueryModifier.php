@@ -249,7 +249,12 @@ class QueryModifier {
     }
 
     public static function queryGetTransactions($user_id) {
-        $query = "SELECT * FROM aclub_transactions WHERE user_id = ".$user_id." ORDER BY created_at DESC;";
+        $query = "SELECT * FROM aclub_transactions WHERE user_id = '".$user_id."' ORDER BY created_at DESC;";
+        return $query;
+    }
+
+    public static function queryGetAclubMember($user_id) {
+        $query = "SELECT * FROM aclub_members WHERE master_id = ".$user_id." ORDER BY created_at DESC";
         return $query;
     }
 } 

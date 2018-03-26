@@ -141,39 +141,48 @@
         <div class="panel-body">
             <!-- Nav tabs -->
             <ul class="nav nav-pills">
-                @if($aclub)
-                    <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">A-CLUB</a>
-                    </li>
-                @else
-                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>A-CLUB</a>
-                    </li>
+                @if ((Auth::user()->hasAnyRole(['1'])) or (Auth::user()->hasAnyRole(['0'])))
+                    @if($aclub)
+                        <li><a href="#aclub-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('AClub.detail', ['id' => $aclub->master_id])}}', 'tab')">A-CLUB</a>
+                        </li>
+                    @else
+                        <li><a type="button" class="btn btn-default" style="color:red;" disabled>A-CLUB</a>
+                        </li>
+                    @endif
                 @endif
-                @if($mrg)
-                    <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2');document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;">MRG</a>
-                    </li>
-                @else
-                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
-                    </li>
+                @if ((Auth::user()->hasAnyRole(['2'])) or (Auth::user()->hasAnyRole(['0'])))
+                    @if($mrg)
+                        <li><a href="#mrg-pills" class="btn btn-default" data-toggle="tab" onclick="load('{{route('MRG.detail', ['id' => $mrg->master_id])}}', 'tab2');document.getElementById('page_count').innerHTML = document.getElementById('hidden_page_count').value;">MRG</a>
+                        </li>
+                    @else
+                        <li><a type="button" class="btn btn-default" style="color:red;" disabled>MRG</a>
+                        </li>
+                    @endif
                 @endif
-                @if($cat)
-                    <li><a href="#cat-pills" class="btn btn-default" data-toggle="tab">CAT</a>
-                    </li>
-                @else
-                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>CAT</a>
-                    </li>
+                @if ((Auth::user()->hasAnyRole(['3'])) or (Auth::user()->hasAnyRole(['0'])))
+                    @if($cat)
+                        <li><a href="#cat-pills" class="btn btn-default" data-toggle="tab">CAT</a>
+                        </li>
+                    @else
+                        <li><a type="button" class="btn btn-default" style="color:red;" disabled>CAT</a>
+                        </li>
+                    @endif
                 @endif
-                @if($uob)
-                    <li><a href="#uob-pills" class="btn btn-default" data-toggle="tab">UOB</a>
-                    </li>
-                @else
-                    <li><a type="button" class="btn btn-default" style="color:red;" disabled>UOB</a>
-                    </li>
+                @if ((Auth::user()->hasAnyRole(['4'])) or (Auth::user()->hasAnyRole(['0'])))
+                    @if($uob)
+                        <li><a href="#uob-pills" class="btn btn-default" data-toggle="tab">UOB</a>
+                        </li>
+                    @else
+                        <li><a type="button" class="btn btn-default" style="color:red;" disabled>UOB</a>
+                        </li>
+                    @endif
                 @endif
             </ul>
             <br>
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane fade" id="aclub-pills">
+                    @if ((Auth::user()->hasAnyRole(['1'])) or (Auth::user()->hasAnyRole(['0'])))
                     <h3>A-CLUB</h3>
 
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editaclub">Edit</a>
@@ -286,9 +295,10 @@
                         /<label id="page_countA">{{ (isset($count) ? $count : "" )}}</label>
                         <button id="page_numberA" onclick="gotoPageA()" href="#">Go</button>
                     </div>
-
+                @endif
                 </div>
                 <div class="tab-pane fade" id="mrg-pills">
+                    @if ((Auth::user()->hasAnyRole(['2'])) or (Auth::user()->hasAnyRole(['0'])))
                     <h3>MRG</h3>
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editmrg">Edit</a>
                     <form action="{{route('MRG.deleteclient', ['id' => $client_mrg->master_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
@@ -369,8 +379,10 @@
                         /<label id="page_count">{{ (isset($count) ? $count : "" )}}</label>
                         <button id="page_number" onclick="gotoPage()" href="#">Go</button>
                     </div>
+                @endif
                 </div>
                 <div class="tab-pane fade" id="cat-pills">
+                    @if ((Auth::user()->hasAnyRole(['3'])) or (Auth::user()->hasAnyRole(['0'])))
                     <div>
                         <h3>CAT</h3>
                         <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#editcat">Edit</a>
@@ -443,8 +455,10 @@
                         @endforeach
                         <br>
                     </div>
+                    @endif
                 </div>
                 <div class="tab-pane fade" id="uob-pills">
+                    @if ((Auth::user()->hasAnyRole(['4'])) or (Auth::user()->hasAnyRole(['0'])))
                     <h3>UOB</h3>
                     <a class="btn btn-primary" data-toggle="collapse" data-parent="#accordion1" href="#edituob">Edit</a>
                     <form action="{{route('UOB.deleteclient', ['id' => $client_uob->client_id])}}" method="post" onsubmit="return del()" style="display: inline-block">
@@ -515,6 +529,7 @@
                             </div>
                         @endforeach
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
