@@ -257,6 +257,11 @@ class QueryModifier {
         $query = "SELECT * FROM aclub_members WHERE master_id = ".$user_id." ORDER BY created_at DESC";
         return $query;
     }
+
+    public static function queryGetCat($master_id) {
+        $query = "SELECT * FROM cats WHERE master_id = ".$master_id." ORDER BY created_at DESC";
+        return $query;
+    }
 } 
 
 ?>
