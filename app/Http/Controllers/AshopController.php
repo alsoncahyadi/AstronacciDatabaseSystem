@@ -263,8 +263,7 @@ class AshopController extends Controller
           "Line ID" => ["line_id",0],
           "BBM" => ["bbm",0],
           "WhatsApp" => ["whatsapp",0],
-          "Facebook" => ["facebook",0]
-                ];
+          "Facebook" => ["facebook",0]];
 
         $heads = ["Master ID" => "master_id",
           "Red Club User ID" => "redclub_user_id",

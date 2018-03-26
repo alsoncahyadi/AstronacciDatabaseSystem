@@ -104,7 +104,8 @@
 				<div class="form-group">
                     <!-- Menuliskan tiap Judul atribut (key) dan isinya (value) -->
                     
-                        @foreach ($ins as $key => [$value,$req])
+                        @foreach ($ins as $key => $req)
+                            <?php $value = $req[0]; ?>
                             <div class="col-lg-2" style="height:30px">
                                 <label>{{$key}}</label>
                             </div>
@@ -129,7 +130,8 @@
                         <div class="form-group">
                             <!-- Menuliskan input untuk setiap judul (key) dan data saat ini (value) -->
                             
-                                    @foreach ($ins as $key => [$value,$req])
+                                    @foreach ($ins as $key => $val)
+                                        <?php $value = $val[0]; $req = $val[1];?>
                                         <div style="height:60px">
                                             <label>{{$key}} <?php if ($req) : ?> <span style="color:red; font-weight: bold"> * </span> <?php endif; ?></label>
                                             @if ($key == "Tanggal Lahir")

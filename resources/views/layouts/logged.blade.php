@@ -111,18 +111,7 @@
             </ul>
             <!-- /.navbar-top-links -->
 
-            <div class="navbar-default sidebar" role="navigation" style="width:15%">
-                @if (Auth::user()->hasAnyRole(['1']))
-                <script>load('{{route('AClub')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['2']))
-                <script>load('{{route('MRG')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['3']))
-                <script>load('{{route('CAT')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['4']))
-                <script>load('{{route('UOB')}}')</script>
-                @elseif (Auth::user()->hasAnyRole(['5']))
-                <script>load('{{route('sales')}}')</script>
-                @endif
+            <div class="navbar-default sidebar" role="navigation" style="width:15%">                
                 <div class="sidebar-nav navbar-collapse">					
                     <ul class="nav" id="side-menu"  style="background-color:#dd1111">
                       <ul class="nav">
@@ -135,10 +124,11 @@
                         <a href="AShopDashboards" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-SHOP<span class="fa arrow"></span></a>
                     </li>
                     @endif
-
+                    @if (Auth::user()->hasAnyRole(['0']))
                     <li id="t3">
                         <a href="GreenDashboard" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>
+                    @endif
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->
