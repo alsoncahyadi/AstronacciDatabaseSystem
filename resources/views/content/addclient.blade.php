@@ -55,7 +55,7 @@
 
 							</select>
 					<?php else : ?>
-							<input class="form-control masterrequired" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
+							<input class="form-control <?php if ($req) : ?> masterrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" 
 								<?php if ($req) : ?> required <?php endif; ?>
 								>
 					<?php endif; ?>
