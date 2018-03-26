@@ -796,7 +796,7 @@ class AClubController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
-                                    $master_id = $master->$master_id;
+                                    $master_id = $master->master_id;
                                 }
                             } else {
                                 $master_id = $master->master_id;
