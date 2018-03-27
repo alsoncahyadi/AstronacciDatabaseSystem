@@ -88,6 +88,7 @@ class RegisterController extends Controller
 			'role' => $data['role'],
 			'fullname' => $data['fullname'],
 			'no_handphone' => $data['phonenum'],
+            'green_auth' => ($data['green']=='on' ? 1 : 0),
         ]);
     }
 }

@@ -96,8 +96,7 @@ Route::get('/AShop', [
 Route::get('/GreenDashboard', [
     'uses' => 'HomeController@indexGreen',
     'as' => 'Green.dashboard',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::get('list', [
@@ -131,8 +130,7 @@ Route::get('/report/{type}/{id}', [
 Route::post('/report/green', [
     'uses' => 'SalesController@addGreenReport',
     'as' => 'report.green',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],	
     ]);
 
 Route::post('/report/grow', [
@@ -535,99 +533,85 @@ Route::post('/AClub/filter', [
 Route::get('/Green', [
     'uses' => 'GreenController@getTable',
     'as' => 'Green',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],
     ]);
 
 Route::get('/green/{id}', [
     'uses' => 'GreenController@clientDetail',
     'as' => 'Green.detail',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],
     ]);
 
 Route::get('/green/{id}/{progress}', [
     'uses' => 'GreenController@clientTrans',
     'as' => 'Green.trans',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/insert', [
     'uses' => 'GreenController@addClient',
     'as' => 'Green.insert',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/inserttrans', [
     'uses' => 'GreenController@addTrans',
     'as' => 'Green.inserttrans',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/import', [
     'uses' => 'GreenController@importExcel',
     'as' => 'Green.import',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/edit', [
     'uses' => 'GreenController@editClient',
     'as' => 'Green.edit',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],
     ]);
 
 Route::delete('/green/deletetrans/{id}', [
     'uses' => 'GreenController@deleteTrans',
     'as' => 'Green.deletetrans',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::get('/greentrans/edit/{id}', [
     'uses' => 'GreenController@updateTrans',
     'as' => 'Greentrans.edit',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/edittrans', [
     'uses' => 'GreenController@editTrans',
     'as' => 'Green.edittrans',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::delete('/green/deleteclient/{id}', [
     'uses' => 'GreenController@deleteClient',
     'as' => 'Green.deleteclient',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/assign', [
     'uses' => 'GreenController@assignClient',
     'as' => 'Green.assign',
-	'middleware' => ['auth', 'roles'],
-	'roles' => ['0'],
+	'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/green/assign', [
     'uses' => 'GreenController@assignClient',
     'as' => 'Green.assign',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 Route::post('/Green/filter', [
     'uses' => 'GreenController@getFilteredAndSortedTable',
     'as' => 'Green.filter',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],
     ]);
 
 
@@ -947,15 +931,13 @@ Route::get('/template/cat', [
 Route::get('/template/green', [
     'uses' => 'GreenController@templateExcel',
     'as' => 'greentemplate',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],    
     ]);
 
 Route::get('/template/green', [
     'uses' => 'GreenController@templateExcel',
     'as' => 'greentemplate',
-    'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'middleware' => ['auth', 'green'],    
     ]);
 
 Route::get('/template/ashop', [

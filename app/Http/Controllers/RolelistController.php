@@ -29,6 +29,12 @@ class RolelistController extends Controller
 					else {
 						$user->a_shop_auth = '0';
 					}
+					if ($request['green'.$idx]) {
+						$user->green_auth = '1';
+					}
+					else {
+						$user->green_auth = '0';
+					}
 					$user->role = $request['roles'.$idx];
 					$user->save();
 				}
