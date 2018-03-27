@@ -227,6 +227,7 @@ class MRGController extends Controller
 
         //sort
         $sortables = [
+            "Tanggal Lahir" => "birthdate",
             "Kota" => "city",
             "Gender" => "gender",
             "Sumber" => "sumber_data",
