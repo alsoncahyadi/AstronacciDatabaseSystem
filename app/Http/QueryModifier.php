@@ -121,16 +121,16 @@ class QueryModifier {
         //
         if ($viewName == 'CAT') { 
             $query_text = self::$query_view_CAT;
-            $premiere_sorted = 'cats.payment_date ASC';
+            $premiere_sorted = 'cats.payment_date DESC';
         } else if ($viewName == 'UOB') { 
             $query_text = self::$query_view_UOB;
-            $premiere_sorted = 'uobs.tanggal_rdi_done ASC';
+            $premiere_sorted = 'uobs.tanggal_rdi_done DESC';
         } else if ($viewName == 'AClub') { 
             $query_text = self::$query_view_AClub;
-            $premiere_sorted = 'last_transaction.payment_date ASC';
+            $premiere_sorted = 'last_transaction.payment_date DESC';
         } else if ($viewName == 'MRG') { 
             $query_text = self::$query_view_MRG;
-            $premiere_sorted = 'mrgs.join_date ASC';
+            $premiere_sorted = 'mrgs.join_date DESC';
         } else if ($viewName == 'AShop') { 
             $query_text = self::$query_view_AShop;
             $premiere_sorted = 'master_clients.created_at DESC';
@@ -263,6 +263,12 @@ class QueryModifier {
         $query = "SELECT * FROM aclub_members WHERE master_id = ".$user_id." ORDER BY created_at DESC";
         return $query;
     }
+
+    public static function queryGetCat($master_id) {
+        $query = "SELECT * FROM cats WHERE master_id = ".$master_id." ORDER BY created_at DESC";
+        return $query;
+    }
+
 } 
 
 ?>

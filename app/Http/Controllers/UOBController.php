@@ -100,7 +100,7 @@ class UOBController extends Controller
 
         // $uobs = $this->getData();
         $record_count = Uob::count();
-        $uobs = Uob::orderBy('tanggal_rdi_done','asc')->skip($record_amount*$page)->take($record_amount)->get();
+        $uobs = Uob::orderBy('tanggal_rdi_done','desc')->skip($record_amount*$page)->take($record_amount)->get();
 
         foreach ($uobs as $uob) {
             $master = $uob->master;
@@ -122,7 +122,7 @@ class UOBController extends Controller
         $page_count = ceil($record_count/$record_amount);
 
         $headsMaster = [
-                    "User   ID",
+                    "User ID",
                     "Nama",
                     "Email",
                     "Telepon",
@@ -130,7 +130,7 @@ class UOBController extends Controller
                 ];
 
         $attsMaster = [
-                        "master_id",
+                        "client_id",
                         "name",
                         "email",
                         "telephone_number",
@@ -262,9 +262,8 @@ class UOBController extends Controller
         // $json_filter = json_encode($example_filter);
         // $json_sort = json_encode($example_sort);
         // test
-
-         $attsMaster = [
-                        "master_id",
+        $attsMaster = [
+                        "client_id",
                         "name",
                         "email",
                         "telephone_number",
