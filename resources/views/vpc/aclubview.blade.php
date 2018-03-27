@@ -221,8 +221,8 @@
 					</div>
 					<div class="col-md-1">
 						<form action="">
-							<input class="check-sort" type="radio" name="asc-desc" value="asc"> Ascending<br>
-							<input class="check-sort" type="radio" name="asc-desc" value="desc"> Descending<br>
+							<input class="check-sort" type="radio" name="asc-desc" id="asc-desc" value="asc"> Ascending<br>
+							<input class="check-sort" type="radio" name="asc-desc" id="asc-desc" value="desc"> Descending<br>
 						</form>
 					</div>
 					<div class="col-md-1" style="width:2%;">
@@ -429,14 +429,18 @@
 		$('.sort').each(function() {
 			var sort_value = $(this).find(":selected").val();
 			if (sort_value) {
-				$('.check-sort:checked').each(function() {
-					var check_sort = $(this).val();
-					if (check_sort == 'asc') {
-						sorts[sort_value] = true;
-					} else {
-						sorts[sort_value] = false;
-					}
-				});
+				if (document.getElementById("asc-desc").checked) {
+                    $('.check-sort:checked').each(function() {
+                        var check_sort = $(this).val();
+                        if (check_sort == 'asc') {
+                            sorts[sort_value] = true;
+                        } else {
+                            sorts[sort_value] = false;
+                        }
+                    });
+                } else {
+                    sorts[sort_value] = false;
+                }
 			}
 		});
 
