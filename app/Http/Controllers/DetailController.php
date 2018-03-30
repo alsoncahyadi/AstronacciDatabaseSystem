@@ -12,6 +12,7 @@ use App\Mrg;
 use App\AclubInformation;
 use App\AlubTransactions;
 use App\Uob;
+use App\Http\QueryModifier;
 
 class DetailController extends Controller
 {
@@ -166,7 +167,8 @@ class DetailController extends Controller
                 "Facebook" => "facebook"];
 
         //CAT
-        $client_cat = Cat::where('master_id', $id)->first();
+        $query_cat = QueryModifier::queryGetCat($id);
+        $client_cat = collect(DB::select($query_cat))->first();
 
         if ($client_cat == null) {
             $client_cat = new \App\Cat();

@@ -76,8 +76,9 @@ Route::get('/view', [
 
 Route::post('/master/import', [
     'uses' => 'HomeController@importExcel',
-    'middleware' => ['auth'],
+    'middleware' => ['auth', 'roles'],
     'as' => 'master.import',
+    'roles' => ['0']
     ]);
 
 Route::get('/dashboard', [
@@ -206,7 +207,7 @@ Route::post('/CAT/import', [
     'uses' => 'CATController@importExcel',
     'as' => 'CAT.import',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '3'],
+	'roles' => ['0'],
     ]);
 
 Route::post('/CAT/edit', [
@@ -278,7 +279,7 @@ Route::post('/MRG/import', [
     'uses' => 'MRGController@importExcel',
     'as' => 'MRG.import',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '2'],
+	'roles' => ['0'],
     ]);
 
 Route::get('/MRGtrans/edit/{id}', [
@@ -370,7 +371,7 @@ Route::post('/UOB/import', [
     'uses' => 'UOBController@importExcel',
     'as' => 'UOB.import',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '4'],
+	'roles' => ['0'],
     ]);
 
 Route::post('/UOB/edit', [
@@ -441,7 +442,7 @@ Route::post('/AClub/import', [
     'uses' => 'AClubController@importExcel',
     'as' => 'AClub.import',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1'],
+	'roles' => ['0'],
     ]);
 
 Route::post('/AClub/edit', [
@@ -641,7 +642,7 @@ Route::post('/RedClub/import', [
     'uses' => 'RedClubController@importExcel',
     'as' => 'RedClub.import',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1', '2', '3', '4'],
+	'roles' => ['0'],
     ]);
 
 Route::post('/RedClub/edit', [
@@ -691,7 +692,7 @@ Route::post('/grow/import', [
     'uses' => 'GrowController@importExcel',
     'as' => 'grow.import',
 	'middleware' => ['auth', 'roles'],
-	'roles' => ['0', '1', '2', '3', '4'],
+	'roles' => ['0'],
     ]);
 
 Route::post('/grow/edit', [
@@ -804,7 +805,8 @@ Route::post('/AShop/filter', [
 Route::post('/AShop/import', [
     'uses' => 'AshopController@importExcel',
     'as' => 'AShop.import',
-    'middleware' => ['auth', 'ashop'],
+    'middleware' => ['auth', 'ashop', 'roles'],
+    'roles' => ['0'],
     ]);
 
 
@@ -979,7 +981,7 @@ Route::get('/export/green', [
     'uses' => 'GreenController@exportExcel',
     'as' => 'greenexport',
     'middleware' => ['auth', 'roles'],
-    'roles' => ['0'],
+    'roles' => ['0', '4'],
     ]);
 
 Route::post('/master/filter', [
