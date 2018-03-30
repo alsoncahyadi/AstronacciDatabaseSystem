@@ -283,11 +283,6 @@
                     </div>
                     <br><br>
 
-                    <div>
-                        <p>Search</p>
-                        <input id="searchkey" type="text"/>    
-                        <button type="button" onclick="load('{{route('AClub.detail', ['id' => $client_aclub->master_id])}}?q=' + document.getElementById('searchkey').value)" href="#">Search</button>
-                    </div>
                     <div id="tab"></div>
                     <div id="pageControllerA" style="margin-left: 2px; margin-top: 12px;">
                         Page
