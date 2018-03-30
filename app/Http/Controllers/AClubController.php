@@ -296,7 +296,6 @@ class AClubController extends Controller
         // test
         // $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
         // $example_sort = array('email'=>false, 'name'=>true);
-
         // $json_filter = json_encode($example_filter);
         // $json_sort = json_encode($example_sort);
         // test
@@ -798,7 +797,7 @@ class AClubController extends Controller
 
                                 if ($is_master_have_attributes) {
                                     $master->save();
-                                    $master_id = $master->$master_id;
+                                    $master_id = $master->master_id;
                                 }
                             } else {
                                 $master_id = $master->master_id;
