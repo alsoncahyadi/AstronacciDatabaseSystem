@@ -296,7 +296,6 @@ class AClubController extends Controller
         // test
         // $example_filter = array('gender'=>['M'], 'birthdate'=>[4,5,6]);
         // $example_sort = array('email'=>false, 'name'=>true);
-
         // $json_filter = json_encode($example_filter);
         // $json_sort = json_encode($example_sort);
         // test

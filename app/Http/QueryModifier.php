@@ -37,7 +37,7 @@ class QueryModifier {
         ON aclub_members.user_id = last_transaction.user_id ";
 
     private static $query_view_MRG = 
-        "SELECT * 
+        "SELECT *
         FROM  
         master_clients  
         INNER JOIN mrgs ON master_clients.master_id = mrgs.master_id  
@@ -112,35 +112,42 @@ class QueryModifier {
 
 
     public static function queryView($viewName, $json_filter, $json_sort) {
+        //
+        // Aclub -> payment date
+        // MRG -> tanggal_join / join_date
+        // CAT -> payment_date
+        // UOB -> tanggal RDI
+        //
+        //
         if ($viewName == 'CAT') { 
             $query_text = self::$query_view_CAT;
-            $sort_table_name = 'cats';
+            $premiere_sorted = 'cats.payment_date DESC';
         } else if ($viewName == 'UOB') { 
             $query_text = self::$query_view_UOB;
-            $sort_table_name = 'uobs';
+            $premiere_sorted = 'uobs.tanggal_rdi_done DESC';
         } else if ($viewName == 'AClub') { 
             $query_text = self::$query_view_AClub;
-            $sort_table_name = 'aclub_members';
+            $premiere_sorted = 'last_transaction.payment_date DESC';
         } else if ($viewName == 'MRG') { 
             $query_text = self::$query_view_MRG;
-            $sort_table_name = 'mrgs';
+            $premiere_sorted = 'mrgs.join_date DESC';
         } else if ($viewName == 'AShop') { 
             $query_text = self::$query_view_AShop;
-            $sort_table_name = 'master_clients';
+            $premiere_sorted = 'master_clients.created_at DESC';
         } else if ($viewName == 'Green') { 
             $query_text = self::$query_view_Green;
-            $sort_table_name = 'green_prospect_clients';
+            $premiere_sorted = 'green_prospect_clients.created_at DESC';
         } else if ($viewName == 'Master') { 
             $query_text = self::$query_view_master;
-            $sort_table_name = 'master_clients';
+            $premiere_sorted = 'master_clients.created_at DESC';
         } 
 
         $query = array('text' => $query_text,
                         'variables' => array());
-        $query = self::addFilterSubquery($query, $json_filter);
-        $query = self::addSortSubquery($query, $json_sort, $sort_table_name);
-        $query['text'] = $query['text'].";";
 
+        $query = self::addFilterSubquery($query, $json_filter);
+        $query = self::addSortSubquery($query, $json_sort, $premiere_sorted);
+        $query['text'] = $query['text'].";";
         return $query;
     }
 
@@ -208,14 +215,12 @@ class QueryModifier {
         return $query;
     }
 
-    public static function addSortSubquery($query, $json_sort, $table_name) {
+    public static function addSortSubquery($query, $json_sort, $premiere_sorted) {
         $sort = json_decode($json_sort, true);
-        $created_at = $table_name.".created_at DESC";
         if (empty($sort)) {
-            $query['text'] = $query['text']." ORDER BY ".$created_at;
+            $query['text'] = $query['text']." ORDER BY ".$premiere_sorted;
             return $query;
         }
-        
         $subquery = " ORDER BY ";
         $idx_sort = 0;
         foreach ($sort as $key_sort => $value_sort) {
@@ -226,7 +231,8 @@ class QueryModifier {
             }
             $subquery = $subquery.", ";
         }
-        $subquery = $subquery.$created_at;
+
+        $subquery = $subquery.$premiere_sorted;
         $query['text'] = $query['text'].$subquery;
         return $query;
     }
@@ -262,6 +268,7 @@ class QueryModifier {
         $query = "SELECT * FROM cats WHERE master_id = ".$master_id." ORDER BY created_at DESC";
         return $query;
     }
+
 } 
 
 ?>
