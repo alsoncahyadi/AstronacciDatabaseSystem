@@ -124,7 +124,7 @@
                         <a href="AShopDashboards" style="color:white;"><i class="fa fa-shopping-cart fa-fw"></i> A-SHOP<span class="fa arrow"></span></a>
                     </li>
                     @endif
-                    @if ((Auth::user()->hasAnyRole(['0'])) or (Auth::user()->hasAnyRole(['4'])))
+                    @if (Auth::user()->hasGreen(Auth::user()->username))
                     <li id="t3">
                         <a href="GreenDashboard" style="color:white;"><i class="fa fa-pencil-square-o fa-fw"></i> Green Prospect</a>
                     </li>

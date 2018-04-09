@@ -17,8 +17,9 @@
 		
 		function checkChange(idx) {
 			var ashopcb = document.getElementById("ashop"+idx);
+			var greencb = document.getElementById("green"+idx);
 			var rolesel = document.getElementById("roles"+idx);
-			if ((ashopcb.checked != ashopcb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
+			if ((ashopcb.checked != ashopcb.defaultChecked)||(greencb.checked != greencb.defaultChecked)||(!rolesel.options[rolesel.selectedIndex].defaultSelected)) {
 				document.getElementById("ischanged"+idx).checked = true;
 				if (!document.getElementById("isdel"+idx).checked) {
 					document.getElementById(idx).style.backgroundColor = "yellow";
@@ -103,6 +104,11 @@
 					<input id="ashop" type="checkbox" name="ashop" >
 				</div>
 				<div class="form-group">
+					<label for="green" class="control-label">Green Auth</label>
+					<input name="green" value="0" type="hidden">
+					<input id="green" type="checkbox" name="green" >
+				</div>
+				<div class="form-group">
 					<label for="role" class="control-label">Role</label>							
 					<select id="role" class="form-control" name="role" required>
 						<option value="0">Superadmin</option>
@@ -141,6 +147,7 @@
 					<th style="text-align:center;">Fullname</th>
 					<th style="text-align:center;">Role</th>
 					<th style="text-align:center;">A Shop</th>
+					<th style="text-align:center;">Green</th>
 					<th style="text-align:center;">Delete</th>
 				</tr>
 
@@ -160,6 +167,7 @@
 						<option value="5" {{ $user->hasRole($user->username, '5') ? 'selected' : ''}} >Sales</option>
 					</select></td>
 					<td style="text-align:center;"><input id="ashop{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasAShop($user->username) ? 'checked' : ''}} name="ashop{{ $idx }}"></td>
+					<td style="text-align:center;"><input id="green{{ $idx }}" onchange="checkChange({{ $idx }})" type="checkbox" {{ $user->hasGreen($user->username) ? 'checked' : ''}} name="green{{ $idx }}"></td>
 					<td style="text-align:center;"><input id="isdel{{ $idx }}" type="checkbox" style="display:none" name="isdel{{ $idx }}"><button type="button" onclick="checkDel({{ $idx }})" id="delbut{{ $idx }}"><i class="fa fa-times"></i></button></td></td>
 					{{ csrf_field() }}
 				</tr>
