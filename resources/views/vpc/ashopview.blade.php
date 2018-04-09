@@ -177,18 +177,18 @@
     <div class="panel panel-default">
         <div class="panel-heading vpchead">
             <div class="row">
-                <div class="col-md-6 row">
-                    <div class="col-md-7">
+                <div class="col-md-3 row">
+                    <div class="col-md-4">
                         <a href="{{route('AShop.dashboard')}}"><button type="button" class="btn btn-default">Back</button></a>&nbsp;
                         <i class="fa fa-spinner fa-spin spinner_load" style="font-size:24px; margin-top:4px;position:fixed;display:none"></i>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-8">
                     </div>
                 </div>
-                <div class="col-md-6 row" style="float: right;">
+                <div class="col-md-9 row" style="float: right;">
                     <div class="col-md-1" style="white-space: nowrap; padding-left: 0px;">Sort by:</div>
                     <!--SORT PARAMS -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select class="sort form-control no-spin" name="sort1">
                             <option value=""> <option>
                             @foreach ($sortables as $sortable => $value)
@@ -196,7 +196,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select class="sort form-control no-spin" name="sort2">
                             <option value=""> <option>
                             @foreach ($sortables as $sortable => $value)
@@ -204,13 +204,20 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <select class="sort form-control no-spin" name="sort3">
                             <option value=""> <option>
                             @foreach ($sortables as $sortable => $value)
                                 <option value="{{ $value }}">{{ $sortable }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="col-md-1" style="white-space: nowrap; padding-left: 0px;">Order :</div>
+                    <div class="col-md-3">
+                        <form action="">
+                            <input class="check-sort" type="radio" name="asc-desc" id="asc-desc" value="asc"> asc (&#8593;) &nbsp;
+                            <input class="check-sort" type="radio" name="asc-desc" id="asc-desc" value="desc"> desc (&#8595;)
+                        </form>
                     </div>
                     <div class="col-md-1" style="width:2%;">
                         <button id="sort-button" class="btn btn-default">Sort</button>
@@ -370,7 +377,18 @@
         $('.sort').each(function() {
             var sort_value = $(this).find(":selected").val();
             if (sort_value) {
-                sorts[sort_value] = true;
+                if (document.getElementById("asc-desc").checked) {
+                    $('.check-sort:checked').each(function() {
+                        var check_sort = $(this).val();
+                        if (check_sort == 'asc') {
+                            sorts[sort_value] = true;
+                        } else {
+                            sorts[sort_value] = false;
+                        }
+                    });
+                } else {
+                    sorts[sort_value] = false;
+                }
             }
         });
 
@@ -426,7 +444,14 @@
         $('.sort').each(function() {
             var sort_value = $(this).find(":selected").val();
             if (sort_value) {
-                sorts[sort_value] = true;
+                $('.check-sort:checked').each(function() {
+                    var check_sort = $(this).val();
+                    if (check_sort == 'asc') {
+                        sorts[sort_value] = true;
+                    } else {
+                        sorts[sort_value] = false;
+                    }
+                });
             }
         });
 
