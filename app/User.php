@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'email', 'password', 'a_shop_auth', 'role', 'fullname', 'no_hp', 'a_shop_auth'
+        'username', 'email', 'password', 'a_shop_auth', 'role', 'fullname', 'no_hp', 'green_auth'
     ];
 
     /**
@@ -56,6 +56,13 @@ class User extends Authenticatable
 		}
 		return false;
 	}
+
+    public function hasGreen($user) {
+        if ($this->where('username', $user)->where('green_auth', '1')->first()) {
+            return true;
+        }
+        return false;
+    }
 
     public function createAclubInformations() {
         return $this->hasMany('App\AclubInformation', 'id', 'created_by');

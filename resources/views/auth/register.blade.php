@@ -69,6 +69,15 @@
                             </div>
                          </div>
 
+                         <div class="form-group">
+                            <label for="green" class="col-md-4 control-label">Green Auth</label>
+
+                            <div class="col-md-6">
+                                <input name="green" value="0" type="hidden">
+                                <input id="green" type="checkbox" class="form-control" name="green" style="width:25px; height:25px;">
+                            </div>
+                         </div>
+
 						<div class="form-group">
                             <label for="role" class="col-md-4 control-label">Role</label>
 
