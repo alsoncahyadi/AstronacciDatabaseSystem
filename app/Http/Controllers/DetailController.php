@@ -216,7 +216,9 @@ class DetailController extends Controller
 
 
         //UOB
-        $client_uob = Uob::where('master_id', $id)->first();
+        $query_uob = QueryModifier::queryGetUob($id);
+        $client_uob = collect(DB::select($query_uob))->first();
+        // $client_uob = Uob::where('master_id', $id)->first();
 
         if ($client_uob == null) {
             $client_uob = new \App\Uob();
