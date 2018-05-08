@@ -265,7 +265,12 @@ class QueryModifier {
     }
 
     public static function queryGetCat($master_id) {
-        $query = "SELECT * FROM cats WHERE master_id = ".$master_id." ORDER BY created_at DESC";
+        $query = "SELECT * FROM cats WHERE master_id = ".$master_id." ORDER BY payment_date DESC";
+        return $query;
+    }
+
+    public static function queryGetUob($master_id) {
+        $query = "SELECT * FROM uobs WHERE master_id = ".$master_id." ORDER BY tanggal_rdi_done DESC";
         return $query;
     }
 
