@@ -8,6 +8,7 @@
 </div>
 
 	<div class="panel panel-default" style="padding:15px 280px;" >
+	<input type="hidden" name="country" value=>
 
 		@if ($errors->any())
 		    <div class="alert alert-danger">
@@ -476,42 +477,8 @@
 		document.getElementById("redzone").stepUp(3);
 	});
     // ======================================================================================================
+    var prov = {!! json_encode($city) !!};
     
-    var prov = {
-    	"Aceh" : ["Banda Aceh", "Langsa", "Lhokseumawe", "Meulaboh", "Sabang", "Subulussalam"],
-    	"Bali" : ["Denpasar"],
-        "Bangka Belitung" : ["Pangkalpinang"],
-        "Banten" : ["Cilegon", "Serang", "Tangerang Selatan", "Tangerang"],
-        "Bengkulu" : ["Bengkulu"],
-        "Gorontalo" : ["Gorontalo"],
-        "Jakarta" : ["Jakarta Barat", "Jakarta Pusat", "Jakarta Selatan", "Jakarta Timur", "Jakarta Utara"],
-        "Jambi" : ["Sungai Penuh", "Jambi"],
-        "Jawa Barat" : ["Bandung", "Bekasi", "Bogor", "Cimahi", "Cirebon", "Depok", "Sukabumi", "Tasikmalaya", "Banjar"],
-        "Jawa Tengah" : ["Magelang", "Pekalongan", "Purwokerto", "Salatiga", "Semarang", "Surakarta", "Tegal"],
-        "Jawa Timur" : ["Batu", "Blitar", "Kediri", "Madiun", "Malang", "Mojokerto", "Pasuruan", "Probolinggo", "Surabaya"],
-        "Kalimantan Barat" : ["Pontianak", "Singkawang"],
-        "Kalimantan Selatan" : ["Banjarbaru", "Banjarmasin"],
-        "Kalimantan Tengah" : ["Palangkaraya"],
-        "Kalimatan Timur" : ["Balikpapan", "Bontang", "Samarinda"],
-        "Kalimantan Utara" : ["Tarakan"],
-        "Kepulauan Riau" : ["Batam", "Tanjungpinang"],
-        "Lampung" : ["Bandar Lampung", "Metro"],
-        "Maluku Utara" : ["Ternate", "Kepulauan Tidore"],
-        "Maluku" : ["Ambon", "Tual"],
-        "Nusa Tenggara Barat" : ["Bima", "Mataram"],
-        "Nusa Tenggara Timur" : ["Kupang"],
-        "Papua Barat" : ["Sorong"],
-        "Papua" : ["Jayapura"],
-        "Riau" : ["Dumai", "Pekanbaru"],
-        "Sulawesi Selatan" : ["Makassar", "Palopo", "Parepare"],
-        "Sulawesi Tengah" : ["Palu"],
-        "Sulawesi Tenggara" : ["Bau-Bau", "Kendari"],
-        "Sulawesi Utara" : ["Bitung", "Kotamobagu", "Manado", "Tomohon"],
-        "Sumatera Barat" : ["Bukittinggi", "Padang", "Padangpanjang", "Pariaman", "Payakumbuh", "Sawahlunto", "Solok"],
-        "Sumatera Selatan" : ["Lubuklinggau", "Pagaralam", "Palembang", "Prabumulih"],
-        "Sumatera Utara" : ["Binjai", "Medan", "Padang Sidempuan", "Pematangsiantar", "Sibolga", "Tanjungbalai", "Tebingtinggi"],
-        "Yogyakarta" : ["Yogyakarta"],
-    };
     var provKeys = Object.keys(prov);
 	var select = document.getElementById('prov');
 	var selectKota = document.getElementById('kota');

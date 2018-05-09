@@ -81,11 +81,26 @@ class MockupController extends Controller
                     "Opening Class" => 0,
                     "Status" => 0,
                     "Keterangan" => 0];
+
+        // Pilihan Kota
+        $city = [];
+        $row = 1;
+        if (($handle = fopen("kota.csv", "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                if (array_key_exists($data[0], $city)) {
+                    array_push($city[$data[0]], $data[1]);
+                } else {
+                    $city[$data[0]] = array($data[1]);
+                }
+            }
+            fclose($handle);
+        }
        
         return view('content/addclient', 
             ['clients' => $clients, 
                 'ins'=>$ins, 'aclub' => $aclubforms, 'uob' => $uobforms, 
-                'mrg' => $mrgforms, 'cat' => $catforms]
+                'mrg' => $mrgforms, 'cat' => $catforms, 'city' => $city]
             );
     }
 
