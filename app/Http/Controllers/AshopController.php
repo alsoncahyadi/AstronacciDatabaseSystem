@@ -257,8 +257,8 @@ class AshopController extends Controller
           "Email" => ["email",1],
           "Tanggal Lahir" =>["birthdate",0],
           "Alamat" => ["address",1],
-          "Kota" => ["city",0],
           "Provinsi" => ["province",0],
+          "Kota" => ["city",0],
           "Jenis Kelamin" => ["gender",0],
           "Line ID" => ["line_id",0],
           "BBM" => ["bbm",0],
@@ -273,8 +273,8 @@ class AshopController extends Controller
           "Email" => "email",
           "Tanggal Lahir" =>"birthdate",
           "Alamat" => "address",
-          "Kota" => "city",
           "Provinsi" => "province",
+          "Kota" => "city",
           "Jenis Kelamin" => "gender",
           "Line ID" => "line_id",
           "BBM" => "bbm",
@@ -310,10 +310,25 @@ class AshopController extends Controller
 
         $attsreg = ["product_type", "product_name", "nominal"];
 
+        // Pilihan Kota
+        $city = [];
+        $row = 1;
+        if (($handle = fopen("kota.csv", "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $num = count($data);
+                if (array_key_exists($data[0], $city)) {
+                    array_push($city[$data[0]], $data[1]);
+                } else {
+                    $city[$data[0]] = array($data[1]);
+                }
+            }
+            fclose($handle);
+        }
+
         return view('profile/profile', ['route'=>'AShop', 'client'=>$master, 
             'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
             'headsreg'=>$headsreg, 'clientsreg' => $clientsreg, 
-            'attsreg' => $attsreg, 'count' => $total, 'page' => $page
+            'attsreg' => $attsreg, 'count' => $total, 'page' => $page, 'city' => $city
         ]);
     }
 
