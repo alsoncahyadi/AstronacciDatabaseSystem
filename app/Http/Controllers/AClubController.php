@@ -673,7 +673,7 @@ class AClubController extends Controller
 
     public function addTrans(Request $request) {
          $this->validate($request, [
-                'user_id' => 'required|integer',
+                'user_id' => 'required',
                 'payment_date' => 'date',
                 'kode' => '',
                 'status_aclub' => '',

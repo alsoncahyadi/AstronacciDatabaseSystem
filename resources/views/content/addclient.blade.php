@@ -156,6 +156,7 @@
 								<option>Basic</option>
 								<option>Syariah</option>
 								<option>Signature</option>
+								<option>Professional</option>
 							</select>
 						@else
 							<input class="form-control <?php if ($req) : ?> mrgrequired <?php endif; ?>" type="text" name="{{strtolower(str_replace(' ', '_', $atr))}}" >

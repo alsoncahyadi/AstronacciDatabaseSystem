@@ -81,21 +81,31 @@
                                                             <option>Basic</option>
                                                             <option>Syariah</option>
                                                             <option>Signature</option>
+                                                            <option>Professional</option>
                                                         @elseif ($client->$value == "Basic")
                                                             <option>Recreation</option>
                                                             <option selected="selected">Basic</option>
                                                             <option>Syariah</option>
                                                             <option>Signature</option>
+                                                            <option>Professional</option>
                                                         @elseif ($client->$value == "Syariah")
                                                             <option>Recreation</option>
                                                             <option>Basic</option>
                                                             <option selected="selected">Syariah</option>
                                                             <option>Signature</option>
+                                                            <option>Professional</option>
                                                         @elseif ($client->$value == "Signature")
                                                             <option>Recreation</option>
                                                             <option>Basic</option>
                                                             <option>Syariah</option>
                                                             <option selected="selected">Signature</option>
+                                                            <option>Professional</option>
+                                                        @elseif ($client->$value == "Professional")
+                                                            <option>Recreation</option>
+                                                            <option>Basic</option>
+                                                            <option>Syariah</option>
+                                                            <option>Signature</option>
+                                                            <option selected="selected">Professional</option>
                                                         @endif
                                                     </select>
                                                 @else
