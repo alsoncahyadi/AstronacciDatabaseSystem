@@ -235,6 +235,7 @@
                                             <option>Basic</option>
                                             <option>Syariah</option>
                                             <option>Signature</option>
+                                            <option>Professional</option>
                                         </select>
                                     @elseif ($atr == "Group")
                                         <input class="form-control no-spin" type="text" id="group" name="{{strtolower(str_replace(' ', '_', $atr))}}" value="Stock"readonly>
@@ -347,6 +348,7 @@
                                             <option>Basic</option>
                                             <option>Syariah</option>
                                             <option>Signature</option>
+                                            <option>Professional</option>
                                         </select>
                                     @else
                                         <input class="form-control" type="text" name="{{$value}}">
