@@ -246,10 +246,12 @@ class GreenController extends Controller
         //attribute sql account
         $attsreg = ["date", "sales_name", "status", "nama_product", "nominal", "keterangan"];
 
+        $city = [];
+
         return view('profile/profile', ['route'=>'Green', 'client'=>$green, 
                 'heads'=>$heads, 'ins'=>$ins, 'insreg'=>$insreg, 
                 'clientsreg'=>$clientsreg, 'headsreg'=>$headsreg, 
-                'attsreg'=>$attsreg, 'count'=>$total, 'page'=>$page
+                'attsreg'=>$attsreg, 'count'=>$total, 'page'=>$page, 'city'=>$city
             ]);
     }
 
