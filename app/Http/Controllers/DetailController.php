@@ -324,8 +324,11 @@ class DetailController extends Controller
             $clientsreg_aclub = null;
             $client_aclub->user_id = 'dummy';
         } else {
-            $clientsreg_aclub = $client_aclub->aclubMembers()->first()->aclubTransactions()->get();
-            $client_aclub->user_id = $clientsreg_aclub[0]->user_id;    
+            $query_member = QueryModifier::queryGetAclubMember($client_aclub->master_id);
+            $aclub_members = collect(DB::select($query_member))->first();
+            $query = QueryModifier::queryGetTransactions($aclub_members->user_id);
+            $clientsreg_aclub = DB::select($query);
+            $client_aclub->user_id = $clientsreg_aclub[0]->user_id;     
         }
         
         
